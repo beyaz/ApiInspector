@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ApiInspector.Application;
 using BOA.DataFlow;
+using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
     class MethodNamesInAssembly
     {
         #region Static Fields
-        public static readonly DataKey<IReadOnlyList<string>> Key = new DataKey<IReadOnlyList<string>>(nameof(AssemblyNames));
+        public static readonly DataKey<IReadOnlyList<MethodDefinition>> Key = new DataKey<IReadOnlyList<MethodDefinition>>(nameof(MethodNamesInAssembly));
         #endregion
 
         #region Public Methods
@@ -35,14 +37,7 @@ namespace ApiInspector.DataAccess
                 return;
             }
 
-            var items = new List<string>();
-
-            foreach (var methodDefinition in typeDefinition.Methods)
-            {
-                items.Add(methodDefinition.Name);
-            }
-
-            context.Update(Key, items);
+            context.Update(Key, typeDefinition.Methods.ToList());
         }
         #endregion
     }

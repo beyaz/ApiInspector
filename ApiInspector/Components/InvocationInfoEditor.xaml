@@ -24,6 +24,12 @@
                 <local:MethodNameIntellisenseTextBox  x:Name="methodNameIntellisenseTextBox" Text="{Binding Model.InvocationInfo.MethodName, Mode=TwoWay}"  />
             </StackPanel>
 
+            <GroupBox Header="Parameters">
+                <StackPanel x:Name="parametersPanel">
+
+                </StackPanel>
+            </GroupBox>
+
 
         </StackPanel>
     </Grid>

@@ -22,6 +22,8 @@ namespace ApiInspector.Components
                 classNameIntellisenseTextBox.Context = value;
                 methodNameIntellisenseTextBox.Context = value;
 
+                value.Update(DataKeys.ParametersPanel,parametersPanel);
+
                 context = value;
             }
         }

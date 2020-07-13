@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BOA.Base">
+      <HintPath>..\..\..\BOA\Server\bin\BOA.Base.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -57,6 +60,7 @@
     </ApplicationDefinition>
     <Compile Include="Components\InvocationInfoEditorContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
+    <Compile Include="Components\Logic.cs" />
     <Compile Include="DataAccess\DataKeys.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BOA.DataFlow;
+using Mono.Cecil;
 
 namespace ApiInspector.Components
 {
@@ -12,7 +14,7 @@ namespace ApiInspector.Components
         /// <summary>
         ///     The class names
         /// </summary>
-        public static DataKey<IReadOnlyList<string>> Names = new DataKey<IReadOnlyList<string>>(nameof(Names));
+        public static DataKey<IReadOnlyList<MethodDefinition>> Names = new DataKey<IReadOnlyList<MethodDefinition>>(nameof(Names));
         #endregion
 
         #region Methods
@@ -21,7 +23,7 @@ namespace ApiInspector.Components
         /// </summary>
         protected override IEnumerable<string> GetSuggestions()
         {
-            return Context.Get(Names);
+            return Context.Get(Names).Select(x=>x.Name);
         }
         #endregion
     }

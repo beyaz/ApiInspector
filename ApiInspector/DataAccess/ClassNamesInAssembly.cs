@@ -2,13 +2,14 @@
 using System.IO;
 using ApiInspector.Application;
 using BOA.DataFlow;
+using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
     class ClassNamesInAssembly
     {
         #region Static Fields
-        public static readonly DataKey<IReadOnlyList<string>> Key = new DataKey<IReadOnlyList<string>>(nameof(AssemblyNames));
+        public static readonly DataKey<IReadOnlyList<TypeDefinition>> Key = new DataKey<IReadOnlyList<TypeDefinition>>(nameof(ClassNamesInAssembly));
         #endregion
 
         #region Public Methods
@@ -27,9 +28,9 @@ namespace ApiInspector.DataAccess
                 return;
             }
 
-            var items = new List<string>();
+            var items = new List<TypeDefinition>();
 
-            CecilHelper.VisitAllTypes(context, assemblyPath, typeDefinition => { items.Add(typeDefinition.FullName); });
+            CecilHelper.VisitAllTypes(context, assemblyPath, typeDefinition => { items.Add(typeDefinition); });
 
             context.Update(Key, items);
         }
