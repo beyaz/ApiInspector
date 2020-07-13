@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Application\InvocationInfoEditorContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
+    <Compile Include="DataAccess\DataKeys.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />

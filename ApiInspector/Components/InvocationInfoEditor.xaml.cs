@@ -33,16 +33,21 @@ namespace ApiInspector.Components
             Loaded += OnLoad;
         }
 
-         void OnLoad(object sender, RoutedEventArgs e)
+        void OnLoad(object sender, RoutedEventArgs routedEventArgs)
         {
-            assemblyIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
+            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                ClassNamesInAssembly.Load(Context,assemblyIntellisenseTextBox.Editor.Text);
+                Context.Update(DataKeys.AssemblyName, assemblyIntellisenseTextBox.Editor.Text);
             };
 
             classNameIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
             {
-                MethodNamesInAssembly.Load(Context,assemblyIntellisenseTextBox.Editor.Text,classNameIntellisenseTextBox.Editor.Text);
+                Context.Update(DataKeys.ClassName, classNameIntellisenseTextBox.Editor.Text);
+            };
+
+            methodNameIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
+            {
+                Context.Update(DataKeys.MethodName, methodNameIntellisenseTextBox.Editor.Text);
             };
         }
         #endregion

@@ -8,13 +8,20 @@ namespace ApiInspector.Application
     {
         public DataContext Build()
         {
-            DataContext context = new DataContext();
+            var context = new DataContext();
 
-            context.ForwardKey(AssemblyIntellisenseTextBox.AssemblyNames,AssemblyNamesAll.Key);
-            context.ForwardKey(ClassNameIntellisenseTextBox.ClassNames,ClassNamesInAssembly.Key);
+            context.ForwardKey(AssemblyIntellisenseTextBox.Names,AssemblyNamesAll.Key);
+            context.ForwardKey(ClassNameIntellisenseTextBox.Names,ClassNamesInAssembly.Key);
+            context.ForwardKey(MethodNameIntellisenseTextBox.Names,MethodNamesInAssembly.Key);
             context.Add(Logger.Key,new Logger());
 
             context.Add(AssemblyDirectory.Key, @"d:\boa\server\bin");
+
+
+            context.OnUpdate(DataKeys.AssemblyName,()=>ClassNamesInAssembly.Load(context) );
+            context.OnUpdate(DataKeys.ClassName,()=>ClassNamesInAssembly.Load(context) );
+            context.OnUpdate(DataKeys.MethodName,()=>MethodNamesInAssembly.Load(context) );
+            
             
             AssemblyNamesAll.Load(context);
 

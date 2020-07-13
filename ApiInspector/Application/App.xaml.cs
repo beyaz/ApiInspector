@@ -16,8 +16,8 @@ namespace ApiInspector.Application
 
         static App()
         {
-            Context.ForwardKey(AssemblyIntellisenseTextBox.AssemblyNames,AssemblyNamesAll.Key);
-            Context.ForwardKey(ClassNameIntellisenseTextBox.ClassNames,ClassNamesInAssembly.Key);
+            Context.ForwardKey(AssemblyIntellisenseTextBox.Names,AssemblyNamesAll.Key);
+            Context.ForwardKey(ClassNameIntellisenseTextBox.Names,ClassNamesInAssembly.Key);
             Context.Add(Logger.Key,new Logger());
         }
     }

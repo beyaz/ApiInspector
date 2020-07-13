@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using ApiInspector.Application;
+using ApiInspector.Components;
 using BOA.DataFlow;
 
 namespace ApiInspector.DataAccess
@@ -12,6 +13,14 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Public Methods
+        public static void Load(DataContext context)
+        {
+            var assemblyName = context.Get(DataKeys.AssemblyName);
+            var className = context.Get(DataKeys.ClassName);
+
+            Load(context,assemblyName,className);
+        }
+
         public static void Load(DataContext context, string assemblyName, string fullClassName)
         {
             var logger            = context.Get(Logger.Key);
@@ -75,6 +84,14 @@ namespace ApiInspector.DataAccess
             CecilHelper.VisitAllTypes(context, assemblyPath, typeDefinition => { items.Add(typeDefinition.FullName); });
 
             context.Update(Key, items);
+        }
+
+        public static void Load(DataContext context)
+        {
+            var assemblyName = context.Get(DataKeys.AssemblyName);
+
+            Load(context,assemblyName);
+
         }
         #endregion
     }

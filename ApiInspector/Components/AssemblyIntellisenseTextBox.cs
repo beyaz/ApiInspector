@@ -12,7 +12,7 @@ namespace ApiInspector.Components
         /// <summary>
         ///     The assembly names
         /// </summary>
-        public static DataKey<IReadOnlyList<string>> AssemblyNames = new DataKey<IReadOnlyList<string>>(nameof(AssemblyNames));
+        public static DataKey<IReadOnlyList<string>> Names = new DataKey<IReadOnlyList<string>>(nameof(Names));
         #endregion
 
         #region Methods
@@ -21,7 +21,7 @@ namespace ApiInspector.Components
         /// </summary>
         protected override IEnumerable<string> GetSuggestions()
         {
-            return Context.Get(AssemblyNames);
+            return Context.Get(Names);
         }
         #endregion
     }
