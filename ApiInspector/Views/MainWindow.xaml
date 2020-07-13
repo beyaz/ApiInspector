@@ -12,7 +12,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <StackPanel>
-            <components:InvocationInfoEditor Margin="180,30,165,0"   />
+            <components:InvocationInfoEditor x:Name="currentInvocationInfo" Margin="180,30,165,0"   />
 
         </StackPanel>
     </Grid>

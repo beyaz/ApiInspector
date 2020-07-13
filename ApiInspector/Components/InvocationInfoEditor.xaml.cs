@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using ApiInspector.DataAccess;
+using BOA.DataFlow;
 
 namespace ApiInspector.Components
 {
@@ -7,10 +9,36 @@ namespace ApiInspector.Components
     /// </summary>
     public partial class InvocationInfoEditor
     {
+        DataContext context;
+        public DataContext Context
+        {
+            get
+            {
+                return context;
+            }
+            set
+            {
+                assemblyIntellisenseTextBox.Context = value;
+                classNameIntellisenseTextBox.Context = value;
+                methodNameIntellisenseTextBox.Context = value;
+
+                context = value;
+            }
+        }
+
         #region Constructors
         public InvocationInfoEditor()
         {
             InitializeComponent();
+            Loaded += OnLoad;
+        }
+
+         void OnLoad(object sender, RoutedEventArgs e)
+        {
+            assemblyIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
+            {
+                ClassNamesInAssembly.Load(Context,assemblyIntellisenseTextBox.Editor.Text);
+            };
         }
         #endregion
 

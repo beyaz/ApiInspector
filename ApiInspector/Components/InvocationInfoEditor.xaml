@@ -11,17 +11,17 @@
         <StackPanel>
             <StackPanel>
                 <Label FontWeight="Bold"> Assembly Name </Label>
-                <local:IntellisenseTextBox Suggestions="{Binding Model.AssemblyNames,Mode=OneWay}" Text="{Binding Model.InvocationInfo. AssemblyName, Mode=TwoWay}"  />
+                <local:AssemblyIntellisenseTextBox  x:Name="assemblyIntellisenseTextBox" Text="{Binding Model.InvocationInfo. AssemblyName, Mode=TwoWay}"  />
             </StackPanel>
 
             <StackPanel Margin="0,10,0,0">
                 <Label FontWeight="Bold"> Class Name </Label>
-                <local:IntellisenseTextBox Suggestions="{Binding Model.ClassNames,Mode=OneWay}" Text="{Binding Model.InvocationInfo.ClassName, Mode=TwoWay}"  />
+                <local:ClassNameIntellisenseTextBox x:Name="classNameIntellisenseTextBox" Text="{Binding Model.InvocationInfo.ClassName, Mode=TwoWay}"  />
             </StackPanel>
 
             <StackPanel Margin="0,10,0,0">
                 <Label FontWeight="Bold"> Method Name </Label>
-                <local:IntellisenseTextBox Suggestions="{Binding Model.MethodNames,Mode=OneWay}" Text="{Binding Model.InvocationInfo.ClassName, Mode=TwoWay}"  />
+                <local:MethodNameIntellisenseTextBox  x:Name="methodNameIntellisenseTextBox" Text="{Binding Model.InvocationInfo.ClassName, Mode=TwoWay}"  />
             </StackPanel>
 
 

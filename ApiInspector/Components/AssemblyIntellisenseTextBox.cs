@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using ApiInspector.Application;
+﻿using System.Collections.Generic;
 using BOA.DataFlow;
-using WpfControls;
 
 namespace ApiInspector.Components
 {
     /// <summary>
     ///     The assembly intellisense text box
     /// </summary>
-    class AssemblyIntellisenseTextBox : AutoCompleteTextBox, ISuggestionProvider
+    class AssemblyIntellisenseTextBox : IntellisenseTextBoxBase
     {
         #region Static Fields
         /// <summary>
@@ -20,37 +15,13 @@ namespace ApiInspector.Components
         public static DataKey<IReadOnlyList<string>> AssemblyNames = new DataKey<IReadOnlyList<string>>(nameof(AssemblyNames));
         #endregion
 
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AssemblyIntellisenseTextBox" /> class.
-        /// </summary>
-        public AssemblyIntellisenseTextBox()
-        {
-            Provider = this;
-        }
-        #endregion
-
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the context.
-        /// </summary>
-        public DataContext Context { get; set; } = App.Context;
-        #endregion
-
-        #region Explicit Interface Methods
+        #region Methods
         /// <summary>
         ///     Gets the suggestions.
         /// </summary>
-        IEnumerable ISuggestionProvider.GetSuggestions(string filter)
+        protected override IEnumerable<string> GetSuggestions()
         {
-            if (string.IsNullOrEmpty(filter))
-            {
-                return null;
-            }
-
-            var assemblyNames = Context.Get(AssemblyNames);
-
-            return assemblyNames.Where(x => x.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0).Take(10);
+            return Context.Get(AssemblyNames);
         }
         #endregion
     }

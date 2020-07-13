@@ -7,6 +7,50 @@ using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
+    class CecilHelper
+    {
+        public static void VisitAllTypes(DataContext context, string assemblyPath, Action<TypeDefinition> action)
+        {
+            var logger = context.Get(Logger.Key);
+
+            if (File.Exists(assemblyPath) == false)
+            {
+                return;
+            }
+
+            var resolver = new DefaultAssemblyResolver();
+
+            resolver.AddSearchDirectory(@"d:\boa\server\bin\");
+
+            AssemblyDefinition assemblyDefinition;
+
+            try
+            {
+                assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
+            }
+            catch (Exception e)
+            {
+                logger.Log($"File not Loaded. File:{assemblyPath}, Error: {e}");
+                return;
+            }
+
+            
+
+            foreach (var moduleDefinition in assemblyDefinition.Modules)
+            {
+                foreach (var type in moduleDefinition.Types)
+                {
+                    if (type.Name.Contains("<"))
+                    {
+                        continue;
+                    }
+
+                    action(type);
+                }
+            }
+        }
+    }
+
     class ClassNamesInAssembly
     {
         #region Static Fields
@@ -19,7 +63,7 @@ namespace ApiInspector.DataAccess
             var logger = context.Get(Logger.Key);
             var assemblyDirectory = context.Get(AssemblyDirectory.Key);
 
-            var items = new List<string>();
+           
 
             
             var assemblyPath= Path.Combine(assemblyDirectory , assemblyName);
@@ -32,25 +76,9 @@ namespace ApiInspector.DataAccess
             }
 
 
-            AssemblyDefinition assembly;
+            var items = new List<string>();
 
-            try
-            {
-                assembly = AssemblyDefinition.ReadAssembly(assemblyPath);
-            }
-            catch (Exception e)
-            {
-                logger.Log($"File not Loaded. File:{assemblyPath}, Error: {e}");
-                return;
-            }
-
-            foreach (var module in assembly.Modules)
-            {
-                foreach (var type in module.Types)
-                {
-                    items.Add(type.FullName);
-                }
-            }
+            CecilHelper.VisitAllTypes(context,assemblyPath,(typeDefinition)=>{items.Add(typeDefinition.FullName);});
 
             context.Update(Key, items);
         }

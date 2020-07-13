@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Application\InvocationInfoEditorContextBuilder.cs" />
+    <Compile Include="Application\Logger.cs" />
+    <Compile Include="Components\IntellisenseTextBoxBase.cs" />
+    <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
     <Compile Include="Views\MainWindowModel.cs" />
     <Page Include="Components\InvocationInfoEditor.xaml">
       <SubType>Designer</SubType>
@@ -70,7 +74,6 @@
     </Compile>
     <Compile Include="Components\ClassNameIntellisenseTextBox.cs" />
     <Compile Include="Components\AssemblyIntellisenseTextBox.cs" />
-    <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="Components\InvocationInfoEditor.xaml.cs">
       <DependentUpon>InvocationInfoEditor.xaml</DependentUpon>
     </Compile>
