@@ -1,0 +1,19 @@
+﻿<Window x:Class="ApiInspector.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ApiInspector"
+        xmlns:components = "clr-namespace:ApiInspector.Components"
+        xmlns:application = "clr-namespace:ApiInspector.Application"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <components:AssemblyIntellisenseTextBox Margin="180,0,165,0" Text="{Binding SelectedAssemblyName, Mode=TwoWay}" />
+            <components:ClassNameIntellisenseTextBox Margin="180,30,165,0" />
+
+            <TextBox Margin="180,0,165,0" />
+        </StackPanel>
+    </Grid>
+</Window>
