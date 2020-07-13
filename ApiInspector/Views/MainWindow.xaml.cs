@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using ApiInspector.Application;
+using ApiInspector.Components;
 using ApiInspector.DataAccess;
 
 namespace ApiInspector.Views
@@ -10,31 +12,37 @@ namespace ApiInspector.Views
     public partial class MainWindow
     {
         #region SelectedAssemlyName
-        public static readonly DependencyProperty SelectedAssemblyNameProperty = DependencyProperty.Register("SelectedAssemblyName", typeof(string), typeof(MainWindow), new PropertyMetadata(default(string),OnSelectedAssemblyChanged));
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(MainWindowModel), typeof(MainWindow), new PropertyMetadata(default(MainWindowModel)));
 
-        static void OnSelectedAssemblyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public MainWindowModel Model
         {
-            var selectedAssemblyName = ((MainWindow)d).SelectedAssemblyName;
-
-            ClassNamesInAssembly.Load(App.Context,selectedAssemblyName);
-        }
-
-        public string SelectedAssemblyName
-        {
-            get { return (string) GetValue(SelectedAssemblyNameProperty); }
-            set { SetValue(SelectedAssemblyNameProperty, value); }
+            get { return (MainWindowModel) GetValue(ModelProperty); }
+            set { SetValue(ModelProperty, value); }
         }
         #endregion
+
 
         #region Constructors
         public MainWindow()
         {
             InitializeComponent();
+
+            Model = new MainWindowModel
+            {
+                CurrentInvocationInfoEditorModel = new InvocationInfoEditorModel
+                {
+                    AssemblyDirectory = @"d:\boa\server\bin",
+                    AssemblyNames = new List<string>(){"u","a","abc"}
+                }
+            };
             
-            App.Context.Add(AssemblyDirectory.Key, @"d:\boa\server\bin");
+            //App.Context.Add(AssemblyDirectory.Key, @"d:\boa\server\bin");
             
-            AssemblyNamesAll.Load(App.Context);
+            //AssemblyNamesAll.Load(App.Context);
         }
         #endregion
+
+
+
     }
 }
