@@ -18,7 +18,22 @@ namespace ApiInspector.DataAccess
 
             context.Update(Key, assemblyNames);
         }
+        public static void Load(DataContext context)
+        {
+            Load(context,context.Get(AssemblyDirectory.Key));
+        }
+        
         #endregion
+    }
+
+
+    static class AssemblyDirectory
+    {
+        #region Static Fields
+        public static readonly DataKey<string> Key = new DataKey<string>(nameof(AssemblyDirectory));
+        #endregion
+
+       
     }
 }
 

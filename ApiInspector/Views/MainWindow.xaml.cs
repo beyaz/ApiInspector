@@ -31,7 +31,9 @@ namespace ApiInspector.Views
         {
             InitializeComponent();
             
-            AssemblyNamesAll.Load(App.Context, @"d:\boa\server\bin");
+            App.Context.Add(AssemblyDirectory.Key, @"d:\boa\server\bin");
+            
+            AssemblyNamesAll.Load(App.Context);
         }
         #endregion
     }

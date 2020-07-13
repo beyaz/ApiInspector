@@ -7,13 +7,14 @@
         xmlns:components = "clr-namespace:ApiInspector.Components"
         xmlns:application = "clr-namespace:ApiInspector.Application"
         mc:Ignorable="d"
+        x:Name="CodeBehind"
+        DataContext="{Binding ElementName=CodeBehind}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <StackPanel>
-            <components:AssemblyIntellisenseTextBox Margin="180,0,165,0" Text="{Binding SelectedAssemblyName, Mode=TwoWay}" />
+            <components:AssemblyIntellisenseTextBox Margin="180,0,165,0" Text="{Binding SelectedAssemblyName, Mode=TwoWay}" x:Name="assemblyIntellisenseTextBox" />
             <components:ClassNameIntellisenseTextBox Margin="180,30,165,0" />
 
-            <TextBox Margin="180,0,165,0" />
         </StackPanel>
     </Grid>
 </Window>
