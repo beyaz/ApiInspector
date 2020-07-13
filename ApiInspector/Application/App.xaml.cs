@@ -1,24 +1,10 @@
-﻿using ApiInspector.Components;
-using ApiInspector.DataAccess;
-using BOA.DataFlow;
-
-namespace ApiInspector.Application
+﻿namespace ApiInspector.Application
 {
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App
     {
-        /// <summary>
-        ///     The context
-        /// </summary>
-        public static readonly  DataContext Context = new DataContext();
-
-        static App()
-        {
-            Context.ForwardKey(AssemblyIntellisenseTextBox.Names,AssemblyNamesAll.Key);
-            Context.ForwardKey(ClassNameIntellisenseTextBox.Names,ClassNamesInAssembly.Key);
-            Context.Add(Logger.Key,new Logger());
-        }
+       
     }
 }

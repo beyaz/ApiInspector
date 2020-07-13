@@ -8,14 +8,14 @@ using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
-    class CecilHelper
+    static class CecilHelper
     {
-
-       public static TypeDefinition FindType(DataContext context, string assemblyPath, string typeFullName)
+        #region Public Methods
+        public static TypeDefinition FindType(DataContext context, string assemblyPath, string typeFullName)
         {
             var typeDefinitions = new List<TypeDefinition>();
 
-            VisitAllTypes(context,assemblyPath, type =>
+            VisitAllTypes(context, assemblyPath, type =>
             {
                 if (type.FullName == typeFullName)
                 {
@@ -29,6 +29,7 @@ namespace ApiInspector.DataAccess
         public static void VisitAllTypes(DataContext context, string assemblyPath, Action<TypeDefinition> action)
         {
             var logger = context.Get(Logger.Key);
+            var assemblySearchDirectory = context.Get(DataKeys.AssemblySearchDirectory);
 
             if (File.Exists(assemblyPath) == false)
             {
@@ -37,7 +38,7 @@ namespace ApiInspector.DataAccess
 
             var resolver = new DefaultAssemblyResolver();
 
-            resolver.AddSearchDirectory(@"d:\boa\server\bin\");
+            resolver.AddSearchDirectory(assemblySearchDirectory);
 
             AssemblyDefinition assemblyDefinition;
 
@@ -50,8 +51,6 @@ namespace ApiInspector.DataAccess
                 logger.Log($"File not Loaded. File:{assemblyPath}, Error: {e}");
                 return;
             }
-
-            
 
             foreach (var moduleDefinition in assemblyDefinition.Modules)
             {
@@ -66,5 +65,6 @@ namespace ApiInspector.DataAccess
                 }
             }
         }
+        #endregion
     }
 }

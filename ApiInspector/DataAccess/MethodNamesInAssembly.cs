@@ -5,7 +5,7 @@ using BOA.DataFlow;
 
 namespace ApiInspector.DataAccess
 {
-    class ClassNamesInAssembly
+    class MethodNamesInAssembly
     {
         #region Static Fields
         public static readonly DataKey<IReadOnlyList<string>> Key = new DataKey<IReadOnlyList<string>>(nameof(AssemblyNames));
@@ -14,7 +14,8 @@ namespace ApiInspector.DataAccess
         #region Public Methods
         public static void Load(DataContext context)
         {
-            var assemblyName = context.Get(DataKeys.AssemblyName);
+            var assemblyName  = context.Get(DataKeys.AssemblyName);
+            var fullClassName = context.Get(DataKeys.ClassName);
 
             var logger            = context.Get(Logger.Key);
             var assemblyDirectory = context.Get(DataKeys.AssemblySearchDirectory);
@@ -27,9 +28,19 @@ namespace ApiInspector.DataAccess
                 return;
             }
 
+            var typeDefinition = CecilHelper.FindType(context, assemblyPath, fullClassName);
+            if (typeDefinition == null)
+            {
+                logger.Log($"Type not exists. File:{assemblyPath}, fullClassName:{fullClassName}");
+                return;
+            }
+
             var items = new List<string>();
 
-            CecilHelper.VisitAllTypes(context, assemblyPath, typeDefinition => { items.Add(typeDefinition.FullName); });
+            foreach (var methodDefinition in typeDefinition.Methods)
+            {
+                items.Add(methodDefinition.Name);
+            }
 
             context.Update(Key, items);
         }
