@@ -59,6 +59,7 @@
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
+    <Compile Include="DataAccess\CecilHelper.cs" />
     <Compile Include="Views\MainWindowModel.cs" />
     <Page Include="Components\InvocationInfoEditor.xaml">
       <SubType>Designer</SubType>
@@ -111,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BOA.DataFlow">
-      <Version>1.0.0.2</Version>
+      <Version>1.0.0.3</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
       <Version>0.11.2</Version>

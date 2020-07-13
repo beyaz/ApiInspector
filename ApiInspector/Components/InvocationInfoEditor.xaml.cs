@@ -39,6 +39,11 @@ namespace ApiInspector.Components
             {
                 ClassNamesInAssembly.Load(Context,assemblyIntellisenseTextBox.Editor.Text);
             };
+
+            classNameIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
+            {
+                MethodNamesInAssembly.Load(Context,assemblyIntellisenseTextBox.Editor.Text,classNameIntellisenseTextBox.Editor.Text);
+            };
         }
         #endregion
 
