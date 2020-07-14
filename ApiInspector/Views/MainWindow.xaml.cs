@@ -11,22 +11,36 @@ namespace ApiInspector.Views
     /// </summary>
     public partial class MainWindow
     {
-       
+        BOA.DataFlow.DataContext context;
 
+        void InitializeContext()
+        {
+            var builder = new InvocationInfoEditorContextBuilder();
+
+            context = builder.Build();
+        }
 
         #region Constructors
         public MainWindow()
         {
             InitializeComponent();
 
-            var builder = new InvocationInfoEditorContextBuilder();
+            InitializeContext();
 
-            currentInvocationInfo.Context = builder.Build();
+            currentInvocationInfo.Context = context;
 
+            Loaded += OnLoad;
 
         }
         #endregion
-
+        void OnLoad(object sender, RoutedEventArgs routedEventArgs)
+        {
+            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                context.Update(DataKeys.TargetEnvironment, environmentIntellisenseTextBox.Editor.Text);
+            };
+            
+        }
 
 
     }

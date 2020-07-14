@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\EnvironmentIntellisenseTextBox.cs" />
     <Compile Include="Components\InvocationInfoEditorContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Components\Logic.cs" />
