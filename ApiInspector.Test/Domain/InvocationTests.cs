@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-using ApiInspector.DataAccess;
-using ApiInspector.DataFlow;
 using ApiInspector.Domain;
-using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Data = ApiInspector.Domain.Data;
 
 namespace ApiInspector.Test
 {
@@ -26,7 +22,6 @@ namespace ApiInspector.Test
 
             Invoke_method(invocationInfo, "0");
 
-
             invocationInfo = new InvocationInfo
             {
                 AssemblyName = "ApiInspector.Test.dll",
@@ -34,28 +29,25 @@ namespace ApiInspector.Test
                 MethodName   = "AnyMethod_1",
                 Parameters = new List<InvocationMethodParameterInfo>
                 {
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
-                        Type = typeof(string),
+                        Type        = typeof(string),
                         ValueAsJson = "\"a\""
                     },
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
                         Type        = typeof(int),
                         ValueAsJson = "5"
                     },
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
                         Type        = typeof(string),
                         ValueAsJson = "\"c\""
                     },
-
                 }
             };
 
             Invoke_method(invocationInfo, "a-5-c");
-
-
 
             invocationInfo = new InvocationInfo
             {
@@ -64,22 +56,22 @@ namespace ApiInspector.Test
                 MethodName   = "AnyMethod_2",
                 Parameters = new List<InvocationMethodParameterInfo>
                 {
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
                         Type        = typeof(string),
                         ValueAsJson = "\"a\""
                     },
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
                         Type        = typeof(int),
                         ValueAsJson = "5"
                     },
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
                         Type        = typeof(string),
                         ValueAsJson = "\"c\""
                     },
-                    new InvocationMethodParameterInfo()
+                    new InvocationMethodParameterInfo
                     {
                         Type        = typeof(int),
                         ValueAsJson = "6"
@@ -92,20 +84,11 @@ namespace ApiInspector.Test
         #endregion
 
         #region Methods
-        void Invoke_method(InvocationInfo invocationInfo, string expectedResponse)
+        static void Invoke_method(InvocationInfo invocationInfo, string expectedResponse)
         {
-            var builder = new ContextBuilder();
-
-            var context = builder.Build();
-          
-
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
-            context.Update(Domain.Data.InvocationInfo, invocationInfo);
-
-            Invoker.Execute(context);
-
-            var response = context.Get(Domain.Data.ExecutionResponse);
+            var response = new Invoker().Invoke(invocationInfo, null);
 
             response.Should().Be(expectedResponse);
         }

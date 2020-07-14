@@ -94,6 +94,7 @@
     <Compile Include="Components\ClassNameIntellisenseTextBox.cs" />
     <Compile Include="Components\AssemblyIntellisenseTextBox.cs" />
     <Compile Include="InvocationInfoEditor\ItemSourceList.cs" />
+    <Compile Include="InvocationInfoEditor\ParameterPanelRefresher.cs" />
     <Compile Include="InvocationInfoEditor\ViewEvents.cs" />
     <Compile Include="InvocationInfoEditor\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>

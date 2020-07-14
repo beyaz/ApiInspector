@@ -4,25 +4,28 @@ using System.IO;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.Base.Data;
-using BOA.DataFlow;
 using Newtonsoft.Json;
 
 namespace ApiInspector.Domain
 {
-    static class Invoker
+    /// <summary>
+    ///     The invoker
+    /// </summary>
+    class Invoker
     {
         #region Public Methods
-        public static void Execute(DataContext context)
+        /// <summary>
+        ///     Invokes the specified invocation information.
+        /// </summary>
+        public object Invoke(InvocationInfo invocationInfo, ExecutionDataContext executionDataContext)
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
-
             var assemblyName = invocationInfo.AssemblyName;
             var methodName   = invocationInfo.MethodName;
             var className    = invocationInfo.ClassName;
 
             var targetType = Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true);
 
-            var instance = CreateInstance(context, targetType);
+            var instance = CreateInstance(targetType, executionDataContext);
 
             var methodInfo = targetType.GetMethod(methodName);
             if (methodInfo == null)
@@ -34,19 +37,23 @@ namespace ApiInspector.Domain
 
             var methodParameters = parameters.ConvertAll(ConvertToMethodInvocationParameter).ToArray();
 
-            var response = methodInfo.Invoke(instance, methodParameters);
-
-            context.Update(Data.ExecutionResponse, response);
+            return methodInfo.Invoke(instance, methodParameters);
         }
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Converts to method invocation parameter.
+        /// </summary>
         static object ConvertToMethodInvocationParameter(InvocationMethodParameterInfo info)
         {
             return JsonConvert.DeserializeObject(info.ValueAsJson, info.Type);
         }
 
-        static object CreateInstance(DataContext context, Type targetType)
+        /// <summary>
+        ///     Creates the instance.
+        /// </summary>
+        static object CreateInstance(Type targetType, ExecutionDataContext executionDataContext)
         {
             // constructor with ExecutionDataContext
             {
@@ -58,7 +65,7 @@ namespace ApiInspector.Domain
                 {
                     var instance = constructorInfo.Invoke(new object[]
                     {
-                        context.Get(Data.ExecutionDataContext)
+                        executionDataContext
                     });
                     return instance;
                 }
@@ -70,7 +77,7 @@ namespace ApiInspector.Domain
                 var objectHelper = instance as ObjectHelper;
                 if (objectHelper != null)
                 {
-                    objectHelper.Context = context.Get(Data.ExecutionDataContext);
+                    objectHelper.Context = executionDataContext;
                 }
 
                 return instance;

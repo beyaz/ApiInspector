@@ -1,6 +1,7 @@
 ﻿using System;
 using ApiInspector.Application;
 using ApiInspector.DataAccess;
+using ApiInspector.InvocationInfoEditor;
 using BOA.DataFlow;
 
 namespace ApiInspector.DataFlow
@@ -19,6 +20,22 @@ namespace ApiInspector.DataFlow
     }
 
     /// <summary>
+    ///     The instance manager extensions
+    /// </summary>
+    static class InstanceManagerExtensions
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Gets the instance manager.
+        /// </summary>
+        public static IInstanceManager GetInstanceManager(this DataContext context)
+        {
+            return new InstanceManager(context);
+        }
+        #endregion
+    }
+
+    /// <summary>
     ///     The instance manager
     /// </summary>
     class InstanceManager : IInstanceManager
@@ -27,7 +44,7 @@ namespace ApiInspector.DataFlow
         /// <summary>
         ///     The context
         /// </summary>
-        readonly DataContext _context;
+        readonly DataContext context;
         #endregion
 
         #region Constructors
@@ -36,7 +53,7 @@ namespace ApiInspector.DataFlow
         /// </summary>
         public InstanceManager(DataContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
         #endregion
 
@@ -50,12 +67,17 @@ namespace ApiInspector.DataFlow
 
             if (targetType == typeof(CecilTypeVisitor))
             {
-                return (T) (object) new CecilTypeVisitor(_context.Get(Logger.Key));
+                return (T) (object) new CecilTypeVisitor(context.Get(Logger.Key));
             }
 
             if (targetType == typeof(IInstanceManager))
             {
                 return (T) (object) this;
+            }
+
+            if (targetType == typeof(ParameterPanelRefresher))
+            {
+                return (T) (object) new ParameterPanelRefresher();
             }
 
             throw new NotImplementedException(targetType.FullName);
