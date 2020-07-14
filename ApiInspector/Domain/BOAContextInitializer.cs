@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ApiInspector.Application;
+using ApiInspector.DataAccess;
 using BOA.Base.Data;
 using BOA.Common.Types;
 using BOA.DataFlow;
@@ -7,6 +9,11 @@ using BOA.UnitTestHelper;
 
 namespace ApiInspector.Domain
 {
+    
+
+
+
+
     static class BOAContextInitializer
     {
         #region Public Methods
