@@ -29,7 +29,8 @@ namespace ApiInspector.DataAccess
         public static void VisitAllTypes(DataContext context, string assemblyPath, Action<TypeDefinition> action)
         {
             var logger = context.Get(Logger.Key);
-            var assemblySearchDirectory = context.Get(DataKeys.AssemblySearchDirectory);
+            
+            var assemblySearchDirectory = context.Get(DataAccess.Data.InvocationInfo).AssemblySearchDirectory;
 
             if (File.Exists(assemblyPath) == false)
             {

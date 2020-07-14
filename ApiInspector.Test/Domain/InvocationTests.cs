@@ -6,6 +6,7 @@ using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Data = ApiInspector.Domain.Data;
 
 namespace ApiInspector.Test
 {
@@ -96,7 +97,9 @@ namespace ApiInspector.Test
             var builder = new ContextBuilder();
 
             var context = builder.Build();
-            context.Update(DataKeys.AssemblySearchDirectory, string.Empty);
+          
+
+            invocationInfo.AssemblySearchDirectory = string.Empty;
 
             context.Update(Domain.Data.InvocationInfo, invocationInfo);
 

@@ -74,7 +74,6 @@
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Domain\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\Controller.cs" />
-    <Compile Include="DataAccess\DataKeys.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />

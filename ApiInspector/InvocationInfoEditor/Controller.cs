@@ -13,6 +13,7 @@ using Mono.Cecil;
 
 namespace ApiInspector.InvocationInfoEditor
 {
+
     static class Controller
     {
         #region Public Methods

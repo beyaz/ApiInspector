@@ -35,17 +35,14 @@ namespace ApiInspector.DataFlow
                 context.SubscribeEvent(ViewEvents.MethodNameChanged,()=>Controller.OnMethodNameSelected(context));
             }
 
-           Domain. Data.InvocationInfo = DataKeys.InvocationInfo;
-           Domain. Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
-           Domain.Data.ExecutionResponse = DataKeys.ExecutionResponse;
+           
 
             context.Add(Logger.Key, new Logger());
 
-            context.Add(DataKeys.AssemblySearchDirectory, defaultAssemblySearchDirectory);
 
             context.SubscribeEvent(EventNames.AssemblyNameChanged, () => Controller.OnAssemblyNameChanged(context));
-            context.OnUpdate(DataKeys.ClassName, () => Controller.OnClassNameChanged(context));
-            context.OnUpdate(DataKeys.MethodName, () => Controller.OnMethodNameSelected(context));
+            context.SubscribeEvent(EventNames.ClassNameChanged, () => Controller.OnClassNameChanged(context));
+            context.SubscribeEvent(EventNames.MethodNameChanged,  () => Controller.OnMethodNameSelected(context));
 
             
 
