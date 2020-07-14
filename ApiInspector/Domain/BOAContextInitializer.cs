@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApiInspector.DataAccess;
 using BOA.Base.Data;
 using BOA.Common.Types;
 using BOA.DataFlow;
 using BOA.UnitTestHelper;
 
-namespace ApiInspector.Components
+namespace ApiInspector.Domain
 {
     static class BOAContextInitializer
     {
         #region Public Methods
         public static void Initialize(DataContext context)
         {
-            var targetEnvironment = context.Get(DataKeys.TargetEnvironment);
+            var targetEnvironment = context.Get(Data.TargetEnvironment);
 
             ExecutionDataContext executionDataContext;
             if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -39,7 +38,7 @@ namespace ApiInspector.Components
                 throw new NotImplementedException(nameof(targetEnvironment));
             }
 
-            context.Update(DataKeys.ExecutionDataContext, executionDataContext);
+            context.Update(Data.ExecutionDataContext, executionDataContext);
         }
         #endregion
     }

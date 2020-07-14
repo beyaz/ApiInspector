@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ApiInspector.Components;
 using ApiInspector.DataAccess;
 using ApiInspector.Domain;
 using ApiInspector.InvocationInfoEditor;
@@ -98,11 +97,11 @@ namespace ApiInspector.Test
             var context = builder.Build();
             context.Update(DataKeys.AssemblySearchDirectory, string.Empty);
 
-            context.Update(DataKeys.InvocationInfo, invocationInfo);
+            context.Update(Data.InvocationInfo, invocationInfo);
 
             Invoker.Execute(context);
 
-            var response = context.Get(DataKeys.ExecutionResponse);
+            var response = context.Get(Data.ExecutionResponse);
 
             response.Should().Be(expectedResponse);
         }

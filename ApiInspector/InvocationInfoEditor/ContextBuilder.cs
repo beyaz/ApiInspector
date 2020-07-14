@@ -1,6 +1,7 @@
 ﻿using ApiInspector.Application;
 using ApiInspector.Components;
 using ApiInspector.DataAccess;
+using ApiInspector.Domain;
 using BOA.DataFlow;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -11,6 +12,12 @@ namespace ApiInspector.InvocationInfoEditor
         public DataContext Build()
         {
             var context = new DataContext();
+
+
+            Data.InvocationInfo = DataKeys.InvocationInfo;
+            Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
+            Data.ExecutionResponse = DataKeys.ExecutionResponse;
+            Data.TargetEnvironment = DataKeys.TargetEnvironment;
 
             context.ForwardKey(AssemblyIntellisenseTextBox.Names, AssemblyNames.Key);
             context.ForwardKey(ClassNameIntellisenseTextBox.Names, ClassNamesInAssembly.Key);

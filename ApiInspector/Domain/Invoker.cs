@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.Base.Data;
@@ -15,7 +14,7 @@ namespace ApiInspector.Domain
         #region Public Methods
         public static void Execute(DataContext context)
         {
-            var invocationInfo = context.Get(DataKeys.InvocationInfo);
+            var invocationInfo = context.Get(Data.InvocationInfo);
 
             var assemblyName = invocationInfo.AssemblyName;
             var methodName   = invocationInfo.MethodName;
@@ -37,7 +36,7 @@ namespace ApiInspector.Domain
 
             var response = methodInfo.Invoke(instance, methodParameters);
 
-            context.Update(DataKeys.ExecutionResponse, response);
+            context.Update(Data.ExecutionResponse, response);
         }
         #endregion
 
@@ -59,7 +58,7 @@ namespace ApiInspector.Domain
                 {
                     var instance = constructorInfo.Invoke(new object[]
                     {
-                        context.Get(DataKeys.ExecutionDataContext)
+                        context.Get(Data.ExecutionDataContext)
                     });
                     return instance;
                 }
@@ -71,7 +70,7 @@ namespace ApiInspector.Domain
                 var objectHelper = instance as ObjectHelper;
                 if (objectHelper != null)
                 {
-                    objectHelper.Context = context.Get(DataKeys.ExecutionDataContext);
+                    objectHelper.Context = context.Get(Data.ExecutionDataContext);
                 }
 
                 return instance;
