@@ -19,6 +19,11 @@ namespace ApiInspector.Test
         {
             return a + "-" + b + "-" + c;
         }
+
+        public static string AnyMethod_2( string a, int b, string c,int d)
+        {
+            return a + "-" + b + "-" + c+"-"+d;
+        }
         #endregion
     }
 
@@ -66,6 +71,40 @@ namespace ApiInspector.Test
             };
 
             Invoke_method(invocationInfo, "a-5-c");
+
+
+
+            invocationInfo = new InvocationInfo
+            {
+                AssemblyName = "ApiInspector.Test.dll",
+                ClassName    = "ApiInspector.Test.AnyClass",
+                MethodName   = "AnyMethod_2",
+                Parameters = new List<InvocationMethodParameterInfo>
+                {
+                    new InvocationMethodParameterInfo()
+                    {
+                        Type        = typeof(string),
+                        ValueAsJson = "\"a\""
+                    },
+                    new InvocationMethodParameterInfo()
+                    {
+                        Type        = typeof(int),
+                        ValueAsJson = "5"
+                    },
+                    new InvocationMethodParameterInfo()
+                    {
+                        Type        = typeof(string),
+                        ValueAsJson = "\"c\""
+                    },
+                    new InvocationMethodParameterInfo()
+                    {
+                        Type        = typeof(int),
+                        ValueAsJson = "6"
+                    }
+                }
+            };
+
+            Invoke_method(invocationInfo, "a-5-c-6");
         }
         #endregion
 
