@@ -11,7 +11,7 @@ using Mono.Cecil;
 
 namespace ApiInspector.Components
 {
-    static class InvocationInfoEditorController
+    static class Controller
     {
         #region Public Methods
         public static void OnAssemblyNameChanged(DataContext context)

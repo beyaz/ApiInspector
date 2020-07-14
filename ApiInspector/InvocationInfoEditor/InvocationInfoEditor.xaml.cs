@@ -1,13 +1,14 @@
 ﻿using System.Windows;
 using ApiInspector.DataAccess;
+using ApiInspector.Models;
 using BOA.DataFlow;
 
 namespace ApiInspector.Components
 {
     /// <summary>
-    ///     Interaction logic for InvocationInfoEditorView.xaml
+    ///     Interaction logic for View.xaml
     /// </summary>
-    public partial class InvocationInfoEditorView
+    public partial class View
     {
         DataContext context;
         public DataContext Context
@@ -29,7 +30,7 @@ namespace ApiInspector.Components
         }
 
         #region Constructors
-        public InvocationInfoEditorView()
+        public View()
         {
             InitializeComponent();
             Loaded += OnLoad;
@@ -54,12 +55,12 @@ namespace ApiInspector.Components
         }
         #endregion
 
-        #region InvocationInfoEditorModel Model
-        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(InvocationInfoEditorModel), typeof(InvocationInfoEditorView), new PropertyMetadata(default(InvocationInfoEditorModel)));
+        #region InvocationInfo Model
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(InvocationInfo), typeof(View), new PropertyMetadata(default(InvocationInfo)));
 
-        public InvocationInfoEditorModel Model
+        public InvocationInfo Model
         {
-            get { return (InvocationInfoEditorModel) GetValue(ModelProperty); }
+            get { return (InvocationInfo) GetValue(ModelProperty); }
             set { SetValue(ModelProperty, value); }
         }
         #endregion

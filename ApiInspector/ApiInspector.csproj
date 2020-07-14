@@ -66,17 +66,16 @@
     </ApplicationDefinition>
     <Compile Include="Components\BOAContextInitializer.cs" />
     <Compile Include="Components\EnvironmentIntellisenseTextBox.cs" />
-    <Compile Include="Components\InvocationInfoEditorContextBuilder.cs" />
+    <Compile Include="InvocationInfoEditor\InvocationInfoEditorContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Components\Invoker.cs" />
-    <Compile Include="Components\InvocationInfoEditorController.cs" />
+    <Compile Include="InvocationInfoEditor\InvocationInfoEditorController.cs" />
     <Compile Include="DataAccess\DataKeys.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />
     <Compile Include="DataAccess\MethodNamesInAssembly.cs" />
-    <Compile Include="Views\MainWindowModel.cs" />
-    <Page Include="Components\InvocationInfoEditor.xaml">
+    <Page Include="InvocationInfoEditor\InvocationInfoEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -90,10 +89,9 @@
     </Compile>
     <Compile Include="Components\ClassNameIntellisenseTextBox.cs" />
     <Compile Include="Components\AssemblyIntellisenseTextBox.cs" />
-    <Compile Include="Components\InvocationInfoEditor.xaml.cs">
+    <Compile Include="InvocationInfoEditor\InvocationInfoEditor.xaml.cs">
       <DependentUpon>InvocationInfoEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\InvocationInfoEditorModel.cs" />
     <Compile Include="DataAccess\AssemblyNames.cs" />
     <Compile Include="DataAccess\ClassNamesInAssembly.cs" />
     <Compile Include="Models\InvocationInfo.cs" />
@@ -121,8 +119,6 @@
       <Version>1.0.0.7</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="InvocationInfoEditor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

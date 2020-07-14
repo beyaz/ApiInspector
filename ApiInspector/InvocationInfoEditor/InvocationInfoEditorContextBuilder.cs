@@ -18,9 +18,9 @@ namespace ApiInspector.Components
 
             context.Add(DataKeys.AssemblySearchDirectory, @"d:\boa\server\bin\");
 
-            context.OnUpdate(DataKeys.AssemblyName, () => InvocationInfoEditorController.OnAssemblyNameChanged(context));
+            context.OnUpdate(DataKeys.AssemblyName, () => Controller.OnAssemblyNameChanged(context));
             context.OnUpdate(DataKeys.ClassName, () => MethodNamesInAssembly.Load(context));
-            context.OnUpdate(DataKeys.MethodName, () => InvocationInfoEditorController.OnMethodNameSelected(context));
+            context.OnUpdate(DataKeys.MethodName, () => Controller.OnMethodNameSelected(context));
 
             AssemblyNames.Load(context);
 
