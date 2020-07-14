@@ -7,6 +7,10 @@ using WpfControls;
 
 namespace ApiInspector.Components
 {
+}
+
+namespace ApiInspector.Components
+{
     /// <summary>
     ///     The intellisense text box
     /// </summary>

@@ -64,6 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="DataAccess\Data.cs" />
+    <Compile Include="DataFlow\EventNames.cs" />
     <Compile Include="Domain\BOAContextInitializer.cs" />
     <Compile Include="Components\EnvironmentIntellisenseTextBox.cs" />
     <Compile Include="Domain\Data.cs" />
@@ -90,6 +93,7 @@
     </Compile>
     <Compile Include="Components\ClassNameIntellisenseTextBox.cs" />
     <Compile Include="Components\AssemblyIntellisenseTextBox.cs" />
+    <Compile Include="InvocationInfoEditor\ViewEvents.cs" />
     <Compile Include="InvocationInfoEditor\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>

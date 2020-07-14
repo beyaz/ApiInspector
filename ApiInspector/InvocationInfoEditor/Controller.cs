@@ -14,6 +14,12 @@ namespace ApiInspector.InvocationInfoEditor
     static class Controller
     {
         #region Public Methods
+
+        public static void OnAssemblySearchDirectoryChanged(DataContext context)
+        {
+            AssemblyNames.Load(context);
+        }
+
         public static void OnAssemblyNameChanged(DataContext context)
         {
             var assemblySearchDirectory = context.Get(DataKeys.AssemblySearchDirectory);

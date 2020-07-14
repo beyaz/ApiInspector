@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using ApiInspector.DataAccess;
-using ApiInspector.Models;
 using BOA.DataFlow;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -19,10 +18,6 @@ namespace ApiInspector.InvocationInfoEditor
             }
             set
             {
-                assemblyIntellisenseTextBox.Context = value;
-                classNameIntellisenseTextBox.Context = value;
-                methodNameIntellisenseTextBox.Context = value;
-
                 value.Update(DataKeys.ParametersPanel,parametersPanel);
 
                 context = value;
@@ -38,40 +33,42 @@ namespace ApiInspector.InvocationInfoEditor
 
         void OnLoad(object sender, RoutedEventArgs routedEventArgs)
         {
+            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                var invocationInfo = context.Get(DataKeys.InvocationInfo);
+                invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
+                context.PublishEvent(ViewEvents.AssemblySearchDirectoryChanged);
+            };
+
             environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
                 var invocationInfo = context.Get(DataKeys.InvocationInfo);
                 invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+                context.PublishEvent(ViewEvents.EnvironmentChanged);
             };
 
             assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
                 var invocationInfo = context.Get(DataKeys.InvocationInfo);
                 invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
+                context.PublishEvent(ViewEvents.AssemblyNameChanged);
             };
 
             classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
                 var invocationInfo = context.Get(DataKeys.InvocationInfo);
                 invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
+                context.PublishEvent(ViewEvents.ClassNameChanged);
             };
 
             methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
                 var invocationInfo = context.Get(DataKeys.InvocationInfo);
                 invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
+                context.PublishEvent(ViewEvents.MethodNameChanged);
             };
         }
         #endregion
 
-        #region InvocationInfo Model
-        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(InvocationInfo), typeof(View), new PropertyMetadata(default(InvocationInfo)));
-
-        public InvocationInfo Model
-        {
-            get { return (InvocationInfo) GetValue(ModelProperty); }
-            set { SetValue(ModelProperty, value); }
-        }
-        #endregion
     }
 }

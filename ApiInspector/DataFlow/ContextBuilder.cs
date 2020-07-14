@@ -1,7 +1,7 @@
-﻿using ApiInspector.Application;
+﻿using System.Collections.Generic;
+using ApiInspector.Application;
 using ApiInspector.Components;
 using ApiInspector.DataAccess;
-using ApiInspector.Domain;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using BOA.DataFlow;
@@ -13,21 +13,32 @@ namespace ApiInspector.DataFlow
         #region Public Methods
         public DataContext Build()
         {
+            var defaultAssemblySearchDirectory = @"d:\boa\server\bin\";
             var context = new DataContext();
-            context.Add(DataKeys.InvocationInfo,new InvocationInfo());
+            context.Add(DataAccess.Data.AssemblySearchDirectoryList,new List<string>{  defaultAssemblySearchDirectory });
+            context.Add(DataAccess.Data.InvocationInfo,new InvocationInfo{ AssemblySearchDirectory = defaultAssemblySearchDirectory});
 
-            Data.InvocationInfo = DataKeys.InvocationInfo;
-            Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
-            Data.ExecutionResponse = DataKeys.ExecutionResponse;
+            // connect view events
+            {
+                
+                context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged,()=>Controller.OnAssemblySearchDirectoryChanged(context));
+                context.SubscribeEvent(ViewEvents.AssemblyNameChanged,()=>Controller.OnAssemblyNameChanged(context));
+                context.SubscribeEvent(ViewEvents.ClassNameChanged,()=>Controller.OnClassNameChanged(context));
+                context.SubscribeEvent(ViewEvents.MethodNameChanged,()=>Controller.OnMethodNameSelected(context));
+            }
 
-            context.ForwardKey(AssemblyIntellisenseTextBox.Names, AssemblyNames.Key);
+           Domain. Data.InvocationInfo = DataKeys.InvocationInfo;
+           Domain. Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
+           Domain.Data.ExecutionResponse = DataKeys.ExecutionResponse;
+
+            context.ForwardKey(AssemblyIntellisenseTextBox.Names, DataAccess.Data.AssemblyNames);
             context.ForwardKey(ClassNameIntellisenseTextBox.Names, ClassNamesInAssembly.Key);
             context.ForwardKey(MethodNameIntellisenseTextBox.Names, MethodNamesInAssembly.Key);
             context.Add(Logger.Key, new Logger());
 
-            context.Add(DataKeys.AssemblySearchDirectory, @"d:\boa\server\bin\");
+            context.Add(DataKeys.AssemblySearchDirectory, defaultAssemblySearchDirectory);
 
-            context.OnUpdate(DataKeys.AssemblyName, () => Controller.OnAssemblyNameChanged(context));
+            context.SubscribeEvent(EventNames.AssemblyNameChanged, () => Controller.OnAssemblyNameChanged(context));
             context.OnUpdate(DataKeys.ClassName, () => Controller.OnClassNameChanged(context));
             context.OnUpdate(DataKeys.MethodName, () => Controller.OnMethodNameSelected(context));
 

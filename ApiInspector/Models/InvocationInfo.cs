@@ -8,6 +8,7 @@ namespace ApiInspector.Models
     {
         public string Environment { get; set; }
         #region Public Properties
+        public string AssemblySearchDirectory { get; set; }
         public string AssemblyName { get; set; }
         public string ClassName    { get; set; }
         public string MethodName   { get; set; }

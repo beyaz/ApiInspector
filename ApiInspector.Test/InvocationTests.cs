@@ -98,11 +98,11 @@ namespace ApiInspector.Test
             var context = builder.Build();
             context.Update(DataKeys.AssemblySearchDirectory, string.Empty);
 
-            context.Update(Data.InvocationInfo, invocationInfo);
+            context.Update(Domain.Data.InvocationInfo, invocationInfo);
 
             Invoker.Execute(context);
 
-            var response = context.Get(Data.ExecutionResponse);
+            var response = context.Get(Domain.Data.ExecutionResponse);
 
             response.Should().Be(expectedResponse);
         }
