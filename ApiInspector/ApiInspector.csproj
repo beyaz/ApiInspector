@@ -109,7 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BOA.DataFlow">
-      <Version>1.0.0.3</Version>
+      <Version>1.0.0.4</Version>
     </PackageReference>
     <PackageReference Include="BOA.UnitTestHelper">
       <Version>1.0.0.11</Version>
@@ -121,6 +121,8 @@
       <Version>1.0.0.7</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
