@@ -42,7 +42,7 @@ namespace ApiInspector.DataFlow
             context.OnUpdate(DataKeys.ClassName, () => Controller.OnClassNameChanged(context));
             context.OnUpdate(DataKeys.MethodName, () => Controller.OnMethodNameSelected(context));
 
-            AssemblyNames.Load(context);
+            
 
             return context;
         }

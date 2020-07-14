@@ -97,7 +97,6 @@
     <Compile Include="InvocationInfoEditor\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataAccess\AssemblyNames.cs" />
     <Compile Include="DataAccess\ClassNamesInAssembly.cs" />
     <Compile Include="Models\InvocationInfo.cs" />
     <Compile Include="MainWindow\View.xaml.cs">

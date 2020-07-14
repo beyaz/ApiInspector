@@ -17,7 +17,11 @@ namespace ApiInspector.InvocationInfoEditor
 
         public static void OnAssemblySearchDirectoryChanged(DataContext context)
         {
-            AssemblyNames.Load(context);
+            var invocationInfo = context.Get(Data.InvocationInfo);
+
+            var assemblyNames = Directory.GetFiles(invocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
+
+            context.Update(Data.AssemblyNames, assemblyNames);
         }
 
         public static void OnAssemblyNameChanged(DataContext context)

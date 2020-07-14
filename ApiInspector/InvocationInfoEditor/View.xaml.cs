@@ -19,6 +19,7 @@ namespace ApiInspector.InvocationInfoEditor
             set
             {
                 value.Update(DataKeys.ParametersPanel,parametersPanel);
+                RegisterEvents();
 
                 context = value;
             }
@@ -29,6 +30,14 @@ namespace ApiInspector.InvocationInfoEditor
         {
             InitializeComponent();
             Loaded += OnLoad;
+        }
+
+        void RegisterEvents()
+        {
+            context.OnUpdate(Data.AssemblyNames, () =>
+            {
+                assemblyIntellisenseTextBox.Suggestions = context.Get(Data.AssemblyNames);
+            });
         }
 
         void OnLoad(object sender, RoutedEventArgs routedEventArgs)

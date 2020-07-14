@@ -7,7 +7,7 @@
     <ProjectGuid>{B5364923-D001-4289-870F-E38D214F3B87}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ApiInspector.Test</RootNamespace>
+    <RootNamespace>ApiInspector</RootNamespace>
     <AssemblyName>ApiInspector.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -48,8 +48,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnyClass.cs" />
-    <Compile Include="InvocationTests.cs" />
+    <Compile Include="Domain\AnyClass.cs" />
+    <Compile Include="InvocationInfoEditor\ControllerTest.cs" />
+    <Compile Include="Domain\InvocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +82,7 @@
       <Name>ApiInspector</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
