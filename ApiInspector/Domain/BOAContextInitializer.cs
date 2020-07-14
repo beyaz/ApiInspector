@@ -12,7 +12,9 @@ namespace ApiInspector.Domain
         #region Public Methods
         public static void Initialize(DataContext context)
         {
-            var targetEnvironment = context.Get(Data.TargetEnvironment);
+            var invocationInfo = context.Get(Data.InvocationInfo);
+
+            var targetEnvironment = invocationInfo.Environment;
 
             ExecutionDataContext executionDataContext;
             if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)

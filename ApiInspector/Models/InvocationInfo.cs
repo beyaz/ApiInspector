@@ -6,6 +6,7 @@ namespace ApiInspector.Models
     [Serializable]
     public class InvocationInfo
     {
+        public string Environment { get; set; }
         #region Public Properties
         public string AssemblyName { get; set; }
         public string ClassName    { get; set; }

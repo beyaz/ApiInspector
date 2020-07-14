@@ -17,7 +17,6 @@ namespace ApiInspector.InvocationInfoEditor
             Data.InvocationInfo = DataKeys.InvocationInfo;
             Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
             Data.ExecutionResponse = DataKeys.ExecutionResponse;
-            Data.TargetEnvironment = DataKeys.TargetEnvironment;
 
             context.ForwardKey(AssemblyIntellisenseTextBox.Names, AssemblyNames.Key);
             context.ForwardKey(ClassNameIntellisenseTextBox.Names, ClassNamesInAssembly.Key);
