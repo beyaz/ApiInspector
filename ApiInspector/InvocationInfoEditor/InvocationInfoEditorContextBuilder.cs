@@ -1,8 +1,9 @@
 ﻿using ApiInspector.Application;
+using ApiInspector.Components;
 using ApiInspector.DataAccess;
 using BOA.DataFlow;
 
-namespace ApiInspector.Components
+namespace ApiInspector.InvocationInfoEditor
 {
     class InvocationInfoEditorContextBuilder
     {

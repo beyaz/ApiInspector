@@ -9,7 +9,7 @@ using BOA.Base.Data;
 using BOA.DataFlow;
 using Mono.Cecil;
 
-namespace ApiInspector.Components
+namespace ApiInspector.InvocationInfoEditor
 {
     static class Controller
     {

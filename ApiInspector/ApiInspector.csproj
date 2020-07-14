@@ -79,7 +79,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow.xaml">
+    <Page Include="MainWindow\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,7 +95,7 @@
     <Compile Include="DataAccess\AssemblyNames.cs" />
     <Compile Include="DataAccess\ClassNamesInAssembly.cs" />
     <Compile Include="Models\InvocationInfo.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
+    <Compile Include="MainWindow\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

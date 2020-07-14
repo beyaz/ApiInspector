@@ -3,7 +3,7 @@ using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.DataFlow;
 
-namespace ApiInspector.Components
+namespace ApiInspector.InvocationInfoEditor
 {
     /// <summary>
     ///     Interaction logic for View.xaml

@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using ApiInspector.Application;
-using ApiInspector.Components;
+﻿using System.Windows;
 using ApiInspector.DataAccess;
+using ApiInspector.InvocationInfoEditor;
 
-namespace ApiInspector.Views
+namespace ApiInspector.MainWindow
 {
     /// <summary>
-    ///     Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindowView.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindowView
     {
         BOA.DataFlow.DataContext context;
 
@@ -21,7 +19,7 @@ namespace ApiInspector.Views
         }
 
         #region Constructors
-        public MainWindow()
+        public MainWindowView()
         {
             InitializeComponent();
 
