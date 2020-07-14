@@ -1,4 +1,5 @@
-﻿using ApiInspector.DataAccess;
+﻿using System.Windows.Controls;
+using ApiInspector.DataAccess;
 using ApiInspector.DataFlow;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,11 +16,59 @@ namespace ApiInspector.InvocationInfoEditor
 
             var context = builder.Build();
 
-            context.Contains(Data.AssemblyNames).Should().BeFalse();
-                
-            Controller.OnAssemblySearchDirectoryChanged(context);
+            var invocationInfo = context.Get(Data.InvocationInfo);
+            var itemSourceList = context.Get(Data.ItemSourceList);
 
-            context.Get(Data.AssemblyNames).Count.Should().BeGreaterThan(0);
+            // On Search Directory Changed
+            {
+                itemSourceList.AssemblyNameList.Should().BeNull();
+                
+                Controller.OnAssemblySearchDirectoryChanged(context);
+
+                itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
+            }
+
+
+            // On Assembly Name Changed
+            {
+                itemSourceList.ClassNameList.Should().BeNull();
+
+                invocationInfo.AssemblyName = "BOA.Process.Kernel.Card.dll";
+
+
+                Controller.OnAssemblyNameChanged(context);
+
+                itemSourceList.ClassNameList.Count.Should().BeGreaterThan(0);
+            }
+
+
+            // On Class Name Changed
+            {
+                itemSourceList.MethodNameList.Should().BeNull();
+
+                invocationInfo.ClassName = "BOA.Process.Kernel.Card.CallCenter.IVR.CreditCard.GetCardDetail";
+
+
+                Controller.OnClassNameChanged(context);
+
+                itemSourceList.MethodNameList.Count.Should().BeGreaterThan(0);
+            }
+
+
+            // On Method Name Changed
+            {
+                context.Update(Data.ParametersPanel,new StackPanel());
+
+                context.Contains(Data.MethodDefinition).Should().BeFalse();
+
+                invocationInfo.MethodName = "ExecuteInOldCardSystem";
+
+
+                Controller.OnMethodNameSelected(context);
+
+                context.Contains(Data.MethodDefinition).Should().BeTrue();
+            }
+
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ApiInspector.DataAccess
         public static readonly DataKey<MethodDefinition> MethodDefinition = new DataKey<MethodDefinition>(nameof(MethodDefinition));
         public static readonly DataKey<string>           MethodName       = new DataKey<string>(nameof(MethodName));
 
-        public static readonly DataKey<StackPanel> ParametersPanel = new DataKey<StackPanel>(nameof(ParametersPanel));
+  
 
         #endregion
     }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace ApiInspector.Models
 {
+    
+
     [Serializable]
     public class InvocationInfo
     {

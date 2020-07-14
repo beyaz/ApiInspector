@@ -14,9 +14,14 @@ namespace ApiInspector.DataFlow
         public DataContext Build()
         {
             var defaultAssemblySearchDirectory = @"d:\boa\server\bin\";
+
+            
+
+
             var context = new DataContext();
-            context.Add(DataAccess.Data.AssemblySearchDirectoryList,new List<string>{  defaultAssemblySearchDirectory });
             context.Add(DataAccess.Data.InvocationInfo,new InvocationInfo{ AssemblySearchDirectory = defaultAssemblySearchDirectory});
+            context.Add(DataAccess.Data.ItemSourceList,new ItemSourceList{ AssemblySearchDirectoryList = new List<string>{  defaultAssemblySearchDirectory }});
+            
 
             // connect view events
             {
@@ -31,9 +36,6 @@ namespace ApiInspector.DataFlow
            Domain. Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
            Domain.Data.ExecutionResponse = DataKeys.ExecutionResponse;
 
-            context.ForwardKey(AssemblyIntellisenseTextBox.Names, DataAccess.Data.AssemblyNames);
-            context.ForwardKey(ClassNameIntellisenseTextBox.Names, ClassNamesInAssembly.Key);
-            context.ForwardKey(MethodNameIntellisenseTextBox.Names, MethodNamesInAssembly.Key);
             context.Add(Logger.Key, new Logger());
 
             context.Add(DataKeys.AssemblySearchDirectory, defaultAssemblySearchDirectory);
