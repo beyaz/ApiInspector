@@ -38,6 +38,10 @@
     <Reference Include="BOA.Base">
       <HintPath>..\..\..\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>
+    <Reference Include="BOA.Common, Version=2.4.7496.20156, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BOA\Server\bin\BOA.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -120,6 +124,9 @@
   <ItemGroup>
     <PackageReference Include="BOA.DataFlow">
       <Version>1.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="BOA.UnitTestHelper">
+      <Version>1.0.0.11</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
       <Version>0.11.2</Version>

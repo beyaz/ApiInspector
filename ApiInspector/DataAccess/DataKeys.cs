@@ -10,6 +10,8 @@ namespace ApiInspector.DataAccess
 
         public static readonly DataKey<string> TargetEnvironment = new DataKey<string>(nameof(TargetEnvironment));
 
+        public static readonly DataKey<object> ExecutionResponse = new DataKey<object>(nameof(ExecutionResponse));
+
         public static readonly DataKey<string> AssemblyFilePath = new DataKey<string>(nameof(AssemblyFilePath));
         public static readonly DataKey<string> AssemblyName = new DataKey<string>(nameof(AssemblyName));
         public static readonly DataKey<string> ClassName    = new DataKey<string>(nameof(ClassName));
