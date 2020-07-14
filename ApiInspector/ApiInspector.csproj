@@ -65,6 +65,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="DataAccess\CecilTypeVisitor.cs" />
     <Compile Include="DataAccess\Data.cs" />
     <Compile Include="DataFlow\EventNames.cs" />
     <Compile Include="Domain\BOAContextInitializer.cs" />

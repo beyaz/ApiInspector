@@ -32,39 +32,9 @@ namespace ApiInspector.DataAccess
             
             var assemblySearchDirectory = context.Get(DataAccess.Data.InvocationInfo).AssemblySearchDirectory;
 
-            if (File.Exists(assemblyPath) == false)
-            {
-                return;
-            }
 
-            var resolver = new DefaultAssemblyResolver();
+            new CecilTypeVisitor(logger).VisitAllTypes(new List<string>{assemblySearchDirectory}, assemblyPath,action);
 
-            resolver.AddSearchDirectory(assemblySearchDirectory);
-
-            AssemblyDefinition assemblyDefinition;
-
-            try
-            {
-                assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
-            }
-            catch (Exception e)
-            {
-                logger.Log($"File not Loaded. File:{assemblyPath}, Error: {e}");
-                return;
-            }
-
-            foreach (var moduleDefinition in assemblyDefinition.Modules)
-            {
-                foreach (var type in moduleDefinition.Types)
-                {
-                    if (type.Name.Contains("<"))
-                    {
-                        continue;
-                    }
-
-                    action(type);
-                }
-            }
         }
         #endregion
     }
