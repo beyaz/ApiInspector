@@ -5,22 +5,58 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.DataAccess;
+using ApiInspector.Models;
 using BOA.Base;
 using BOA.Base.Data;
 using BOA.Common.Types;
 using BOA.DataFlow;
 using BOA.UnitTestHelper;
 using Mono.Cecil;
+using Newtonsoft.Json;
 
 namespace ApiInspector.Components
 {
     static class Logic
     {
-
-
+        #region Public Methods
         public static void Execute(DataContext context)
         {
-            var assemblyName = context.Get(DataKeys.AssemblyName);
+            var invocationInfo = context.Get(DataKeys.InvocationInfo);
+
+            var assemblyName = invocationInfo.AssemblyName;
+            var methodName   = invocationInfo.MethodName;
+            var className    = invocationInfo.ClassName;
+
+            var targetType = Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true);
+
+            var instance = CreateInstance(targetType, null);
+
+            var methodInfo = targetType.GetMethod(methodName);
+            if (methodInfo == null)
+            {
+                throw new ArgumentNullException(nameof(methodInfo));
+            }
+
+            var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
+
+            var methodParameters = parameters.ConvertAll(ConvertToMethodInvocationParameter).ToArray();
+
+            var response = methodInfo.Invoke(instance, methodParameters);
+
+            context.Update(DataKeys.ExecutionResponse, response);
+        }
+
+
+      static  object ConvertToMethodInvocationParameter(InvocationMethodParameterInfo info)
+        {
+            return JsonConvert.DeserializeObject(info.ValueAsJson, info.Type);
+        }
+
+        public static void Execute_old(DataContext context)
+        {
+            var invocationInfo = context.Get(DataKeys.InvocationInfo);
+
+            var assemblyName     = invocationInfo.AssemblyName;
             var methodDefinition = context.Get(DataKeys.MethodDefinition);
 
             var targetEnvironment = context.Get(DataKeys.TargetEnvironment);
@@ -28,7 +64,7 @@ namespace ApiInspector.Components
             var className = context.Get(DataKeys.ClassName);
 
             ExecutionDataContext executionDataContext;
-            if (targetEnvironment.IndexOf("dev",StringComparison.OrdinalIgnoreCase) >=0)
+            if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 executionDataContext = new BOATestContextDev().objectHelper.Context;
 
@@ -37,7 +73,7 @@ namespace ApiInspector.Components
                     {Databases.BanksoftCC, @"Data Source=srvxdev\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
                 };
             }
-            else  if (targetEnvironment.IndexOf("test",StringComparison.OrdinalIgnoreCase) >=0)
+            else if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 executionDataContext = new BOATestContextTest().objectHelper.Context;
 
@@ -53,7 +89,7 @@ namespace ApiInspector.Components
 
             var targetType = Type.GetType($"{className},{assemblyName}", true);
 
-            var instance = CreateInstance(targetType,executionDataContext);
+            var instance = CreateInstance(targetType, executionDataContext);
 
             var methodInfo = targetType.GetMethod(methodDefinition.Name);
             if (methodInfo == null)
@@ -63,46 +99,11 @@ namespace ApiInspector.Components
 
             var parameters = new List<object>();
 
+            var response = methodInfo.Invoke(instance, parameters.ToArray());
 
-
-            var response = methodInfo.Invoke(instance,parameters.ToArray());
-
-            context.Update(DataKeys.ExecutionResponse,response);
-
-        }
-        
-        static object CreateInstance(Type targetType, ExecutionDataContext executionDataContext)
-        {
-            // constructor with ExecutionDataContext
-            { 
-                var constructorInfo = targetType.GetConstructor(new[]
-                {
-                    typeof(ExecutionDataContext)
-                });
-                if (constructorInfo != null)
-                {
-                    var instance = constructorInfo.Invoke(new object[]
-                    {
-                        executionDataContext
-                    });
-                    return instance;
-                }
-            }
-
-            // simple constructor
-            {
-                var instance =  Activator.CreateInstance(targetType) as ObjectHelper;
-                if (instance != null)
-                {
-                    instance.Context = executionDataContext;    
-                }
-            
-                return instance;
-            }
+            context.Update(DataKeys.ExecutionResponse, response);
         }
 
-
-        #region Public Methods
         public static void OnAssemblyNameChanged(DataContext context)
         {
             var assemblySearchDirectory = context.Get(DataKeys.AssemblySearchDirectory);
@@ -130,36 +131,18 @@ namespace ApiInspector.Components
 
             context.Update(DataKeys.MethodDefinition, methodDefinition);
 
-
             UpdateUI(context);
-
-
         }
+        #endregion
 
-        static void UpdateUI(DataContext context)
-        {
-            var panel = context.Get(DataKeys.ParametersPanel);
-
-            panel.Children.Clear();
-            
-            
-            var methodDefinition = context.Get(DataKeys.MethodDefinition);
-
-            foreach (var parameterDefinition in methodDefinition.Parameters)
-            {
-                var item = Create(parameterDefinition);
-
-                panel.Children.Add(item);
-            }
-        }
-
+        #region Methods
         static StackPanel Create(ParameterDefinition definition)
         {
             var sp = new StackPanel();
 
             var label = new Label
             {
-                Content = definition.Name,
+                Content    = definition.Name,
                 FontWeight = FontWeights.Bold
             };
 
@@ -176,6 +159,52 @@ namespace ApiInspector.Components
             return sp;
         }
 
+        static object CreateInstance(Type targetType, ExecutionDataContext executionDataContext)
+        {
+            // constructor with ExecutionDataContext
+            {
+                var constructorInfo = targetType.GetConstructor(new[]
+                {
+                    typeof(ExecutionDataContext)
+                });
+                if (constructorInfo != null)
+                {
+                    var instance = constructorInfo.Invoke(new object[]
+                    {
+                        executionDataContext
+                    });
+                    return instance;
+                }
+            }
+
+            // simple constructor
+            {
+                var instance     = Activator.CreateInstance(targetType);
+                var objectHelper = instance as ObjectHelper;
+                if (objectHelper != null)
+                {
+                    objectHelper.Context = executionDataContext;
+                }
+
+                return instance;
+            }
+        }
+
+        static void UpdateUI(DataContext context)
+        {
+            var panel = context.Get(DataKeys.ParametersPanel);
+
+            panel.Children.Clear();
+
+            var methodDefinition = context.Get(DataKeys.MethodDefinition);
+
+            foreach (var parameterDefinition in methodDefinition.Parameters)
+            {
+                var item = Create(parameterDefinition);
+
+                panel.Children.Add(item);
+            }
+        }
         #endregion
     }
 }
