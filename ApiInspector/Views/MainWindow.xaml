@@ -44,7 +44,7 @@
                     <Label FontWeight="Bold"> Target BOA Environment (Dev,Test)</Label>
                     <components:EnvironmentIntellisenseTextBox x:Name="environmentIntellisenseTextBox" />
                 </StackPanel>
-                <components:InvocationInfoEditor x:Name="currentInvocationInfo"  Margin="0,10,0,0" />
+                <components:InvocationInfoEditorView x:Name="currentInvocationInfo"  Margin="0,10,0,0" />
 
                 <StackPanel Margin="0,10,0,0">
 

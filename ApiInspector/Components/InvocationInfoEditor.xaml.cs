@@ -5,9 +5,9 @@ using BOA.DataFlow;
 namespace ApiInspector.Components
 {
     /// <summary>
-    ///     Interaction logic for InvocationInfoEditor.xaml
+    ///     Interaction logic for InvocationInfoEditorView.xaml
     /// </summary>
-    public partial class InvocationInfoEditor
+    public partial class InvocationInfoEditorView
     {
         DataContext context;
         public DataContext Context
@@ -29,7 +29,7 @@ namespace ApiInspector.Components
         }
 
         #region Constructors
-        public InvocationInfoEditor()
+        public InvocationInfoEditorView()
         {
             InitializeComponent();
             Loaded += OnLoad;
@@ -55,7 +55,7 @@ namespace ApiInspector.Components
         #endregion
 
         #region InvocationInfoEditorModel Model
-        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(InvocationInfoEditorModel), typeof(InvocationInfoEditor), new PropertyMetadata(default(InvocationInfoEditorModel)));
+        public static readonly DependencyProperty ModelProperty = DependencyProperty.Register(nameof(Model), typeof(InvocationInfoEditorModel), typeof(InvocationInfoEditorView), new PropertyMetadata(default(InvocationInfoEditorModel)));
 
         public InvocationInfoEditorModel Model
         {
