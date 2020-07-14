@@ -2,9 +2,11 @@
 using ApiInspector.Components;
 using ApiInspector.DataAccess;
 using ApiInspector.Domain;
+using ApiInspector.InvocationInfoEditor;
+using ApiInspector.Models;
 using BOA.DataFlow;
 
-namespace ApiInspector.InvocationInfoEditor
+namespace ApiInspector.DataFlow
 {
     class ContextBuilder
     {
@@ -12,7 +14,7 @@ namespace ApiInspector.InvocationInfoEditor
         public DataContext Build()
         {
             var context = new DataContext();
-
+            context.Add(DataKeys.InvocationInfo,new InvocationInfo());
 
             Data.InvocationInfo = DataKeys.InvocationInfo;
             Data.    ExecutionDataContext = DataKeys.ExecutionDataContext;
@@ -26,7 +28,7 @@ namespace ApiInspector.InvocationInfoEditor
             context.Add(DataKeys.AssemblySearchDirectory, @"d:\boa\server\bin\");
 
             context.OnUpdate(DataKeys.AssemblyName, () => Controller.OnAssemblyNameChanged(context));
-            context.OnUpdate(DataKeys.ClassName, () => MethodNamesInAssembly.Load(context));
+            context.OnUpdate(DataKeys.ClassName, () => Controller.OnClassNameChanged(context));
             context.OnUpdate(DataKeys.MethodName, () => Controller.OnMethodNameSelected(context));
 
             AssemblyNames.Load(context);

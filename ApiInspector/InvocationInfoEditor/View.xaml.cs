@@ -38,19 +38,28 @@ namespace ApiInspector.InvocationInfoEditor
 
         void OnLoad(object sender, RoutedEventArgs routedEventArgs)
         {
+            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                var invocationInfo = context.Get(DataKeys.InvocationInfo);
+                invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+            };
+
             assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                Context.Update(DataKeys.AssemblyName, assemblyIntellisenseTextBox.Editor.Text);
+                var invocationInfo = context.Get(DataKeys.InvocationInfo);
+                invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
             };
 
-            classNameIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
+            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                Context.Update(DataKeys.ClassName, classNameIntellisenseTextBox.Editor.Text);
+                var invocationInfo = context.Get(DataKeys.InvocationInfo);
+                invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
             };
 
-            methodNameIntellisenseTextBox.Editor.TextChanged += (s, ee) =>
+            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                Context.Update(DataKeys.MethodName, methodNameIntellisenseTextBox.Editor.Text);
+                var invocationInfo = context.Get(DataKeys.InvocationInfo);
+                invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
             };
         }
         #endregion

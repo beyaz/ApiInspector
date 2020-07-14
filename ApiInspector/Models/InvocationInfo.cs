@@ -12,7 +12,7 @@ namespace ApiInspector.Models
         public string ClassName    { get; set; }
         public string MethodName   { get; set; }
 
-        public List<InvocationMethodParameterInfo> Parameters { get; set; }
+        public List<InvocationMethodParameterInfo> Parameters { get; set; } = new List<InvocationMethodParameterInfo>();
         #endregion
     }
 }

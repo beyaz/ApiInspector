@@ -43,6 +43,13 @@ namespace ApiInspector.InvocationInfoEditor
 
             UpdateUI(context);
         }
+
+        public static void OnClassNameChanged(DataContext context)
+        {
+            MethodNamesInAssembly.Load(context);
+        }
+
+        
         #endregion
 
         #region Methods

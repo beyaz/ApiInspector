@@ -27,7 +27,6 @@ namespace ApiInspector.DataAccess
 
         public static readonly DataKey<StackPanel> ParametersPanel = new DataKey<StackPanel>(nameof(ParametersPanel));
 
-        public static readonly DataKey<string> TargetEnvironment = new DataKey<string>(nameof(TargetEnvironment));
         #endregion
     }
 }
