@@ -64,10 +64,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\BOAContextInitializer.cs" />
     <Compile Include="Components\EnvironmentIntellisenseTextBox.cs" />
     <Compile Include="Components\InvocationInfoEditorContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
-    <Compile Include="Components\Logic.cs" />
+    <Compile Include="Components\Invoker.cs" />
+    <Compile Include="Components\InvocationInfoEditorController.cs" />
     <Compile Include="DataAccess\DataKeys.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />

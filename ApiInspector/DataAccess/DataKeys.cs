@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using ApiInspector.Models;
+using BOA.Base.Data;
 using BOA.DataFlow;
 using Mono.Cecil;
 
@@ -10,6 +11,10 @@ namespace ApiInspector.DataAccess
         #region Static Fields
         public static readonly DataKey<string> AssemblyFilePath = new DataKey<string>(nameof(AssemblyFilePath));
         public static readonly DataKey<string> AssemblyName     = new DataKey<string>(nameof(AssemblyName));
+
+        public static readonly DataKey<ExecutionDataContext> ExecutionDataContext = new DataKey<ExecutionDataContext>(nameof(ExecutionDataContext));
+
+        
 
         public static readonly DataKey<string> AssemblySearchDirectory = new DataKey<string>(nameof(AssemblySearchDirectory));
         public static readonly DataKey<string> ClassName               = new DataKey<string>(nameof(ClassName));

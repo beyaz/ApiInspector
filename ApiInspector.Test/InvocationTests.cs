@@ -118,7 +118,7 @@ namespace ApiInspector.Test
 
             context.Update(DataKeys.InvocationInfo, invocationInfo);
 
-            Logic.Execute(context);
+            Invoker.Execute(context);
 
             var response = context.Get(DataKeys.ExecutionResponse);
 
