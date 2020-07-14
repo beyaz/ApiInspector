@@ -36,12 +36,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BOA.Base">
-      <HintPath>..\..\..\BOA\Server\bin\BOA.Base.dll</HintPath>
+      <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>
-    <Reference Include="BOA.Common, Version=2.4.7496.20156, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\BOA\Server\bin\BOA.Common.dll</HintPath>
-    </Reference>
+     <Reference Include="BOA.Common">
+      <HintPath>d:\BOA\Server\bin\BOA.Common.dll</HintPath>
+    </Reference>    
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

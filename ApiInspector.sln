@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.1000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector", "ApiInspector\ApiInspector.csproj", "{1C314B5C-C79A-4EBB-9B9C-65259AADA2D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.Test", "ApiInspector.Test\ApiInspector.Test.csproj", "{B5364923-D001-4289-870F-E38D214F3B87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1C314B5C-C79A-4EBB-9B9C-65259AADA2D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C314B5C-C79A-4EBB-9B9C-65259AADA2D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C314B5C-C79A-4EBB-9B9C-65259AADA2D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5364923-D001-4289-870F-E38D214F3B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5364923-D001-4289-870F-E38D214F3B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5364923-D001-4289-870F-E38D214F3B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5364923-D001-4289-870F-E38D214F3B87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
