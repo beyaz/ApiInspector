@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Components;
 using ApiInspector.DataAccess;
+using ApiInspector.Domain;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using FluentAssertions;
@@ -8,26 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.Test
 {
-    class AnyClass
-    {
-        #region Public Methods
-        public string AnyMethod_0()
-        {
-            return "0";
-        }
-
-        public string AnyMethod_1(string a, int b, string c)
-        {
-            return a + "-" + b + "-" + c;
-        }
-
-        public static string AnyMethod_2( string a, int b, string c,int d)
-        {
-            return a + "-" + b + "-" + c+"-"+d;
-        }
-        #endregion
-    }
-
     [TestClass]
     public class InvocationTests
     {
@@ -112,7 +93,7 @@ namespace ApiInspector.Test
         #region Methods
         void Invoke_method(InvocationInfo invocationInfo, string expectedResponse)
         {
-            var builder = new InvocationInfoEditorContextBuilder();
+            var builder = new ContextBuilder();
 
             var context = builder.Build();
             context.Update(DataKeys.AssemblySearchDirectory, string.Empty);

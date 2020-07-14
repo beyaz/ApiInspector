@@ -8,7 +8,7 @@ using BOA.Base.Data;
 using BOA.DataFlow;
 using Newtonsoft.Json;
 
-namespace ApiInspector.Components
+namespace ApiInspector.Domain
 {
     static class Invoker
     {

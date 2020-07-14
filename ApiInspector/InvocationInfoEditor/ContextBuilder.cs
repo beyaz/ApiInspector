@@ -5,7 +5,7 @@ using BOA.DataFlow;
 
 namespace ApiInspector.InvocationInfoEditor
 {
-    class InvocationInfoEditorContextBuilder
+    class ContextBuilder
     {
         #region Public Methods
         public DataContext Build()

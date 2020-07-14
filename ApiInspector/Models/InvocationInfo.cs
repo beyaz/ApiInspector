@@ -16,12 +16,4 @@ namespace ApiInspector.Models
         public List<InvocationMethodParameterInfo> Parameters { get; set; }
 
     }
-
-
-    [Serializable]
-    public class InvocationMethodParameterInfo
-    {
-        public string ValueAsJson { get; set; }
-        public Type Type { get; set; }
-    }
 }
