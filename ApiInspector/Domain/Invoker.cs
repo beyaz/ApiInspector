@@ -17,19 +17,16 @@ namespace ApiInspector.Domain
     static class Invoker
     {
         #region Public Methods
-        
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
         public static void Invoke(DataContext context)
         {
-            InvocationInfo invocationInfo = context.Get(Data.InvocationInfo);
+            var invocationInfo = context.Get(Data.InvocationInfo);
 
             var assemblyName = invocationInfo.AssemblyName;
             var methodName   = invocationInfo.MethodName;
             var className    = invocationInfo.ClassName;
-
-           
 
             Type targetType = null;
 
@@ -40,13 +37,11 @@ namespace ApiInspector.Domain
 
                 if (!Utility.IsSuccess(() => assembly.GetType(className, true), ref targetType))
                 {
-                throw  new TypeLoadException(className);
-                }   
+                    throw new TypeLoadException(className);
+                }
             }
 
-
-
-            var instance = CreateInstance(context,targetType);
+            var instance = CreateInstance(context, targetType);
 
             var methodInfo = targetType.GetMethod(methodName);
             if (methodInfo == null)
@@ -58,9 +53,9 @@ namespace ApiInspector.Domain
 
             var methodParameters = parameters.ConvertAll(ConvertToMethodInvocationParameter).ToArray();
 
-            var response =  methodInfo.Invoke(instance, methodParameters);
+            var response = methodInfo.Invoke(instance, methodParameters);
 
-            context.Update(ExecutionResponse,response);
+            context.Update(ExecutionResponse, response);
         }
         #endregion
 
