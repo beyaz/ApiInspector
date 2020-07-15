@@ -30,7 +30,7 @@ namespace ApiInspector.MainWindow
             });
 
 
-            BOAContextInitializer.InvocationInfo=            Invoker.InvocationInfo = Data.InvocationInfo;
+            BOAContextInitializer.InvocationInfo=      View.InvocationInfo =      Invoker.InvocationInfo = Data.InvocationInfo;
 
             BOAContextInitializer.BOAExecutionContext = Invoker.BOAExecutionContext;
 
@@ -39,10 +39,10 @@ namespace ApiInspector.MainWindow
             // connect view events
             {
                 
-                context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged,()=>Controller_old.OnAssemblySearchDirectoryChanged(context));
-                context.SubscribeEvent(ViewEvents.AssemblyNameChanged,()=>Controller_old.OnAssemblyNameChanged(context));
-                context.SubscribeEvent(ViewEvents.ClassNameChanged,()=>Controller_old.OnClassNameChanged(context));
-                context.SubscribeEvent(ViewEvents.MethodNameChanged,()=>Controller_old.OnMethodNameSelected(context));
+                context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged,()=>ViewController.OnAssemblySearchDirectoryChanged(context));
+                context.SubscribeEvent(ViewEvents.AssemblyNameChanged,()=>ViewController.OnAssemblyNameChanged(context));
+                context.SubscribeEvent(ViewEvents.ClassNameChanged,()=>ViewController.OnClassNameChanged(context));
+                context.SubscribeEvent(ViewEvents.MethodNameChanged,()=>ViewController.OnMethodNameSelected(context));
             }
 
            
@@ -50,9 +50,9 @@ namespace ApiInspector.MainWindow
             context.Add(Logger.Key, new Logger());
 
 
-            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => Controller_old.OnAssemblyNameChanged(context));
-            context.SubscribeEvent(ViewEvents.ClassNameChanged, () => Controller_old.OnClassNameChanged(context));
-            context.SubscribeEvent(ViewEvents.MethodNameChanged,  () => Controller_old.OnMethodNameSelected(context));
+            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => ViewController.OnAssemblyNameChanged(context));
+            context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
+            context.SubscribeEvent(ViewEvents.MethodNameChanged,  () => ViewController.OnMethodNameSelected(context));
 
             context.SetupGet(CecilHelper.AssemblySearchDirectories, c =>
             {
@@ -62,9 +62,9 @@ namespace ApiInspector.MainWindow
             });
 
             context.SetupGet(CecilHelper.Log, c => message => c.Get(Logger.Key).Log(message));
-            context.SetupGet(Controller_old.AssemblyFilePath,GetAssemblyFilePath);
-            context.SetupGet(Controller_old.TypesInAssembly,GetTypesInAssembly);
-            context.SetupGet(Controller_old.TypeDefinitionRelatedClassName,GeTypeDefinitionRelatedClassName);
+            context.SetupGet(ViewController.AssemblyFilePath,GetAssemblyFilePath);
+            context.SetupGet(ViewController.TypesInAssembly,GetTypesInAssembly);
+            context.SetupGet(ViewController.TypeDefinitionRelatedClassName,GeTypeDefinitionRelatedClassName);
 
             context.SetupGet(MainWindow.View.HistoryDataKey,HistoryManager.GetHistory);
             
@@ -85,7 +85,7 @@ namespace ApiInspector.MainWindow
 
         static IReadOnlyList<TypeDefinition> GetTypesInAssembly(DataContext context)
         {
-            var assemblyFilePath = context.Get(Controller_old.AssemblyFilePath);
+            var assemblyFilePath = context.Get(ViewController.AssemblyFilePath);
 
             var items = new List<TypeDefinition>();
 
@@ -96,7 +96,7 @@ namespace ApiInspector.MainWindow
 
          static TypeDefinition GeTypeDefinitionRelatedClassName(DataContext context)
         {
-            var assemblyFilePath = context.Get(Controller_old.AssemblyFilePath);
+            var assemblyFilePath = context.Get(ViewController.AssemblyFilePath);
             var invocationInfo = context.Get(Data.InvocationInfo);
             var logger = context.Get(Logger.Key);
 

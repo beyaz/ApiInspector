@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using ApiInspector.DataAccess;
 using BOA.DataFlow;
 
 namespace ApiInspector.InvocationInfoEditor
