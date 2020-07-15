@@ -72,7 +72,12 @@ namespace ApiInspector.Invoking
             for (var i = 0; i < methodParametersInDotNet.Length; i++)
             {
                 var value = parameters[i].Value;
-                value = Convert.ChangeType(value, methodParametersInDotNet[i].ParameterType);
+                var targetParameterType = methodParametersInDotNet[i].ParameterType;
+                if ( targetParameterType.FullName != typeof(string).FullName && targetParameterType.IsClass && value is string)
+                {
+                    value = JsonConvert.DeserializeObject((string) value, targetParameterType);
+                }
+                value = Convert.ChangeType(value, targetParameterType);
                 invocationParameters.Add(value);
             }
 

@@ -72,8 +72,33 @@ namespace ApiInspector.Invoking
                     }
                 }
             };
-
-            Invoke_method(invocationInfo, "a-5-c-6");
+            invocationInfo = new InvocationInfo
+            {
+                AssemblyName = "ApiInspector.Test.dll",
+                ClassName    = typeof(AnyClass).FullName,
+                MethodName   = nameof(AnyClass.AnyMethod_3),
+                Parameters = new List<InvocationMethodParameterInfo>
+                {
+                    new InvocationMethodParameterInfo
+                    {
+                        Value = "a"
+                    },
+                    new InvocationMethodParameterInfo
+                    {
+                        Value = 5
+                    },
+                    new InvocationMethodParameterInfo
+                    {
+                        Value = "{StringProperty:'A', IntegerProperty: 56}"
+                    },
+                    new InvocationMethodParameterInfo
+                    {
+                        Value = "c"
+                    },
+                    
+                }
+            };
+            Invoke_method(invocationInfo, "a-5-A-56-c");
         }
         #endregion
 
