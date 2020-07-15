@@ -6,16 +6,18 @@ using BOA.DataFlow;
 
 namespace ApiInspector.DataFlow
 {
+
     /// <summary>
-    ///     The instance manager
+    ///     The service provider
     /// </summary>
-    interface IInstanceManager
+    interface IServiceProvider
     {
         #region Public Methods
+
         /// <summary>
-        ///     Gets the instance.
+        ///     Gets the service.
         /// </summary>
-        T GetInstance<T>();
+        T GetService<T>();
         #endregion
     }
 
@@ -28,17 +30,18 @@ namespace ApiInspector.DataFlow
         /// <summary>
         ///     Gets the instance manager.
         /// </summary>
-        public static IInstanceManager GetInstanceManager(this DataContext context)
+        public static IServiceProvider GetInstanceManager(this DataContext context)
         {
-            return new InstanceManager(context);
+            return new ServiceProvider(context);
         }
         #endregion
     }
 
+
     /// <summary>
-    ///     The instance manager
+    ///     The service provider
     /// </summary>
-    class InstanceManager : IInstanceManager
+    class ServiceProvider : IServiceProvider
     {
         #region Fields
         /// <summary>
@@ -48,10 +51,11 @@ namespace ApiInspector.DataFlow
         #endregion
 
         #region Constructors
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InstanceManager" /> class.
+        ///     Initializes a new instance of the <see cref="ServiceProvider"/> class.
         /// </summary>
-        public InstanceManager(DataContext context)
+        public ServiceProvider(DataContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
@@ -61,7 +65,7 @@ namespace ApiInspector.DataFlow
         /// <summary>
         ///     Gets the instance.
         /// </summary>
-        public T GetInstance<T>()
+        public T GetService<T>()
         {
             var targetType = typeof(T);
 
@@ -70,7 +74,7 @@ namespace ApiInspector.DataFlow
                 return (T) (object) new CecilTypeVisitor(context.Get(Logger.Key));
             }
 
-            if (targetType == typeof(IInstanceManager))
+            if (targetType == typeof(IServiceProvider))
             {
                 return (T) (object) this;
             }

@@ -68,7 +68,7 @@
     <Compile Include="DataAccess\CecilTypeVisitor.cs" />
     <Compile Include="DataAccess\Data.cs" />
     <Compile Include="DataFlow\EventNames.cs" />
-    <Compile Include="DataFlow\InstanceManager.cs" />
+    <Compile Include="DataFlow\ServiceProvider.cs" />
     <Compile Include="Domain\BOAContextInitializer.cs" />
     <Compile Include="Components\EnvironmentIntellisenseTextBox.cs" />
     <Compile Include="Domain\Data.cs" />

@@ -89,7 +89,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             context.Update(Data.MethodDefinition, methodDefinition);
 
-            context.GetInstanceManager().GetInstance<ParameterPanelRefresher>().UpdateUI(context.Get(Data.ParametersPanel), methodDefinition);
+            context.GetInstanceManager().GetService<ParameterPanelRefresher>().UpdateUI(context.Get(Data.ParametersPanel), methodDefinition);
         }
         #endregion
     }
