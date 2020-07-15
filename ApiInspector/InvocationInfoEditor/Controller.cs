@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using ApiInspector.Application;
 using ApiInspector.DataAccess;
-using ApiInspector.DataFlow;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;

@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using ApiInspector.DataFlow;
 using ApiInspector.History;
-using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using BOA.DataFlow;
 
@@ -11,6 +10,8 @@ namespace ApiInspector.MainWindow
 {
     public partial class View
     {
+        public static readonly DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+
         #region Fields
         DataContext context;
         #endregion
@@ -43,7 +44,7 @@ namespace ApiInspector.MainWindow
 
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            context.Update(Data.InvocationInfo,(InvocationInfo)historyListBox.SelectedItem);
+            context.Update(InvocationInfo,(InvocationInfo)historyListBox.SelectedItem);
 
         }
 
