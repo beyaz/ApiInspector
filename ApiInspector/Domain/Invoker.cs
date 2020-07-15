@@ -1,31 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.Base.Data;
+using BOA.DataFlow;
 using Newtonsoft.Json;
+using static ApiInspector.Domain.Data;
 
 namespace ApiInspector.Domain
 {
     /// <summary>
     ///     The invoker
     /// </summary>
-    class Invoker
+    static class Invoker
     {
         #region Public Methods
+        
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public object Invoke(InvocationInfo invocationInfo, ExecutionDataContext executionDataContext)
+        public static void Invoke(DataContext context)
         {
+            InvocationInfo invocationInfo = context.Get(Data.InvocationInfo);
+
             var assemblyName = invocationInfo.AssemblyName;
             var methodName   = invocationInfo.MethodName;
             var className    = invocationInfo.ClassName;
 
-            var targetType = Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true);
+           
 
-            var instance = CreateInstance(targetType, executionDataContext);
+            Type targetType = null;
+
+            if (!Utility.IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
+            {
+                var assemblyPath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
+                var assembly     = Assembly.LoadFile(assemblyPath);
+
+                if (!Utility.IsSuccess(() => assembly.GetType(className, true), ref targetType))
+                {
+                throw  new TypeLoadException(className);
+                }   
+            }
+
+
+
+            var instance = CreateInstance(context,targetType);
 
             var methodInfo = targetType.GetMethod(methodName);
             if (methodInfo == null)
@@ -37,7 +58,9 @@ namespace ApiInspector.Domain
 
             var methodParameters = parameters.ConvertAll(ConvertToMethodInvocationParameter).ToArray();
 
-            return methodInfo.Invoke(instance, methodParameters);
+            var response =  methodInfo.Invoke(instance, methodParameters);
+
+            context.Update(ExecutionResponse,response);
         }
         #endregion
 
@@ -53,7 +76,7 @@ namespace ApiInspector.Domain
         /// <summary>
         ///     Creates the instance.
         /// </summary>
-        static object CreateInstance(Type targetType, ExecutionDataContext executionDataContext)
+        static object CreateInstance(DataContext context, Type targetType)
         {
             // constructor with ExecutionDataContext
             {
@@ -65,7 +88,7 @@ namespace ApiInspector.Domain
                 {
                     var instance = constructorInfo.Invoke(new object[]
                     {
-                        executionDataContext
+                        context.Get(BOAExecutionContext)
                     });
                     return instance;
                 }
@@ -77,7 +100,7 @@ namespace ApiInspector.Domain
                 var objectHelper = instance as ObjectHelper;
                 if (objectHelper != null)
                 {
-                    objectHelper.Context = executionDataContext;
+                    objectHelper.Context = context.Get(BOAExecutionContext);
                 }
 
                 return instance;

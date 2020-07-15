@@ -26,7 +26,9 @@ namespace ApiInspector.DataFlow
                 AssemblySearchDirectoryList = new List<string>{  defaultAssemblySearchDirectory },
                 EnvironmentNameList = new List<string>{  "dev","test" }
             });
-            
+
+
+            Domain.Data.InvocationInfo = Data.InvocationInfo;
 
             // connect view events
             {

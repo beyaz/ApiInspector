@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApiInspector.Application;
-using ApiInspector.DataAccess;
 using BOA.Base.Data;
 using BOA.Common.Types;
 using BOA.DataFlow;
@@ -9,11 +7,6 @@ using BOA.UnitTestHelper;
 
 namespace ApiInspector.Domain
 {
-    
-
-
-
-
     static class BOAContextInitializer
     {
         #region Public Methods
@@ -47,7 +40,7 @@ namespace ApiInspector.Domain
                 throw new NotImplementedException(nameof(targetEnvironment));
             }
 
-            context.Update(Data.ExecutionDataContext, executionDataContext);
+            context.Update(Data.BOAExecutionContext, executionDataContext);
         }
         #endregion
     }

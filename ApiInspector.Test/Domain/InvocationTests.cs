@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Domain;
 using ApiInspector.Models;
+using BOA.DataFlow;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -88,9 +89,13 @@ namespace ApiInspector.Test
         {
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
-            var response = new Invoker().Invoke(invocationInfo, null);
+            var context = new DataContext();
+            context.SetupGet(Data.InvocationInfo,(c)=>invocationInfo);
+            
 
-            response.Should().Be(expectedResponse);
+            Invoker.Invoke(context);
+
+            context.Get(Data.ExecutionResponse).Should().Be(expectedResponse);
         }
         #endregion
     }

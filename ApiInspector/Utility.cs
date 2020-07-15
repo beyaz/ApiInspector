@@ -17,6 +17,21 @@ namespace ApiInspector
                 return e;
             }
         }
+
+        public static bool IsSuccess<T>(Func<T> action, ref  T target)
+        {
+            try
+            {
+                target = action();
+
+                return true;
+            }
+            catch (Exception )
+            {
+                return false;
+            }
+
+        }
         #endregion
     }
 }
