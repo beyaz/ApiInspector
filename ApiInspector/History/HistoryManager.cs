@@ -38,6 +38,38 @@ namespace ApiInspector.History
                             ValueAsJson = "{ customerNumber: 1000 }"
                         }
                     }
+                },
+
+                new InvocationInfo
+                {
+                    Environment             = "dev",
+                    AssemblyName            = "ApiInspector.Test.dll",
+                    ClassName               = "ApiInspector.Test.AnyClass",
+                    MethodName              = "AnyMethod_2",
+                    AssemblySearchDirectory = @"D:\git\ApiInspector\ApiInspector.Test\bin\Debug\",
+                    Parameters = new List<InvocationMethodParameterInfo>
+                    {
+                        new InvocationMethodParameterInfo
+                        {
+                            ValueAsJson = "\"a\"",
+                            Type = typeof(string)
+                        },
+                        new InvocationMethodParameterInfo
+                        {
+                            ValueAsJson = "2",
+                            Type        = typeof(int)
+                        },
+                        new InvocationMethodParameterInfo
+                        {
+                            ValueAsJson = "\"c\"",
+                            Type        = typeof(string)
+                        },
+                        new InvocationMethodParameterInfo
+                        {
+                            ValueAsJson = "5",
+                            Type        = typeof(int)
+                        }
+                    }
                 }
             };
         }

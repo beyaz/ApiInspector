@@ -75,10 +75,6 @@ namespace ApiInspector.DataFlow
                 return (T) (object) this;
             }
 
-            if (targetType == typeof(ParameterPanelRefresher))
-            {
-                return (T) (object) new ParameterPanelRefresher();
-            }
 
             throw new NotImplementedException(targetType.FullName);
         }

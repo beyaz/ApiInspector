@@ -79,6 +79,7 @@
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />
+    <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -94,7 +95,6 @@
     <Compile Include="Components\ClassNameIntellisenseTextBox.cs" />
     <Compile Include="Components\AssemblyIntellisenseTextBox.cs" />
     <Compile Include="InvocationInfoEditor\ItemSourceList.cs" />
-    <Compile Include="InvocationInfoEditor\ParameterPanelRefresher.cs" />
     <Compile Include="InvocationInfoEditor\ViewEvents.cs" />
     <Compile Include="InvocationInfoEditor\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
