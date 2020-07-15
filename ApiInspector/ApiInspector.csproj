@@ -66,18 +66,13 @@
     </ApplicationDefinition>
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="InvocationInfoEditor\Data.cs" />
-    <Compile Include="DataFlow\EventNames.cs" />
-    <Compile Include="DataFlow\ServiceProvider.cs" />
     <Compile Include="Domain\BOAContextInitializer.cs" />
-    <Compile Include="Components\EnvironmentIntellisenseTextBox.cs" />
     <Compile Include="Domain\Data.cs" />
-    <Compile Include="DataFlow\ContextBuilder.cs" />
+    <Compile Include="MainWindow\ContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Domain\Invoker.cs" />
     <Compile Include="History\HistoryManager.cs" />
     <Compile Include="InvocationInfoEditor\Controller.cs" />
-    <Compile Include="Components\IntellisenseTextBoxBase.cs" />
-    <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
@@ -92,8 +87,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Components\ClassNameIntellisenseTextBox.cs" />
-    <Compile Include="Components\AssemblyIntellisenseTextBox.cs" />
     <Compile Include="InvocationInfoEditor\ItemSourceList.cs" />
     <Compile Include="InvocationInfoEditor\ViewEvents.cs" />
     <Compile Include="InvocationInfoEditor\View.xaml.cs">

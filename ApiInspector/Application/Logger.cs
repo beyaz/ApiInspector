@@ -4,17 +4,29 @@ using BOA.DataFlow;
 
 namespace ApiInspector.Application
 {
+    /// <summary>
+    ///     The logger
+    /// </summary>
     class Logger
     {
+        #region Static Fields
+        /// <summary>
+        ///     The key
+        /// </summary>
         public static readonly DataKey<Logger> Key = new DataKey<Logger>(nameof(Logger));
+        #endregion
 
+        #region Properties
+        /// <summary>
+        ///     Gets the file path.
+        /// </summary>
         static string FilePath => Path.GetDirectoryName(typeof(Logger).Assembly.Location) + Path.DirectorySeparatorChar + "Log.txt";
+        #endregion
 
-        public void Push(Exception exception)
-        {
-            Log(exception.ToString());
-        }
-
+        #region Public Methods
+        /// <summary>
+        ///     Logs the specified message.
+        /// </summary>
         public void Log(string message)
         {
             try
@@ -32,5 +44,14 @@ namespace ApiInspector.Application
                 // ignored
             }
         }
+
+        /// <summary>
+        ///     Pushes the specified exception.
+        /// </summary>
+        public void Push(Exception exception)
+        {
+            Log(exception.ToString());
+        }
+        #endregion
     }
 }

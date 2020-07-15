@@ -6,26 +6,37 @@ using WpfControls;
 
 namespace ApiInspector.Components
 {
+    /// <summary>
+    ///     The intellisense text box
+    /// </summary>
     public sealed class IntellisenseTextBox : AutoCompleteTextBox, ISuggestionProvider
     {
         #region Constructors
-        
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="IntellisenseTextBox" /> class.
+        /// </summary>
         public IntellisenseTextBox()
         {
             Provider = this;
         }
         #endregion
 
-        public void SetValue(string value)
-        {
-            Editor.Text  = value;
-            Popup.IsOpen = false;
-        }
         #region Public Properties
         /// <summary>
         ///     Gets or sets the context.
         /// </summary>
         public IReadOnlyList<string> Suggestions { get; set; }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Sets the value.
+        /// </summary>
+        public void SetValue(string value)
+        {
+            Editor.Text  = value;
+            Popup.IsOpen = false;
+        }
         #endregion
 
         #region Explicit Interface Methods
@@ -42,7 +53,5 @@ namespace ApiInspector.Components
             return Suggestions?.Where(x => x.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0).Take(10);
         }
         #endregion
-
-      
     }
 }

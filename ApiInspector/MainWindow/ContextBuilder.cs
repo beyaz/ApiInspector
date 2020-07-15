@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ApiInspector.Application;
-using ApiInspector.Components;
 using ApiInspector.DataAccess;
 using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
@@ -48,9 +45,9 @@ namespace ApiInspector.DataFlow
             context.Add(Logger.Key, new Logger());
 
 
-            context.SubscribeEvent(EventNames.AssemblyNameChanged, () => Controller_old.OnAssemblyNameChanged(context));
-            context.SubscribeEvent(EventNames.ClassNameChanged, () => Controller_old.OnClassNameChanged(context));
-            context.SubscribeEvent(EventNames.MethodNameChanged,  () => Controller_old.OnMethodNameSelected(context));
+            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => Controller_old.OnAssemblyNameChanged(context));
+            context.SubscribeEvent(ViewEvents.ClassNameChanged, () => Controller_old.OnClassNameChanged(context));
+            context.SubscribeEvent(ViewEvents.MethodNameChanged,  () => Controller_old.OnMethodNameSelected(context));
 
             context.SetupGet(CecilHelper.AssemblySearchDirectories, c =>
             {
