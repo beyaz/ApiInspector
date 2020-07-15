@@ -90,7 +90,11 @@ namespace ApiInspector.InvocationInfoEditor
             else
             {
                 // complex items should be as json input
-                editor.MaxLines = 3;
+                editor.TextWrapping = TextWrapping.Wrap;
+                editor.MaxLines = 5;
+                editor.AcceptsReturn = true;
+                //editor.MaxHeight = 300;
+                //editor.Height = Double.MaxValue;
 
                 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
