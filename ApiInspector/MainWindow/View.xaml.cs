@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using ApiInspector.DataFlow;
-using ApiInspector.History;
 using ApiInspector.Models;
 using BOA.DataFlow;
 
@@ -11,6 +11,7 @@ namespace ApiInspector.MainWindow
     public partial class View
     {
         public static readonly DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
 
         #region Fields
         DataContext context;
@@ -38,7 +39,7 @@ namespace ApiInspector.MainWindow
 
             context = builder.Build();
 
-            historyListBox.ItemsSource = HistoryManager.GetHistory(context);
+            historyListBox.ItemsSource = context.Get(HistoryDataKey);
         }
         #endregion
 

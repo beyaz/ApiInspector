@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ApiInspector.Application;
-using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
@@ -131,30 +130,26 @@ namespace ApiInspector.InvocationInfoEditor
 
     static class Controller_old
     {
+        public static DataKey<string> AssemblyFilePath = new DataKey<string>(nameof(AssemblyFilePath));
+        public static DataKey<IReadOnlyList<TypeDefinition>> TypesInAssembly = new DataKey<IReadOnlyList<TypeDefinition>>(nameof(TypesInAssembly));
+        public static DataKey<TypeDefinition> TypeDefinitionRelatedClassName = new DataKey<TypeDefinition>(nameof(TypeDefinitionRelatedClassName));
+       
+
         #region Public Methods
         public static void OnAssemblyNameChanged(DataContext context)
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
             var itemSourceList = context.Get(Data.ItemSourceList);
-
-            var assemblyName = invocationInfo.AssemblyName;
-
             var logger            = context.Get(Logger.Key);
-            var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
 
-            var assemblyPath = Path.Combine(assemblyDirectory, assemblyName);
+            var assemblyFilePath = context.Get(AssemblyFilePath);
 
-            if (!File.Exists(assemblyPath))
+            if (!File.Exists(assemblyFilePath))
             {
-                logger.Log($"File not exists. File:{assemblyPath}");
+                logger.Log($"File not exists. File:{assemblyFilePath}");
                 return;
             }
 
-            var items = new List<TypeDefinition>();
-
-            CecilHelper.VisitAllTypes(context, assemblyPath, typeDefinition => { items.Add(typeDefinition); });
-
-            itemSourceList.ClassNameList = items.Select(x => x.FullName).ToList();
+            itemSourceList.ClassNameList = context.Get(TypesInAssembly).Select(x => x.FullName).ToList();
         }
 
         public static void OnAssemblySearchDirectoryChanged(DataContext context)
@@ -172,23 +167,11 @@ namespace ApiInspector.InvocationInfoEditor
 
         public static void OnClassNameChanged(DataContext context)
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
             var itemSourceList = context.Get(Data.ItemSourceList);
 
-            var logger = context.Get(Logger.Key);
-
-            var assemblyPath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
-
-            if (!File.Exists(assemblyPath))
-            {
-                logger.Log($"File not exists. File:{assemblyPath}");
-                return;
-            }
-
-            var typeDefinition = CecilHelper.FindType(context, assemblyPath, invocationInfo.ClassName);
+            var typeDefinition = context.Get(TypeDefinitionRelatedClassName);
             if (typeDefinition == null)
             {
-                logger.Log($"Type not exists. File:{assemblyPath}, fullClassName:{invocationInfo.ClassName}");
                 return;
             }
 
@@ -199,13 +182,10 @@ namespace ApiInspector.InvocationInfoEditor
         {
             var invocationInfo = context.Get(Data.InvocationInfo);
 
-            var className        = invocationInfo.ClassName;
-            var methodName       = invocationInfo.MethodName;
-            var assemblyFilePath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
 
-            var typeDefinition = CecilHelper.FindType(context, assemblyFilePath, className);
+            var typeDefinition = context.Get(TypeDefinitionRelatedClassName);
 
-            var methodDefinition = typeDefinition.Methods.FirstOrDefault(x => x.Name == methodName);
+            var methodDefinition = typeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
 
             if (methodDefinition == null)
             {
