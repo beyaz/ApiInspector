@@ -114,6 +114,9 @@
     <PackageReference Include="Mono.Cecil">
       <Version>0.11.2</Version>
     </PackageReference>
+    <PackageReference Include="Notifications.Wpf">
+      <Version>0.1.1</Version>
+    </PackageReference>
     <PackageReference Include="WpfControls.AutoCompleteTextBox">
       <Version>1.0.0.7</Version>
     </PackageReference>

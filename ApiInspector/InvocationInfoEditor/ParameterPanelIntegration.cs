@@ -87,12 +87,20 @@ namespace ApiInspector.InvocationInfoEditor
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 });
             }
-
-            if (definition.ParameterType.FullName == typeof(string).FullName)
+            else if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
             {
+                editor.IsEnabled = false;
+                editor.Text = "objectHelper";
+            }
+            else
+            {
+                // complex items should be as json input
+                editor.MaxLines = 3;
+
                 if (parameterInfo.Value == null && parameterInfo.ValueAsJson != null)
                 {
-                    Utility.TryRun(() => parameterInfo.Value = JsonConvert.DeserializeObject(parameterInfo.ValueAsJson, typeof(string)));
+                    var parameterType = Type.GetType(definition.ParameterType.FullName);
+                    Utility.TryRun(() => parameterInfo.Value = JsonConvert.DeserializeObject(parameterInfo.ValueAsJson, parameterType));
                 }
 
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
@@ -104,10 +112,6 @@ namespace ApiInspector.InvocationInfoEditor
                 });
             }
 
-            if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
-            {
-                editor.IsEnabled = false;
-            }
 
             sp.Children.Add(label);
             sp.Children.Add(editor);

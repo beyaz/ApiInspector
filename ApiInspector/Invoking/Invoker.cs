@@ -81,7 +81,7 @@ namespace ApiInspector.Invoking
         /// </summary>
         static object ConvertToMethodInvocationParameter(InvocationMethodParameterInfo info)
         {
-            return JsonConvert.DeserializeObject(info.ValueAsJson, info.Type);
+            return Convert.ChangeType(info.Value, info.Type);
         }
 
         /// <summary>
