@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using Newtonsoft.Json;
@@ -27,61 +26,6 @@ namespace ApiInspector.History
 
             return localItems;
 
-            return new List<InvocationInfo>
-            {
-                new InvocationInfo
-                {
-                    Environment             = "dev",
-                    AssemblyName            = "BOA.Business.Card.Accounting.dll",
-                    ClassName               = "BOA.Business.Card.Accounting.LegalFollowup",
-                    MethodName              = "GetLegalFollowList",
-                    AssemblySearchDirectory = @"d:\boa\server\bin\"
-                },
-
-                new InvocationInfo
-                {
-                    Environment             = "dev",
-                    AssemblyName            = "BOA.Process.Kernel.Card.dll",
-                    ClassName               = "BOA.Process.Kernel.Card.InternetBanking.CardGeneral.GetCardListHandler",
-                    MethodName              = "ExecuteInOldCardSystem",
-                    AssemblySearchDirectory = @"d:\boa\server\bin\",
-                    Parameters = new List<InvocationMethodParameterInfo>
-                    {
-                        new InvocationMethodParameterInfo
-                        {
-                            Value = "{ customerNumber: 1000 }"
-                        }
-                    }
-                },
-
-                new InvocationInfo
-                {
-                    Environment             = "dev",
-                    AssemblyName            = "ApiInspector.Test.dll",
-                    ClassName               = "ApiInspector.TestData.AnyClass",
-                    MethodName              = "AnyMethod_2",
-                    AssemblySearchDirectory = @"D:\git\ApiInspector\ApiInspector.Test\bin\Debug\",
-                    Parameters = new List<InvocationMethodParameterInfo>
-                    {
-                        new InvocationMethodParameterInfo
-                        {
-                            Value = "a",
-                        },
-                        new InvocationMethodParameterInfo
-                        {
-                            Value = 2,
-                        },
-                        new InvocationMethodParameterInfo
-                        {
-                            Value = "c",
-                        },
-                        new InvocationMethodParameterInfo
-                        {
-                            Value = 5,
-                        }
-                    }
-                }
-            };
         }
 
         public static void SaveToHistory(InvocationInfo info)
