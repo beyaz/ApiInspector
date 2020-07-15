@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using Newtonsoft.Json;
@@ -8,17 +9,24 @@ namespace ApiInspector.History
 {
     static class HistoryManager
     {
-        #region Static Fields
-        public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
-        #endregion
-
         #region Properties
-        static string DirectoryPath => Path.GetDirectoryName(typeof(HistoryManager).Assembly.Location) + Path.DirectorySeparatorChar + nameof(ApiInspector) + "History" + Path.DirectorySeparatorChar;
+        static string DirectoryPath => Path.GetDirectoryName(typeof(HistoryManager).Assembly.Location) + Path.DirectorySeparatorChar + 
+                                       nameof(ApiInspector) + "History" + Path.DirectorySeparatorChar;
         #endregion
 
         #region Public Methods
         public static IReadOnlyList<InvocationInfo> GetHistory(DataContext context)
         {
+
+            var localItems = new List<InvocationInfo>();
+
+            foreach (var file in Directory.GetFiles(DirectoryPath))
+            {
+                Utility.TryRun(() => localItems.Add(JsonConvert.DeserializeObject<InvocationInfo>(File.ReadAllText(file))));
+            }
+
+            return localItems;
+
             return new List<InvocationInfo>
             {
                 new InvocationInfo

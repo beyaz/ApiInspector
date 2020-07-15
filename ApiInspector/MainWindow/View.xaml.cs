@@ -57,6 +57,8 @@ namespace ApiInspector.MainWindow
 
          void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            HistoryManager.SaveToHistory(context.Get(InvocationInfo));
+
             invokingResponseView.SetText("invoke started...");
 
             Invoker.Invoke(context);
@@ -65,7 +67,7 @@ namespace ApiInspector.MainWindow
             
             invokingResponseView.SetText(ResultSerializer.SerializeToJson(response));
 
-            HistoryManager.SaveToHistory(context.Get(InvocationInfo));
+            
         }
 
          void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
