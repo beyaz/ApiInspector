@@ -87,22 +87,18 @@ namespace ApiInspector.History
                         new InvocationMethodParameterInfo
                         {
                             ValueAsJson = "\"a\"",
-                            Type = typeof(string)
                         },
                         new InvocationMethodParameterInfo
                         {
                             ValueAsJson = "2",
-                            Type        = typeof(int)
                         },
                         new InvocationMethodParameterInfo
                         {
                             ValueAsJson = "\"c\"",
-                            Type        = typeof(string)
                         },
                         new InvocationMethodParameterInfo
                         {
                             ValueAsJson = "5",
-                            Type        = typeof(int)
                         }
                     }
                 }

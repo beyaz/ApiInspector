@@ -32,17 +32,14 @@ namespace ApiInspector.Invoking
                 {
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(string),
                         ValueAsJson = "\"a\""
                     },
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(int),
                         ValueAsJson = "5"
                     },
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(string),
                         ValueAsJson = "\"c\""
                     },
                 }
@@ -59,22 +56,18 @@ namespace ApiInspector.Invoking
                 {
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(string),
                         ValueAsJson = "\"a\""
                     },
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(int),
                         ValueAsJson = "5"
                     },
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(string),
                         ValueAsJson = "\"c\""
                     },
                     new InvocationMethodParameterInfo
                     {
-                        Type        = typeof(int),
                         ValueAsJson = "6"
                     }
                 }
