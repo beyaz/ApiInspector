@@ -2,18 +2,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ApiInspector.Application;
-using ApiInspector.InvocationInfoEditor;
 using BOA.DataFlow;
 using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
+    /// <summary>
+    ///     The cecil helper
+    /// </summary>
     static class CecilHelper
     {
-        public static  DataKey<IReadOnlyList<string>> AssemblySearchDirectories = new DataKey<IReadOnlyList<string>>(nameof(AssemblySearchDirectories));
+        #region Static Fields
+        /// <summary>
+        ///     The assembly search directories
+        /// </summary>
+        public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories = new DataKey<IReadOnlyList<string>>(nameof(AssemblySearchDirectories));
+
+        /// <summary>
+        ///     The log
+        /// </summary>
+        public static DataKey<Action<string>> Log = new DataKey<Action<string>>(nameof(Log));
+        #endregion
 
         #region Public Methods
+        /// <summary>
+        ///     Finds the type.
+        /// </summary>
         public static TypeDefinition FindType(DataContext context, string assemblyPath, string typeFullName)
         {
             var typeDefinitions = new List<TypeDefinition>();
@@ -29,14 +43,14 @@ namespace ApiInspector.DataAccess
             return typeDefinitions.FirstOrDefault();
         }
 
+        /// <summary>
+        ///     Visits all types.
+        /// </summary>
         public static void VisitAllTypes(DataContext context, string assemblyPath, Action<TypeDefinition> action)
         {
-            var logger = context.Get(Logger.Key);
-            
-            var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
+            var log = context.Get(Log);
 
-            var assemblySearchDirectories = new List<string>{assemblySearchDirectory};
-            
+            var assemblySearchDirectories = context.Get(AssemblySearchDirectories);
 
             if (File.Exists(assemblyPath) == false)
             {
@@ -58,7 +72,7 @@ namespace ApiInspector.DataAccess
             }
             catch (Exception e)
             {
-                logger.Log($"File not Loaded. File:{assemblyPath}, Error: {e}");
+                log($"File not Loaded. File:{assemblyPath}, Error: {e}");
                 return;
             }
 
@@ -74,7 +88,6 @@ namespace ApiInspector.DataAccess
                     action(type);
                 }
             }
-
         }
         #endregion
     }
