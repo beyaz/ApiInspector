@@ -53,7 +53,7 @@ namespace ApiInspector.MainWindow
         {
             Domain.Invoker.Invoke(context);
 
-            invokingResponseView.SetText(context.Get(Domain.Data.ExecutionResponse) + "");
+            invokingResponseView.SetText(context.Get(Domain.Invoker.ExecutionResponse) + "");
         }
 
         

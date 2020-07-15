@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ApiInspector.Models;
 using BOA.Base.Data;
 using BOA.Common.Types;
 using BOA.DataFlow;
@@ -7,12 +8,30 @@ using BOA.UnitTestHelper;
 
 namespace ApiInspector.Domain
 {
+    /// <summary>
+    ///     The boa context initializer
+    /// </summary>
     static class BOAContextInitializer
     {
+        #region Static Fields
+        /// <summary>
+        ///     The boa execution context
+        /// </summary>
+        public static DataKey<ExecutionDataContext> BOAExecutionContext = new DataKey<ExecutionDataContext>(nameof(BOAExecutionContext));
+
+        /// <summary>
+        ///     The invocation information
+        /// </summary>
+        public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        #endregion
+
         #region Public Methods
+        /// <summary>
+        ///     Initializes the specified context.
+        /// </summary>
         public static void Initialize(DataContext context)
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
+            var invocationInfo = context.Get(InvocationInfo);
 
             var targetEnvironment = invocationInfo.Environment;
 
@@ -40,7 +59,7 @@ namespace ApiInspector.Domain
                 throw new NotImplementedException(nameof(targetEnvironment));
             }
 
-            context.Update(Data.BOAExecutionContext, executionDataContext);
+            context.Update(BOAExecutionContext, executionDataContext);
         }
         #endregion
     }

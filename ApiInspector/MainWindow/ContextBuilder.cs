@@ -29,7 +29,11 @@ namespace ApiInspector.DataFlow
             });
 
 
-            Domain.Data.InvocationInfo = Data.InvocationInfo;
+            Domain.BOAContextInitializer.InvocationInfo=            Domain.Invoker.InvocationInfo = Data.InvocationInfo;
+
+            Domain.BOAContextInitializer.BOAExecutionContext = Domain.Invoker.BOAExecutionContext;
+
+            
 
             // connect view events
             {

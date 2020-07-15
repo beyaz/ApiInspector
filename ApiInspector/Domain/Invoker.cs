@@ -7,7 +7,6 @@ using BOA.Base;
 using BOA.Base.Data;
 using BOA.DataFlow;
 using Newtonsoft.Json;
-using static ApiInspector.Domain.Data;
 
 namespace ApiInspector.Domain
 {
@@ -16,13 +15,30 @@ namespace ApiInspector.Domain
     /// </summary>
     static class Invoker
     {
+        #region Static Fields
+        /// <summary>
+        ///     The boa execution context
+        /// </summary>
+        public static DataKey<ExecutionDataContext> BOAExecutionContext = new DataKey<ExecutionDataContext>(nameof(BOAExecutionContext));
+
+        /// <summary>
+        ///     The execution response
+        /// </summary>
+        public static DataKey<object> ExecutionResponse = new DataKey<object>(nameof(ExecutionResponse));
+
+        /// <summary>
+        ///     The invocation information
+        /// </summary>
+        public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        #endregion
+
         #region Public Methods
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
         public static void Invoke(DataContext context)
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
+            var invocationInfo = context.Get(InvocationInfo);
 
             var assemblyName = invocationInfo.AssemblyName;
             var methodName   = invocationInfo.MethodName;

@@ -90,12 +90,12 @@ namespace ApiInspector.Test
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
             var context = new DataContext();
-            context.SetupGet(Data.InvocationInfo,(c)=>invocationInfo);
+            context.SetupGet(Invoker.InvocationInfo,(c)=>invocationInfo);
             
 
             Invoker.Invoke(context);
 
-            context.Get(Data.ExecutionResponse).Should().Be(expectedResponse);
+            context.Get(Invoker.ExecutionResponse).Should().Be(expectedResponse);
         }
         #endregion
     }
