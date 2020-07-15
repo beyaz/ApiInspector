@@ -8,17 +8,25 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     public partial class View
     {
+        #region Fields
         DataContext context;
+        #endregion
+
+        #region Constructors
+        public View()
+        {
+            InitializeComponent();
+            Loaded += OnLoad;
+        }
+        #endregion
+
+        #region Public Properties
         public DataContext Context
         {
-            get
-            {
-                return context;
-            }
+            get { return context; }
             set
             {
-                value.Update(Data.ParametersPanel,parametersPanel);
-                
+                value.Update(Data.ParametersPanel, parametersPanel);
 
                 context = value;
 
@@ -27,26 +35,9 @@ namespace ApiInspector.InvocationInfoEditor
                 UpdateSuggestions();
             }
         }
+        #endregion
 
-        #region Constructors
-        public View()
-        {
-            InitializeComponent();
-            Loaded += OnLoad;
-        }
-
-        void RegisterEvents()
-        {
-            context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, UpdateSuggestions);
-            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, UpdateSuggestions);
-            context.SubscribeEvent(ViewEvents.ClassNameChanged, UpdateSuggestions);
-            context.SubscribeEvent(ViewEvents.MethodNameChanged, UpdateSuggestions);
-            context.OnUpdate(Data.InvocationInfo,RefreshValues);
-
-
-           
-        }
-
+        #region Public Methods
         public void RefreshValues()
         {
             var invocationInfo = context.Get(Data.InvocationInfo);
@@ -58,21 +49,11 @@ namespace ApiInspector.InvocationInfoEditor
             classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
             methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
         }
+        #endregion
 
-        void UpdateSuggestions()
-        {
-            var source = context.Get(Data.ItemSourceList);
-
-            environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
-            assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;
-            assemblyIntellisenseTextBox.Suggestions = source.AssemblyNameList;
-            classNameIntellisenseTextBox.Suggestions = source.ClassNameList;
-            methodNameIntellisenseTextBox.Suggestions = source.MethodNameList;
-        }
-
+        #region Methods
         void OnLoad(object sender, RoutedEventArgs routedEventArgs)
         {
-            
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
                 var invocationInfo = context.Get(Data.InvocationInfo);
@@ -108,7 +89,26 @@ namespace ApiInspector.InvocationInfoEditor
                 context.PublishEvent(ViewEvents.MethodNameChanged);
             };
         }
-        #endregion
 
+        void RegisterEvents()
+        {
+            context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, UpdateSuggestions);
+            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, UpdateSuggestions);
+            context.SubscribeEvent(ViewEvents.ClassNameChanged, UpdateSuggestions);
+            context.SubscribeEvent(ViewEvents.MethodNameChanged, UpdateSuggestions);
+            context.OnUpdate(Data.InvocationInfo, RefreshValues);
+        }
+
+        void UpdateSuggestions()
+        {
+            var source = context.Get(Data.ItemSourceList);
+
+            environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
+            assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;
+            assemblyIntellisenseTextBox.Suggestions                = source.AssemblyNameList;
+            classNameIntellisenseTextBox.Suggestions               = source.ClassNameList;
+            methodNameIntellisenseTextBox.Suggestions              = source.MethodNameList;
+        }
+        #endregion
     }
 }
