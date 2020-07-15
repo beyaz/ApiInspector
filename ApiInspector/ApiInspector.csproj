@@ -38,6 +38,9 @@
     <Reference Include="BOA.Base">
       <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>
+    <Reference Include="BOA.Process.Kernel.Card">
+      <HintPath>d:\BOA\Server\bin\BOA.Process.Kernel.Card.dll</HintPath>
+    </Reference>
     <Reference Include="BOA.Common">
       <HintPath>d:\BOA\Server\bin\BOA.Common.dll</HintPath>
     </Reference>
@@ -64,7 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CardSystemOldAndNewApiCall\ResultSerializer.cs" />
+    <Compile Include="CardSystemOldAndNewApiCall\Invoker.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="CardSystemOldAndNewApiCall\ExternalCodeCompareProgramStarter.cs" />
     <Compile Include="InvocationInfoEditor\Data.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="Invoking\BOAContextInitializer.cs" />

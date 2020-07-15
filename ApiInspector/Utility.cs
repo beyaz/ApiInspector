@@ -1,10 +1,42 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace ApiInspector
 {
     static class Utility
     {
         #region Public Methods
+        public static bool IsSuccess<T>(Func<T> action, ref T target)
+        {
+            try
+            {
+                target = action();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static string SerializeToJson(object value, bool ignoreDefaultValues = true)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var settings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
+                Formatting           = Formatting.Indented,
+                DateFormatString     = "yyyy.MM.dd hh:mm:ss"
+            };
+
+            return JsonConvert.SerializeObject(value, settings);
+        }
+
         public static Exception TryRun(Action action)
         {
             try
@@ -16,21 +48,6 @@ namespace ApiInspector
             {
                 return e;
             }
-        }
-
-        public static bool IsSuccess<T>(Func<T> action, ref  T target)
-        {
-            try
-            {
-                target = action();
-
-                return true;
-            }
-            catch (Exception )
-            {
-                return false;
-            }
-
         }
         #endregion
     }

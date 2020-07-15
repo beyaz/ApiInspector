@@ -26,6 +26,8 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static DataKey<object> ExecutionResponse = new DataKey<object>(nameof(ExecutionResponse));
 
+        public static DataKey<string> ExecutionResponseAsJson = new DataKey<string>(nameof(ExecutionResponseAsJson));
+
         /// <summary>
         ///     The invocation information
         /// </summary>
@@ -85,6 +87,8 @@ namespace ApiInspector.Invoking
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
             context.Update(ExecutionResponse, response);
+            context.Update(ExecutionResponseAsJson, Utility.SerializeToJson(response));
+
         }
         #endregion
 

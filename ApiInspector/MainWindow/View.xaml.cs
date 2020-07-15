@@ -7,14 +7,15 @@ using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
-using Newtonsoft.Json;
 
 namespace ApiInspector.MainWindow
 {
     public partial class View
     {
-        public static  DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        #region Static Fields
         public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
+        public static DataKey<InvocationInfo>                InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        #endregion
 
         #region Fields
         DataContext context;
@@ -28,13 +29,30 @@ namespace ApiInspector.MainWindow
             InitializeContext();
 
             currentInvocationInfo.Context = context;
-
-        
         }
         #endregion
 
         #region Methods
-        
+        bool HistoryFilter(object item)
+        {
+            if (string.IsNullOrEmpty(historyFilterTextBox.Text))
+            {
+                return true;
+            }
+
+            return ((InvocationInfo) item).ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
+        }
+
+        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
+        {
+            context.Update(InvocationInfo, (InvocationInfo) historyListBox.SelectedItem);
+            invokingResponseView.SetText(string.Empty);
+        }
 
         void InitializeContext()
         {
@@ -44,18 +62,11 @@ namespace ApiInspector.MainWindow
 
             historyListBox.ItemsSource = context.Get(HistoryDataKey);
 
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
             view.Filter = HistoryFilter;
         }
-        #endregion
 
-        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
-        {
-            context.Update(InvocationInfo,(InvocationInfo)historyListBox.SelectedItem);
-
-        }
-
-         void OnExecuteClicked(object sender, RoutedEventArgs e)
+        void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
             HistoryManager.SaveToHistory(context.Get(InvocationInfo));
 
@@ -63,45 +74,8 @@ namespace ApiInspector.MainWindow
 
             Invoker.Invoke(context);
 
-            var response = context.Get(Invoker.ExecutionResponse);
-            
-            invokingResponseView.SetText(ResultSerializer.SerializeToJson(response));
-
-            
+            invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson));
         }
-
-         void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-         {
-             CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
-         }
-
-         private bool HistoryFilter(object item)
-         {
-             if(String.IsNullOrEmpty(historyFilterTextBox.Text))
-                 return true;
-             
-             
-             return ((InvocationInfo)item) .ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
-         }
-    }
-
-    class ResultSerializer
-    {
-       public static string SerializeToJson(object value, bool ignoreDefaultValues = true)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss"
-            };
-
-            return JsonConvert.SerializeObject(value, settings);
-        }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Threading;
+using BOA.UnitTestHelper;
 using Notifications.Wpf;
 
 namespace ApiInspector.Application
@@ -18,6 +19,7 @@ namespace ApiInspector.Application
         #region Constructors
         public App()
         {
+            BOAAssemblyResolver.AttachToCurrentDomain();
             DispatcherUnhandledException += OnDispatcherUnhandledException;
         }
         #endregion

@@ -52,6 +52,10 @@ namespace ApiInspector.Application
         {
             Log(exception.ToString());
         }
+        public void Push(string message)
+        {
+            Log(message);
+        }
         #endregion
     }
 }

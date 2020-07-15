@@ -99,7 +99,7 @@ namespace ApiInspector.InvocationInfoEditor
                 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
-                    parameterInfo.Value = ResultSerializer.SerializeToJson(parameterInfo.Value);
+                    parameterInfo.Value = Utility.SerializeToJson(parameterInfo.Value);
                 }
 
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
