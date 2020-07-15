@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using ApiInspector.Domain;
 using ApiInspector.Models;
+using ApiInspector.TestData;
 using BOA.DataFlow;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ApiInspector.Test
+namespace ApiInspector.Invoking
 {
     [TestClass]
     public class InvocationTests
@@ -17,8 +17,8 @@ namespace ApiInspector.Test
             var invocationInfo = new InvocationInfo
             {
                 AssemblyName = "ApiInspector.Test.dll",
-                ClassName    = "ApiInspector.Test.AnyClass",
-                MethodName   = "AnyMethod_0"
+                ClassName    = typeof(AnyClass).FullName,
+                MethodName   = nameof(AnyClass.AnyMethod_0)
             };
 
             Invoke_method(invocationInfo, "0");
@@ -26,8 +26,8 @@ namespace ApiInspector.Test
             invocationInfo = new InvocationInfo
             {
                 AssemblyName = "ApiInspector.Test.dll",
-                ClassName    = "ApiInspector.Test.AnyClass",
-                MethodName   = "AnyMethod_1",
+                ClassName    = typeof(AnyClass).FullName,
+                MethodName   = nameof(AnyClass.AnyMethod_1),
                 Parameters = new List<InvocationMethodParameterInfo>
                 {
                     new InvocationMethodParameterInfo
@@ -53,8 +53,8 @@ namespace ApiInspector.Test
             invocationInfo = new InvocationInfo
             {
                 AssemblyName = "ApiInspector.Test.dll",
-                ClassName    = "ApiInspector.Test.AnyClass",
-                MethodName   = "AnyMethod_2",
+                ClassName    = typeof(AnyClass).FullName,
+                MethodName   = nameof(AnyClass.AnyMethod_2),
                 Parameters = new List<InvocationMethodParameterInfo>
                 {
                     new InvocationMethodParameterInfo

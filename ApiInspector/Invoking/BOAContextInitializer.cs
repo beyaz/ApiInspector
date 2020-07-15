@@ -6,7 +6,7 @@ using BOA.Common.Types;
 using BOA.DataFlow;
 using BOA.UnitTestHelper;
 
-namespace ApiInspector.Domain
+namespace ApiInspector.Invoking
 {
     /// <summary>
     ///     The boa context initializer

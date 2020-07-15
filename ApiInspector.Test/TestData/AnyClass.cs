@@ -1,4 +1,4 @@
-﻿namespace ApiInspector.Test
+﻿namespace ApiInspector.TestData
 {
     class AnyClass
     {

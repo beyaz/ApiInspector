@@ -44,7 +44,7 @@ namespace ApiInspector.History
                 {
                     Environment             = "dev",
                     AssemblyName            = "ApiInspector.Test.dll",
-                    ClassName               = "ApiInspector.Test.AnyClass",
+                    ClassName               = "ApiInspector.TestData.AnyClass",
                     MethodName              = "AnyMethod_2",
                     AssemblySearchDirectory = @"D:\git\ApiInspector\ApiInspector.Test\bin\Debug\",
                     Parameters = new List<InvocationMethodParameterInfo>

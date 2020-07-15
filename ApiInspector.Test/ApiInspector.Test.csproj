@@ -49,9 +49,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\AnyClass.cs" />
+    <Compile Include="TestData\AnyClass.cs" />
     <Compile Include="InvocationInfoEditor\ControllerTest.cs" />
-    <Compile Include="Domain\InvocationTests.cs" />
+    <Compile Include="Invoking\InvocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

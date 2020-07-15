@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using ApiInspector.DataFlow;
+using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
 
@@ -51,9 +51,9 @@ namespace ApiInspector.MainWindow
 
          void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            Domain.Invoker.Invoke(context);
+            Invoker.Invoke(context);
 
-            invokingResponseView.SetText(context.Get(Domain.Invoker.ExecutionResponse) + "");
+            invokingResponseView.SetText(context.Get(Invoker.ExecutionResponse) + "");
         }
 
         

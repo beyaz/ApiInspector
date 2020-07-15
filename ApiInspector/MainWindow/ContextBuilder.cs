@@ -4,11 +4,12 @@ using ApiInspector.Application;
 using ApiInspector.DataAccess;
 using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
+using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using Mono.Cecil;
 
-namespace ApiInspector.DataFlow
+namespace ApiInspector.MainWindow
 {
     class ContextBuilder
     {
@@ -29,9 +30,9 @@ namespace ApiInspector.DataFlow
             });
 
 
-            Domain.BOAContextInitializer.InvocationInfo=            Domain.Invoker.InvocationInfo = Data.InvocationInfo;
+            BOAContextInitializer.InvocationInfo=            Invoker.InvocationInfo = Data.InvocationInfo;
 
-            Domain.BOAContextInitializer.BOAExecutionContext = Domain.Invoker.BOAExecutionContext;
+            BOAContextInitializer.BOAExecutionContext = Invoker.BOAExecutionContext;
 
             
 
