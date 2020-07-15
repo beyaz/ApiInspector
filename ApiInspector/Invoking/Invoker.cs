@@ -67,22 +67,24 @@ namespace ApiInspector.Invoking
 
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-            var methodParameters = parameters.ConvertAll(ConvertToMethodInvocationParameter).ToArray();
+            var invocationParameters = new List<object>();
+            var methodParametersInDotNet = methodInfo.GetParameters();
+            for (var i = 0; i < methodParametersInDotNet.Length; i++)
+            {
+                var value = parameters[i].Value;
+                value = Convert.ChangeType(value, methodParametersInDotNet[i].ParameterType);
+                invocationParameters.Add(value);
+            }
 
-            var response = methodInfo.Invoke(instance, methodParameters);
+
+            var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
             context.Update(ExecutionResponse, response);
         }
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Converts to method invocation parameter.
-        /// </summary>
-        static object ConvertToMethodInvocationParameter(InvocationMethodParameterInfo info)
-        {
-            return Convert.ChangeType(info.Value, info.Type);
-        }
+      
 
         /// <summary>
         ///     Creates the instance.
