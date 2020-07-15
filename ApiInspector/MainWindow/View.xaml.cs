@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
@@ -63,6 +64,8 @@ namespace ApiInspector.MainWindow
             var response = context.Get(Invoker.ExecutionResponse);
             
             invokingResponseView.SetText(ResultSerializer.SerializeToJson(response));
+
+            HistoryManager.SaveToHistory(context.Get(InvocationInfo));
         }
 
          void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
