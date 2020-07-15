@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using ApiInspector.DataAccess;
 using ApiInspector.DataFlow;
 using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
