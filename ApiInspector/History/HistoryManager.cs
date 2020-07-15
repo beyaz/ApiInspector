@@ -70,7 +70,7 @@ namespace ApiInspector.History
                     {
                         new InvocationMethodParameterInfo
                         {
-                            ValueAsJson = "{ customerNumber: 1000 }"
+                            Value = "{ customerNumber: 1000 }"
                         }
                     }
                 },
@@ -86,19 +86,19 @@ namespace ApiInspector.History
                     {
                         new InvocationMethodParameterInfo
                         {
-                            ValueAsJson = "\"a\"",
+                            Value = "a",
                         },
                         new InvocationMethodParameterInfo
                         {
-                            ValueAsJson = "2",
+                            Value = 2,
                         },
                         new InvocationMethodParameterInfo
                         {
-                            ValueAsJson = "\"c\"",
+                            Value = "c",
                         },
                         new InvocationMethodParameterInfo
                         {
-                            ValueAsJson = "5",
+                            Value = 5,
                         }
                     }
                 }

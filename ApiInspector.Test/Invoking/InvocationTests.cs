@@ -32,15 +32,15 @@ namespace ApiInspector.Invoking
                 {
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "\"a\""
+                        Value = "a"
                     },
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "5"
+                        Value = 5
                     },
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "\"c\""
+                        Value = "c"
                     },
                 }
             };
@@ -56,19 +56,19 @@ namespace ApiInspector.Invoking
                 {
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "\"a\""
+                        Value = "a"
                     },
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "5"
+                        Value = 5
                     },
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "\"c\""
+                        Value = "c"
                     },
                     new InvocationMethodParameterInfo
                     {
-                        ValueAsJson = "6"
+                        Value = 6
                     }
                 }
             };

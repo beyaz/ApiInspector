@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
@@ -73,12 +74,6 @@ namespace ApiInspector.InvocationInfoEditor
             var index = Array.IndexOf(primitiveTypeNames, definition.ParameterType.FullName);
             if (index >= 0)
             {
-                var targetPrimitiveType = Type.GetType(primitiveTypeNames[index]);
-                if (parameterInfo.Value == null && parameterInfo.ValueAsJson != null)
-                {
-                    Utility.TryRun(() => parameterInfo.Value = JsonConvert.DeserializeObject(parameterInfo.ValueAsJson, targetPrimitiveType));
-                }
-
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
                 {
                     Source              = parameterInfo,
@@ -97,10 +92,10 @@ namespace ApiInspector.InvocationInfoEditor
                 // complex items should be as json input
                 editor.MaxLines = 3;
 
-                if (parameterInfo.Value == null && parameterInfo.ValueAsJson != null)
+                
+                if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
-                    var parameterType = Type.GetType(definition.ParameterType.FullName);
-                    Utility.TryRun(() => parameterInfo.Value = JsonConvert.DeserializeObject(parameterInfo.ValueAsJson, parameterType));
+                    parameterInfo.Value = ResultSerializer.SerializeToJson(parameterInfo.Value);
                 }
 
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
