@@ -9,7 +9,8 @@ using Mono.Cecil;
 
 namespace ApiInspector.InvocationInfoEditor
 {
-    static class Controller
+
+    static class Controller_old
     {
         #region Public Methods
         public static void OnAssemblyNameChanged(DataContext context)
@@ -41,6 +42,11 @@ namespace ApiInspector.InvocationInfoEditor
         {
             var invocationInfo = context.Get(Data.InvocationInfo);
             var itemSourceList = context.Get(Data.ItemSourceList);
+
+            if (!Directory.Exists(invocationInfo.AssemblySearchDirectory))
+            {
+                return;
+            }
 
             itemSourceList.AssemblyNameList = Directory.GetFiles(invocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
         }

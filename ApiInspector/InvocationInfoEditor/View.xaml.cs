@@ -24,6 +24,8 @@ namespace ApiInspector.InvocationInfoEditor
                 context = value;
 
                 RegisterEvents();
+
+                UpdateSuggestions();
             }
         }
 
@@ -36,22 +38,37 @@ namespace ApiInspector.InvocationInfoEditor
 
         void RegisterEvents()
         {
-            context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, () =>
-            {
-                assemblyIntellisenseTextBox.Suggestions = context.Get(Data.ItemSourceList).AssemblyNameList;
-            });
+            context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, UpdateSuggestions);
+            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, UpdateSuggestions);
+            context.SubscribeEvent(ViewEvents.ClassNameChanged, UpdateSuggestions);
+            context.SubscribeEvent(ViewEvents.MethodNameChanged, UpdateSuggestions);
+            context.OnUpdate(Data.InvocationInfo,RefreshValues);
 
-            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () =>
-            {
-                classNameIntellisenseTextBox.Suggestions = context.Get(Data.ItemSourceList).ClassNameList;
-            });
 
-            context.SubscribeEvent(ViewEvents.ClassNameChanged, () =>
-            {
-                methodNameIntellisenseTextBox.Suggestions = context.Get(Data.ItemSourceList).MethodNameList;
-            });
+           
+        }
 
-            environmentIntellisenseTextBox.Suggestions = context.Get(Data.ItemSourceList).EnvironmentNameList;
+        public void RefreshValues()
+        {
+            var invocationInfo = context.Get(Data.InvocationInfo);
+
+            environmentIntellisenseTextBox.SetValue(invocationInfo.Environment);
+
+            assemblySearchDirectoryIntellisenseTextBox.SetValue(invocationInfo.AssemblySearchDirectory);
+            assemblyIntellisenseTextBox.SetValue(invocationInfo.AssemblyName);
+            classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
+            methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
+        }
+
+        void UpdateSuggestions()
+        {
+            var source = context.Get(Data.ItemSourceList);
+
+            environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
+            assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;
+            assemblyIntellisenseTextBox.Suggestions = source.AssemblyNameList;
+            classNameIntellisenseTextBox.Suggestions = source.ClassNameList;
+            methodNameIntellisenseTextBox.Suggestions = source.MethodNameList;
         }
 
         void OnLoad(object sender, RoutedEventArgs routedEventArgs)

@@ -17,5 +17,12 @@ namespace ApiInspector.Models
 
         public List<InvocationMethodParameterInfo> Parameters { get; set; } = new List<InvocationMethodParameterInfo>();
         #endregion
+
+        public override string ToString()
+        {
+           
+
+            return $"{ClassName}:{MethodName}";
+        }
     }
 }

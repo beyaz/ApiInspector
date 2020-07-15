@@ -1,6 +1,9 @@
-﻿using ApiInspector.DataAccess;
+﻿using System.Windows;
+using ApiInspector.DataAccess;
 using ApiInspector.DataFlow;
+using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
+using ApiInspector.Models;
 using BOA.DataFlow;
 
 namespace ApiInspector.MainWindow
@@ -32,7 +35,15 @@ namespace ApiInspector.MainWindow
             var builder = new ContextBuilder();
 
             context = builder.Build();
+
+            historyListBox.ItemsSource = HistoryManager.GetHistory(context);
         }
         #endregion
+
+        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
+        {
+            context.Update(Data.InvocationInfo,(InvocationInfo)historyListBox.SelectedItem);
+
+        }
     }
 }

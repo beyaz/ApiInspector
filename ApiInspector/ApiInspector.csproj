@@ -75,6 +75,7 @@
     <Compile Include="DataFlow\ContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Domain\Invoker.cs" />
+    <Compile Include="History\HistoryManager.cs" />
     <Compile Include="InvocationInfoEditor\Controller.cs" />
     <Compile Include="Components\IntellisenseTextBoxBase.cs" />
     <Compile Include="Components\MethodNameIntellisenseTextBox.cs" />
@@ -128,5 +129,6 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

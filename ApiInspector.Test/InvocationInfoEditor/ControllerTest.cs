@@ -23,7 +23,7 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 itemSourceList.AssemblyNameList.Should().BeNull();
                 
-                Controller.OnAssemblySearchDirectoryChanged(context);
+                Controller_old.OnAssemblySearchDirectoryChanged(context);
 
                 itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
             }
@@ -36,7 +36,7 @@ namespace ApiInspector.InvocationInfoEditor
                 invocationInfo.AssemblyName = "BOA.Process.Kernel.Card.dll";
 
 
-                Controller.OnAssemblyNameChanged(context);
+                Controller_old.OnAssemblyNameChanged(context);
 
                 itemSourceList.ClassNameList.Count.Should().BeGreaterThan(0);
             }
@@ -49,7 +49,7 @@ namespace ApiInspector.InvocationInfoEditor
                 invocationInfo.ClassName = "BOA.Process.Kernel.Card.CallCenter.IVR.CreditCard.GetCardDetail";
 
 
-                Controller.OnClassNameChanged(context);
+                Controller_old.OnClassNameChanged(context);
 
                 itemSourceList.MethodNameList.Count.Should().BeGreaterThan(0);
             }
@@ -64,7 +64,7 @@ namespace ApiInspector.InvocationInfoEditor
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";
 
 
-                Controller.OnMethodNameSelected(context);
+                Controller_old.OnMethodNameSelected(context);
 
                 context.Contains(Data.MethodDefinition).Should().BeTrue();
             }

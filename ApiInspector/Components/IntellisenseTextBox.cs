@@ -16,6 +16,11 @@ namespace ApiInspector.Components
         }
         #endregion
 
+        public void SetValue(string value)
+        {
+            Editor.Text  = value;
+            Popup.IsOpen = false;
+        }
         #region Public Properties
         /// <summary>
         ///     Gets or sets the context.
