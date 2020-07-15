@@ -76,35 +76,35 @@ namespace ApiInspector.InvocationInfoEditor
             
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(DataAccess.Data.InvocationInfo);
+                var invocationInfo = context.Get(Data.InvocationInfo);
                 invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
                 context.PublishEvent(ViewEvents.AssemblySearchDirectoryChanged);
             };
 
             environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(DataAccess.Data.InvocationInfo);
+                var invocationInfo = context.Get(Data.InvocationInfo);
                 invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
                 context.PublishEvent(ViewEvents.EnvironmentChanged);
             };
 
             assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(DataAccess.Data.InvocationInfo);
+                var invocationInfo = context.Get(Data.InvocationInfo);
                 invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
                 context.PublishEvent(ViewEvents.AssemblyNameChanged);
             };
 
             classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(DataAccess.Data.InvocationInfo);
+                var invocationInfo = context.Get(Data.InvocationInfo);
                 invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
                 context.PublishEvent(ViewEvents.ClassNameChanged);
             };
 
             methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(DataAccess.Data.InvocationInfo);
+                var invocationInfo = context.Get(Data.InvocationInfo);
                 invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
                 context.PublishEvent(ViewEvents.MethodNameChanged);
             };

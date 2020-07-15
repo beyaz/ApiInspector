@@ -18,8 +18,8 @@ namespace ApiInspector.DataFlow
 
 
             var context = new DataContext();
-            context.Add(DataAccess.Data.InvocationInfo,new InvocationInfo{ AssemblySearchDirectory = defaultAssemblySearchDirectory});
-            context.Add(DataAccess.Data.ItemSourceList,new ItemSourceList
+            context.Add(Data.InvocationInfo,new InvocationInfo{ AssemblySearchDirectory = defaultAssemblySearchDirectory});
+            context.Add(Data.ItemSourceList,new ItemSourceList
             {
                 AssemblySearchDirectoryList = new List<string>{  defaultAssemblySearchDirectory },
                 EnvironmentNameList = new List<string>{  "dev","test" }
@@ -43,6 +43,8 @@ namespace ApiInspector.DataFlow
             context.SubscribeEvent(EventNames.AssemblyNameChanged, () => Controller_old.OnAssemblyNameChanged(context));
             context.SubscribeEvent(EventNames.ClassNameChanged, () => Controller_old.OnClassNameChanged(context));
             context.SubscribeEvent(EventNames.MethodNameChanged,  () => Controller_old.OnMethodNameSelected(context));
+
+            
 
             
 

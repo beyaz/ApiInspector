@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
-using ApiInspector.InvocationInfoEditor;
+﻿using System.Windows.Controls;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using Mono.Cecil;
 
-namespace ApiInspector.DataAccess
+namespace ApiInspector.InvocationInfoEditor
 {
     static class Data
     {

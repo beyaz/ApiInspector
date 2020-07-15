@@ -69,10 +69,6 @@ namespace ApiInspector.DataFlow
         {
             var targetType = typeof(T);
 
-            if (targetType == typeof(CecilTypeVisitor))
-            {
-                return (T) (object) new CecilTypeVisitor(context.Get(Logger.Key));
-            }
 
             if (targetType == typeof(IServiceProvider))
             {
