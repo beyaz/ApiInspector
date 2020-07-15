@@ -74,6 +74,7 @@
     <Compile Include="History\HistoryManager.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />
+    <Compile Include="MainWindow\Extensions.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>

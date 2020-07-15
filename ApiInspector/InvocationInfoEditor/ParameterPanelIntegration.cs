@@ -59,7 +59,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             var label = new Label
             {
-                Content    = $"{definition.Name} ({definition.ParameterType.Name})",
+                Content    = $"{definition.Name} : {definition.ParameterType.Name}",
                 FontWeight = FontWeights.Bold
             };
 

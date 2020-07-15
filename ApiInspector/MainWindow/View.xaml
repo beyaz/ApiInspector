@@ -24,7 +24,7 @@
             </Grid.RowDefinitions>
            <StackPanel>
                <Label FontWeight="Bold">History</Label>
-               <TextBox></TextBox>
+               <TextBox x:Name="historyFilterTextBox" TextChanged="HistoryFilterTextBox_OnTextChanged"></TextBox>
            </StackPanel>
             <ListBox Grid.Row="1" x:Name="historyListBox" SelectionChanged="HistoryListBox_OnSelected">
 

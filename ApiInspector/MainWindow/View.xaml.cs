@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Data;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
+using Newtonsoft.Json;
 
 namespace ApiInspector.MainWindow
 {
@@ -40,6 +42,9 @@ namespace ApiInspector.MainWindow
             context = builder.Build();
 
             historyListBox.ItemsSource = context.Get(HistoryDataKey);
+
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+            view.Filter = HistoryFilter;
         }
         #endregion
 
@@ -51,26 +56,47 @@ namespace ApiInspector.MainWindow
 
          void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            invokingResponseView.SetText("invoke started...");
+
             Invoker.Invoke(context);
 
-            invokingResponseView.SetText(context.Get(Invoker.ExecutionResponse) + "");
+            var response = context.Get(Invoker.ExecutionResponse);
+            
+            invokingResponseView.SetText(ResultSerializer.SerializeToJson(response));
         }
 
-        
+         void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+         {
+             CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
+         }
+
+         private bool HistoryFilter(object item)
+         {
+             if(String.IsNullOrEmpty(historyFilterTextBox.Text))
+                 return true;
+             
+             
+             return ((InvocationInfo)item) .ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+         }
     }
 
-    static class Extensions
+    class ResultSerializer
     {
-        public static string GetText(this RichTextBox richTextBox)
+       public static string SerializeToJson(object value, bool ignoreDefaultValues = true)
         {
-            return new TextRange(richTextBox.Document.ContentStart,
-                                 richTextBox.Document.ContentEnd).Text;
-        }
+            if (value == null)
+            {
+                return null;
+            }
 
-        public static void SetText(this RichTextBox richTextBox, string text)
-        {
-            richTextBox.Document.Blocks.Clear();
-            richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
+            var settings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
+                Formatting           = Formatting.Indented,
+                DateFormatString     = "yyyy.MM.dd hh:mm:ss"
+            };
+
+            return JsonConvert.SerializeObject(value, settings);
         }
     }
 }
