@@ -6,6 +6,7 @@ using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
+using BOA.Base.Data;
 using BOA.DataFlow;
 using Mono.Cecil;
 
@@ -32,10 +33,10 @@ namespace ApiInspector.MainWindow
 
             BOAContextInitializer.InvocationInfo=      View.InvocationInfo =      Invoker.InvocationInfo = Data.InvocationInfo;
 
-            BOAContextInitializer.BOAExecutionContext = Invoker.BOAExecutionContext;
+            context.SetupGet(Invoker.BOAExecutionContext,GetExecutionDataContext);
 
             
-
+           
             // connect view events
             {
                 
@@ -116,5 +117,18 @@ namespace ApiInspector.MainWindow
 
             return typeDefinition;
         }
+
+
+         static ExecutionDataContext GetExecutionDataContext(DataContext context)
+         {
+             if (context.Contains(BOAContextInitializer.BOAExecutionContext))
+             {
+                 return context.Get(BOAContextInitializer.BOAExecutionContext);
+             }
+
+             BOAContextInitializer.Initialize(context);
+
+             return context.Get(BOAContextInitializer.BOAExecutionContext);
+         }
     }
 }

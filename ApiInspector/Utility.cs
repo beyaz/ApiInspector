@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace ApiInspector
 {
     static class Utility
-    {
+    { 
+        public static BindingFlags AllBindings
+        {
+            get
+            {
+                return BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            }
+        }
         #region Public Methods
         public static bool IsSuccess<T>(Func<T> action, ref T target)
         {

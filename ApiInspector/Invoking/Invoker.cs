@@ -7,6 +7,7 @@ using BOA.Base;
 using BOA.Base.Data;
 using BOA.DataFlow;
 using Newtonsoft.Json;
+using  static  ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
 {
@@ -33,7 +34,7 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
         #endregion
-
+       
         #region Public Methods
         /// <summary>
         ///     Invokes the specified invocation information.
@@ -61,7 +62,7 @@ namespace ApiInspector.Invoking
 
             var instance = CreateInstance(context, targetType);
 
-            var methodInfo = targetType.GetMethod(methodName);
+            var methodInfo = targetType.GetMethod(methodName,AllBindings);
             if (methodInfo == null)
             {
                 throw new ArgumentNullException(nameof(methodInfo));
