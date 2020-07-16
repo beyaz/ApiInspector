@@ -38,6 +38,9 @@
     <Reference Include="BOA.Base">
       <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>d:\BOA\Server\bin\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="BOA.Process.Kernel.Card">
       <HintPath>d:\BOA\Server\bin\BOA.Process.Kernel.Card.dll</HintPath>
     </Reference>
@@ -117,9 +120,6 @@
     </PackageReference>
     <PackageReference Include="BOA.UnitTestHelper">
       <Version>1.0.0.11</Version>
-    </PackageReference>
-    <PackageReference Include="Mono.Cecil">
-      <Version>0.11.2</Version>
     </PackageReference>
     <PackageReference Include="Notifications.Wpf">
       <Version>0.1.1</Version>
