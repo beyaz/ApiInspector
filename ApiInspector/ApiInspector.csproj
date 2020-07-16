@@ -145,4 +145,7 @@ copy /y "$(TargetDir)WpfControls.dll" "d:\boa\server\bin\"
 
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>taskkill /f /fi "imagename eq $(TargetFileName)"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
