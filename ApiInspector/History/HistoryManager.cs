@@ -16,8 +16,13 @@ namespace ApiInspector.History
         #region Public Methods
         public static IReadOnlyList<InvocationInfo> GetHistory(DataContext context)
         {
-
+            
             var localItems = new List<InvocationInfo>();
+
+            if (!Directory.Exists(DirectoryPath))
+            {
+                return localItems;
+            }
 
             foreach (var file in Directory.GetFiles(DirectoryPath))
             {
