@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.History;
-using ApiInspector.Invoking;
+using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using BOA.DataFlow;
+using Invoker = ApiInspector.Invoking.Invoker;
 
 namespace ApiInspector.MainWindow
 {
@@ -72,10 +75,17 @@ namespace ApiInspector.MainWindow
 
             invokingResponseView.SetText("invoke started...");
 
+            if (Detection.CanInvokeAsCardSystemOldAndNewApiCall(context))
+            {
+                CardSystemOldAndNewApiCall.Invoker.Run(context);
+                return;
+            }
+
             Invoker.Invoke(context);
 
             invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson));
         }
+
         #endregion
     }
 }

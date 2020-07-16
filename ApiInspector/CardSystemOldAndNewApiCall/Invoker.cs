@@ -9,9 +9,11 @@ using BOA.UnitTestHelper;
 
 namespace ApiInspector.CardSystemOldAndNewApiCall
 {
-    
     static class Invoker
     {
+
+        
+
         #region Public Methods
 
         public static DataKey<bool> IsDevEnvironment = new DataKey<bool>(nameof(IsDevEnvironment));

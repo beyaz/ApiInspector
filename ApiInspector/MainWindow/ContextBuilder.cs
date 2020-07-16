@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using ApiInspector.Application;
+using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.DataAccess;
 using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
@@ -9,6 +10,7 @@ using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
 using Mono.Cecil;
+using Invoker = ApiInspector.Invoking.Invoker;
 
 namespace ApiInspector.MainWindow
 {
@@ -47,6 +49,10 @@ namespace ApiInspector.MainWindow
                 context.SubscribeEvent(ViewEvents.MethodNameChanged,()=>ViewController.OnMethodNameSelected(context));
             }
 
+            {
+                Detection.InvocationInfo = Data.InvocationInfo;
+                Detection.MethodDefinition = Data.MethodDefinition;
+            }
            
 
             context.Add(Logger.Key, new Logger());

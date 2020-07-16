@@ -67,6 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CardSystemOldAndNewApiCall\Detection.cs" />
     <Compile Include="CardSystemOldAndNewApiCall\ResultSerializer.cs" />
     <Compile Include="CardSystemOldAndNewApiCall\Invoker.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
