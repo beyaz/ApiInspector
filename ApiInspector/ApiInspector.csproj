@@ -133,4 +133,16 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "$(TargetDir)$(TargetName).*" "d:\boa\server\bin\"
+
+
+copy /y "$(TargetDir)BOA.DataFlow.dll" "d:\boa\server\bin\"
+copy /y "$(TargetDir)BOA.UnitTestHelper.dll" "d:\boa\server\bin\"
+copy /y "$(TargetDir)Notifications.Wpf.dll" "d:\boa\server\bin\"
+copy /y "$(TargetDir)WpfControls.dll" "d:\boa\server\bin\"
+
+
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
