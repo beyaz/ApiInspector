@@ -35,6 +35,8 @@ namespace ApiInspector.MainWindow
 
                  View.InvocationInfo =      Invoker.InvocationInfo = Data.InvocationInfo;
 
+                 View.BOAExecutionContext = Invoker.BOAExecutionContext;
+
             context.SetupGet(Invoker.BOAExecutionContext,GetExecutionDataContext);
             context.SetupGet(BOAContextInitializer.TargetEnvironment,(c)=>c.Get(Data.InvocationInfo).Environment);
 

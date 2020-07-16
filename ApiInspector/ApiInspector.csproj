@@ -69,7 +69,6 @@
     </ApplicationDefinition>
     <Compile Include="CardSystemOldAndNewApiCall\Detection.cs" />
     <Compile Include="CardSystemOldAndNewApiCall\ResultSerializer.cs" />
-    <Compile Include="CardSystemOldAndNewApiCall\Invoker.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="CardSystemOldAndNewApiCall\ExternalCodeCompareProgramStarter.cs" />
     <Compile Include="InvocationInfoEditor\Data.cs" />

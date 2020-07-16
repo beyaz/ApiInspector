@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.History;
-using ApiInspector.InvocationInfoEditor;
+using ApiInspector.Invoking;
 using ApiInspector.Models;
+using BOA.Base;
 using BOA.DataFlow;
-using Invoker = ApiInspector.Invoking.Invoker;
+using BOA.Process.Kernel.Card;
 
 namespace ApiInspector.MainWindow
 {
     public partial class View
     {
         #region Static Fields
-        public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
-        public static DataKey<InvocationInfo>                InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        public static DataKey<ObjectHelper>                  BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
+        public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey      = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
+        public static DataKey<InvocationInfo>                InvocationInfo      = new DataKey<InvocationInfo>(nameof(InvocationInfo));
         #endregion
 
         #region Fields
@@ -71,13 +72,45 @@ namespace ApiInspector.MainWindow
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            HistoryManager.SaveToHistory(context.Get(InvocationInfo));
+            var invocationInfo = context.Get(InvocationInfo);
+
+            HistoryManager.SaveToHistory(invocationInfo);
 
             invokingResponseView.SetText("invoke started...");
 
             if (Detection.CanInvokeAsCardSystemOldAndNewApiCall(context))
             {
-                CardSystemOldAndNewApiCall.Invoker.Run(context);
+                var objectHelper = context.Get(BOAExecutionContext);
+
+                // CALL OLD SYSTEM
+                {
+                    objectHelper.Context.DBLayer.BeginTransaction();
+
+                    invocationInfo.MethodName = "ExecuteInOldCardSystem";
+
+                    Invoker.Invoke(context);
+
+                    objectHelper.Context.DBLayer.CommitTransaction();
+                    context.Update(ExternalCodeCompareProgramStarter.OldCardSystemResult, context.Get(Invoker.ExecutionResponseAsJson));
+                }
+
+                // CALL NEW SYSTEM
+                {
+                    objectHelper.Context.DBLayer.BeginTransaction();
+
+                    invocationInfo.MethodName = "ExecuteInNewCardSystem";
+
+                    CardService.UseLocalProxy = true;
+
+                    Invoker.Invoke(context);
+
+                    objectHelper.Context.DBLayer.CommitTransaction();
+
+                    context.Update(ExternalCodeCompareProgramStarter.NewCardSystemResult, context.Get(Invoker.ExecutionResponseAsJson));
+                }
+
+                ExternalCodeCompareProgramStarter.Start(context);
+
                 return;
             }
 
@@ -85,7 +118,6 @@ namespace ApiInspector.MainWindow
 
             invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson));
         }
-
         #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using ApiInspector.Application;
 using BOA.DataFlow;
@@ -11,8 +12,8 @@ namespace ApiInspector.CardSystemOldAndNewApiCall
     class ExternalCodeCompareProgramStarter
     {
         #region Static Fields
-        public static DataKey<string> NewCardSystemResultOutputFilePath = new DataKey<string>(nameof(NewCardSystemResultOutputFilePath));
-        public static DataKey<string> OldCardSystemResultOutputFilePath = new DataKey<string>(nameof(OldCardSystemResultOutputFilePath));
+        public static DataKey<string> NewCardSystemResult = new DataKey<string>(nameof(NewCardSystemResult));
+        public static DataKey<string> OldCardSystemResult = new DataKey<string>(nameof(OldCardSystemResult));
         #endregion
 
         #region Public Methods
@@ -21,8 +22,8 @@ namespace ApiInspector.CardSystemOldAndNewApiCall
         /// </summary>
         public static void Start(DataContext context)
         {
-            var source = context.Get(OldCardSystemResultOutputFilePath);
-            var target = context.Get(NewCardSystemResultOutputFilePath);
+            var oldCardSystemResult = context.Get(OldCardSystemResult);
+            var newCardSystemResult = context.Get(NewCardSystemResult);
 
             var externalProgramPaths = GetProgramPath();
             if (externalProgramPaths == null)
@@ -31,9 +32,17 @@ namespace ApiInspector.CardSystemOldAndNewApiCall
                 return;
             }
 
+            var outputFolderPath = System.IO.Path.GetTempPath();
+
+            var oldCardSystemResponseFilePath = Path.Combine(outputFolderPath, "OldCardSystemResponse.json");
+            var newCardSystemResponseFilePath = Path.Combine(outputFolderPath, "NewCardSystemResponse.json");
+
+            File.WriteAllText(oldCardSystemResponseFilePath, oldCardSystemResult);
+            File.WriteAllText(newCardSystemResponseFilePath, newCardSystemResult);
+
             Process.Start(new ProcessStartInfo(externalProgramPaths)
             {
-                Arguments = $"{source} {target}"
+                Arguments = $"{oldCardSystemResponseFilePath} {newCardSystemResponseFilePath}"
             });
         }
         #endregion
