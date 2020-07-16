@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -40,6 +40,8 @@ namespace ApiInspector.MainWindow
             currentInvocationInfo.Context = context;
 
             context.Update(Trace,AppendTraceMessage);
+
+            StartTimer();
         }
         #endregion
 
@@ -79,24 +81,28 @@ namespace ApiInspector.MainWindow
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            Dispatcher.InvokeAsync(OnExecuteClicked, DispatcherPriority.Normal);
+            //Action action = this.OnExecuteClicked;
+
+            new Thread(OnExecuteClicked).Start();
+            //Dispatcher.BeginInvoke(DispatcherPriority.Background,action);
 
         }
         void OnExecuteClicked()
         {
-            
+            var trace = context.Get(Trace);
 
             var invocationInfo = context.Get(InvocationInfo);
 
             HistoryManager.SaveToHistory(invocationInfo);
 
-            invokingResponseView.SetText(string.Empty);
+            
+            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
             if (Detection.CanInvokeAsCardSystemOldAndNewApiCall(context))
             {
                 var objectHelper = context.Get(BOAExecutionContext);
 
-                AppendTraceMessage("------------- EXECUTE STARTED FOR OLD CARD SYSTEM -----------------");
+                trace("------------- EXECUTE STARTED FOR OLD CARD SYSTEM -----------------");
                 {
                     objectHelper.Context.DBLayer.BeginTransaction();
 
@@ -108,7 +114,7 @@ namespace ApiInspector.MainWindow
                     context.Update(ExternalCodeCompareProgramStarter.OldCardSystemResult, context.Get(Invoker.ExecutionResponseAsJson));
                 }
 
-                AppendTraceMessage("------------- EXECUTE STARTED FOR NEW CARD SYSTEM -----------------");
+                trace("------------- EXECUTE STARTED FOR NEW CARD SYSTEM -----------------");
                 {
                     objectHelper.Context.DBLayer.BeginTransaction();
 
@@ -128,23 +134,52 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
-            AppendTraceMessage("------------- EXECUTE STARTED -----------------");
+            trace("------------- EXECUTE STARTED -----------------");
             Invoker.Invoke(context);
 
-            invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson));
+            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson)); });
 
-            AppendTraceMessage(string.Empty);
-            AppendTraceMessage(string.Empty);
-            AppendTraceMessage(string.Empty);
+            trace(string.Empty);
+            trace(string.Empty);
+            trace(string.Empty);
         }
         #endregion
 
-        
+        void StartTimer()
+        {
+            var timer         =  new System.Timers.Timer(50);
+            timer.Elapsed += OnTimedEvent;
+            timer.Start();
+        }
+
+        void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+            foreach (var message in traceMessages)
+            {
+               
+                    traceViewer.AppendText("\r" + message);
+                    traceViewer.ScrollToEnd();
+              
+            }
+
+            traceMessages.Clear();
+            });
+        }
+
+        readonly List<string> traceMessages = new List<string>();
+
         void AppendTraceMessage(string message)
         {
-            traceViewer.AppendText("\r" + message);
-            traceViewer.ScrollToEnd();
-            Thread.Sleep(100);
+            traceMessages.Add(message);
+
+            //Dispatcher.Invoke(() =>
+            //{
+            //    traceViewer.AppendText("\r" + message);
+            //    traceViewer.ScrollToEnd();
+            //    Thread.Sleep(100);
+            //});
         }
     }
 }

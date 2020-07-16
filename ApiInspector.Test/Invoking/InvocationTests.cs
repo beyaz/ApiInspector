@@ -109,6 +109,7 @@ namespace ApiInspector.Invoking
 
             var context = new DataContext();
             context.SetupGet(Invoker.InvocationInfo,(c)=>invocationInfo);
+            context.SetupGet(Invoker.Trace,(c)=> (message)=>{});
             
 
             Invoker.Invoke(context);
