@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.History;
 using ApiInspector.Invoking;
@@ -19,6 +20,8 @@ namespace ApiInspector.MainWindow
         public static DataKey<ObjectHelper>                  BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
         public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey      = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
         public static DataKey<InvocationInfo>                InvocationInfo      = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+
+        public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
         #endregion
 
         #region Fields
@@ -33,6 +36,8 @@ namespace ApiInspector.MainWindow
             InitializeContext();
 
             currentInvocationInfo.Context = context;
+
+            context.Update(Trace,AppendTraceMessage);
         }
         #endregion
 
@@ -72,17 +77,19 @@ namespace ApiInspector.MainWindow
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            
+
             var invocationInfo = context.Get(InvocationInfo);
 
             HistoryManager.SaveToHistory(invocationInfo);
 
-            invokingResponseView.SetText("invoke started...");
+            invokingResponseView.SetText(string.Empty);
 
             if (Detection.CanInvokeAsCardSystemOldAndNewApiCall(context))
             {
                 var objectHelper = context.Get(BOAExecutionContext);
 
-                // CALL OLD SYSTEM
+                AppendTraceMessage("------------- EXECUTE STARTED FOR OLD CARD SYSTEM -----------------");
                 {
                     objectHelper.Context.DBLayer.BeginTransaction();
 
@@ -94,7 +101,7 @@ namespace ApiInspector.MainWindow
                     context.Update(ExternalCodeCompareProgramStarter.OldCardSystemResult, context.Get(Invoker.ExecutionResponseAsJson));
                 }
 
-                // CALL NEW SYSTEM
+                AppendTraceMessage("------------- EXECUTE STARTED FOR NEW CARD SYSTEM -----------------");
                 {
                     objectHelper.Context.DBLayer.BeginTransaction();
 
@@ -114,10 +121,21 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
+            AppendTraceMessage("------------- EXECUTE STARTED -----------------");
             Invoker.Invoke(context);
 
             invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson));
         }
         #endregion
+
+        
+        void AppendTraceMessage(string message)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                traceViewer.AppendText("\r"+message);
+                traceViewer.ScrollToEnd();
+            }, DispatcherPriority.Normal);
+        }
     }
 }

@@ -36,6 +36,8 @@ namespace ApiInspector.Invoking
         ///     The invocation information
         /// </summary>
         public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+
+        public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
         #endregion
 
         #region Public Methods
@@ -44,6 +46,8 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static void Invoke(DataContext context)
         {
+            var trace = context.Get(Trace);
+
             var invocationInfo = context.Get(InvocationInfo);
 
             var assemblyName = invocationInfo.AssemblyName;
@@ -51,6 +55,8 @@ namespace ApiInspector.Invoking
             var className    = invocationInfo.ClassName;
 
             Type targetType = null;
+
+            trace($"Started to search class: {className}");
 
             if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
             {
@@ -65,12 +71,14 @@ namespace ApiInspector.Invoking
 
             var instance = CreateInstance(context, targetType);
 
+            trace($"Started to search method: {methodName}");
             var methodInfo = targetType.GetMethod(methodName, AllBindings);
             if (methodInfo == null)
             {
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
+            trace($"Preparing invocation parameters");
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
             var invocationParameters     = new List<object>();
@@ -94,7 +102,9 @@ namespace ApiInspector.Invoking
                 invocationParameters.Add(value);
             }
 
+            trace("Invoke started. Response waiting...");
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+            trace($"Successfully invoked.");
 
             context.Update(ExecutionResponse, response);
             context.Update(ExecutionResponseAsJson, SerializeToJson(response));

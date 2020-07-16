@@ -55,7 +55,10 @@ namespace ApiInspector.MainWindow
                 Detection.InvocationInfo = Data.InvocationInfo;
                 Detection.MethodDefinition = Data.MethodDefinition;
             }
-           
+
+            {
+                MainWindow.View.Trace = Invoker.Trace;
+            }
 
             context.Add(Logger.Key, new Logger());
 
