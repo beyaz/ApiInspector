@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApiInspector.Models;
 using BOA.Base.Data;
 using BOA.Common.Types;
 using BOA.DataFlow;
@@ -20,9 +19,9 @@ namespace ApiInspector.Invoking
         public static DataKey<ExecutionDataContext> BOAExecutionContext = new DataKey<ExecutionDataContext>(nameof(BOAExecutionContext));
 
         /// <summary>
-        ///     The invocation information
+        ///     The target environment
         /// </summary>
-        public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        public static DataKey<string> TargetEnvironment = new DataKey<string>(nameof(TargetEnvironment));
         #endregion
 
         #region Public Methods
@@ -31,9 +30,7 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static void Initialize(DataContext context)
         {
-            var invocationInfo = context.Get(InvocationInfo);
-
-            var targetEnvironment = invocationInfo.Environment;
+            var targetEnvironment = context.Get(TargetEnvironment);
 
             ExecutionDataContext executionDataContext;
             if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -49,10 +46,10 @@ namespace ApiInspector.Invoking
             {
                 executionDataContext = new BOATestContextTest().objectHelper.Context;
 
-                //executionDataContext.DBLayer.ConnectionMock = new Dictionary<Databases, string>
-                //{
-                //    {Databases.BanksoftCC, @"Data Source=srvxtest\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
-                //};
+                executionDataContext.DBLayer.ConnectionMock = new Dictionary<Databases, string>
+                {
+                    {Databases.BanksoftCC, @"Data Source=srvxtest\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
+                };
             }
             else
             {

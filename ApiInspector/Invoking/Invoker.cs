@@ -76,6 +76,13 @@ namespace ApiInspector.Invoking
             {
                 var value = parameters[i].Value;
                 var targetParameterType = methodParametersInDotNet[i].ParameterType;
+
+                if (targetParameterType == typeof(ObjectHelper))
+                {
+                    value = new ObjectHelper {Context = context.Get(BOAExecutionContext)};
+                }
+
+
                 if ( targetParameterType.FullName != typeof(string).FullName && targetParameterType.IsClass && value is string)
                 {
                     value = JsonConvert.DeserializeObject((string) value, targetParameterType);

@@ -40,7 +40,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel  >
-                <Button HorizontalAlignment="Right" Click="OnExecuteClicked"> Execute</Button>
+                <Button HorizontalAlignment="Right" x:Name="executeButton" Click="OnExecuteClicked"> Execute</Button>
                
                 <invocationInfoEditor:View x:Name="currentInvocationInfo"  Margin="0,10,0,0" />
 
