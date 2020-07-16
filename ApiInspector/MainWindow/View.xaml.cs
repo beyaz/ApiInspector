@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -77,6 +79,11 @@ namespace ApiInspector.MainWindow
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            Dispatcher.InvokeAsync(OnExecuteClicked, DispatcherPriority.Normal);
+
+        }
+        void OnExecuteClicked()
+        {
             
 
             var invocationInfo = context.Get(InvocationInfo);
@@ -125,17 +132,19 @@ namespace ApiInspector.MainWindow
             Invoker.Invoke(context);
 
             invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson));
+
+            AppendTraceMessage(string.Empty);
+            AppendTraceMessage(string.Empty);
+            AppendTraceMessage(string.Empty);
         }
         #endregion
 
         
         void AppendTraceMessage(string message)
         {
-            Dispatcher.InvokeAsync(() =>
-            {
-                traceViewer.AppendText("\r"+message);
-                traceViewer.ScrollToEnd();
-            }, DispatcherPriority.Normal);
+            traceViewer.AppendText("\r" + message);
+            traceViewer.ScrollToEnd();
+            Thread.Sleep(100);
         }
     }
 }
