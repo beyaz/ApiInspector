@@ -49,19 +49,20 @@ namespace ApiInspector.Invoking
             {
                 objectHelper = new BOATestContextDev().objectHelper;
 
-                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
-                {
-                    {Databases.BanksoftCC, @"Data Source=srvxdev\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
-                };
+                //objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
+                //{
+                //    {Databases.BanksoftCC, @"Data Source=srvxdev\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
+                //};
             }
             else if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 objectHelper = new BOATestContextTest().objectHelper;
 
-                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
-                {
-                    {Databases.BanksoftCC, @"Data Source=srvxtest\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
-                };
+                //objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
+                //{
+                //    {Databases.BOACard, @"Data Source=srvxtest\zumrut;Initial Catalog=BOACard2;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"},
+                //    {Databases.BanksoftCC, @"Data Source=srvxtest\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
+                //};
             }
             else
             {

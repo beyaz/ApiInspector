@@ -38,6 +38,9 @@ namespace ApiInspector.Invoking
         public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
 
         public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
+
+        public static DataKey<Exception> Error = new DataKey<Exception>(nameof(Error));
+
         #endregion
 
         #region Public Methods
@@ -46,7 +49,10 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static void Invoke(DataContext context)
         {
+            context.TryRemove(Error);
+
             var trace = context.Get(Trace);
+
 
             var invocationInfo = context.Get(InvocationInfo);
 
@@ -102,12 +108,23 @@ namespace ApiInspector.Invoking
                 invocationParameters.Add(value);
             }
 
-            trace("Invoke started. Response waiting...");
-            var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
-            trace($"Successfully invoked.");
+            try
+            {
+                trace("Invoke started. Response waiting...");
+                object response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+                trace($"Successfully invoked.");
+                context.Update(ExecutionResponse, response);
+                context.Update(ExecutionResponseAsJson, SerializeToJson(response));
+            }
+            catch (Exception e)
+            {
+                trace($"FAIL:{e}");
+                context.Add(Error,e);
+                context.Update(ExecutionResponse, e);
+                context.Update(ExecutionResponseAsJson, SerializeToJson(e));
+            }
 
-            context.Update(ExecutionResponse, response);
-            context.Update(ExecutionResponseAsJson, SerializeToJson(response));
+            
         }
         #endregion
 
