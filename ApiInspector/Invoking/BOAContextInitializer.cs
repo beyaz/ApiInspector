@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BOA.Base.Data;
+using BOA.Base;
 using BOA.Common.Types;
 using BOA.DataFlow;
 using BOA.UnitTestHelper;
@@ -16,7 +16,7 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     The boa execution context
         /// </summary>
-        public static DataKey<ExecutionDataContext> BOAExecutionContext = new DataKey<ExecutionDataContext>(nameof(BOAExecutionContext));
+        public static DataKey<ObjectHelper> BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
 
         /// <summary>
         ///     The target environment
@@ -32,21 +32,33 @@ namespace ApiInspector.Invoking
         {
             var targetEnvironment = context.Get(TargetEnvironment);
 
-            ExecutionDataContext executionDataContext;
+            var objectHelper = CreateObjectHelper(targetEnvironment);
+
+            context.Update(BOAExecutionContext, objectHelper);
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Creates the object helper.
+        /// </summary>
+        static ObjectHelper CreateObjectHelper(string targetEnvironment)
+        {
+            ObjectHelper objectHelper = null;
             if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                executionDataContext = new BOATestContextDev().objectHelper.Context;
+                objectHelper = new BOATestContextDev().objectHelper;
 
-                executionDataContext.DBLayer.ConnectionMock = new Dictionary<Databases, string>
+                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
                 {
                     {Databases.BanksoftCC, @"Data Source=srvxdev\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
                 };
             }
             else if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                executionDataContext = new BOATestContextTest().objectHelper.Context;
+                objectHelper = new BOATestContextTest().objectHelper;
 
-                executionDataContext.DBLayer.ConnectionMock = new Dictionary<Databases, string>
+                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
                 {
                     {Databases.BanksoftCC, @"Data Source=srvxtest\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
                 };
@@ -56,7 +68,7 @@ namespace ApiInspector.Invoking
                 throw new NotImplementedException(nameof(targetEnvironment));
             }
 
-            context.Update(BOAExecutionContext, executionDataContext);
+            return objectHelper;
         }
         #endregion
     }

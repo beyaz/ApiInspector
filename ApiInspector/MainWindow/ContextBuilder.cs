@@ -6,7 +6,7 @@ using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
-using BOA.Base.Data;
+using BOA.Base;
 using BOA.DataFlow;
 using Mono.Cecil;
 
@@ -120,7 +120,7 @@ namespace ApiInspector.MainWindow
         }
 
 
-         static ExecutionDataContext GetExecutionDataContext(DataContext context)
+         static ObjectHelper GetExecutionDataContext(DataContext context)
          {
              if (context.Contains(BOAContextInitializer.BOAExecutionContext))
              {
