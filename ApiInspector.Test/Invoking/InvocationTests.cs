@@ -107,14 +107,7 @@ namespace ApiInspector.Invoking
         {
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
-            var context = new DataContext();
-
-            var invokerInput = new InvokerInput
-            {
-                Trace = (message) => { },
-                InvocationInfo = invocationInfo
-            };
-            var output = Invoker.Invoke(context,invokerInput);
+            var output = new Invoker((message) => { }).Invoke(invocationInfo);
 
             output.ExecutionResponse.Should().Be(expectedResponse);
         }
