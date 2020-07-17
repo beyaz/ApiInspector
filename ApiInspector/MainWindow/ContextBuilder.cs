@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using ApiInspector.Application;
-using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.DataAccess;
 using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
@@ -10,7 +9,6 @@ using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
 using Mono.Cecil;
-using Invoker = ApiInspector.Invoking.Invoker;
 
 namespace ApiInspector.MainWindow
 {
@@ -21,71 +19,60 @@ namespace ApiInspector.MainWindow
         {
             var defaultAssemblySearchDirectory = @"d:\boa\server\bin\";
 
-            
-
-
             var context = new DataContext();
-            context.Add(Data.InvocationInfo,new InvocationInfo{ AssemblySearchDirectory = defaultAssemblySearchDirectory});
-            context.Add(Data.ItemSourceList,new ItemSourceList
+            context.Add(Data.InvocationInfo, new InvocationInfo {AssemblySearchDirectory = defaultAssemblySearchDirectory});
+            context.Add(Data.ItemSourceList, new ItemSourceList
             {
-                AssemblySearchDirectoryList = new List<string>{  defaultAssemblySearchDirectory },
-                EnvironmentNameList = new List<string>{  "dev","test" }
+                AssemblySearchDirectoryList = new List<string> {defaultAssemblySearchDirectory},
+                EnvironmentNameList         = new List<string> {"dev", "test"}
             });
 
+            View.InvocationInfo = Invoker.InvocationInfo = Data.InvocationInfo;
 
-                 View.InvocationInfo =      Invoker.InvocationInfo = Data.InvocationInfo;
+            View.BOAExecutionContext = Invoker.BOAExecutionContext;
 
-                 View.BOAExecutionContext = Invoker.BOAExecutionContext;
-
-            context.SetupGet(Invoker.BOAExecutionContext,GetExecutionDataContext);
-            context.SetupGet(BOAContextInitializer.TargetEnvironment,(c)=>c.Get(Data.InvocationInfo).Environment);
+            context.SetupGet(Invoker.BOAExecutionContext, GetExecutionDataContext);
+            context.SetupGet(BOAContextInitializer.TargetEnvironment, c => c.Get(Data.InvocationInfo).Environment);
 
             Invoker.InvocationFinished = BOAContextInitializer.BOATransactionShouldCommit;
-           
+
             // connect view events
             {
-                
-                context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged,()=>ViewController.OnAssemblySearchDirectoryChanged(context));
-                context.SubscribeEvent(ViewEvents.AssemblyNameChanged,()=>ViewController.OnAssemblyNameChanged(context));
-                context.SubscribeEvent(ViewEvents.ClassNameChanged,()=>ViewController.OnClassNameChanged(context));
-                context.SubscribeEvent(ViewEvents.MethodNameChanged,()=>ViewController.OnMethodNameSelected(context));
+                context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, () => ViewController.OnAssemblySearchDirectoryChanged(context));
+                context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => ViewController.OnAssemblyNameChanged(context));
+                context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
+                context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
             }
 
             {
-                Detection.InvocationInfo = Data.InvocationInfo;
-                Detection.MethodDefinition = Data.MethodDefinition;
-            }
-
-            {
-                MainWindow.View.Trace = Invoker.Trace;
+                View.Trace = Invoker.Trace;
             }
 
             context.Add(Logger.Key, new Logger());
 
-
             context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => ViewController.OnAssemblyNameChanged(context));
             context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
-            context.SubscribeEvent(ViewEvents.MethodNameChanged,  () => ViewController.OnMethodNameSelected(context));
+            context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
 
             context.SetupGet(CecilHelper.AssemblySearchDirectories, c =>
             {
                 var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
 
-                return new List<string>{assemblySearchDirectory};
+                return new List<string> {assemblySearchDirectory};
             });
 
             context.SetupGet(CecilHelper.Log, c => message => c.Get(Logger.Key).Log(message));
-            context.SetupGet(ViewController.AssemblyFilePath,GetAssemblyFilePath);
-            context.SetupGet(ViewController.TypesInAssembly,GetTypesInAssembly);
-            context.SetupGet(ViewController.TypeDefinitionRelatedClassName,GeTypeDefinitionRelatedClassName);
+            context.SetupGet(ViewController.AssemblyFilePath, GetAssemblyFilePath);
+            context.SetupGet(ViewController.TypesInAssembly, GetTypesInAssembly);
+            context.SetupGet(ViewController.TypeDefinitionRelatedClassName, GeTypeDefinitionRelatedClassName);
 
-            context.SetupGet(MainWindow.View.HistoryDataKey,HistoryManager.GetHistory);
-            
+            context.SetupGet(View.HistoryDataKey, HistoryManager.GetHistory);
 
             return context;
         }
         #endregion
 
+        #region Methods
         static string GetAssemblyFilePath(DataContext context)
         {
             var invocationInfo    = context.Get(Data.InvocationInfo);
@@ -94,6 +81,18 @@ namespace ApiInspector.MainWindow
             var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
 
             return assemblyPath;
+        }
+
+        static ObjectHelper GetExecutionDataContext(DataContext context)
+        {
+            if (context.Contains(BOAContextInitializer.BOAExecutionContext))
+            {
+                return context.Get(BOAContextInitializer.BOAExecutionContext);
+            }
+
+            BOAContextInitializer.Initialize(context);
+
+            return context.Get(BOAContextInitializer.BOAExecutionContext);
         }
 
         static IReadOnlyList<TypeDefinition> GetTypesInAssembly(DataContext context)
@@ -107,12 +106,11 @@ namespace ApiInspector.MainWindow
             return items;
         }
 
-         static TypeDefinition GeTypeDefinitionRelatedClassName(DataContext context)
+        static TypeDefinition GeTypeDefinitionRelatedClassName(DataContext context)
         {
             var assemblyFilePath = context.Get(ViewController.AssemblyFilePath);
-            var invocationInfo = context.Get(Data.InvocationInfo);
-            var logger = context.Get(Logger.Key);
-
+            var invocationInfo   = context.Get(Data.InvocationInfo);
+            var logger           = context.Get(Logger.Key);
 
             if (!File.Exists(assemblyFilePath))
             {
@@ -129,18 +127,6 @@ namespace ApiInspector.MainWindow
 
             return typeDefinition;
         }
-
-
-         static ObjectHelper GetExecutionDataContext(DataContext context)
-         {
-             if (context.Contains(BOAContextInitializer.BOAExecutionContext))
-             {
-                 return context.Get(BOAContextInitializer.BOAExecutionContext);
-             }
-
-             BOAContextInitializer.Initialize(context);
-
-             return context.Get(BOAContextInitializer.BOAExecutionContext);
-         }
+        #endregion
     }
 }

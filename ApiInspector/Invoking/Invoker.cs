@@ -22,6 +22,8 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static DataKey<ObjectHelper> BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
 
+        public static DataKey<Exception> Error = new DataKey<Exception>(nameof(Error));
+
         /// <summary>
         ///     The execution response
         /// </summary>
@@ -32,19 +34,15 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static DataKey<string> ExecutionResponseAsJson = new DataKey<string>(nameof(ExecutionResponseAsJson));
 
+        public static string InvocationFinished = nameof(InvocationFinished);
+
         /// <summary>
         ///     The invocation information
         /// </summary>
         public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
 
         public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
-
-        public static DataKey<Exception> Error = new DataKey<Exception>(nameof(Error));
-
         #endregion
-
-        public static string InvocationFinished = nameof(InvocationFinished);
-
 
         #region Public Methods
         /// <summary>
@@ -55,7 +53,6 @@ namespace ApiInspector.Invoking
             context.TryRemove(Error);
 
             var trace = context.Get(Trace);
-
 
             var invocationInfo = context.Get(InvocationInfo);
 
@@ -87,7 +84,7 @@ namespace ApiInspector.Invoking
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
-            trace($"Preparing invocation parameters");
+            trace("Preparing invocation parameters");
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
             var invocationParameters     = new List<object>();
@@ -114,21 +111,20 @@ namespace ApiInspector.Invoking
             try
             {
                 trace("Invoke started. Response waiting...");
-                object response = methodInfo.Invoke(instance, invocationParameters.ToArray());
-                trace($"Successfully invoked.");
+                var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+                trace("Successfully invoked.");
                 context.Update(ExecutionResponse, response);
                 context.Update(ExecutionResponseAsJson, SerializeToJson(response));
             }
             catch (Exception e)
             {
                 trace($"FAIL:{e}");
-                context.Add(Error,e);
+                context.Add(Error, e);
                 context.Update(ExecutionResponse, e);
                 context.Update(ExecutionResponseAsJson, SerializeToJson(e));
             }
 
             context.PublishEvent(InvocationFinished);
-            
         }
         #endregion
 

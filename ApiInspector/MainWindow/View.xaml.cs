@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
-using BOA.Process.Kernel.Card;
 using Timer = System.Timers.Timer;
 
 namespace ApiInspector.MainWindow
@@ -112,42 +109,6 @@ namespace ApiInspector.MainWindow
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
-            if (Detection.CanInvokeAsCardSystemOldAndNewApiCall(context))
-            {
-                var objectHelper = context.Get(BOAExecutionContext);
-
-                trace("------------- EXECUTE STARTED FOR OLD CARD SYSTEM -----------------");
-                {
-                    objectHelper.Context.DBLayer.BeginTransaction();
-
-                    invocationInfo.MethodName = "ExecuteInOldCardSystem";
-
-                    Invoker.Invoke(context);
-
-                    objectHelper.Context.DBLayer.CommitTransaction();
-                    context.Update(ExternalCodeCompareProgramStarter.OldCardSystemResult, context.Get(Invoker.ExecutionResponseAsJson));
-                }
-
-                trace("------------- EXECUTE STARTED FOR NEW CARD SYSTEM -----------------");
-                {
-                    objectHelper.Context.DBLayer.BeginTransaction();
-
-                    invocationInfo.MethodName = "ExecuteInNewCardSystem";
-
-                    CardService.UseLocalProxy = true;
-
-                    Invoker.Invoke(context);
-
-                    objectHelper.Context.DBLayer.CommitTransaction();
-
-                    context.Update(ExternalCodeCompareProgramStarter.NewCardSystemResult, context.Get(Invoker.ExecutionResponseAsJson));
-                }
-
-                ExternalCodeCompareProgramStarter.Start(context);
-
-                return;
-            }
-
             trace("------------- EXECUTE STARTED -----------------");
             Invoker.Invoke(context);
 
@@ -158,17 +119,6 @@ namespace ApiInspector.MainWindow
             trace(string.Empty);
             trace(string.Empty);
             trace(string.Empty);
-        }
-
-        void TryToExportExecutionResponseToFile()
-        {
-            var outputFilePath = context.Get(InvocationInfo).ResponseOutputFilePath;
-            if (string.IsNullOrWhiteSpace(outputFilePath))
-            {
-                return;
-            }
-
-            Utility.WriteAllText(outputFilePath,context.Get(Invoker.ExecutionResponseAsJson));
         }
 
         void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -195,6 +145,17 @@ namespace ApiInspector.MainWindow
             var timer = new Timer(50);
             timer.Elapsed += OnTimedEvent;
             timer.Start();
+        }
+
+        void TryToExportExecutionResponseToFile()
+        {
+            var outputFilePath = context.Get(InvocationInfo).ResponseOutputFilePath;
+            if (string.IsNullOrWhiteSpace(outputFilePath))
+            {
+                return;
+            }
+
+            Utility.WriteAllText(outputFilePath, context.Get(Invoker.ExecutionResponseAsJson));
         }
         #endregion
     }

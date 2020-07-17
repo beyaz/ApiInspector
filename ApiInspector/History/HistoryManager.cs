@@ -9,14 +9,13 @@ namespace ApiInspector.History
     static class HistoryManager
     {
         #region Properties
-        static string DirectoryPath => Path.GetDirectoryName(typeof(HistoryManager).Assembly.Location) + Path.DirectorySeparatorChar + 
+        static string DirectoryPath => Path.GetDirectoryName(typeof(HistoryManager).Assembly.Location) + Path.DirectorySeparatorChar +
                                        nameof(ApiInspector) + "History" + Path.DirectorySeparatorChar;
         #endregion
 
         #region Public Methods
         public static IReadOnlyList<InvocationInfo> GetHistory(DataContext context)
         {
-            
             var localItems = new List<InvocationInfo>();
 
             if (!Directory.Exists(DirectoryPath))
@@ -30,14 +29,13 @@ namespace ApiInspector.History
             }
 
             return localItems;
-
         }
 
         public static void SaveToHistory(InvocationInfo info)
         {
             var filePath = Path.Combine(DirectoryPath, info.ToString().Replace(":", "____") + ".json");
 
-            Utility.WriteAllText(filePath,SerializeToJson(info));
+            Utility.WriteAllText(filePath, SerializeToJson(info));
         }
         #endregion
 

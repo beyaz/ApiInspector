@@ -6,14 +6,14 @@ using Newtonsoft.Json;
 namespace ApiInspector
 {
     static class Utility
-    { 
+    {
+        #region Public Properties
         public static BindingFlags AllBindings
         {
-            get
-            {
-                return BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            }
+            get { return BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic; }
         }
+        #endregion
+
         #region Public Methods
         public static bool IsSuccess<T>(Func<T> action, ref T target)
         {
@@ -28,7 +28,6 @@ namespace ApiInspector
                 return false;
             }
         }
-
 
         public static string SerializeToJson(object value, bool ignoreDefaultValues = true)
         {
@@ -60,7 +59,7 @@ namespace ApiInspector
             }
         }
 
-        public static void WriteAllText(string filePath,string content)
+        public static void WriteAllText(string filePath, string content)
         {
             var directoryName = Path.GetDirectoryName(filePath);
             if (directoryName == null)

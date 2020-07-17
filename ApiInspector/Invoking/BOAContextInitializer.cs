@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using BOA.Base;
-using BOA.Common.Types;
 using BOA.DataFlow;
 using BOA.Process.Kernel.Card;
 using BOA.UnitTestHelper;
@@ -19,13 +17,13 @@ namespace ApiInspector.Invoking
         /// </summary>
         public static DataKey<ObjectHelper> BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
 
+        public static string BOATransactionShouldCommit = nameof(BOATransactionShouldCommit);
+
         /// <summary>
         ///     The target environment
         /// </summary>
         public static DataKey<string> TargetEnvironment = new DataKey<string>(nameof(TargetEnvironment));
         #endregion
-
-        public static string BOATransactionShouldCommit = nameof(BOATransactionShouldCommit);
 
         #region Public Methods
         /// <summary>
@@ -43,16 +41,8 @@ namespace ApiInspector.Invoking
 
             context.Update(BOAExecutionContext, objectHelper);
 
-            context.SubscribeEvent(BOATransactionShouldCommit,()=> { Dispose(context); });
+            context.SubscribeEvent(BOATransactionShouldCommit, () => { Dispose(context); });
         }
-
-        static void Dispose(DataContext context)
-        {
-            var objectHelper =  context.Get(BOAExecutionContext);
-
-            objectHelper.Context.DBLayer.CommitTransaction();
-        }
-        
         #endregion
 
         #region Methods
@@ -87,6 +77,13 @@ namespace ApiInspector.Invoking
             }
 
             return objectHelper;
+        }
+
+        static void Dispose(DataContext context)
+        {
+            var objectHelper = context.Get(BOAExecutionContext);
+
+            objectHelper.Context.DBLayer.CommitTransaction();
         }
         #endregion
     }

@@ -1,41 +1,39 @@
-﻿<UserControl x:Class="ApiInspector.InvocationInfoEditor.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ApiInspector.Components"
-             mc:Ignorable="d" 
-             x:Name="CodeBehind"
-             DataContext="{Binding ElementName=CodeBehind}">
+﻿<UserControl x:Class = "ApiInspector.InvocationInfoEditor.View"
+             xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local = "clr-namespace:ApiInspector.Components"
+             mc:Ignorable = "d"
+             x:Name = "CodeBehind"
+             DataContext = "{Binding ElementName=CodeBehind}" >
     <Grid>
         <StackPanel>
             <StackPanel>
-                <Label FontWeight="Bold"> Target BOA Environment (Dev,Test)</Label>
-                <local:IntellisenseTextBox x:Name="environmentIntellisenseTextBox" />
+                <Label FontWeight = "Bold" > Target BOA Environment (Dev,Test)</Label>
+                <local:IntellisenseTextBox x:Name = "environmentIntellisenseTextBox" />
             </StackPanel>
-            <StackPanel Margin="0,10,0,0">
-                <Label FontWeight="Bold"> Assembly Search Directory </Label>
-                <local:IntellisenseTextBox  x:Name="assemblySearchDirectoryIntellisenseTextBox"   />
+            <StackPanel Margin = "0,10,0,0" >
+                <Label FontWeight = "Bold" > Assembly Search Directory </Label>
+                <local:IntellisenseTextBox x:Name = "assemblySearchDirectoryIntellisenseTextBox" />
             </StackPanel>
-            <StackPanel Margin="0,10,0,0">
-                <Label FontWeight="Bold"> Assembly Name </Label>
-                <local:IntellisenseTextBox  x:Name="assemblyIntellisenseTextBox"   />
-            </StackPanel>
-
-            <StackPanel Margin="0,10,0,0">
-                <Label FontWeight="Bold"> Class Name </Label>
-                <local:IntellisenseTextBox x:Name="classNameIntellisenseTextBox"  />
+            <StackPanel Margin = "0,10,0,0" >
+                <Label FontWeight = "Bold" > Assembly Name </Label>
+                <local:IntellisenseTextBox x:Name = "assemblyIntellisenseTextBox" />
             </StackPanel>
 
-            <StackPanel Margin="0,10,0,0">
-                <Label FontWeight="Bold"> Method Name </Label>
-                <local:IntellisenseTextBox  x:Name="methodNameIntellisenseTextBox"   />
+            <StackPanel Margin = "0,10,0,0" >
+                <Label FontWeight = "Bold" > Class Name </Label>
+                <local:IntellisenseTextBox x:Name = "classNameIntellisenseTextBox" />
             </StackPanel>
 
-            <GroupBox Header="Parameters"  Margin="0,10,0,0">
-                <StackPanel x:Name="parametersPanel">
+            <StackPanel Margin = "0,10,0,0" >
+                <Label FontWeight = "Bold" > Method Name </Label>
+                <local:IntellisenseTextBox x:Name = "methodNameIntellisenseTextBox" />
+            </StackPanel>
 
-                </StackPanel>
+            <GroupBox Header = "Parameters" Margin = "0,10,0,0" >
+                <StackPanel x:Name = "parametersPanel" />
             </GroupBox>
 
 

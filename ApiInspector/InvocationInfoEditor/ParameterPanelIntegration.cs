@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
 using Mono.Cecil;
-using Newtonsoft.Json;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -85,18 +83,17 @@ namespace ApiInspector.InvocationInfoEditor
             else if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
             {
                 editor.IsEnabled = false;
-                editor.Text = "objectHelper";
+                editor.Text      = "objectHelper";
             }
             else
             {
                 // complex items should be as json input
-                editor.TextWrapping = TextWrapping.Wrap;
-                editor.MaxLines = 5;
+                editor.TextWrapping  = TextWrapping.Wrap;
+                editor.MaxLines      = 5;
                 editor.AcceptsReturn = true;
                 //editor.MaxHeight = 300;
                 //editor.Height = Double.MaxValue;
 
-                
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
                     parameterInfo.Value = Utility.SerializeToJson(parameterInfo.Value);
@@ -110,7 +107,6 @@ namespace ApiInspector.InvocationInfoEditor
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 });
             }
-
 
             sp.Children.Add(label);
             sp.Children.Add(editor);

@@ -5,6 +5,7 @@ namespace ApiInspector.MainWindow
 {
     static class Extensions
     {
+        #region Public Methods
         public static string GetText(this RichTextBox richTextBox)
         {
             return new TextRange(richTextBox.Document.ContentStart,
@@ -16,5 +17,6 @@ namespace ApiInspector.MainWindow
             richTextBox.Document.Blocks.Clear();
             richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
         }
+        #endregion
     }
 }

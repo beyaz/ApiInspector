@@ -7,9 +7,11 @@ namespace ApiInspector.InvocationInfoEditor
 {
     static class Data
     {
-        public static readonly DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
-        public static readonly DataKey<ItemSourceList> ItemSourceList = new DataKey<ItemSourceList>(nameof(ItemSourceList));
+        #region Static Fields
+        public static readonly DataKey<InvocationInfo>   InvocationInfo   = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        public static readonly DataKey<ItemSourceList>   ItemSourceList   = new DataKey<ItemSourceList>(nameof(ItemSourceList));
         public static readonly DataKey<MethodDefinition> MethodDefinition = new DataKey<MethodDefinition>(nameof(MethodDefinition));
-        public static readonly DataKey<StackPanel> ParametersPanel = new DataKey<StackPanel>(nameof(ParametersPanel));
+        public static readonly DataKey<StackPanel>       ParametersPanel  = new DataKey<StackPanel>(nameof(ParametersPanel));
+        #endregion
     }
 }

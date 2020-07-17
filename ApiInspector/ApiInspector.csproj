@@ -70,10 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CardSystemOldAndNewApiCall\Detection.cs" />
-    <Compile Include="CardSystemOldAndNewApiCall\ResultSerializer.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
-    <Compile Include="CardSystemOldAndNewApiCall\ExternalCodeCompareProgramStarter.cs" />
     <Compile Include="InvocationInfoEditor\Data.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="Invoking\BOAContextInitializer.cs" />
