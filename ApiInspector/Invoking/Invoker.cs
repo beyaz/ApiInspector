@@ -114,7 +114,7 @@ namespace ApiInspector.Invoking
                 var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
                 trace("Successfully invoked.");
                 context.Update(ExecutionResponse, response);
-                context.Update(ExecutionResponseAsJson, SerializeToJson(response));
+                context.Update(ExecutionResponseAsJson, SerializeToJson(response,false));
             }
             catch (Exception e)
             {
