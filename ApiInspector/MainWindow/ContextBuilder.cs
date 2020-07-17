@@ -50,14 +50,8 @@ namespace ApiInspector.MainWindow
             context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
             context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
 
-            context.SetupGet(CecilHelper.AssemblySearchDirectories, c =>
-            {
-                var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
+           
 
-                return new List<string> {assemblySearchDirectory};
-            });
-
-            context.SetupGet(CecilHelper.Log, c => message => c.Get(Logger.Key).Log(message));
             context.SetupGet(ViewController.AssemblyFilePath, GetAssemblyFilePath);
             context.SetupGet(ViewController.TypesInAssembly, GetTypesInAssembly);
             context.SetupGet(ViewController.TypeDefinitionRelatedClassName, GeTypeDefinitionRelatedClassName);
@@ -84,11 +78,11 @@ namespace ApiInspector.MainWindow
         {
             var assemblyFilePath = context.Get(ViewController.AssemblyFilePath);
 
-            var items = new List<TypeDefinition>();
+            var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
 
-            CecilHelper.VisitAllTypes(context, assemblyFilePath, typeDefinition => { items.Add(typeDefinition); });
+            var typeVisitor = new TypeVisitor(context.Get(Logger.Key).Log,new List<string> {assemblySearchDirectory});
 
-            return items;
+            return typeVisitor.GeTypeDefinitions(assemblyFilePath);
         }
 
         static TypeDefinition GeTypeDefinitionRelatedClassName(DataContext context)
@@ -103,7 +97,12 @@ namespace ApiInspector.MainWindow
                 return null;
             }
 
-            var typeDefinition = CecilHelper.FindType(context, assemblyFilePath, invocationInfo.ClassName);
+            var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
+
+            var typeVisitor = new TypeVisitor(context.Get(Logger.Key).Log,new List<string> {assemblySearchDirectory});
+
+
+            var typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 logger.Log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");

@@ -7,32 +7,27 @@ using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
-    /// <summary>
-    ///     The cecil helper
-    /// </summary>
-    static class CecilHelper
+    class TypeVisitor
     {
-        #region Static Fields
-        /// <summary>
-        ///     The assembly search directories
-        /// </summary>
-        public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories = new DataKey<IReadOnlyList<string>>(nameof(AssemblySearchDirectories));
+        #region Fields
+        readonly IReadOnlyList<string> assemblySearchDirectories;
+        readonly Action<string>        log;
+        #endregion
 
-        /// <summary>
-        ///     The log
-        /// </summary>
-        public static DataKey<Action<string>> Log = new DataKey<Action<string>>(nameof(Log));
+        #region Constructors
+        public TypeVisitor(Action<string> log, IReadOnlyList<string> assemblySearchDirectories)
+        {
+            this.log                       = log;
+            this.assemblySearchDirectories = assemblySearchDirectories;
+        }
         #endregion
 
         #region Public Methods
-        /// <summary>
-        ///     Finds the type.
-        /// </summary>
-        public static TypeDefinition FindType(DataContext context, string assemblyPath, string typeFullName)
+        public TypeDefinition FindType(string assemblyPath, string typeFullName)
         {
             var typeDefinitions = new List<TypeDefinition>();
 
-            VisitAllTypes(context, assemblyPath, type =>
+            VisitAllTypes(assemblyPath, type =>
             {
                 if (type.FullName == typeFullName)
                 {
@@ -43,15 +38,19 @@ namespace ApiInspector.DataAccess
             return typeDefinitions.FirstOrDefault();
         }
 
+        public IReadOnlyList<TypeDefinition> GeTypeDefinitions(string assemblyFilePath)
+        {
+            var items = new List<TypeDefinition>();
+
+            VisitAllTypes(assemblyFilePath, typeDefinition => { items.Add(typeDefinition); });
+
+            return items;
+        }
         /// <summary>
         ///     Visits all types.
         /// </summary>
-        public static void VisitAllTypes(DataContext context, string assemblyPath, Action<TypeDefinition> action)
+        public void VisitAllTypes(string assemblyPath, Action<TypeDefinition> action)
         {
-            var log = context.Get(Log);
-
-            var assemblySearchDirectories = context.Get(AssemblySearchDirectories);
-
             if (File.Exists(assemblyPath) == false)
             {
                 return;
@@ -91,4 +90,6 @@ namespace ApiInspector.DataAccess
         }
         #endregion
     }
+
+   
 }

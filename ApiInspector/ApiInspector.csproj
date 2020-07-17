@@ -80,7 +80,7 @@
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Invoking\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
-    <Compile Include="DataAccess\CecilHelper.cs" />
+    <Compile Include="DataAccess\TypeVisitor.cs" />
     <Compile Include="MainWindow\Extensions.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
