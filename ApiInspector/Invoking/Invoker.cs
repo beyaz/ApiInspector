@@ -12,49 +12,73 @@ using static ApiInspector.Utility;
 namespace ApiInspector.Invoking
 {
     /// <summary>
-    ///     The invoker
+    ///     The invoker input
     /// </summary>
-    static class Invoker2
+    class InvokerInput
     {
-        #region Static Fields
+        #region Fields
         /// <summary>
-        ///     The boa execution context
+        ///     The invocation information
         /// </summary>
-        public static DataKey<ObjectHelper> BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
-
-        public static DataKey<Exception> Error = new DataKey<Exception>(nameof(Error));
+        public InvocationInfo InvocationInfo;
 
         /// <summary>
-        ///     The execution response
+        ///     The trace
         /// </summary>
-        public static DataKey<object> ExecutionResponse = new DataKey<object>(nameof(ExecutionResponse));
+        public Action<string> Trace;
+        #endregion
+    }
+
+    /// <summary>
+    ///     The invoker output
+    /// </summary>
+    class InvokerOutput
+    {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="InvokerOutput" /> class.
+        /// </summary>
+        public InvokerOutput(Exception error, object executionResponse, string executionResponseAsJson)
+        {
+            Error                   = error;
+            ExecutionResponse       = executionResponse;
+            ExecutionResponseAsJson = executionResponseAsJson;
+        }
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        ///     Gets the error.
+        /// </summary>
+        public Exception Error { get; }
+
+        /// <summary>
+        ///     Gets the execution response.
+        /// </summary>
+        public object ExecutionResponse { get; }
 
         /// <summary>
         ///     The execution response as json
         /// </summary>
-        public static DataKey<string> ExecutionResponseAsJson = new DataKey<string>(nameof(ExecutionResponseAsJson));
-
-        public static string InvocationFinished = nameof(InvocationFinished);
-
-        /// <summary>
-        ///     The invocation information
-        /// </summary>
-        public static DataKey<InvocationInfo> InvocationInfo = new DataKey<InvocationInfo>(nameof(InvocationInfo));
-
-        public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
+        public string ExecutionResponseAsJson { get; }
         #endregion
+    }
 
+    /// <summary>
+    ///     The invoker
+    /// </summary>
+    class Invoker
+    {
         #region Public Methods
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public static void Invoke(DataContext context)
+        public static InvokerOutput Invoke(DataContext context, InvokerInput invokerInput)
         {
-            context.TryRemove(Error);
+            var trace          = invokerInput.Trace;
+            var invocationInfo = invokerInput.InvocationInfo;
 
-            var trace = context.Get(Trace);
-
-            var invocationInfo = context.Get(InvocationInfo);
+            var boaContext = new BOAContext(invocationInfo.Environment);
 
             var assemblyName = invocationInfo.AssemblyName;
             var methodName   = invocationInfo.MethodName;
@@ -75,7 +99,7 @@ namespace ApiInspector.Invoking
                 }
             }
 
-            var instance = CreateInstance(context, targetType);
+            var instance = CreateInstance(targetType, boaContext);
 
             trace($"Started to search method: {methodName}");
             var methodInfo = targetType.GetMethod(methodName, AllBindings);
@@ -96,7 +120,7 @@ namespace ApiInspector.Invoking
 
                 if (targetParameterType == typeof(ObjectHelper))
                 {
-                    value = new ObjectHelper {Context = context.Get(BOAExecutionContext).Context};
+                    value = new ObjectHelper {Context = boaContext.GetObjectHelper().Context};
                 }
 
                 if (targetParameterType.FullName != typeof(string).FullName && targetParameterType.IsClass && value is string)
@@ -113,18 +137,18 @@ namespace ApiInspector.Invoking
                 trace("Invoke started. Response waiting...");
                 var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
                 trace("Successfully invoked.");
-                context.Update(ExecutionResponse, response);
-                context.Update(ExecutionResponseAsJson, SerializeToJson(response,false));
+
+                boaContext.Dispose();
+
+                return new InvokerOutput(null, response, SerializeToJson(response, false));
             }
             catch (Exception e)
             {
                 trace($"FAIL:{e}");
-                context.Add(Error, e);
-                context.Update(ExecutionResponse, e);
-                context.Update(ExecutionResponseAsJson, SerializeToJson(e));
-            }
 
-            context.PublishEvent(InvocationFinished);
+                boaContext.Dispose();
+                return new InvokerOutput(e, e, SerializeToJson(e));
+            }
         }
         #endregion
 
@@ -132,7 +156,7 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Creates the instance.
         /// </summary>
-        static object CreateInstance(DataContext context, Type targetType)
+        static object CreateInstance(Type targetType, BOAContext boaContext)
         {
             // constructor with ExecutionDataContext
             {
@@ -144,7 +168,7 @@ namespace ApiInspector.Invoking
                 {
                     var instance = constructorInfo.Invoke(new object[]
                     {
-                        context.Get(BOAExecutionContext)
+                        boaContext.GetObjectHelper().Context
                     });
                     return instance;
                 }
@@ -156,7 +180,7 @@ namespace ApiInspector.Invoking
                 var objectHelper = instance as ObjectHelper;
                 if (objectHelper != null)
                 {
-                    objectHelper.Context = context.Get(BOAExecutionContext).Context;
+                    objectHelper.Context = boaContext.GetObjectHelper().Context;
                 }
 
                 return instance;

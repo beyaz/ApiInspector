@@ -27,14 +27,12 @@ namespace ApiInspector.MainWindow
                 EnvironmentNameList         = new List<string> {"dev", "test"}
             });
 
-            View.InvocationInfo = Invoker2.InvocationInfo = Data.InvocationInfo;
+            View.InvocationInfo  = Data.InvocationInfo;
 
-            View.BOAExecutionContext = Invoker2.BOAExecutionContext;
+            
 
-            context.SetupGet(Invoker2.BOAExecutionContext, GetExecutionDataContext);
             context.SetupGet(BOAContextInitializer.TargetEnvironment, c => c.Get(Data.InvocationInfo).Environment);
 
-            Invoker2.InvocationFinished = BOAContextInitializer.BOATransactionShouldCommit;
 
             // connect view events
             {
@@ -44,9 +42,7 @@ namespace ApiInspector.MainWindow
                 context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
             }
 
-            {
-                View.Trace = Invoker2.Trace;
-            }
+            
 
             context.Add(Logger.Key, new Logger());
 
@@ -82,17 +78,7 @@ namespace ApiInspector.MainWindow
             return assemblyPath;
         }
 
-        static ObjectHelper GetExecutionDataContext(DataContext context)
-        {
-            if (context.Contains(BOAContextInitializer.BOAExecutionContext))
-            {
-                return context.Get(BOAContextInitializer.BOAExecutionContext);
-            }
-
-            BOAContextInitializer.Initialize(context);
-
-            return context.Get(BOAContextInitializer.BOAExecutionContext);
-        }
+       
 
         static IReadOnlyList<TypeDefinition> GetTypesInAssembly(DataContext context)
         {

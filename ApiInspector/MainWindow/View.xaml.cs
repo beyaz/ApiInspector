@@ -124,11 +124,17 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
             trace("------------- EXECUTE STARTED -----------------");
-            Invoker2.Invoke(context);
 
-            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(context.Get(Invoker2.ExecutionResponseAsJson)); });
+            var invokerInput = new InvokerInput
+            {
+                Trace = AppendTraceMessage,
+                InvocationInfo = context.Get(View.InvocationInfo ),
+            };
+            var invokerOutput = Invoker.Invoke(context,invokerInput);
 
-            TryToExportExecutionResponseToFile();
+            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
+
+            TryToExportExecutionResponseToFile(invokerOutput.ExecutionResponseAsJson);
 
             trace(string.Empty);
             trace(string.Empty);
@@ -160,7 +166,7 @@ namespace ApiInspector.MainWindow
             timer.Start();
         }
 
-        void TryToExportExecutionResponseToFile()
+        void TryToExportExecutionResponseToFile(string executionResponseAsJson)
         {
             var outputFilePath = context.Get(InvocationInfo).ResponseOutputFilePath;
             if (string.IsNullOrWhiteSpace(outputFilePath))
@@ -168,7 +174,7 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
-            Utility.WriteAllText(outputFilePath, context.Get(Invoker2.ExecutionResponseAsJson));
+            Utility.WriteAllText(outputFilePath, executionResponseAsJson);
         }
         #endregion
     }

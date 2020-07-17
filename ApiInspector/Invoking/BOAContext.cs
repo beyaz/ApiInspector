@@ -1,47 +1,62 @@
 ﻿using System;
 using BOA.Base;
-using BOA.DataFlow;
 using BOA.Process.Kernel.Card;
 using BOA.UnitTestHelper;
 
 namespace ApiInspector.Invoking
 {
     /// <summary>
-    ///     The boa context initializer
+    ///     The boa context
     /// </summary>
-    static class BOAContextInitializer
+    class BOAContext : IDisposable
     {
-        #region Static Fields
-        /// <summary>
-        ///     The boa execution context
-        /// </summary>
-        public static DataKey<ObjectHelper> BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
-
-        public static string BOATransactionShouldCommit = nameof(BOATransactionShouldCommit);
-
+        #region Fields
         /// <summary>
         ///     The target environment
         /// </summary>
-        public static DataKey<string> TargetEnvironment = new DataKey<string>(nameof(TargetEnvironment));
+        readonly string targetEnvironment;
+
+        /// <summary>
+        ///     The object helper
+        /// </summary>
+        ObjectHelper objectHelper;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BOAContext" /> class.
+        /// </summary>
+        public BOAContext(string targetEnvironment)
+        {
+            this.targetEnvironment = targetEnvironment;
+        }
         #endregion
 
         #region Public Methods
         /// <summary>
-        ///     Initializes the specified context.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public static void Initialize(DataContext context)
+        public void Dispose()
         {
-            var targetEnvironment = context.Get(TargetEnvironment);
+            if (objectHelper == null)
+            {
+                return;
+            }
 
-            var objectHelper = CreateObjectHelper(targetEnvironment);
+            objectHelper.Context.DBLayer.CommitTransaction();
+        }
 
-            objectHelper.Context.DBLayer.BeginTransaction();
+        /// <summary>
+        ///     Gets the object helper.
+        /// </summary>
+        public ObjectHelper GetObjectHelper()
+        {
+            if (objectHelper == null)
+            {
+                Initialize();
+            }
 
-            CardService.UseLocalProxy = true;
-
-            context.Update(BOAExecutionContext, objectHelper);
-
-            context.SubscribeEvent(BOATransactionShouldCommit, () => { Dispose(context); });
+            return objectHelper;
         }
         #endregion
 
@@ -79,17 +94,16 @@ namespace ApiInspector.Invoking
             return objectHelper;
         }
 
-        static void Dispose(DataContext context)
+        /// <summary>
+        ///     Initializes this instance.
+        /// </summary>
+        void Initialize()
         {
-            var objectHelper = context.TryGet(BOAExecutionContext);
-            if (objectHelper == null)
-            {
-                return;
-            }
+            objectHelper = CreateObjectHelper(targetEnvironment);
 
-            objectHelper.Context.DBLayer.CommitTransaction();
+            objectHelper.Context.DBLayer.BeginTransaction();
 
-            context.Remove(BOAExecutionContext);
+            CardService.UseLocalProxy = true;
         }
         #endregion
     }
