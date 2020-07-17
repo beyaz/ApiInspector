@@ -81,9 +81,18 @@ namespace ApiInspector.Invoking
 
         static void Dispose(DataContext context)
         {
-            var objectHelper = context.Get(BOAExecutionContext);
+
+            ObjectHelper objectHelper = context.TryGet(BOAExecutionContext);
+            if (objectHelper == null)
+            {
+                return;
+            }
+
+
 
             objectHelper.Context.DBLayer.CommitTransaction();
+
+            context.Remove(BOAExecutionContext);
         }
         #endregion
     }

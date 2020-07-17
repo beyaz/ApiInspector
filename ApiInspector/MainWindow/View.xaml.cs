@@ -76,9 +76,15 @@ namespace ApiInspector.MainWindow
 
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            context.Update(InvocationInfo, (InvocationInfo) historyListBox.SelectedItem);
+            Update((InvocationInfo) historyListBox.SelectedItem);
+        }
+
+        void Update(InvocationInfo invocationInfo)
+        {
+            context.Update(InvocationInfo, invocationInfo);
             invokingResponseView.SetText(string.Empty);
         }
+
 
         void InitializeContext()
         {
@@ -86,12 +92,17 @@ namespace ApiInspector.MainWindow
 
             context = builder.Build();
 
-            historyListBox.ItemsSource = context.Get(HistoryDataKey);
+            RefreshHistory();
 
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
             view.Filter = HistoryFilter;
 
             context.OnUpdate(InvocationInfo, RefreshValues);
+        }
+
+        void RefreshHistory()
+        {
+            historyListBox.ItemsSource = context.Get(HistoryDataKey);
         }
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
@@ -106,6 +117,7 @@ namespace ApiInspector.MainWindow
             var invocationInfo = context.Get(InvocationInfo);
 
             HistoryManager.SaveToHistory(invocationInfo);
+          
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
@@ -116,7 +128,6 @@ namespace ApiInspector.MainWindow
 
             TryToExportExecutionResponseToFile();
 
-            trace(string.Empty);
             trace(string.Empty);
             trace(string.Empty);
         }

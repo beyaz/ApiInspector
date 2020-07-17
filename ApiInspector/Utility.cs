@@ -7,6 +7,13 @@ namespace ApiInspector
 {
     static class Utility
     {
+
+        public static T Clone<T>(this T source)
+        {
+            var serialized = JsonConvert.SerializeObject(source);
+            return JsonConvert.DeserializeObject<T>(serialized);
+        }
+
         #region Public Properties
         public static BindingFlags AllBindings
         {
