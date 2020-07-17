@@ -70,6 +70,7 @@
     </ApplicationDefinition>
     <Compile Include="Application\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="Invoking\InvokeOutput.cs" />
     <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />

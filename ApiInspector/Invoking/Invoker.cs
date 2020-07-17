@@ -12,41 +12,6 @@ using static ApiInspector.Utility;
 namespace ApiInspector.Invoking
 {
     /// <summary>
-    ///     The invoke output
-    /// </summary>
-    class InvokeOutput
-    {
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="InvokeOutput" /> class.
-        /// </summary>
-        public InvokeOutput(Exception error, object executionResponse, string executionResponseAsJson)
-        {
-            Error                   = error;
-            ExecutionResponse       = executionResponse;
-            ExecutionResponseAsJson = executionResponseAsJson;
-        }
-        #endregion
-
-        #region Public Properties
-        /// <summary>
-        ///     Gets the error.
-        /// </summary>
-        public Exception Error { get; }
-
-        /// <summary>
-        ///     Gets the execution response.
-        /// </summary>
-        public object ExecutionResponse { get; }
-
-        /// <summary>
-        ///     The execution response as json
-        /// </summary>
-        public string ExecutionResponseAsJson { get; }
-        #endregion
-    }
-
-    /// <summary>
     ///     The invoker
     /// </summary>
     class Invoker
@@ -101,7 +66,21 @@ namespace ApiInspector.Invoking
             }
 
             trace($"Started to search method: {methodName}");
-            var methodInfo = targetType.GetMethod(methodName, AllBindings);
+            
+            MethodInfo methodInfo = null;
+            try
+            {
+                methodInfo = targetType.GetMethod(methodName, AllBindings);
+            }
+            catch (Exception e)
+            {
+                trace($"Failed when accessing method. {e}");
+
+                boaContext.Dispose();
+
+                return new InvokeOutput(e, e, serializer.SerializeToJson(e));
+
+            }
             if (methodInfo == null)
             {
                 throw new ArgumentNullException(nameof(methodInfo));
@@ -116,6 +95,13 @@ namespace ApiInspector.Invoking
             {
                 var value               = parameters[i].Value;
                 var targetParameterType = methodParametersInDotNet[i].ParameterType;
+
+                if (targetParameterType == typeof(object))
+                {
+                    invocationParameters.Add(value);
+                    continue;
+                    
+                }
 
                 if (targetParameterType == typeof(ObjectHelper))
                 {
@@ -155,7 +141,7 @@ namespace ApiInspector.Invoking
             }
             catch (Exception e)
             {
-                trace($"FAIL:{e}");
+                trace($"Failed when invoking method. {e}");
 
                 boaContext.Dispose();
                 return new InvokeOutput(e, e, serializer.SerializeToJson(e));
