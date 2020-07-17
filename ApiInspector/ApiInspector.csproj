@@ -74,6 +74,7 @@
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\Data.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
+    <Compile Include="InvocationInfoEditor\ViewData.cs" />
     <Compile Include="Invoking\BOAContext.cs" />
     <Compile Include="Invoking\BOAContextInitializer.cs" />
     <Compile Include="MainWindow\ContextBuilder.cs" />

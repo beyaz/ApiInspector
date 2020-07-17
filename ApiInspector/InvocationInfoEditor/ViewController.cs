@@ -4,66 +4,18 @@ using System.Linq;
 using ApiInspector.Application;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
-using BOA.DataFlow;
-using Mono.Cecil;
 
 namespace ApiInspector.InvocationInfoEditor
 {
-    public class ViewData
-    {
-        #region Public Properties
-        public InvocationInfo InvocationInfo { get; set; }
-        public ItemSourceList ItemSourceList { get; set; }
-        public List<string>   Logs           { get; set; } = new List<string>();
-        #endregion
-    }
-
     /// <summary>
     ///     The view controller
     /// </summary>
     class ViewController
     {
-        #region Static Fields
-        /// <summary>
-        ///     The assembly file path
-        /// </summary>
-        public static DataKey<string> AssemblyFilePath = new DataKey<string>(nameof(AssemblyFilePath));
-
-        /// <summary>
-        ///     The type definition related class name
-        /// </summary>
-        public static DataKey<TypeDefinition> TypeDefinitionRelatedClassName = new DataKey<TypeDefinition>(nameof(TypeDefinitionRelatedClassName));
-
-        /// <summary>
-        ///     The types in assembly
-        /// </summary>
-        public static DataKey<IReadOnlyList<TypeDefinition>> TypesInAssembly = new DataKey<IReadOnlyList<TypeDefinition>>(nameof(TypesInAssembly));
-        #endregion
-
         #region Public Methods
         /// <summary>
-        ///     Called when [method name selected].
+        ///     Called when [assembly name changed].
         /// </summary>
-        public static void OnMethodNameSelected(DataContext context)
-        {
-            var invocationInfo = context.Get(Data.InvocationInfo);
-
-            var typeDefinition = context.Get(TypeDefinitionRelatedClassName);
-
-            var methodDefinition = typeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
-
-            if (methodDefinition == null)
-            {
-                return;
-            }
-
-            context.Update(Data.MethodDefinition, methodDefinition);
-
-            var panel = context.Get(Data.ParametersPanel);
-
-            new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
-        }
-
         public void OnAssemblyNameChanged(ViewData viewData)
         {
             var assemblyFilePath = GetAssemblyFilePath(viewData.InvocationInfo);
@@ -81,6 +33,9 @@ namespace ApiInspector.InvocationInfoEditor
             viewData.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
         }
 
+        /// <summary>
+        ///     Called when [assembly search directory changed].
+        /// </summary>
         public void OnAssemblySearchDirectoryChanged(ViewData viewData)
         {
             if (!Directory.Exists(viewData.InvocationInfo.AssemblySearchDirectory))
@@ -91,6 +46,9 @@ namespace ApiInspector.InvocationInfoEditor
             viewData.ItemSourceList.AssemblyNameList = Directory.GetFiles(viewData.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
         }
 
+        /// <summary>
+        ///     Called when [class name changed].
+        /// </summary>
         public void OnClassNameChanged(ViewData viewData)
         {
             var invocationInfo = viewData.InvocationInfo;
@@ -106,7 +64,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             var typeVisitor = new TypeVisitor(new Logger().Log, new List<string> {assemblySearchDirectory});
 
-            var typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
+            var typeDefinition = viewData.typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 viewData.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -115,9 +73,33 @@ namespace ApiInspector.InvocationInfoEditor
 
             viewData.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
         }
+
+        /// <summary>
+        ///     Called when [method name selected].
+        /// </summary>
+        public void OnMethodNameSelected(ViewData viewData)
+        {
+            var invocationInfo = viewData.InvocationInfo;
+
+            var methodDefinition = viewData.typeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+
+            if (methodDefinition == null)
+            {
+                return;
+            }
+
+            viewData.methodDefinition = methodDefinition;
+
+            var panel = viewData.ParametersPanel;
+
+            new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
+        }
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Gets the assembly file path.
+        /// </summary>
         static string GetAssemblyFilePath(InvocationInfo invocationInfo)
         {
             var assemblyName      = invocationInfo.AssemblyName;

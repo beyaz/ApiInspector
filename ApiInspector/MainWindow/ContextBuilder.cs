@@ -34,78 +34,27 @@ namespace ApiInspector.MainWindow
             context.SetupGet(BOAContextInitializer.TargetEnvironment, c => c.Get(Data.InvocationInfo).Environment);
 
 
-            // connect view events
-            {
-                context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
-            }
+           
 
             
 
             context.Add(Logger.Key, new Logger());
 
-            context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
 
            
-
-            context.SetupGet(ViewController.AssemblyFilePath, GetAssemblyFilePath);
-            context.SetupGet(ViewController.TypesInAssembly, GetTypesInAssembly);
-            context.SetupGet(ViewController.TypeDefinitionRelatedClassName, GeTypeDefinitionRelatedClassName);
-
+            
 
             return context;
         }
         #endregion
 
         #region Methods
-        static string GetAssemblyFilePath(DataContext context)
-        {
-            var invocationInfo    = context.Get(Data.InvocationInfo);
-            var assemblyName      = invocationInfo.AssemblyName;
-            var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
-            var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
-
-            return assemblyPath;
-        }
+      
+       
 
        
 
-        static IReadOnlyList<TypeDefinition> GetTypesInAssembly(DataContext context)
-        {
-            var assemblyFilePath = context.Get(ViewController.AssemblyFilePath);
-
-            var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
-
-            var typeVisitor = new TypeVisitor(context.Get(Logger.Key).Log,new List<string> {assemblySearchDirectory});
-
-            return typeVisitor.GeTypeDefinitions(assemblyFilePath);
-        }
-
-        static TypeDefinition GeTypeDefinitionRelatedClassName(DataContext context)
-        {
-            var assemblyFilePath = context.Get(ViewController.AssemblyFilePath);
-            var invocationInfo   = context.Get(Data.InvocationInfo);
-            var logger           = context.Get(Logger.Key);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                logger.Log($"File not exists. File:{assemblyFilePath}");
-                return null;
-            }
-
-            var assemblySearchDirectory = context.Get(Data.InvocationInfo).AssemblySearchDirectory;
-
-            var typeVisitor = new TypeVisitor(context.Get(Logger.Key).Log,new List<string> {assemblySearchDirectory});
-
-
-            var typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
-            if (typeDefinition == null)
-            {
-                logger.Log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
-                return null;
-            }
-
-            return typeDefinition;
-        }
+       
         #endregion
     }
 }

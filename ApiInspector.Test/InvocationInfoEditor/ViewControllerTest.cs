@@ -1,26 +1,29 @@
-﻿using System.Windows.Controls;
-using ApiInspector.DataAccess;
-using ApiInspector.MainWindow;
+﻿using System.Collections.Generic;
+using System.Windows.Controls;
+using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.InvocationInfoEditor
 {
     [TestClass]
-    public class ControllerTest
+    public class ViewControllerTest
     {
+        #region Public Methods
         [TestMethod]
         public void Should_load_data_according_to_component_interaction()
         {
             var viewController = new ViewController();
-            var builder = new ContextBuilder();
 
-            var context = builder.Build();
+            var defaultAssemblySearchDirectory = @"d:\boa\server\bin\";
+            var invocationInfo                 = new InvocationInfo {AssemblySearchDirectory = defaultAssemblySearchDirectory};
+            var itemSourceList = new ItemSourceList
+            {
+                AssemblySearchDirectoryList = new List<string> {defaultAssemblySearchDirectory},
+                EnvironmentNameList         = new List<string> {"dev", "test"}
+            };
 
-            var invocationInfo = context.Get(Data.InvocationInfo);
-            var itemSourceList = context.Get(Data.ItemSourceList);
-
-            var viewData = new ViewData()
+            var viewData = new ViewData
             {
                 InvocationInfo = invocationInfo,
                 ItemSourceList = itemSourceList
@@ -30,12 +33,10 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 itemSourceList.AssemblyNameList.Should().BeNull();
 
-               
                 viewController.OnAssemblySearchDirectoryChanged(viewData);
 
                 itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
             }
-
 
             // On Assembly Name Changed
             {
@@ -43,12 +44,10 @@ namespace ApiInspector.InvocationInfoEditor
 
                 invocationInfo.AssemblyName = "BOA.Process.Kernel.Card.dll";
 
-
                 viewController.OnAssemblyNameChanged(viewData);
 
                 itemSourceList.ClassNameList.Count.Should().BeGreaterThan(0);
             }
-
 
             // On Class Name Changed
             {
@@ -56,27 +55,24 @@ namespace ApiInspector.InvocationInfoEditor
 
                 invocationInfo.ClassName = "BOA.Process.Kernel.Card.CallCenter.IVR.CreditCard.GetCardDetail";
 
-
                 viewController.OnClassNameChanged(viewData);
 
                 itemSourceList.MethodNameList.Count.Should().BeGreaterThan(0);
             }
 
-
             // On Method Name Changed
             {
-                context.Update(Data.ParametersPanel,new StackPanel());
+                viewData.ParametersPanel = new StackPanel();
 
-                context.Contains(Data.MethodDefinition).Should().BeFalse();
+                viewData.methodDefinition.Should().BeNull();
 
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";
 
+                viewController.OnMethodNameSelected(viewData);
 
-                ViewController.OnMethodNameSelected(context);
-
-                context.Contains(Data.MethodDefinition).Should().BeTrue();
+                viewData.methodDefinition.Should().NotBeNull();
             }
-
         }
+        #endregion
     }
 }

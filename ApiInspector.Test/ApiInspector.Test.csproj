@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestData\AnyClass.cs" />
-    <Compile Include="InvocationInfoEditor\ControllerTest.cs" />
+    <Compile Include="InvocationInfoEditor\ViewControllerTest.cs" />
     <Compile Include="Invoking\InvocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
