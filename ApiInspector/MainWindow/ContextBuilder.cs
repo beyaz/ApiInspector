@@ -36,7 +36,6 @@ namespace ApiInspector.MainWindow
 
             // connect view events
             {
-                context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, () => ViewController.OnAssemblySearchDirectoryChanged(context));
                 context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => ViewController.OnAssemblyNameChanged(context));
                 context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
                 context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));

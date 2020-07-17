@@ -51,6 +51,8 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
+        readonly ViewController viewController = new ViewController();
+
         #region Methods
         void OnLoad(object sender, RoutedEventArgs routedEventArgs)
         {
@@ -58,7 +60,16 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 var invocationInfo = context.Get(Data.InvocationInfo);
                 invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
-                context.PublishEvent(ViewEvents.AssemblySearchDirectoryChanged);
+
+                var viewData = new ViewData
+                {
+                    InvocationInfo = invocationInfo,
+                    ItemSourceList = context.Get(Data.ItemSourceList)
+                };
+
+                viewController.OnAssemblySearchDirectoryChanged(viewData);
+                
+                UpdateSuggestions();
             };
 
             environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
@@ -92,7 +103,6 @@ namespace ApiInspector.InvocationInfoEditor
 
         void RegisterEvents()
         {
-            context.SubscribeEvent(ViewEvents.AssemblySearchDirectoryChanged, UpdateSuggestions);
             context.SubscribeEvent(ViewEvents.AssemblyNameChanged, UpdateSuggestions);
             context.SubscribeEvent(ViewEvents.ClassNameChanged, UpdateSuggestions);
             context.SubscribeEvent(ViewEvents.MethodNameChanged, UpdateSuggestions);

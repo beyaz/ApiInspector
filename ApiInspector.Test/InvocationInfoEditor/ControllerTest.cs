@@ -12,6 +12,7 @@ namespace ApiInspector.InvocationInfoEditor
         [TestMethod]
         public void Should_load_data_according_to_component_interaction()
         {
+            var viewController = new ViewController();
             var builder = new ContextBuilder();
 
             var context = builder.Build();
@@ -22,8 +23,13 @@ namespace ApiInspector.InvocationInfoEditor
             // On Search Directory Changed
             {
                 itemSourceList.AssemblyNameList.Should().BeNull();
-                
-                ViewController.OnAssemblySearchDirectoryChanged(context);
+
+                var viewData = new ViewData()
+                {
+                    InvocationInfo = invocationInfo,
+                    ItemSourceList = itemSourceList
+                };
+                viewController.OnAssemblySearchDirectoryChanged(viewData);
 
                 itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
             }

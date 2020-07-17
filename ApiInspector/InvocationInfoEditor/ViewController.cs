@@ -1,16 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Application;
+using ApiInspector.Models;
 using BOA.DataFlow;
 using Mono.Cecil;
 
 namespace ApiInspector.InvocationInfoEditor
 {
+    public class ViewData
+    {
+        public ItemSourceList ItemSourceList { get; set; }
+        public InvocationInfo InvocationInfo { get; set; }
+    }
     /// <summary>
     ///     The view controller
     /// </summary>
-    static class ViewController
+    class ViewController
     {
         #region Static Fields
         /// <summary>
@@ -49,21 +56,16 @@ namespace ApiInspector.InvocationInfoEditor
             itemSourceList.ClassNameList = context.Get(TypesInAssembly).Select(x => x.FullName).ToList();
         }
 
-        /// <summary>
-        ///     Called when [assembly search directory changed].
-        /// </summary>
-        public static void OnAssemblySearchDirectoryChanged(DataContext context)
+        public void OnAssemblySearchDirectoryChanged(ViewData viewData)
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
-            var itemSourceList = context.Get(Data.ItemSourceList);
-
-            if (!Directory.Exists(invocationInfo.AssemblySearchDirectory))
+            if (!Directory.Exists(viewData.InvocationInfo.AssemblySearchDirectory))
             {
                 return;
             }
 
-            itemSourceList.AssemblyNameList = Directory.GetFiles(invocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
+            viewData.ItemSourceList.AssemblyNameList = Directory.GetFiles(viewData.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
         }
+
 
         /// <summary>
         ///     Called when [class name changed].

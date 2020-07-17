@@ -2,7 +2,6 @@
 {
     enum ViewEvents
     {
-        AssemblySearchDirectoryChanged,
         AssemblyNameChanged,
         ClassNameChanged,
         MethodNameChanged,
