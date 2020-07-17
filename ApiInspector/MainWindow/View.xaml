@@ -39,24 +39,30 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel  >
+            <StackPanel>
                 <Button HorizontalAlignment="Right" x:Name="executeButton" Click="OnExecuteClicked"> Execute</Button>
                
                 <invocationInfoEditor:View x:Name="currentInvocationInfo"  Margin="0,10,0,0" />
 
                 <StackPanel Margin="0,10,0,0">
-
-            
                     <Label FontWeight="Bold"> Response </Label>
-                 
                 </StackPanel>
 
-               
-
             </StackPanel>
+
             <RichTextBox Grid.Row="1" Height="Auto" x:Name="invokingResponseView" ></RichTextBox>
+            
+            <Grid Grid.Row="2" Margin="0,4,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label FontWeight="Bold"> Response Output File: </Label>
+                <TextBox Grid.Column="1" x:Name="responseOutputFilePath" TextChanged="ResponseOutputFilePath_OnTextChanged" />
+            </Grid>
         </Grid>
         
         <GridSplitter Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Stretch" />

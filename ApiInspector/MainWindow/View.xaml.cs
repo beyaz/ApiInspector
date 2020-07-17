@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
 using ApiInspector.CardSystemOldAndNewApiCall;
 using ApiInspector.History;
 using ApiInspector.Invoking;
@@ -13,6 +13,7 @@ using ApiInspector.Models;
 using BOA.Base;
 using BOA.DataFlow;
 using BOA.Process.Kernel.Card;
+using Timer = System.Timers.Timer;
 
 namespace ApiInspector.MainWindow
 {
@@ -27,7 +28,8 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Fields
-        DataContext context;
+        readonly List<string> traceMessages = new List<string>();
+        DataContext           context;
         #endregion
 
         #region Constructors
@@ -39,13 +41,27 @@ namespace ApiInspector.MainWindow
 
             currentInvocationInfo.Context = context;
 
-            context.Update(Trace,AppendTraceMessage);
+            context.Update(Trace, AppendTraceMessage);
 
             StartTimer();
         }
         #endregion
 
+        #region Public Methods
+        public void RefreshValues()
+        {
+            var invocationInfo = context.Get(InvocationInfo);
+
+            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
+        }
+        #endregion
+
         #region Methods
+        void AppendTraceMessage(string message)
+        {
+            traceMessages.Add(message);
+        }
+
         bool HistoryFilter(object item)
         {
             if (string.IsNullOrEmpty(historyFilterTextBox.Text))
@@ -77,16 +93,15 @@ namespace ApiInspector.MainWindow
 
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
             view.Filter = HistoryFilter;
+
+            context.OnUpdate(InvocationInfo, RefreshValues);
         }
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            //Action action = this.OnExecuteClicked;
-
             new Thread(OnExecuteClicked).Start();
-            //Dispatcher.BeginInvoke(DispatcherPriority.Background,action);
-
         }
+
         void OnExecuteClicked()
         {
             var trace = context.Get(Trace);
@@ -95,7 +110,6 @@ namespace ApiInspector.MainWindow
 
             HistoryManager.SaveToHistory(invocationInfo);
 
-            
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
             if (Detection.CanInvokeAsCardSystemOldAndNewApiCall(context))
@@ -139,47 +153,49 @@ namespace ApiInspector.MainWindow
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson)); });
 
+            TryToExportExecutionResponseToFile();
+
             trace(string.Empty);
             trace(string.Empty);
             trace(string.Empty);
         }
-        #endregion
 
-        void StartTimer()
+        void TryToExportExecutionResponseToFile()
         {
-            var timer         =  new System.Timers.Timer(50);
-            timer.Elapsed += OnTimedEvent;
-            timer.Start();
+            var outputFilePath = context.Get(InvocationInfo).ResponseOutputFilePath;
+            if (string.IsNullOrWhiteSpace(outputFilePath))
+            {
+                return;
+            }
+
+            Utility.WriteAllText(outputFilePath,context.Get(Invoker.ExecutionResponseAsJson));
         }
 
         void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
-            foreach (var message in traceMessages)
-            {
-               
+                foreach (var message in traceMessages)
+                {
                     traceViewer.AppendText("\r" + message);
                     traceViewer.ScrollToEnd();
-              
-            }
+                }
 
-            traceMessages.Clear();
+                traceMessages.Clear();
             });
         }
 
-        readonly List<string> traceMessages = new List<string>();
-
-        void AppendTraceMessage(string message)
+        void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            traceMessages.Add(message);
-
-            //Dispatcher.Invoke(() =>
-            //{
-            //    traceViewer.AppendText("\r" + message);
-            //    traceViewer.ScrollToEnd();
-            //    Thread.Sleep(100);
-            //});
+            context.Get(InvocationInfo).ResponseOutputFilePath = responseOutputFilePath.Text;
         }
+
+        void StartTimer()
+        {
+            var timer = new Timer(50);
+            timer.Elapsed += OnTimedEvent;
+            timer.Start();
+        }
+        #endregion
     }
 }

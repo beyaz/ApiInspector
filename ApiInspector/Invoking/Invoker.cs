@@ -43,6 +43,9 @@ namespace ApiInspector.Invoking
 
         #endregion
 
+        public static string InvocationFinished = nameof(InvocationFinished);
+
+
         #region Public Methods
         /// <summary>
         ///     Invokes the specified invocation information.
@@ -124,6 +127,7 @@ namespace ApiInspector.Invoking
                 context.Update(ExecutionResponseAsJson, SerializeToJson(e));
             }
 
+            context.PublishEvent(InvocationFinished);
             
         }
         #endregion

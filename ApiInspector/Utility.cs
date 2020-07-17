@@ -1,6 +1,6 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
-using BOA.DataFlow;
 using Newtonsoft.Json;
 
 namespace ApiInspector
@@ -58,6 +58,22 @@ namespace ApiInspector
             {
                 return e;
             }
+        }
+
+        public static void WriteAllText(string filePath,string content)
+        {
+            var directoryName = Path.GetDirectoryName(filePath);
+            if (directoryName == null)
+            {
+                throw new ArgumentNullException(nameof(directoryName));
+            }
+
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
+            File.WriteAllText(filePath, content);
         }
         #endregion
     }

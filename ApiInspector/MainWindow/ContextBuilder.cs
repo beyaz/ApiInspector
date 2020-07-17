@@ -40,7 +40,7 @@ namespace ApiInspector.MainWindow
             context.SetupGet(Invoker.BOAExecutionContext,GetExecutionDataContext);
             context.SetupGet(BOAContextInitializer.TargetEnvironment,(c)=>c.Get(Data.InvocationInfo).Environment);
 
-            
+            Invoker.InvocationFinished = BOAContextInitializer.BOATransactionShouldCommit;
            
             // connect view events
             {

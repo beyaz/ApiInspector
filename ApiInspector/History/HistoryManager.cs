@@ -37,12 +37,7 @@ namespace ApiInspector.History
         {
             var filePath = Path.Combine(DirectoryPath, info.ToString().Replace(":", "____") + ".json");
 
-            if (!Directory.Exists(DirectoryPath))
-            {
-                Directory.CreateDirectory(DirectoryPath);
-            }
-
-            File.WriteAllText(filePath, SerializeToJson(info));
+            Utility.WriteAllText(filePath,SerializeToJson(info));
         }
         #endregion
 
