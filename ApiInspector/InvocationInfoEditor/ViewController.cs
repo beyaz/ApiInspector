@@ -11,10 +11,13 @@ namespace ApiInspector.InvocationInfoEditor
 {
     public class ViewData
     {
-        public ItemSourceList ItemSourceList { get; set; }
+        #region Public Properties
         public InvocationInfo InvocationInfo { get; set; }
-        public List<string> Logs { get; set; } = new List<string>();
+        public ItemSourceList ItemSourceList { get; set; }
+        public List<string>   Logs           { get; set; } = new List<string>();
+        #endregion
     }
+
     /// <summary>
     ///     The view controller
     /// </summary>
@@ -38,71 +41,6 @@ namespace ApiInspector.InvocationInfoEditor
         #endregion
 
         #region Public Methods
-        
-        public void OnAssemblySearchDirectoryChanged(ViewData viewData)
-        {
-            if (!Directory.Exists(viewData.InvocationInfo.AssemblySearchDirectory))
-            {
-                return;
-            }
-
-            viewData.ItemSourceList.AssemblyNameList = Directory.GetFiles(viewData.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
-        }
-
-        static string GetAssemblyFilePath(InvocationInfo invocationInfo)
-        {
-            var assemblyName      = invocationInfo.AssemblyName;
-            var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
-            var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
-
-            return assemblyPath;
-        }
-
-        public void OnAssemblyNameChanged(ViewData viewData)
-        {
-            var assemblyFilePath = GetAssemblyFilePath(viewData.InvocationInfo);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
-                return;
-            }
-            
-            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
-
-            var typeVisitor = new TypeVisitor(new Logger().Log,new List<string> {assemblySearchDirectory});
-
-            viewData.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
-        }
-
-        
-
-        public void OnClassNameChanged(ViewData viewData)
-        {
-            var invocationInfo = viewData.InvocationInfo;
-
-            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-            if (!File.Exists(assemblyFilePath))
-            {
-                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
-                return;
-            }
-            
-            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
-
-            var typeVisitor = new TypeVisitor(new Logger().Log,new List<string> {assemblySearchDirectory});
-            
-            var typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
-            if (typeDefinition == null)
-            {
-                viewData.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
-                return;
-            }
-
-            viewData.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
-
-        }
-
         /// <summary>
         ///     Called when [method name selected].
         /// </summary>
@@ -121,9 +59,72 @@ namespace ApiInspector.InvocationInfoEditor
 
             context.Update(Data.MethodDefinition, methodDefinition);
 
-            var panel            = context.Get(Data.ParametersPanel);
+            var panel = context.Get(Data.ParametersPanel);
 
             new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
+        }
+
+        public void OnAssemblyNameChanged(ViewData viewData)
+        {
+            var assemblyFilePath = GetAssemblyFilePath(viewData.InvocationInfo);
+
+            if (!File.Exists(assemblyFilePath))
+            {
+                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                return;
+            }
+
+            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
+
+            var typeVisitor = new TypeVisitor(new Logger().Log, new List<string> {assemblySearchDirectory});
+
+            viewData.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
+        }
+
+        public void OnAssemblySearchDirectoryChanged(ViewData viewData)
+        {
+            if (!Directory.Exists(viewData.InvocationInfo.AssemblySearchDirectory))
+            {
+                return;
+            }
+
+            viewData.ItemSourceList.AssemblyNameList = Directory.GetFiles(viewData.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
+        }
+
+        public void OnClassNameChanged(ViewData viewData)
+        {
+            var invocationInfo = viewData.InvocationInfo;
+
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+            if (!File.Exists(assemblyFilePath))
+            {
+                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                return;
+            }
+
+            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
+
+            var typeVisitor = new TypeVisitor(new Logger().Log, new List<string> {assemblySearchDirectory});
+
+            var typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
+            if (typeDefinition == null)
+            {
+                viewData.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
+                return;
+            }
+
+            viewData.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
+        }
+        #endregion
+
+        #region Methods
+        static string GetAssemblyFilePath(InvocationInfo invocationInfo)
+        {
+            var assemblyName      = invocationInfo.AssemblyName;
+            var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
+            var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
+
+            return assemblyPath;
         }
         #endregion
     }
