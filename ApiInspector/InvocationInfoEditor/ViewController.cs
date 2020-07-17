@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ApiInspector.Application;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
 
@@ -36,14 +35,14 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [assembly search directory changed].
         /// </summary>
-        public void OnAssemblySearchDirectoryChanged(InvocationEditorViewModel invocationEditorViewModel)
+        public void OnAssemblySearchDirectoryChanged(InvocationEditorViewModel model)
         {
-            if (!Directory.Exists(invocationEditorViewModel.InvocationInfo.AssemblySearchDirectory))
+            if (!Directory.Exists(model.InvocationInfo.AssemblySearchDirectory))
             {
                 return;
             }
 
-            invocationEditorViewModel.ItemSourceList.AssemblyNameList = Directory.GetFiles(invocationEditorViewModel.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
+            model.ItemSourceList.AssemblyNameList = Directory.GetFiles(model.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             var typeVisitor = new TypeVisitor(model.Logs.Add, new List<string> {assemblySearchDirectory});
 
-            var typeDefinition = model.typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
+            var typeDefinition = model.TypeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 model.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -77,20 +76,20 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [method name selected].
         /// </summary>
-        public void OnMethodNameSelected(InvocationEditorViewModel invocationEditorViewModel)
+        public void OnMethodNameSelected(InvocationEditorViewModel model)
         {
-            var invocationInfo = invocationEditorViewModel.InvocationInfo;
+            var invocationInfo = model.InvocationInfo;
 
-            var methodDefinition = invocationEditorViewModel.typeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+            var methodDefinition = model.TypeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
 
             if (methodDefinition == null)
             {
                 return;
             }
 
-            invocationEditorViewModel.methodDefinition = methodDefinition;
+            model.MethodDefinition = methodDefinition;
 
-            var panel = invocationEditorViewModel.ParametersPanel;
+            var panel = model.ParametersPanel;
 
             new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
         }

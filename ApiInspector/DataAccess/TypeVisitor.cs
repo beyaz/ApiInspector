@@ -6,14 +6,27 @@ using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
+    /// <summary>
+    ///     The type visitor
+    /// </summary>
     class TypeVisitor
     {
         #region Fields
+        /// <summary>
+        ///     The assembly search directories
+        /// </summary>
         readonly IReadOnlyList<string> assemblySearchDirectories;
-        readonly Action<string>        log;
+
+        /// <summary>
+        ///     The log
+        /// </summary>
+        readonly Action<string> log;
         #endregion
 
         #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TypeVisitor" /> class.
+        /// </summary>
         public TypeVisitor(Action<string> log, IReadOnlyList<string> assemblySearchDirectories)
         {
             this.log                       = log;
@@ -22,6 +35,9 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Public Methods
+        /// <summary>
+        ///     Finds the type.
+        /// </summary>
         public TypeDefinition FindType(string assemblyPath, string typeFullName)
         {
             var typeDefinitions = new List<TypeDefinition>();
@@ -37,6 +53,9 @@ namespace ApiInspector.DataAccess
             return typeDefinitions.FirstOrDefault();
         }
 
+        /// <summary>
+        ///     Ges the type definitions.
+        /// </summary>
         public IReadOnlyList<TypeDefinition> GeTypeDefinitions(string assemblyFilePath)
         {
             var items = new List<TypeDefinition>();
@@ -45,6 +64,7 @@ namespace ApiInspector.DataAccess
 
             return items;
         }
+
         /// <summary>
         ///     Visits all types.
         /// </summary>
@@ -89,6 +109,4 @@ namespace ApiInspector.DataAccess
         }
         #endregion
     }
-
-   
 }

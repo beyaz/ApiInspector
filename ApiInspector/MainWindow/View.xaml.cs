@@ -78,28 +78,36 @@ namespace ApiInspector.MainWindow
         void OnExecuteClicked()
         {
             Action<string> trace = model.TraceMessages.Add;
-
+            
             var invocationInfo = model.InvocationEditor.InvocationInfo;
 
             history.SaveToHistory(invocationInfo);
           
 
-            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
+            UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
 
             trace("------------- EXECUTE STARTED -----------------");
 
+            var invokerOutput = invoker.Invoke(invocationInfo);
+
+            UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
+
+            if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
+            {
+                Utility.WriteAllText(invocationInfo.ResponseOutputFilePath, invokerOutput.ExecutionResponseAsJson);
+            }
+
             
 
-            var invokerOutput = invoker.Invoke(model.InvocationEditor.InvocationInfo);
-
-            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
-
-            TryToExportExecutionResponseToFile(invokerOutput.ExecutionResponseAsJson);
 
             trace(string.Empty);
             trace(string.Empty);
         }
 
+        void UpdateUI(Action action)
+        {
+            Dispatcher.InvokeAsync(action);
+        }
        
 
         void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -107,18 +115,6 @@ namespace ApiInspector.MainWindow
             model.InvocationEditor.InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 
-      
-
-        void TryToExportExecutionResponseToFile(string executionResponseAsJson)
-        {
-            var outputFilePath = model.InvocationEditor.InvocationInfo.ResponseOutputFilePath;
-            if (string.IsNullOrWhiteSpace(outputFilePath))
-            {
-                return;
-            }
-
-            Utility.WriteAllText(outputFilePath, executionResponseAsJson);
-        }
         #endregion
 
 

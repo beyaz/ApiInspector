@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using BOA.Base;
 using BOA.Base.Data;
 using Newtonsoft.Json;
@@ -55,6 +56,7 @@ namespace ApiInspector.Invoking
         ///     The trace
         /// </summary>
         readonly Action<string> trace;
+        readonly  Serialization.Serializer serializer = new Serializer();
         #endregion
 
         #region Constructors
@@ -145,14 +147,14 @@ namespace ApiInspector.Invoking
 
                 boaContext.Dispose();
 
-                return new InvokeOutput(null, response, SerializeToJson(response, false));
+                return new InvokeOutput(null, response, serializer.SerializeToJsonDoNotIgnoreDefaultValues(response));
             }
             catch (Exception e)
             {
                 trace($"FAIL:{e}");
 
                 boaContext.Dispose();
-                return new InvokeOutput(e, e, SerializeToJson(e));
+                return new InvokeOutput(e, e, serializer.SerializeToJson(e));
             }
         }
         #endregion

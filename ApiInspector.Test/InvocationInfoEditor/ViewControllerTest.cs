@@ -64,13 +64,13 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 viewData.ParametersPanel = new StackPanel();
 
-                viewData.methodDefinition.Should().BeNull();
+                viewData.MethodDefinition.Should().BeNull();
 
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";
 
                 viewController.OnMethodNameSelected(viewData);
 
-                viewData.methodDefinition.Should().NotBeNull();
+                viewData.MethodDefinition.Should().NotBeNull();
             }
         }
         #endregion

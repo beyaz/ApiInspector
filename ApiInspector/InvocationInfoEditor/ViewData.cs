@@ -13,8 +13,8 @@ namespace ApiInspector.InvocationInfoEditor
         public List<string>   Logs            { get; set; }
         public StackPanel     ParametersPanel { get; set; }
 
-        public TypeDefinition   typeDefinition;
-        public MethodDefinition methodDefinition;
+        public TypeDefinition   TypeDefinition;
+        public MethodDefinition MethodDefinition;
         #endregion
     }
 }

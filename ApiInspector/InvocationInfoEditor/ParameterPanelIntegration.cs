@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
 
@@ -14,6 +15,8 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ParameterPanelIntegration
     {
+        readonly Serialization.Serializer serializer = new Serializer();
+
         #region Public Methods
         /// <summary>
         ///     Connects the specified invocation information.
@@ -53,7 +56,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Creates the specified definition.
         /// </summary>
-        static StackPanel Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
+        StackPanel Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
         {
             var sp = new StackPanel();
 
@@ -97,7 +100,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
-                    parameterInfo.Value = Utility.SerializeToJson(parameterInfo.Value);
+                    parameterInfo.Value = serializer.SerializeToJson(parameterInfo.Value);
                 }
 
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding

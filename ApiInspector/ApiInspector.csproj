@@ -68,7 +68,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Application\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="InvocationInfoEditor\ViewData.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="MainWindow\Extensions.cs" />
     <Compile Include="MainWindow\MainWindowData.cs" />
     <Compile Include="MainWindow\TraceMonitor.cs" />
+    <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>
