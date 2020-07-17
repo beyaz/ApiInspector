@@ -138,7 +138,6 @@ namespace ApiInspector.Invoking
                 {
                     var instance = CreateInstance(targetType, boaContext);
 
-                    trace("Invoke started. Response waiting...");
                     response = methodInfo.Invoke(instance, invocationParameters.ToArray());
                 }
 
