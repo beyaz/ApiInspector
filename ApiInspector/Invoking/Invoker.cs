@@ -94,8 +94,6 @@ namespace ApiInspector.Invoking
                 }
             }
 
-            var instance = CreateInstance(targetType, boaContext);
-
             trace($"Started to search method: {methodName}");
             var methodInfo = targetType.GetMethod(methodName, AllBindings);
             if (methodInfo == null)
@@ -130,7 +128,20 @@ namespace ApiInspector.Invoking
             try
             {
                 trace("Invoke started. Response waiting...");
-                var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+
+                object response = null;
+                if (methodInfo.IsStatic)
+                {
+                    response = methodInfo.Invoke(null, invocationParameters.ToArray());
+                }
+                else
+                {
+                    var instance = CreateInstance(targetType, boaContext);
+
+                    trace("Invoke started. Response waiting...");
+                    response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+                }
+
                 trace("Successfully invoked.");
 
                 boaContext.Dispose();
