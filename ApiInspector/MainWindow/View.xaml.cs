@@ -16,9 +16,11 @@ namespace ApiInspector.MainWindow
 {
     public partial class View
     {
+
+        readonly DataSource History = new DataSource();
+
         #region Static Fields
         public static DataKey<ObjectHelper>                  BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
-        public static DataKey<IReadOnlyList<InvocationInfo>> HistoryDataKey      = new DataKey<IReadOnlyList<InvocationInfo>>(nameof(HistoryDataKey));
         public static DataKey<InvocationInfo>                InvocationInfo      = new DataKey<InvocationInfo>(nameof(InvocationInfo));
 
         public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
@@ -102,7 +104,7 @@ namespace ApiInspector.MainWindow
 
         void RefreshHistory()
         {
-            historyListBox.ItemsSource = context.Get(HistoryDataKey);
+            historyListBox.ItemsSource = History.GetHistory();
         }
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
@@ -116,7 +118,7 @@ namespace ApiInspector.MainWindow
 
             var invocationInfo = context.Get(InvocationInfo);
 
-            HistoryManager.SaveToHistory(invocationInfo);
+            History.SaveToHistory(invocationInfo);
           
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });

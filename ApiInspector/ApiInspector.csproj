@@ -71,13 +71,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\Data.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="Invoking\BOAContextInitializer.cs" />
     <Compile Include="MainWindow\ContextBuilder.cs" />
     <Compile Include="Application\Logger.cs" />
     <Compile Include="Invoking\Invoker.cs" />
-    <Compile Include="History\HistoryManager.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\CecilHelper.cs" />
     <Compile Include="MainWindow\Extensions.cs" />

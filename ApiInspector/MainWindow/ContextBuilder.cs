@@ -66,7 +66,6 @@ namespace ApiInspector.MainWindow
             context.SetupGet(ViewController.TypesInAssembly, GetTypesInAssembly);
             context.SetupGet(ViewController.TypeDefinitionRelatedClassName, GeTypeDefinitionRelatedClassName);
 
-            context.SetupGet(View.HistoryDataKey, HistoryManager.GetHistory);
 
             return context;
         }
