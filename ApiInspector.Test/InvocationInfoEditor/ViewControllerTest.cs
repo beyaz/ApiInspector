@@ -23,7 +23,7 @@ namespace ApiInspector.InvocationInfoEditor
                 EnvironmentNameList         = new List<string> {"dev", "test"}
             };
 
-            var viewData = new ViewData
+            var viewData = new InvocationEditorViewModel
             {
                 InvocationInfo = invocationInfo,
                 ItemSourceList = itemSourceList

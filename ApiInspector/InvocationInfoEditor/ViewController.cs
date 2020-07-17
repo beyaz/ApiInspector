@@ -16,81 +16,81 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [assembly name changed].
         /// </summary>
-        public void OnAssemblyNameChanged(ViewData viewData)
+        public void OnAssemblyNameChanged(InvocationEditorViewModel model)
         {
-            var assemblyFilePath = GetAssemblyFilePath(viewData.InvocationInfo);
+            var assemblyFilePath = GetAssemblyFilePath(model.InvocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
-                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                model.Logs.Add($"File not exists. File:{assemblyFilePath}");
                 return;
             }
 
-            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
+            var assemblySearchDirectory = model.InvocationInfo.AssemblySearchDirectory;
 
-            var typeVisitor = new TypeVisitor(new Logger().Log, new List<string> {assemblySearchDirectory});
+            var typeVisitor = new TypeVisitor(model.Logs.Add, new List<string> {assemblySearchDirectory});
 
-            viewData.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
+            model.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
         }
 
         /// <summary>
         ///     Called when [assembly search directory changed].
         /// </summary>
-        public void OnAssemblySearchDirectoryChanged(ViewData viewData)
+        public void OnAssemblySearchDirectoryChanged(InvocationEditorViewModel invocationEditorViewModel)
         {
-            if (!Directory.Exists(viewData.InvocationInfo.AssemblySearchDirectory))
+            if (!Directory.Exists(invocationEditorViewModel.InvocationInfo.AssemblySearchDirectory))
             {
                 return;
             }
 
-            viewData.ItemSourceList.AssemblyNameList = Directory.GetFiles(viewData.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
+            invocationEditorViewModel.ItemSourceList.AssemblyNameList = Directory.GetFiles(invocationEditorViewModel.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
         }
 
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public void OnClassNameChanged(ViewData viewData)
+        public void OnClassNameChanged(InvocationEditorViewModel model)
         {
-            var invocationInfo = viewData.InvocationInfo;
+            var invocationInfo = model.InvocationInfo;
 
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
             if (!File.Exists(assemblyFilePath))
             {
-                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                model.Logs.Add($"File not exists. File:{assemblyFilePath}");
                 return;
             }
 
-            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
+            var assemblySearchDirectory = model.InvocationInfo.AssemblySearchDirectory;
 
-            var typeVisitor = new TypeVisitor(new Logger().Log, new List<string> {assemblySearchDirectory});
+            var typeVisitor = new TypeVisitor(model.Logs.Add, new List<string> {assemblySearchDirectory});
 
-            var typeDefinition = viewData.typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
+            var typeDefinition = model.typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
-                viewData.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
+                model.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
                 return;
             }
 
-            viewData.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
+            model.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
         }
 
         /// <summary>
         ///     Called when [method name selected].
         /// </summary>
-        public void OnMethodNameSelected(ViewData viewData)
+        public void OnMethodNameSelected(InvocationEditorViewModel invocationEditorViewModel)
         {
-            var invocationInfo = viewData.InvocationInfo;
+            var invocationInfo = invocationEditorViewModel.InvocationInfo;
 
-            var methodDefinition = viewData.typeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+            var methodDefinition = invocationEditorViewModel.typeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
 
             if (methodDefinition == null)
             {
                 return;
             }
 
-            viewData.methodDefinition = methodDefinition;
+            invocationEditorViewModel.methodDefinition = methodDefinition;
 
-            var panel = viewData.ParametersPanel;
+            var panel = invocationEditorViewModel.ParametersPanel;
 
             new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
         }

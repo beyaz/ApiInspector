@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using BOA.DataFlow;
+using ApiInspector.Models;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -9,109 +9,118 @@ namespace ApiInspector.InvocationInfoEditor
     public partial class View
     {
         #region Fields
-        DataContext context;
+        /// <summary>
+        ///     The view controller
+        /// </summary>
+        readonly ViewController viewController = new ViewController();
         #endregion
 
         #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="View" /> class.
+        /// </summary>
         public View()
         {
             InitializeComponent();
-            Loaded += OnLoad;
+
+            Loaded += RegisterEvents;
         }
         #endregion
 
         #region Public Properties
-        public DataContext Context
-        {
-            get { return context; }
-            set
-            {
-                value.Update(Data.ParametersPanel, parametersPanel);
+        /// <summary>
+        ///     Gets or sets the model.
+        /// </summary>
+        public InvocationEditorViewModel Model { get; set; }
+        #endregion
 
-                context = value;
-
-                RegisterEvents();
-
-                UpdateSuggestions();
-            }
-        }
+        #region Properties
+        /// <summary>
+        ///     Gets the invocation information.
+        /// </summary>
+        InvocationInfo InvocationInfo => Model.InvocationInfo;
         #endregion
 
         #region Public Methods
-        public void RefreshValues()
+        /// <summary>
+        ///     Called when [invocation information changed].
+        /// </summary>
+        public void OnInvocationInfoChanged()
         {
-            var invocationInfo = context.Get(Data.InvocationInfo);
-
-            environmentIntellisenseTextBox.SetValue(invocationInfo.Environment);
-
-            assemblySearchDirectoryIntellisenseTextBox.SetValue(invocationInfo.AssemblySearchDirectory);
-            assemblyIntellisenseTextBox.SetValue(invocationInfo.AssemblyName);
-            classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
-            methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
+            RefreshValues();
         }
         #endregion
 
-        readonly ViewController viewController = new ViewController();
-
         #region Methods
-        void OnLoad(object sender, RoutedEventArgs routedEventArgs)
+        /// <summary>
+        ///     Refreshes the values.
+        /// </summary>
+        void RefreshValues()
+        {
+            Model.ParametersPanel = parametersPanel;
+
+            environmentIntellisenseTextBox.SetValue(InvocationInfo.Environment);
+            assemblySearchDirectoryIntellisenseTextBox.SetValue(InvocationInfo.AssemblySearchDirectory);
+            assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);
+            classNameIntellisenseTextBox.SetValue(InvocationInfo.ClassName);
+            methodNameIntellisenseTextBox.SetValue(InvocationInfo.MethodName);
+        }
+
+        void AfterControllerCall()
+        {
+            UpdateSuggestions();
+        }
+
+        /// <summary>
+        ///     Registers the events.
+        /// </summary>
+        void RegisterEvents(object sender, RoutedEventArgs routedEventArgs)
         {
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(Data.InvocationInfo);
-                invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
+                InvocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                var viewData = new ViewData
-                {
-                    InvocationInfo = invocationInfo,
-                    ItemSourceList = context.Get(Data.ItemSourceList)
-                };
+                viewController.OnAssemblySearchDirectoryChanged(Model);
 
-                viewController.OnAssemblySearchDirectoryChanged(viewData);
-                
-                UpdateSuggestions();
+                AfterControllerCall();
             };
 
-            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
-            {
-                var invocationInfo = context.Get(Data.InvocationInfo);
-                invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
-                context.PublishEvent(ViewEvents.EnvironmentChanged);
-            };
+            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) => { InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text; };
 
             assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(Data.InvocationInfo);
-                invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
-                context.PublishEvent(ViewEvents.AssemblyNameChanged);
+                InvocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
+
+                viewController.OnAssemblyNameChanged(Model);
+
+                AfterControllerCall();
             };
 
             classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(Data.InvocationInfo);
-                invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
-                context.PublishEvent(ViewEvents.ClassNameChanged);
+                InvocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
+
+                viewController.OnClassNameChanged(Model);
+
+                AfterControllerCall();
             };
 
             methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                var invocationInfo = context.Get(Data.InvocationInfo);
-                invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
-                context.PublishEvent(ViewEvents.MethodNameChanged);
+                InvocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
+
+                viewController.OnMethodNameSelected(Model);
+
+                AfterControllerCall();
             };
         }
 
-        void RegisterEvents()
-        {
-            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, UpdateSuggestions);
-            context.SubscribeEvent(ViewEvents.ClassNameChanged, UpdateSuggestions);
-            context.SubscribeEvent(ViewEvents.MethodNameChanged, UpdateSuggestions);
-            context.OnUpdate(Data.InvocationInfo, RefreshValues);
-        }
-
+        /// <summary>
+        ///     Updates the suggestions.
+        /// </summary>
         void UpdateSuggestions()
         {
-            var source = context.Get(Data.ItemSourceList);
+            var source = Model.ItemSourceList;
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;

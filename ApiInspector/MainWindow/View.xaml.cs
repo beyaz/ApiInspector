@@ -1,111 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
-using BOA.Base;
-using BOA.DataFlow;
-using Timer = System.Timers.Timer;
 
 namespace ApiInspector.MainWindow
 {
     public partial class View
     {
+        readonly DataSource history = new DataSource();
 
-        readonly DataSource History = new DataSource();
+        readonly MainWindowViewModel model = new MainWindowViewModelBuilder().Build();
 
-        #region Static Fields
-        public static DataKey<ObjectHelper>                  BOAExecutionContext = new DataKey<ObjectHelper>(nameof(BOAExecutionContext));
-        public static DataKey<InvocationInfo>                InvocationInfo      = new DataKey<InvocationInfo>(nameof(InvocationInfo));
-
-        public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
-        #endregion
-
-        #region Fields
-        readonly List<string> traceMessages = new List<string>();
-        DataContext           context;
-        #endregion
+        readonly Invoker invoker;
 
         #region Constructors
         public View()
         {
             InitializeComponent();
 
-            InitializeContext();
+            currentInvocationInfo.Model = model.InvocationEditor;
 
-            currentInvocationInfo.Context = context;
+             invoker = new Invoker(model.TraceMessages.Add);
 
-            context.Update(Trace, AppendTraceMessage);
+            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, model.TraceMessages);
 
-            StartTimer();
+            traceMonitor.StartToMonitor();
+
+            InitializeHistoryPanel();
         }
         #endregion
 
         #region Public Methods
         public void RefreshValues()
         {
-            var invocationInfo = context.Get(InvocationInfo);
-
-            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
+            responseOutputFilePath.Text = model.InvocationEditor.InvocationInfo.ResponseOutputFilePath;
         }
         #endregion
 
         #region Methods
         void AppendTraceMessage(string message)
         {
-            traceMessages.Add(message);
+            model.TraceMessages.Add(message);
         }
 
-        bool HistoryFilter(object item)
-        {
-            if (string.IsNullOrEmpty(historyFilterTextBox.Text))
-            {
-                return true;
-            }
-
-            return ((InvocationInfo) item).ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
-        }
+       
 
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            Update((InvocationInfo) historyListBox.SelectedItem);
+            model.TraceMessages.Add("History item clicked.");
+            SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
         }
 
-        void Update(InvocationInfo invocationInfo)
+        void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
         {
-            context.Update(InvocationInfo, invocationInfo);
+            model.InvocationEditor.InvocationInfo = invocationInfo;
+            
             invokingResponseView.SetText(string.Empty);
+
+            currentInvocationInfo.OnInvocationInfoChanged();
+
+            model.TraceMessages.Add("Selected invocation was changed.");
         }
 
 
-        void InitializeContext()
-        {
-            var builder = new ContextBuilder();
 
-            context = builder.Build();
-
-            RefreshHistory();
-
-            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
-            view.Filter = HistoryFilter;
-
-            context.OnUpdate(InvocationInfo, RefreshValues);
-        }
-
-        void RefreshHistory()
-        {
-            historyListBox.ItemsSource = History.GetHistory();
-        }
+        
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
@@ -114,18 +77,20 @@ namespace ApiInspector.MainWindow
 
         void OnExecuteClicked()
         {
-            var trace = context.Get(Trace);
+            Action<string> trace = model.TraceMessages.Add;
 
-            var invocationInfo = context.Get(InvocationInfo);
+            var invocationInfo = model.InvocationEditor.InvocationInfo;
 
-            History.SaveToHistory(invocationInfo);
+            history.SaveToHistory(invocationInfo);
           
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
             trace("------------- EXECUTE STARTED -----------------");
+
             
-            var invokerOutput = new Invoker(AppendTraceMessage).Invoke(context.Get(View.InvocationInfo));
+
+            var invokerOutput = invoker.Invoke(model.InvocationEditor.InvocationInfo);
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
 
@@ -135,41 +100,54 @@ namespace ApiInspector.MainWindow
             trace(string.Empty);
         }
 
-        void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                foreach (var message in traceMessages)
-                {
-                    traceViewer.AppendText("\r" + message);
-                    traceViewer.ScrollToEnd();
-                }
-
-                traceMessages.Clear();
-            });
-        }
+       
 
         void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            context.Get(InvocationInfo).ResponseOutputFilePath = responseOutputFilePath.Text;
+            model.InvocationEditor.InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 
-        void StartTimer()
-        {
-            var timer = new Timer(50);
-            timer.Elapsed += OnTimedEvent;
-            timer.Start();
-        }
+      
 
         void TryToExportExecutionResponseToFile(string executionResponseAsJson)
         {
-            var outputFilePath = context.Get(InvocationInfo).ResponseOutputFilePath;
+            var outputFilePath = model.InvocationEditor.InvocationInfo.ResponseOutputFilePath;
             if (string.IsNullOrWhiteSpace(outputFilePath))
             {
                 return;
             }
 
             Utility.WriteAllText(outputFilePath, executionResponseAsJson);
+        }
+        #endregion
+
+
+        #region History
+        bool HistoryFilter(object item)
+        {
+            if (string.IsNullOrEmpty(historyFilterTextBox.Text))
+            {
+                return true;
+            }
+
+            return ((InvocationInfo) item).ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+        void InitializeHistoryPanel()
+        {
+            model.TraceMessages.Add("History is loading...");
+
+            historyListBox.ItemsSource = history.GetHistory();
+
+            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+
+            view.Filter = HistoryFilter;
+
+            model.TraceMessages.Add("History is loaded.");
+        }
+
+        void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
         }
         #endregion
     }

@@ -77,12 +77,13 @@
     <Compile Include="InvocationInfoEditor\ViewData.cs" />
     <Compile Include="Invoking\BOAContext.cs" />
     <Compile Include="Invoking\BOAContextInitializer.cs" />
-    <Compile Include="MainWindow\ContextBuilder.cs" />
-    <Compile Include="Application\Logger.cs" />
+    <Compile Include="MainWindow\MainWindowModelBuilder.cs" />
     <Compile Include="Invoking\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />
     <Compile Include="MainWindow\Extensions.cs" />
+    <Compile Include="MainWindow\MainWindowData.cs" />
+    <Compile Include="MainWindow\TraceMonitor.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>
@@ -97,7 +98,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InvocationInfoEditor\ItemSourceList.cs" />
-    <Compile Include="InvocationInfoEditor\ViewEvents.cs" />
     <Compile Include="InvocationInfoEditor\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
