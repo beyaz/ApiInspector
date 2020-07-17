@@ -27,14 +27,14 @@ namespace ApiInspector.MainWindow
                 EnvironmentNameList         = new List<string> {"dev", "test"}
             });
 
-            View.InvocationInfo = Invoker.InvocationInfo = Data.InvocationInfo;
+            View.InvocationInfo = Invoker2.InvocationInfo = Data.InvocationInfo;
 
-            View.BOAExecutionContext = Invoker.BOAExecutionContext;
+            View.BOAExecutionContext = Invoker2.BOAExecutionContext;
 
-            context.SetupGet(Invoker.BOAExecutionContext, GetExecutionDataContext);
+            context.SetupGet(Invoker2.BOAExecutionContext, GetExecutionDataContext);
             context.SetupGet(BOAContextInitializer.TargetEnvironment, c => c.Get(Data.InvocationInfo).Environment);
 
-            Invoker.InvocationFinished = BOAContextInitializer.BOATransactionShouldCommit;
+            Invoker2.InvocationFinished = BOAContextInitializer.BOATransactionShouldCommit;
 
             // connect view events
             {
@@ -45,7 +45,7 @@ namespace ApiInspector.MainWindow
             }
 
             {
-                View.Trace = Invoker.Trace;
+                View.Trace = Invoker2.Trace;
             }
 
             context.Add(Logger.Key, new Logger());

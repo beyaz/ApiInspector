@@ -14,7 +14,7 @@ namespace ApiInspector.Invoking
     /// <summary>
     ///     The invoker
     /// </summary>
-    static class Invoker
+    static class Invoker2
     {
         #region Static Fields
         /// <summary>

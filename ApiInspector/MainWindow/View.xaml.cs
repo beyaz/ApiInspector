@@ -124,9 +124,9 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
             trace("------------- EXECUTE STARTED -----------------");
-            Invoker.Invoke(context);
+            Invoker2.Invoke(context);
 
-            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(context.Get(Invoker.ExecutionResponseAsJson)); });
+            Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(context.Get(Invoker2.ExecutionResponseAsJson)); });
 
             TryToExportExecutionResponseToFile();
 
@@ -168,7 +168,7 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
-            Utility.WriteAllText(outputFilePath, context.Get(Invoker.ExecutionResponseAsJson));
+            Utility.WriteAllText(outputFilePath, context.Get(Invoker2.ExecutionResponseAsJson));
         }
         #endregion
     }

@@ -108,13 +108,13 @@ namespace ApiInspector.Invoking
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
             var context = new DataContext();
-            context.SetupGet(Invoker.InvocationInfo,(c)=>invocationInfo);
-            context.SetupGet(Invoker.Trace,(c)=> (message)=>{});
+            context.SetupGet(Invoker2.InvocationInfo,(c)=>invocationInfo);
+            context.SetupGet(Invoker2.Trace,(c)=> (message)=>{});
             
 
-            Invoker.Invoke(context);
+            Invoker2.Invoke(context);
 
-            context.Get(Invoker.ExecutionResponse).Should().Be(expectedResponse);
+            context.Get(Invoker2.ExecutionResponse).Should().Be(expectedResponse);
         }
         #endregion
     }
