@@ -29,18 +29,6 @@ namespace ApiInspector
             }
         }
 
-        public static bool TryRemove<T>(this DataContext context, DataKey<T> key)
-        {
-            if (context.Contains(key))
-            {
-                context.Remove(key);
-
-                return true;
-
-            }
-
-            return false;
-        }
 
         public static string SerializeToJson(object value, bool ignoreDefaultValues = true)
         {
