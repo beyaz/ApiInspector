@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Application;
+using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using Mono.Cecil;
@@ -13,6 +13,7 @@ namespace ApiInspector.InvocationInfoEditor
     {
         public ItemSourceList ItemSourceList { get; set; }
         public InvocationInfo InvocationInfo { get; set; }
+        public List<string> Logs { get; set; } = new List<string>();
     }
     /// <summary>
     ///     The view controller
@@ -37,25 +38,7 @@ namespace ApiInspector.InvocationInfoEditor
         #endregion
 
         #region Public Methods
-        /// <summary>
-        ///     Called when [assembly name changed].
-        /// </summary>
-        public static void OnAssemblyNameChanged(DataContext context)
-        {
-            var itemSourceList = context.Get(Data.ItemSourceList);
-            var logger         = context.Get(Logger.Key);
-
-            var assemblyFilePath = context.Get(AssemblyFilePath);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                logger.Log($"File not exists. File:{assemblyFilePath}");
-                return;
-            }
-
-            itemSourceList.ClassNameList = context.Get(TypesInAssembly).Select(x => x.FullName).ToList();
-        }
-
+        
         public void OnAssemblySearchDirectoryChanged(ViewData viewData)
         {
             if (!Directory.Exists(viewData.InvocationInfo.AssemblySearchDirectory))
@@ -66,21 +49,58 @@ namespace ApiInspector.InvocationInfoEditor
             viewData.ItemSourceList.AssemblyNameList = Directory.GetFiles(viewData.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
         }
 
-
-        /// <summary>
-        ///     Called when [class name changed].
-        /// </summary>
-        public static void OnClassNameChanged(DataContext context)
+        static string GetAssemblyFilePath(InvocationInfo invocationInfo)
         {
-            var itemSourceList = context.Get(Data.ItemSourceList);
+            var assemblyName      = invocationInfo.AssemblyName;
+            var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
+            var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
 
-            var typeDefinition = context.Get(TypeDefinitionRelatedClassName);
+            return assemblyPath;
+        }
+
+        public void OnAssemblyNameChanged(ViewData viewData)
+        {
+            var assemblyFilePath = GetAssemblyFilePath(viewData.InvocationInfo);
+
+            if (!File.Exists(assemblyFilePath))
+            {
+                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                return;
+            }
+            
+            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
+
+            var typeVisitor = new TypeVisitor(new Logger().Log,new List<string> {assemblySearchDirectory});
+
+            viewData.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
+        }
+
+        
+
+        public void OnClassNameChanged(ViewData viewData)
+        {
+            var invocationInfo = viewData.InvocationInfo;
+
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+            if (!File.Exists(assemblyFilePath))
+            {
+                viewData.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                return;
+            }
+            
+            var assemblySearchDirectory = viewData.InvocationInfo.AssemblySearchDirectory;
+
+            var typeVisitor = new TypeVisitor(new Logger().Log,new List<string> {assemblySearchDirectory});
+            
+            var typeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
+                viewData.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
                 return;
             }
 
-            itemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
+            viewData.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
+
         }
 
         /// <summary>

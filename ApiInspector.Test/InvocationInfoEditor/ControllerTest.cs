@@ -20,15 +20,17 @@ namespace ApiInspector.InvocationInfoEditor
             var invocationInfo = context.Get(Data.InvocationInfo);
             var itemSourceList = context.Get(Data.ItemSourceList);
 
+            var viewData = new ViewData()
+            {
+                InvocationInfo = invocationInfo,
+                ItemSourceList = itemSourceList
+            };
+
             // On Search Directory Changed
             {
                 itemSourceList.AssemblyNameList.Should().BeNull();
 
-                var viewData = new ViewData()
-                {
-                    InvocationInfo = invocationInfo,
-                    ItemSourceList = itemSourceList
-                };
+               
                 viewController.OnAssemblySearchDirectoryChanged(viewData);
 
                 itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
@@ -42,7 +44,7 @@ namespace ApiInspector.InvocationInfoEditor
                 invocationInfo.AssemblyName = "BOA.Process.Kernel.Card.dll";
 
 
-                ViewController.OnAssemblyNameChanged(context);
+                viewController.OnAssemblyNameChanged(viewData);
 
                 itemSourceList.ClassNameList.Count.Should().BeGreaterThan(0);
             }
@@ -55,7 +57,7 @@ namespace ApiInspector.InvocationInfoEditor
                 invocationInfo.ClassName = "BOA.Process.Kernel.Card.CallCenter.IVR.CreditCard.GetCardDetail";
 
 
-                ViewController.OnClassNameChanged(context);
+                viewController.OnClassNameChanged(viewData);
 
                 itemSourceList.MethodNameList.Count.Should().BeGreaterThan(0);
             }

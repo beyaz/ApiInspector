@@ -36,8 +36,6 @@ namespace ApiInspector.MainWindow
 
             // connect view events
             {
-                context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => ViewController.OnAssemblyNameChanged(context));
-                context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
                 context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
             }
 
@@ -45,8 +43,6 @@ namespace ApiInspector.MainWindow
 
             context.Add(Logger.Key, new Logger());
 
-            context.SubscribeEvent(ViewEvents.AssemblyNameChanged, () => ViewController.OnAssemblyNameChanged(context));
-            context.SubscribeEvent(ViewEvents.ClassNameChanged, () => ViewController.OnClassNameChanged(context));
             context.SubscribeEvent(ViewEvents.MethodNameChanged, () => ViewController.OnMethodNameSelected(context));
 
            
