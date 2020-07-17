@@ -124,13 +124,8 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(string.Empty); });
 
             trace("------------- EXECUTE STARTED -----------------");
-
-            var invokerInput = new InvokerInput
-            {
-                Trace = AppendTraceMessage,
-                InvocationInfo = context.Get(View.InvocationInfo ),
-            };
-            var invokerOutput = Invoker.Invoke(context,invokerInput);
+            
+            var invokerOutput = new Invoker(AppendTraceMessage).Invoke(context.Get(View.InvocationInfo));
 
             Dispatcher.InvokeAsync(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
 

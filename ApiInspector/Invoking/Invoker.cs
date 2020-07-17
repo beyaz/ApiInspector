@@ -5,40 +5,21 @@ using System.Reflection;
 using ApiInspector.Models;
 using BOA.Base;
 using BOA.Base.Data;
-using BOA.DataFlow;
 using Newtonsoft.Json;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
 {
     /// <summary>
-    ///     The invoker input
+    ///     The invoke output
     /// </summary>
-    class InvokerInput
-    {
-        #region Fields
-        /// <summary>
-        ///     The invocation information
-        /// </summary>
-        public InvocationInfo InvocationInfo;
-
-        /// <summary>
-        ///     The trace
-        /// </summary>
-        public Action<string> Trace;
-        #endregion
-    }
-
-    /// <summary>
-    ///     The invoker output
-    /// </summary>
-    class InvokerOutput
+    class InvokeOutput
     {
         #region Constructors
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InvokerOutput" /> class.
+        ///     Initializes a new instance of the <see cref="InvokeOutput" /> class.
         /// </summary>
-        public InvokerOutput(Exception error, object executionResponse, string executionResponseAsJson)
+        public InvokeOutput(Exception error, object executionResponse, string executionResponseAsJson)
         {
             Error                   = error;
             ExecutionResponse       = executionResponse;
@@ -69,15 +50,29 @@ namespace ApiInspector.Invoking
     /// </summary>
     class Invoker
     {
+        #region Fields
+        /// <summary>
+        ///     The trace
+        /// </summary>
+        readonly Action<string> trace;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Invoker" /> class.
+        /// </summary>
+        public Invoker(Action<string> trace)
+        {
+            this.trace = trace;
+        }
+        #endregion
+
         #region Public Methods
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public static InvokerOutput Invoke(DataContext context, InvokerInput invokerInput)
+        public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-            var trace          = invokerInput.Trace;
-            var invocationInfo = invokerInput.InvocationInfo;
-
             var boaContext = new BOAContext(invocationInfo.Environment);
 
             var assemblyName = invocationInfo.AssemblyName;
@@ -140,14 +135,14 @@ namespace ApiInspector.Invoking
 
                 boaContext.Dispose();
 
-                return new InvokerOutput(null, response, SerializeToJson(response, false));
+                return new InvokeOutput(null, response, SerializeToJson(response, false));
             }
             catch (Exception e)
             {
                 trace($"FAIL:{e}");
 
                 boaContext.Dispose();
-                return new InvokerOutput(e, e, SerializeToJson(e));
+                return new InvokeOutput(e, e, SerializeToJson(e));
             }
         }
         #endregion
