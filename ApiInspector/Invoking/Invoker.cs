@@ -53,10 +53,14 @@ namespace ApiInspector.Invoking
     {
         #region Fields
         /// <summary>
+        ///     The serializer
+        /// </summary>
+        readonly Serializer serializer = new Serializer();
+
+        /// <summary>
         ///     The trace
         /// </summary>
         readonly Action<string> trace;
-        readonly  Serialization.Serializer serializer = new Serializer();
         #endregion
 
         #region Constructors

@@ -15,7 +15,12 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ParameterPanelIntegration
     {
-        readonly Serialization.Serializer serializer = new Serializer();
+        #region Fields
+        /// <summary>
+        ///     The serializer
+        /// </summary>
+        readonly Serializer serializer = new Serializer();
+        #endregion
 
         #region Public Methods
         /// <summary>

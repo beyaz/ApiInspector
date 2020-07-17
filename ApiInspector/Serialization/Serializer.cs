@@ -3,15 +3,43 @@ using Newtonsoft.Json;
 
 namespace ApiInspector.Serialization
 {
+    /// <summary>
+    ///     The serializer
+    /// </summary>
     class Serializer
     {
-        public T Clone<T>( T source)
+        #region Public Methods
+        /// <summary>
+        ///     Clones the specified source.
+        /// </summary>
+        public T Clone<T>(T source)
         {
             var serialized = JsonConvert.SerializeObject(source);
             return JsonConvert.DeserializeObject<T>(serialized);
         }
 
-        static string SerializeToJson(object value, bool ignoreDefaultValues )
+        /// <summary>
+        ///     Serializes to json.
+        /// </summary>
+        public string SerializeToJson(object value)
+        {
+            return SerializeToJson(value, true);
+        }
+
+        /// <summary>
+        ///     Serializes to json do not ignore default values.
+        /// </summary>
+        public string SerializeToJsonDoNotIgnoreDefaultValues(object value)
+        {
+            return SerializeToJson(value, false);
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Serializes to json.
+        /// </summary>
+        static string SerializeToJson(object value, bool ignoreDefaultValues)
         {
             if (value == null)
             {
@@ -28,15 +56,6 @@ namespace ApiInspector.Serialization
 
             return JsonConvert.SerializeObject(value, settings);
         }
-
-        public string SerializeToJsonDoNotIgnoreDefaultValues(object value)
-        {
-            return SerializeToJson(value,false);
-        }
-
-        public string SerializeToJson(object value)
-        {
-            return SerializeToJson(value,true);
-        }
+        #endregion
     }
 }

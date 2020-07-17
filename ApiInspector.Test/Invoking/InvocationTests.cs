@@ -6,10 +6,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.Invoking
 {
+    /// <summary>
+    ///     The invocation tests
+    /// </summary>
     [TestClass]
     public class InvocationTests
     {
         #region Public Methods
+        /// <summary>
+        ///     Shoulds the invoke non static method.
+        /// </summary>
         [TestMethod]
         public void Should_invoke_non_static__method()
         {
@@ -94,7 +100,6 @@ namespace ApiInspector.Invoking
                     {
                         Value = "c"
                     },
-                    
                 }
             };
             Invoke_method(invocationInfo, "a-5-A-56-c");
@@ -102,11 +107,14 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Invokes the method.
+        /// </summary>
         static void Invoke_method(InvocationInfo invocationInfo, string expectedResponse)
         {
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
-            var output = new Invoker((message) => { }).Invoke(invocationInfo);
+            var output = new Invoker(message => { }).Invoke(invocationInfo);
 
             output.ExecutionResponse.Should().Be(expectedResponse);
         }

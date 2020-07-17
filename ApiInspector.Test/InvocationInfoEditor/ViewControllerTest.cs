@@ -6,10 +6,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.InvocationInfoEditor
 {
+    /// <summary>
+    ///     The view controller test
+    /// </summary>
     [TestClass]
     public class ViewControllerTest
     {
         #region Public Methods
+        /// <summary>
+        ///     Shoulds the load data according to component interaction.
+        /// </summary>
         [TestMethod]
         public void Should_load_data_according_to_component_interaction()
         {

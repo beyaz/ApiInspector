@@ -4,9 +4,15 @@ using ApiInspector.Models;
 
 namespace ApiInspector.MainWindow
 {
+    /// <summary>
+    ///     The main window view model builder
+    /// </summary>
     class MainWindowViewModelBuilder
     {
         #region Public Methods
+        /// <summary>
+        ///     Builds this instance.
+        /// </summary>
         public MainWindowViewModel Build()
         {
             const string defaultAssemblySearchDirectory = @"d:\boa\server\bin\";

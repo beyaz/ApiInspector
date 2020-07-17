@@ -53,6 +53,14 @@ namespace ApiInspector.InvocationInfoEditor
 
         #region Methods
         /// <summary>
+        ///     Afters the controller call.
+        /// </summary>
+        void AfterControllerCall()
+        {
+            UpdateSuggestions();
+        }
+
+        /// <summary>
         ///     Refreshes the values.
         /// </summary>
         void RefreshValues()
@@ -64,11 +72,6 @@ namespace ApiInspector.InvocationInfoEditor
             assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);
             classNameIntellisenseTextBox.SetValue(InvocationInfo.ClassName);
             methodNameIntellisenseTextBox.SetValue(InvocationInfo.MethodName);
-        }
-
-        void AfterControllerCall()
-        {
-            UpdateSuggestions();
         }
 
         /// <summary>

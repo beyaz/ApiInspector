@@ -1,76 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 namespace ApiInspector
 {
+    /// <summary>
+    ///     The utility
+    /// </summary>
     static class Utility
     {
         #region Public Properties
+        /// <summary>
+        ///     Gets all bindings.
+        /// </summary>
         public static BindingFlags AllBindings
         {
             get { return BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic; }
@@ -78,8 +20,9 @@ namespace ApiInspector
         #endregion
 
         #region Public Methods
-        
-
+        /// <summary>
+        ///     Determines whether the specified action is success.
+        /// </summary>
         public static bool IsSuccess<T>(Func<T> action, ref T target)
         {
             try
@@ -94,8 +37,9 @@ namespace ApiInspector
             }
         }
 
-      
-
+        /// <summary>
+        ///     Tries the run.
+        /// </summary>
         public static Exception TryRun(Action action)
         {
             try
@@ -109,6 +53,9 @@ namespace ApiInspector
             }
         }
 
+        /// <summary>
+        ///     Writes all text.
+        /// </summary>
         public static void WriteAllText(string filePath, string content)
         {
             var directoryName = Path.GetDirectoryName(filePath);
