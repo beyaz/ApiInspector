@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BOA.DataFlow;
 using Mono.Cecil;
 
 namespace ApiInspector.DataAccess

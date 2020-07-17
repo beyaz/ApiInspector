@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Models;
 using ApiInspector.TestData;
-using BOA.DataFlow;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
