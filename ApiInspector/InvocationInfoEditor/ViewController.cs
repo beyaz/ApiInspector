@@ -99,7 +99,9 @@ namespace ApiInspector.InvocationInfoEditor
 
             context.Update(Data.MethodDefinition, methodDefinition);
 
-            ParameterPanelIntegration.Connect(context);
+            var panel            = context.Get(Data.ParametersPanel);
+
+            new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
         }
         #endregion
     }

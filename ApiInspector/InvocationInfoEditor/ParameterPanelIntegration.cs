@@ -5,20 +5,21 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using ApiInspector.Models;
 using BOA.Base;
-using BOA.DataFlow;
 using Mono.Cecil;
 
 namespace ApiInspector.InvocationInfoEditor
 {
+    /// <summary>
+    ///     The parameter panel integration
+    /// </summary>
     class ParameterPanelIntegration
     {
         #region Public Methods
-        public static void Connect(DataContext context)
+        /// <summary>
+        ///     Connects the specified invocation information.
+        /// </summary>
+        public void Connect(InvocationInfo invocationInfo, StackPanel panel, MethodDefinition methodDefinition)
         {
-            var invocationInfo   = context.Get(Data.InvocationInfo);
-            var methodDefinition = context.Get(Data.MethodDefinition);
-            var panel            = context.Get(Data.ParametersPanel);
-
             var invocationParameters = invocationInfo.Parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
             panel.Children.Clear();
