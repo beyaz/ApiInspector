@@ -152,6 +152,8 @@ copy /y "$(TargetDir)BOA.DataFlow.dll" "d:\boa\server\bin\"
 copy /y "$(TargetDir)BOA.UnitTestHelper.dll" "d:\boa\server\bin\"
 copy /y "$(TargetDir)Notifications.Wpf.dll" "d:\boa\server\bin\"
 copy /y "$(TargetDir)WpfControls.dll" "d:\boa\server\bin\"
+copy /y "$(TargetDir)Dapper.dll" "d:\boa\server\bin\"
+copy /y "$(TargetDir)Dapper.Contrib.dll" "d:\boa\server\bin\"
 
 
 </PostBuildEvent>
