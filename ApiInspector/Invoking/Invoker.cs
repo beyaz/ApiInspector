@@ -6,167 +6,28 @@ using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Base;
 using BOA.Base.Data;
-using Newtonsoft.Json;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
 {
-    /// <summary>
-    ///     The parameter adapter input
-    /// </summary>
-    class ParameterAdapterInput
-    {
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the boa context.
-        /// </summary>
-        public BOAContext boaContext { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the invocation value.
-        /// </summary>
-        public object InvocationValue { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the parameter information.
-        /// </summary>
-        public ParameterInfo ParameterInfo { get; set; }
-        #endregion
-    }
-
-    /// <summary>
-    ///     The parameter adapter
-    /// </summary>
-    interface IParameterAdapter
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Tries the adapt.
-        /// </summary>
-        bool TryAdapt(ParameterAdapterInput input);
-        #endregion
-    }
-
-    /// <summary>
-    ///     The parameter adapter for object type
-    /// </summary>
-    class ParameterAdapterForObjectType : IParameterAdapter
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Tries the adapt.
-        /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
-        {
-            var targetParameterType = input.ParameterInfo.ParameterType;
-
-            if (targetParameterType == typeof(object))
-            {
-                return true;
-            }
-
-            return false;
-        }
-        #endregion
-    }
-
-    /// <summary>
-    ///     The parameter adapter for object helper type
-    /// </summary>
-    class ParameterAdapterForObjectHelperType : IParameterAdapter
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Tries the adapt.
-        /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
-        {
-            var targetParameterType = input.ParameterInfo.ParameterType;
-
-            if (targetParameterType == typeof(ObjectHelper))
-            {
-                input.InvocationValue = new ObjectHelper {Context = input.boaContext.GetObjectHelper().Context};
-                return true;
-            }
-
-            return false;
-        }
-        #endregion
-    }
-
-    /// <summary>
-    ///     The parameter adapter for string type
-    /// </summary>
-    class ParameterAdapterForStringType : IParameterAdapter
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Tries the adapt.
-        /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
-        {
-            var targetParameterType = input.ParameterInfo.ParameterType;
-
-            if (targetParameterType == typeof(string) && input.InvocationValue is string)
-            {
-                return true;
-            }
-
-            return false;
-        }
-        #endregion
-    }
-
-    /// <summary>
-    ///     The parameter adapter for serializable types
-    /// </summary>
-    class ParameterAdapterForSerializableTypes : IParameterAdapter
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Tries the adapt.
-        /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
-        {
-            var targetParameterType = input.ParameterInfo.ParameterType;
-
-            if (targetParameterType.IsClass && input.InvocationValue is string)
-            {
-                input.InvocationValue = JsonConvert.DeserializeObject((string) input.InvocationValue, targetParameterType);
-                return true;
-            }
-
-            return false;
-        }
-        #endregion
-    }
-
-    /// <summary>
-    ///     The parameter adapter for convertible types
-    /// </summary>
-    class ParameterAdapterForConvertibleTypes : IParameterAdapter
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Tries the adapt.
-        /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
-        {
-            var targetParameterType = input.ParameterInfo.ParameterType;
-
-            input.InvocationValue = Convert.ChangeType(input.InvocationValue, targetParameterType);
-
-            return true;
-        }
-        #endregion
-    }
-
     /// <summary>
     ///     The invoker
     /// </summary>
     class Invoker
     {
         #region Fields
+        /// <summary>
+        ///     The parameter adapters
+        /// </summary>
+        readonly IParameterAdapter[] parameterAdapters =
+        {
+            new ParameterAdapterForObjectType(),
+            new ParameterAdapterForStringType(),
+            new ParameterAdapterForObjectHelperType(),
+            new ParameterAdapterForSerializableTypes(),
+            new ParameterAdapterForConvertibleTypes()
+        };
+
         /// <summary>
         ///     The serializer
         /// </summary>
@@ -235,15 +96,6 @@ namespace ApiInspector.Invoking
             {
                 throw new ArgumentNullException(nameof(methodInfo));
             }
-
-            var parameterAdapters = new IParameterAdapter[]
-            {
-                new ParameterAdapterForObjectType(),
-                new ParameterAdapterForStringType(),
-                new ParameterAdapterForObjectHelperType(),
-                new ParameterAdapterForSerializableTypes(),
-                new ParameterAdapterForConvertibleTypes()
-            };
 
             trace("Preparing invocation parameters");
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();

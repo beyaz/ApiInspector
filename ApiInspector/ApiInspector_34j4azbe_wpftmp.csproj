@@ -35,39 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BOA.Base">
-      <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>d:\BOA\Server\bin\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="BOA.Process.Kernel.Card">
-      <HintPath>d:\BOA\Server\bin\BOA.Process.Kernel.Card.dll</HintPath>
-    </Reference>
-    <Reference Include="BOA.Common">
-      <HintPath>d:\BOA\Server\bin\BOA.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>D:\BOA\server\bin\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Application\App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
     <Compile Include="Application\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
@@ -92,14 +61,6 @@
     <Compile Include="MainWindow\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
-    <Page Include="InvocationInfoEditor\View.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow\View.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="Application\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -151,4 +112,31 @@ copy /y "$(TargetDir)WpfControls.dll" "d:\boa\server\bin\"
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /fi "imagename eq $(TargetFileName)"</PreBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <ReferencePath Include="d:\BOA\Server\bin\BOA.Base.dll" />
+    <ReferencePath Include="d:\BOA\Server\bin\BOA.Common.dll" />
+    <ReferencePath Include="d:\BOA\Server\bin\BOA.Process.Kernel.Card.dll" />
+    <ReferencePath Include="D:\Users\beyaztas\.nuget\packages\boa.unittesthelper\1.0.0.11\lib\net461\BOA.UnitTestHelper.dll" />
+    <ReferencePath Include="d:\BOA\Server\bin\Mono.Cecil.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\mscorlib.dll" />
+    <ReferencePath Include="D:\BOA\server\bin\Newtonsoft.Json.dll" />
+    <ReferencePath Include="D:\Users\beyaztas\.nuget\packages\notifications.wpf\0.1.1\lib\net461\Notifications.Wpf.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\WindowsBase.dll" />
+    <ReferencePath Include="D:\Users\beyaztas\.nuget\packages\wpfcontrols.autocompletetextbox\1.0.0.7\lib\net35\WpfControls.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="D:\git\ApiInspector\ApiInspector\obj\Debug\InvocationInfoEditor\View.g.cs" />
+    <Compile Include="D:\git\ApiInspector\ApiInspector\obj\Debug\MainWindow\View.g.cs" />
+    <Compile Include="D:\git\ApiInspector\ApiInspector\obj\Debug\Application\App.g.cs" />
+    <Compile Include="D:\git\ApiInspector\ApiInspector\obj\Debug\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
 </Project>
