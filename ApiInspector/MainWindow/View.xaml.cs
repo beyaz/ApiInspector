@@ -79,7 +79,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            if (model.InvocationEditor.InvocationInfo == null)
+            if (model.InvocationEditor.InvocationInfo == null || string.IsNullOrWhiteSpace(model.InvocationEditor.InvocationInfo.MethodName) )
             {
                 ((App)System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
                 return;
