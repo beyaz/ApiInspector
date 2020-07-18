@@ -84,6 +84,8 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            history.SaveToHistory(model.InvocationEditor.InvocationInfo);
+
             new Thread(OnExecuteClicked).Start();
         }
 
@@ -95,8 +97,6 @@ namespace ApiInspector.MainWindow
             Action<string> trace = model.TraceMessages.Add;
 
             var invocationInfo = model.InvocationEditor.InvocationInfo;
-
-            history.SaveToHistory(invocationInfo);
 
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
 
