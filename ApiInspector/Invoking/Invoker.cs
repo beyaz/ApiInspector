@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using ApiInspector.Models;
@@ -106,10 +107,14 @@ namespace ApiInspector.Invoking
 
             for (var i = 0; i < methodParametersInDotNet.Length; i++)
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                var parameterInfo = methodParametersInDotNet[i];
+
                 var parameterAdapterInput = new ParameterAdapterInput
                 {
                     InvocationValue = parameters[i].Value,
-                    ParameterInfo   = methodParametersInDotNet[i],
+                    ParameterInfo   = parameterInfo,
                     boaContext      = boaContext
                 };
 
@@ -126,6 +131,8 @@ namespace ApiInspector.Invoking
 
                 if (isAdapted)
                 {
+                    stopwatch.Stop();
+                    trace( $"Parameter: {parameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
                     continue;
                 }
 
@@ -139,6 +146,7 @@ namespace ApiInspector.Invoking
             try
             {
                 trace("Invoke started. Response waiting...");
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
                 object response = null;
                 if (methodInfo.IsStatic)
@@ -152,7 +160,8 @@ namespace ApiInspector.Invoking
                     response = methodInfo.Invoke(instance, invocationParameters.ToArray());
                 }
 
-                trace("Successfully invoked.");
+                stopwatch.Stop();
+                trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
                 boaContext.Dispose();
 

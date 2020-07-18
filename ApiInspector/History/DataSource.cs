@@ -11,8 +11,14 @@ namespace ApiInspector.History
     class DataSource
     {
         #region Fields
+        /// <summary>
+        ///     The boa dev data source
+        /// </summary>
         readonly BoaDevDataSource boaDevDataSource = new BoaDevDataSource();
 
+        /// <summary>
+        ///     The file data source
+        /// </summary>
         readonly FileDataSource fileDataSource = new FileDataSource();
         #endregion
 
@@ -44,5 +50,16 @@ namespace ApiInspector.History
             fileDataSource.SaveToHistory(info);
         }
         #endregion
+
+        /// <summary>
+        ///     Removes the specified information.
+        /// </summary>
+        public void Remove(InvocationInfo info)
+        {
+            Utility.TryRun(() => boaDevDataSource.Remove(info));
+
+            fileDataSource.Remove(info);
+
+        }
     }
 }

@@ -58,13 +58,32 @@ namespace ApiInspector.History
         }
 
         /// <summary>
+        ///     Removes the specified information.
+        /// </summary>
+        public void Remove(InvocationInfo info)
+        {
+            var filePath = GetFilePath(info);
+            File.Delete(filePath);
+        }
+
+        /// <summary>
         ///     Saves to history.
         /// </summary>
         public void SaveToHistory(InvocationInfo info)
         {
-            var filePath = Path.Combine(directoryPath, info.ToString().Replace(":", "____") + ".json");
+            var filePath = GetFilePath(info);
 
             Utility.WriteAllText(filePath, serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info));
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Gets the file path.
+        /// </summary>
+        string GetFilePath(InvocationInfo info)
+        {
+            return Path.Combine(directoryPath, info.ToString().Replace(":", "____") + ".json");
         }
         #endregion
     }

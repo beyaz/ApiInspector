@@ -65,6 +65,11 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
+            if (InvocationInfo == null)
+            {
+                return;
+            }
+
             environmentIntellisenseTextBox.SetValue(InvocationInfo.Environment);
             assemblySearchDirectoryIntellisenseTextBox.SetValue(InvocationInfo.AssemblySearchDirectory);
             assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);

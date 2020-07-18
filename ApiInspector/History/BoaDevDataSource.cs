@@ -52,21 +52,42 @@ namespace ApiInspector.History
         }
 
         /// <summary>
+        ///     Removes the specified information.
+        /// </summary>
+        public void Remove(InvocationInfo info)
+        {
+            var model = CreateFrom(info);
+
+            connection.Delete(model);
+        }
+
+        /// <summary>
         ///     Saves to history.
         /// </summary>
         public void SaveToHistory(InvocationInfo info)
         {
+            var model = CreateFrom(info);
+
+            Remove(info);
+
+            connection.Insert(model);
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Creates from.
+        /// </summary>
+        RecordModel CreateFrom(InvocationInfo info)
+        {
             var key = info.ToString();
 
-            var model = new RecordModel
+            return new RecordModel
             {
                 Key      = key,
                 UserName = Environment.UserName,
                 Value    = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info)
             };
-
-            connection.Delete(model);
-            connection.Insert(model);
         }
         #endregion
 

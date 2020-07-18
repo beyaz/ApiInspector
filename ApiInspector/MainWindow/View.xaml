@@ -28,7 +28,7 @@
                 <Label FontWeight = "Bold" >History</Label>
                 <TextBox x:Name = "historyFilterTextBox" TextChanged = "HistoryFilterTextBox_OnTextChanged" />
             </StackPanel>
-            <ListBox Grid.Row = "1" x:Name = "historyListBox" SelectionChanged = "HistoryListBox_OnSelected" />
+            <ListBox Grid.Row = "1" x:Name = "historyListBox" SelectionChanged = "HistoryListBox_OnSelected" KeyDown="HistoryListBox_OnKeyDown" />
         </Grid>
 
         <GridSplitter Grid.Row = "0" Grid.Column = "1" Width = "5" HorizontalAlignment = "Stretch" />

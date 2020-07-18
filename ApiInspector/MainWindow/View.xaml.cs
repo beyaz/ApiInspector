@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
@@ -76,7 +78,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            history.SaveToHistory(model.InvocationEditor.InvocationInfo);
+            Task.Run(() => history.SaveToHistory(model.InvocationEditor.InvocationInfo));
 
             new Thread(OnExecuteClicked).Start();
         }
@@ -123,7 +125,11 @@ namespace ApiInspector.MainWindow
             model.InvocationEditor.InvocationInfo = invocationInfo;
 
             invokingResponseView.SetText(string.Empty);
-            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
+
+            if (invocationInfo != null)
+            {
+                responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
+            }
 
             currentInvocationInfo.OnInvocationInfoChanged();
 
@@ -177,5 +183,24 @@ namespace ApiInspector.MainWindow
             CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
         }
         #endregion
+
+        void HistoryListBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.Key == Key.Delete)
+            {
+                if (historyListBox.SelectedItem != null)
+                {
+                    DeleteSelectedItemFromHistory((InvocationInfo)historyListBox.SelectedItem);
+                }
+            }
+        }
+
+        void DeleteSelectedItemFromHistory(InvocationInfo info)
+        {
+            history.Remove(info);
+
+            InitializeHistoryPanel();
+        }
     }
 }
