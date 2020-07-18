@@ -12,6 +12,156 @@ using static ApiInspector.Utility;
 namespace ApiInspector.Invoking
 {
     /// <summary>
+    ///     The parameter adapter input
+    /// </summary>
+    class ParameterAdapterInput
+    {
+        #region Public Properties
+        /// <summary>
+        ///     Gets or sets the boa context.
+        /// </summary>
+        public BOAContext boaContext { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the invocation value.
+        /// </summary>
+        public object InvocationValue { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the parameter information.
+        /// </summary>
+        public ParameterInfo ParameterInfo { get; set; }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The parameter adapter
+    /// </summary>
+    interface IParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        bool TryAdapt(ParameterAdapterInput input);
+        #endregion
+    }
+
+    /// <summary>
+    ///     The parameter adapter for object type
+    /// </summary>
+    class ParameterAdapterForObjectType : IParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public bool TryAdapt(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType == typeof(object))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The parameter adapter for object helper type
+    /// </summary>
+    class ParameterAdapterForObjectHelperType : IParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public bool TryAdapt(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType == typeof(ObjectHelper))
+            {
+                input.InvocationValue = new ObjectHelper {Context = input.boaContext.GetObjectHelper().Context};
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The parameter adapter for string type
+    /// </summary>
+    class ParameterAdapterForStringType : IParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public bool TryAdapt(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType == typeof(string) && input.InvocationValue is string)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The parameter adapter for serializable types
+    /// </summary>
+    class ParameterAdapterForSerializableTypes : IParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public bool TryAdapt(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType.IsClass && input.InvocationValue is string)
+            {
+                input.InvocationValue = JsonConvert.DeserializeObject((string) input.InvocationValue, targetParameterType);
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The parameter adapter for convertible types
+    /// </summary>
+    class ParameterAdapterForConvertibleTypes : IParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public bool TryAdapt(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            input.InvocationValue = Convert.ChangeType(input.InvocationValue, targetParameterType);
+
+            return true;
+        }
+        #endregion
+    }
+
+    /// <summary>
     ///     The invoker
     /// </summary>
     class Invoker
@@ -66,7 +216,7 @@ namespace ApiInspector.Invoking
             }
 
             trace($"Started to search method: {methodName}");
-            
+
             MethodInfo methodInfo = null;
             try
             {
@@ -79,42 +229,58 @@ namespace ApiInspector.Invoking
                 boaContext.Dispose();
 
                 return new InvokeOutput(e, e, serializer.SerializeToJson(e));
-
             }
+
             if (methodInfo == null)
             {
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
+            var parameterAdapters = new IParameterAdapter[]
+            {
+                new ParameterAdapterForObjectType(),
+                new ParameterAdapterForStringType(),
+                new ParameterAdapterForObjectHelperType(),
+                new ParameterAdapterForSerializableTypes(),
+                new ParameterAdapterForConvertibleTypes()
+            };
+
             trace("Preparing invocation parameters");
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-            var invocationParameters     = new List<object>();
+            var invocationParameters = new List<object>();
+
             var methodParametersInDotNet = methodInfo.GetParameters();
+
             for (var i = 0; i < methodParametersInDotNet.Length; i++)
             {
-                var value               = parameters[i].Value;
-                var targetParameterType = methodParametersInDotNet[i].ParameterType;
-
-                if (targetParameterType == typeof(object))
+                var parameterAdapterInput = new ParameterAdapterInput
                 {
-                    invocationParameters.Add(value);
+                    InvocationValue = parameters[i].Value,
+                    ParameterInfo   = methodParametersInDotNet[i]
+                };
+
+                var isAdapted = false;
+                foreach (var parameterAdapter in parameterAdapters)
+                {
+                    if (parameterAdapter.TryAdapt(parameterAdapterInput))
+                    {
+                        invocationParameters.Add(parameterAdapterInput.InvocationValue);
+                        isAdapted = true;
+                        break;
+                    }
+                }
+
+                if (isAdapted)
+                {
                     continue;
-                    
                 }
 
-                if (targetParameterType == typeof(ObjectHelper))
-                {
-                    value = new ObjectHelper {Context = boaContext.GetObjectHelper().Context};
-                }
+                trace("Parameter not adapted.");
 
-                if (targetParameterType.FullName != typeof(string).FullName && targetParameterType.IsClass && value is string)
-                {
-                    value = JsonConvert.DeserializeObject((string) value, targetParameterType);
-                }
+                boaContext.Dispose();
 
-                value = Convert.ChangeType(value, targetParameterType);
-                invocationParameters.Add(value);
+                return Fail(new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}"), boaContext);
             }
 
             try
@@ -139,12 +305,11 @@ namespace ApiInspector.Invoking
 
                 return new InvokeOutput(null, response, serializer.SerializeToJsonDoNotIgnoreDefaultValues(response));
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                trace($"Failed when invoking method. {e}");
+                trace($"Failed when invoking method. {exception}");
 
-                boaContext.Dispose();
-                return new InvokeOutput(e, e, serializer.SerializeToJson(e));
+                return Fail(exception, boaContext);
             }
         }
         #endregion
@@ -182,6 +347,16 @@ namespace ApiInspector.Invoking
 
                 return instance;
             }
+        }
+
+        /// <summary>
+        ///     Fails the specified exception.
+        /// </summary>
+        InvokeOutput Fail(Exception exception, BOAContext boaContext)
+        {
+            boaContext.Dispose();
+
+            return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
         }
         #endregion
     }
