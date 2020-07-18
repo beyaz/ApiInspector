@@ -24,6 +24,7 @@ namespace ApiInspector.InvocationInfoEditor
             InitializeComponent();
 
             Loaded += RegisterEvents;
+            Loaded += (s, e) => { UpdateSuggestions(); };
         }
         #endregion
 
@@ -91,7 +92,10 @@ namespace ApiInspector.InvocationInfoEditor
                 AfterControllerCall();
             };
 
-            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) => { InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text; };
+            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+            };
 
             assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
