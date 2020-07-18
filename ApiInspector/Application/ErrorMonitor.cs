@@ -47,7 +47,7 @@ namespace ApiInspector.Application
         /// <summary>
         ///     Shows the error notification.
         /// </summary>
-        static void ShowErrorNotification(string message)
+         public void ShowErrorNotification(string message)
         {
             ShowNotification(null, message, NotificationType.Error);
         }

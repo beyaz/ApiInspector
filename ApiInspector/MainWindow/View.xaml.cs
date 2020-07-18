@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ApiInspector.Application;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
@@ -78,6 +79,12 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            if (model.InvocationEditor.InvocationInfo == null)
+            {
+                ((App)System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
+                return;
+            }
+
             Task.Run(() => history.SaveToHistory(model.InvocationEditor.InvocationInfo));
 
             new Thread(OnExecuteClicked).Start();

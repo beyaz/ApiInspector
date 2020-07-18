@@ -15,8 +15,16 @@ namespace ApiInspector.Application
         {
             BOAAssemblyResolver.AttachToCurrentDomain();
 
-            new ErrorMonitor(this).StartMonitor();
+            ErrorMonitor = new ErrorMonitor(this);
+            ErrorMonitor.StartMonitor();
         }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        ///     Gets the error monitor.
+        /// </summary>
+        internal ErrorMonitor ErrorMonitor { get; }
         #endregion
     }
 }
