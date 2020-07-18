@@ -70,6 +70,8 @@
     </ApplicationDefinition>
     <Compile Include="Application\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="History\BoaDevDataSource.cs" />
+    <Compile Include="History\FileDataSource.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
     <Compile Include="Invoking\IParameterAdapter.cs" />
     <Compile Include="Invoking\ParameterAdapterForConvertibleTypes.cs" />
@@ -125,6 +127,9 @@
       <Version>1.0.0.11</Version>
     </PackageReference>
     <PackageReference Include="Dapper">
+      <Version>2.0.35</Version>
+    </PackageReference>
+    <PackageReference Include="Dapper.Contrib">
       <Version>2.0.35</Version>
     </PackageReference>
     <PackageReference Include="Notifications.Wpf">

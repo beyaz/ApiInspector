@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using ApiInspector.Models;
-using ApiInspector.Serialization;
-using Newtonsoft.Json;
 
 namespace ApiInspector.History
 {
@@ -13,36 +11,12 @@ namespace ApiInspector.History
     class DataSource
     {
         #region Fields
-        /// <summary>
-        ///     The directory path
-        /// </summary>
-        readonly string directoryPath;
+        readonly BoaDevDataSource boaDevDataSource = new BoaDevDataSource();
 
-        /// <summary>
-        ///     The serializer
-        /// </summary>
-        readonly Serializer serializer = new Serializer();
+        readonly FileDataSource fileDataSource = new FileDataSource();
         #endregion
 
         #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DataSource" /> class.
-        /// </summary>
-        public DataSource()
-        {
-            directoryPath = Path.GetDirectoryName(typeof(DataSource).Assembly.Location) +
-                            Path.DirectorySeparatorChar +
-                            nameof(ApiInspector) + "History" +
-                            Path.DirectorySeparatorChar;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DataSource" /> class.
-        /// </summary>
-        public DataSource(string directoryPath)
-        {
-            this.directoryPath = directoryPath ?? throw new ArgumentNullException(nameof(directoryPath));
-        }
         #endregion
 
         #region Public Methods
@@ -51,19 +25,13 @@ namespace ApiInspector.History
         /// </summary>
         public IReadOnlyList<InvocationInfo> GetHistory()
         {
-            var localItems = new List<InvocationInfo>();
-
-            if (!Directory.Exists(directoryPath))
+            IReadOnlyList<InvocationInfo> records = null;
+            if (Utility.IsSuccess(() => boaDevDataSource.GetHistory(), ref records))
             {
-                return localItems;
+                Array.ForEach(records.ToArray(), fileDataSource.SaveToHistory);
             }
 
-            foreach (var file in Directory.GetFiles(directoryPath))
-            {
-                Utility.TryRun(() => localItems.Add(JsonConvert.DeserializeObject<InvocationInfo>(File.ReadAllText(file))));
-            }
-
-            return localItems;
+            return fileDataSource.GetHistory();
         }
 
         /// <summary>
@@ -71,9 +39,9 @@ namespace ApiInspector.History
         /// </summary>
         public void SaveToHistory(InvocationInfo info)
         {
-            var filePath = Path.Combine(directoryPath, info.ToString().Replace(":", "____") + ".json");
+            Utility.TryRun(() => boaDevDataSource.SaveToHistory(info));
 
-            Utility.WriteAllText(filePath, serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info));
+            fileDataSource.SaveToHistory(info);
         }
         #endregion
     }

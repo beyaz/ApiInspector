@@ -109,7 +109,8 @@ namespace ApiInspector.Invoking
                 var parameterAdapterInput = new ParameterAdapterInput
                 {
                     InvocationValue = parameters[i].Value,
-                    ParameterInfo   = methodParametersInDotNet[i]
+                    ParameterInfo   = methodParametersInDotNet[i],
+                    boaContext      = boaContext
                 };
 
                 var isAdapted = false;
