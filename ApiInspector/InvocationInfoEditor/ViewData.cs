@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Controls;
 using ApiInspector.Models;
 using Mono.Cecil;
 
@@ -37,11 +36,6 @@ namespace ApiInspector.InvocationInfoEditor
         ///     Gets or sets the logs.
         /// </summary>
         public List<string> Logs { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the parameters panel.
-        /// </summary>
-        public StackPanel ParametersPanel { get; set; }
         #endregion
     }
 }

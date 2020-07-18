@@ -65,8 +65,6 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            Model.ParametersPanel = parametersPanel;
-
             environmentIntellisenseTextBox.SetValue(InvocationInfo.Environment);
             assemblySearchDirectoryIntellisenseTextBox.SetValue(InvocationInfo.AssemblySearchDirectory);
             assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);
@@ -113,6 +111,11 @@ namespace ApiInspector.InvocationInfoEditor
                 InvocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
                 viewController.OnMethodNameSelected(Model);
+
+                if (Model.MethodDefinition != null)
+                {
+                    new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);    
+                }
 
                 AfterControllerCall();
             };

@@ -79,19 +79,8 @@ namespace ApiInspector.InvocationInfoEditor
         public void OnMethodNameSelected(InvocationEditorViewModel model)
         {
             var invocationInfo = model.InvocationInfo;
-
-            var methodDefinition = model.TypeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
-
-            if (methodDefinition == null)
-            {
-                return;
-            }
-
-            model.MethodDefinition = methodDefinition;
-
-            var panel = model.ParametersPanel;
-
-            new ParameterPanelIntegration().Connect(invocationInfo, panel, methodDefinition);
+            
+            model.MethodDefinition = model.TypeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
         }
         #endregion
 

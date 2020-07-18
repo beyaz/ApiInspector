@@ -68,8 +68,6 @@ namespace ApiInspector.InvocationInfoEditor
 
             // On Method Name Changed
             {
-                viewData.ParametersPanel = new StackPanel();
-
                 viewData.MethodDefinition.Should().BeNull();
 
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";

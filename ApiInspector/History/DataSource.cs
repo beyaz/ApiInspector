@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using Newtonsoft.Json;
 
 namespace ApiInspector.History
@@ -16,6 +17,11 @@ namespace ApiInspector.History
         ///     The directory path
         /// </summary>
         readonly string directoryPath;
+
+        /// <summary>
+        ///     The serializer
+        /// </summary>
+        readonly Serializer serializer = new Serializer();
         #endregion
 
         #region Constructors
@@ -67,30 +73,7 @@ namespace ApiInspector.History
         {
             var filePath = Path.Combine(directoryPath, info.ToString().Replace(":", "____") + ".json");
 
-            Utility.WriteAllText(filePath, SerializeToJson(info));
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Serializes to json.
-        /// </summary>
-        static string SerializeToJson(object value)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
-                TypeNameHandling     = TypeNameHandling.Objects
-            };
-
-            return JsonConvert.SerializeObject(value, settings);
+            Utility.WriteAllText(filePath, serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info));
         }
         #endregion
     }
