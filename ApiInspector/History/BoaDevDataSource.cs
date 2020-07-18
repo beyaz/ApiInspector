@@ -58,20 +58,14 @@ namespace ApiInspector.History
         {
             var key = info.ToString();
 
-            var sql = $@"
-DELETE FROM DBT.ApiInspectorWhiteStone 
- WHERE UserName = @{nameof(Environment.UserName)} 
-   AND [Key] = @{nameof(key)}
-                       ";
-
-            connection.Execute(sql, new {Environment.UserName,key});
-
             var model = new RecordModel
             {
                 Key      = key,
                 UserName = Environment.UserName,
                 Value    = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info)
             };
+
+            connection.Delete(model);
             connection.Insert(model);
         }
         #endregion
@@ -86,11 +80,13 @@ DELETE FROM DBT.ApiInspectorWhiteStone
             /// <summary>
             ///     Gets or sets the key.
             /// </summary>
+            [ExplicitKey]
             public string Key { get; set; }
 
             /// <summary>
             ///     Gets or sets the name of the user.
             /// </summary>
+            [ExplicitKey]
             public string UserName { get; set; }
 
             /// <summary>

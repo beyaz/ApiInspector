@@ -51,15 +51,7 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        #region Public Methods
-        /// <summary>
-        ///     Refreshes the values.
-        /// </summary>
-        public void RefreshValues()
-        {
-            responseOutputFilePath.Text = model.InvocationEditor.InvocationInfo.ResponseOutputFilePath;
-        }
-        #endregion
+       
 
         #region Methods
         /// <summary>
@@ -131,6 +123,7 @@ namespace ApiInspector.MainWindow
             model.InvocationEditor.InvocationInfo = invocationInfo;
 
             invokingResponseView.SetText(string.Empty);
+            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
 
             currentInvocationInfo.OnInvocationInfoChanged();
 
