@@ -64,6 +64,8 @@ namespace ApiInspector.Invoking
 
             Type targetType = null;
 
+
+
             trace($"Started to search class: {className}");
 
             if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
@@ -95,7 +97,7 @@ namespace ApiInspector.Invoking
 
             if (methodInfo == null)
             {
-                throw new ArgumentNullException(nameof(methodInfo));
+                return Fail(new Exception("Method not found."), boaContext);
             }
 
             trace("Preparing invocation parameters");
