@@ -135,6 +135,11 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
+            if (Model == null || Model.ItemSourceList == null)
+            {
+                return;
+            }
+
             var source = Model.ItemSourceList;
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
