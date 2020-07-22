@@ -98,36 +98,34 @@ namespace ApiInspector.InvocationInfoEditor
 
                     viewController.OnAssemblySearchDirectoryChanged(Model);
 
-                    AfterControllerCall();
-
                     break;
                 }
+
                 case ViewEvents.OnEnvironmentChanged:
                 {
                     InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
 
                     break;
                 }
+
                 case ViewEvents.OnAssemblyNameChanged:
                 {
                     InvocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
                     viewController.OnAssemblyNameChanged(Model);
 
-                    AfterControllerCall();
-
                     break;
                 }
+
                 case ViewEvents.OnClassNameChanged:
                 {
                     InvocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
 
                     viewController.OnClassNameChanged(Model);
 
-                    AfterControllerCall();
-
                     break;
                 }
+
                 case ViewEvents.OnMethodNameChanged:
                 {
                     InvocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
@@ -139,12 +137,13 @@ namespace ApiInspector.InvocationInfoEditor
                         new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);    
                     }
 
-                    AfterControllerCall();
-
                     break;
                 }
+
                 default: throw new NotImplementedException(name.ToString());
             }
+
+            AfterControllerCall();
         }
 
 
