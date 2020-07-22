@@ -123,10 +123,10 @@ namespace ApiInspector.Invoking
                 var isAdapted = false;
                 foreach (var parameterAdapter in parameterAdapters)
                 {
-                    if (parameterAdapter.TryAdapt(parameterAdapterInput))
+                    isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
+                    if (isAdapted)
                     {
                         invocationParameters.Add(parameterAdapterInput.InvocationValue);
-                        isAdapted = true;
                         break;
                     }
                 }
