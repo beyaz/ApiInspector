@@ -29,6 +29,17 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
+        #region Enums
+        enum ViewEvents
+        {
+            OnAssemblySearchDirectoryChanged,
+            OnEnvironmentChanged,
+            OnAssemblyNameChanged,
+            OnClassNameChanged,
+            OnMethodNameChanged
+        }
+        #endregion
+
         #region Public Properties
         /// <summary>
         ///     Gets or sets the model.
@@ -63,31 +74,8 @@ namespace ApiInspector.InvocationInfoEditor
         }
 
         /// <summary>
-        ///     Refreshes the values.
+        ///     Fires the event.
         /// </summary>
-        void RefreshValues()
-        {
-            if (InvocationInfo == null)
-            {
-                return;
-            }
-
-            environmentIntellisenseTextBox.SetValue(InvocationInfo.Environment);
-            assemblySearchDirectoryIntellisenseTextBox.SetValue(InvocationInfo.AssemblySearchDirectory);
-            assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);
-            classNameIntellisenseTextBox.SetValue(InvocationInfo.ClassName);
-            methodNameIntellisenseTextBox.SetValue(InvocationInfo.MethodName);
-        }
-
-        enum ViewEvents
-        {
-            OnAssemblySearchDirectoryChanged,
-            OnEnvironmentChanged,
-            OnAssemblyNameChanged,
-            OnClassNameChanged,
-            OnMethodNameChanged
-        }
-
         void FireEvent(ViewEvents name)
         {
             switch (name)
@@ -134,7 +122,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                     if (Model.MethodDefinition != null)
                     {
-                        new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);    
+                        new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);
                     }
 
                     break;
@@ -146,36 +134,37 @@ namespace ApiInspector.InvocationInfoEditor
             AfterControllerCall();
         }
 
+        /// <summary>
+        ///     Refreshes the values.
+        /// </summary>
+        void RefreshValues()
+        {
+            if (InvocationInfo == null)
+            {
+                return;
+            }
+
+            environmentIntellisenseTextBox.SetValue(InvocationInfo.Environment);
+            assemblySearchDirectoryIntellisenseTextBox.SetValue(InvocationInfo.AssemblySearchDirectory);
+            assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);
+            classNameIntellisenseTextBox.SetValue(InvocationInfo.ClassName);
+            methodNameIntellisenseTextBox.SetValue(InvocationInfo.MethodName);
+        }
 
         /// <summary>
         ///     Registers the events.
         /// </summary>
         void RegisterEvents(object sender, RoutedEventArgs routedEventArgs)
         {
-            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
-            {
-                FireEvent(ViewEvents.OnAssemblySearchDirectoryChanged);
-            };
+            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnAssemblySearchDirectoryChanged); };
 
-            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
-            {
-                FireEvent(ViewEvents.OnEnvironmentChanged);
-            };
+            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnEnvironmentChanged); };
 
-            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
-            {
-                FireEvent(ViewEvents.OnAssemblyNameChanged);
-            };
+            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnAssemblyNameChanged); };
 
-            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
-            {
-                FireEvent(ViewEvents.OnClassNameChanged);
-            };
+            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnClassNameChanged); };
 
-            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
-            {
-                FireEvent(ViewEvents.OnMethodNameChanged);
-            };
+            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnMethodNameChanged); };
         }
 
         /// <summary>
