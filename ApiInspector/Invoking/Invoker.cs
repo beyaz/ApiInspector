@@ -77,6 +77,23 @@ namespace ApiInspector.Invoking
                 }
             }
 
+            if (methodName == EndOfDay.MethodAccessText)
+            {
+                try
+                {
+                    BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
+
+                    new EndOfDayInvoker().Invoke(targetType);
+                
+                    return new InvokeOutput(null, null, null);
+                }
+                catch (Exception exception)
+                {
+                    return Fail(exception, boaContext);
+                }
+            }
+
+
             trace($"Started to search method: {methodName}");
 
             MethodInfo methodInfo = null;
@@ -86,11 +103,7 @@ namespace ApiInspector.Invoking
             }
             catch (Exception e)
             {
-                trace($"Failed when accessing method. {e}");
-
-                boaContext.Dispose();
-
-                return new InvokeOutput(e, e, serializer.SerializeToJson(e));
+                return Fail(e, boaContext);
             }
 
             if (methodInfo == null)

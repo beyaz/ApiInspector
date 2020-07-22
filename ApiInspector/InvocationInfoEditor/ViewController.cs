@@ -37,12 +37,18 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public void OnAssemblySearchDirectoryChanged(InvocationEditorViewModel model)
         {
-            if (!Directory.Exists(model.InvocationInfo.AssemblySearchDirectory))
+            var assemblySearchDirectory = model.InvocationInfo.AssemblySearchDirectory;
+            if (!Directory.Exists(assemblySearchDirectory))
             {
                 return;
             }
 
-            model.ItemSourceList.AssemblyNameList = Directory.GetFiles(model.InvocationInfo.AssemblySearchDirectory).Select(Path.GetFileName).ToList();
+            model.ItemSourceList.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
+
+            if (assemblySearchDirectory == AssemblySearchDirectories.clientBin)
+            {
+                model.ItemSourceList.AssemblyNameList = model.ItemSourceList.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
+            }
         }
 
         /// <summary>
@@ -71,6 +77,12 @@ namespace ApiInspector.InvocationInfoEditor
             }
 
             model.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
+
+            if (assemblySearchDirectory == AssemblySearchDirectories.clientBin)
+            {
+                model.ItemSourceList.MethodNameList = new List<string> {EndOfDay.MethodAccessText};
+            }
+            
         }
 
         /// <summary>

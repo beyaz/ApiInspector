@@ -15,9 +15,6 @@ namespace ApiInspector.MainWindow
         /// </summary>
         public MainWindowViewModel Build()
         {
-            const string serverBin = @"d:\boa\server\bin\";
-            const string clientBin = @"d:\boa\client\bin\";
-
             var traceMessages = new List<string>();
 
             return new MainWindowViewModel
@@ -26,11 +23,11 @@ namespace ApiInspector.MainWindow
                 {
                     InvocationInfo = new InvocationInfo
                     {
-                        AssemblySearchDirectory = serverBin
+                        AssemblySearchDirectory = AssemblySearchDirectories.serverBin
                     },
                     ItemSourceList = new ItemSourceList
                     {
-                        AssemblySearchDirectoryList = new List<string> {serverBin,clientBin},
+                        AssemblySearchDirectoryList = new List<string> {AssemblySearchDirectories.serverBin, AssemblySearchDirectories.clientBin},
                         EnvironmentNameList         = new List<string> {"dev", "test"}
                     },
                     Logs = traceMessages

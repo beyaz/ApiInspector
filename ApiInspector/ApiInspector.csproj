@@ -38,6 +38,12 @@
     <Reference Include="BOA.Base">
       <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>
+    <Reference Include="BOA.Common.TaskScheduler">
+      <HintPath>..\..\..\BOA\Client\bin\BOA.Common.TaskScheduler.dll</HintPath>
+    </Reference>
+    <Reference Include="BOA.EOD.Base">
+      <HintPath>..\..\..\BOA\Client\bin\BOA.EOD.Base.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>d:\BOA\Server\bin\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -72,6 +78,7 @@
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
+    <Compile Include="Invoking\EndOfDayInvoker.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
     <Compile Include="Invoking\IParameterAdapter.cs" />
     <Compile Include="Invoking\ParameterAdapterForConvertibleTypes.cs" />

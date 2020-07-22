@@ -4,6 +4,17 @@ using System.Reflection;
 
 namespace ApiInspector
 {
+    static class AssemblySearchDirectories
+    {
+        public const string serverBin = @"d:\boa\server\bin\";
+        public const string clientBin = @"d:\boa\client\bin\";
+    }
+
+    static class EndOfDay
+    {
+        public const string MethodAccessText = "InitializeParameters -> BeforeProcess -> Process -> AfterProcess";
+    }
+
     /// <summary>
     ///     The utility
     /// </summary>

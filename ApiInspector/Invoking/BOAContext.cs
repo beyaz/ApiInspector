@@ -63,15 +63,34 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Methods
+
+        public static BOATestContext CreateTestContext(string targetEnvironment)
+        {
+            if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return new BOATestContextDev();
+            }
+
+            if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return new BOATestContextTest();
+                
+            }
+
+            throw new NotImplementedException(nameof(targetEnvironment));
+        }
+
         /// <summary>
         ///     Creates the object helper.
         /// </summary>
         static ObjectHelper CreateObjectHelper(string targetEnvironment)
         {
+            var testContext = CreateTestContext(targetEnvironment);
+
             ObjectHelper objectHelper = null;
             if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                objectHelper = new BOATestContextDev().objectHelper;
+                objectHelper = testContext.objectHelper;
 
                 //objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
                 //{
@@ -80,7 +99,7 @@ namespace ApiInspector.Invoking
             }
             else if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                objectHelper = new BOATestContextTest().objectHelper;
+                objectHelper = testContext.objectHelper;
 
                 objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
                 {
