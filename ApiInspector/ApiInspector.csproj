@@ -123,6 +123,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BOA.DataFlow">
+      <Version>1.0.0.6</Version>
+    </PackageReference>
     <PackageReference Include="BOA.UnitTestHelper">
       <Version>1.0.0.11</Version>
     </PackageReference>

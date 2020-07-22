@@ -29,8 +29,9 @@ namespace ApiInspector.DataAccess
         /// </summary>
         public TypeVisitor(Action<string> log, IReadOnlyList<string> assemblySearchDirectories)
         {
-            this.log                       = log;
-            this.assemblySearchDirectories = assemblySearchDirectories;
+            this.log = log ?? throw new ArgumentNullException(nameof(log));
+
+            this.assemblySearchDirectories = assemblySearchDirectories ?? throw new ArgumentNullException(nameof(assemblySearchDirectories));
         }
         #endregion
 

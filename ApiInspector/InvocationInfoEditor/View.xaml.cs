@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using ApiInspector.Models;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -78,6 +79,75 @@ namespace ApiInspector.InvocationInfoEditor
             methodNameIntellisenseTextBox.SetValue(InvocationInfo.MethodName);
         }
 
+        enum ViewEvents
+        {
+            OnAssemblySearchDirectoryChanged,
+            OnEnvironmentChanged,
+            OnAssemblyNameChanged,
+            OnClassNameChanged,
+            OnMethodNameChanged
+        }
+
+        void FireEvent(ViewEvents name)
+        {
+            switch (name)
+            {
+                case ViewEvents.OnAssemblySearchDirectoryChanged:
+                {
+                    InvocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
+
+                    viewController.OnAssemblySearchDirectoryChanged(Model);
+
+                    AfterControllerCall();
+
+                    break;
+                }
+                case ViewEvents.OnEnvironmentChanged:
+                {
+                    InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+
+                    break;
+                }
+                case ViewEvents.OnAssemblyNameChanged:
+                {
+                    InvocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
+
+                    viewController.OnAssemblyNameChanged(Model);
+
+                    AfterControllerCall();
+
+                    break;
+                }
+                case ViewEvents.OnClassNameChanged:
+                {
+                    InvocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
+
+                    viewController.OnClassNameChanged(Model);
+
+                    AfterControllerCall();
+
+                    break;
+                }
+                case ViewEvents.OnMethodNameChanged:
+                {
+                    InvocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
+
+                    viewController.OnMethodNameSelected(Model);
+
+                    if (Model.MethodDefinition != null)
+                    {
+                        new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);    
+                    }
+
+                    AfterControllerCall();
+
+                    break;
+                }
+                default: throw new NotImplementedException(name.ToString());
+            }
+        }
+
+
         /// <summary>
         ///     Registers the events.
         /// </summary>
@@ -85,48 +155,27 @@ namespace ApiInspector.InvocationInfoEditor
         {
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                InvocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
-
-                viewController.OnAssemblySearchDirectoryChanged(Model);
-
-                AfterControllerCall();
+                FireEvent(ViewEvents.OnAssemblySearchDirectoryChanged);
             };
 
             environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+                FireEvent(ViewEvents.OnEnvironmentChanged);
             };
 
             assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                InvocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
-
-                viewController.OnAssemblyNameChanged(Model);
-
-                AfterControllerCall();
+                FireEvent(ViewEvents.OnAssemblyNameChanged);
             };
 
             classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                InvocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
-
-                viewController.OnClassNameChanged(Model);
-
-                AfterControllerCall();
+                FireEvent(ViewEvents.OnClassNameChanged);
             };
 
             methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-                InvocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
-
-                viewController.OnMethodNameSelected(Model);
-
-                if (Model.MethodDefinition != null)
-                {
-                    new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);    
-                }
-
-                AfterControllerCall();
+                FireEvent(ViewEvents.OnMethodNameChanged);
             };
         }
 
