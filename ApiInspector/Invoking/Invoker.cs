@@ -64,8 +64,6 @@ namespace ApiInspector.Invoking
 
             Type targetType = null;
 
-
-
             trace($"Started to search class: {className}");
 
             if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
@@ -109,14 +107,12 @@ namespace ApiInspector.Invoking
 
             for (var i = 0; i < methodParametersInDotNet.Length; i++)
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
-                var parameterInfo = methodParametersInDotNet[i];
+                var stopwatch = Stopwatch.StartNew();
 
                 var parameterAdapterInput = new ParameterAdapterInput
                 {
                     InvocationValue = parameters[i].Value,
-                    ParameterInfo   = parameterInfo,
+                    ParameterInfo   = methodParametersInDotNet[i],
                     boaContext      = boaContext
                 };
 
@@ -134,7 +130,7 @@ namespace ApiInspector.Invoking
                 if (isAdapted)
                 {
                     stopwatch.Stop();
-                    trace( $"Parameter: {parameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+                    trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
                     continue;
                 }
 
@@ -148,7 +144,7 @@ namespace ApiInspector.Invoking
             try
             {
                 trace("Invoke started. Response waiting...");
-                Stopwatch stopwatch = Stopwatch.StartNew();
+                var stopwatch = Stopwatch.StartNew();
 
                 object response = null;
                 if (methodInfo.IsStatic)
