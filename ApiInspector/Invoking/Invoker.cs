@@ -105,21 +105,35 @@ namespace ApiInspector.Invoking
 
             var methodParametersInDotNet = methodInfo.GetParameters();
 
+            var parameterAdapterInputs = new List<ParameterAdapterInput>();
+
             for (var i = 0; i < methodParametersInDotNet.Length; i++)
             {
-                var stopwatch = Stopwatch.StartNew();
-
                 var parameterAdapterInput = new ParameterAdapterInput
                 {
                     InvocationValue = parameters[i].Value,
                     ParameterInfo   = methodParametersInDotNet[i],
                     boaContext      = boaContext
                 };
+                parameterAdapterInputs.Add(parameterAdapterInput);
+            }
+
+            foreach (var parameterAdapterInput in parameterAdapterInputs)
+            {
+                var stopwatch = Stopwatch.StartNew();
 
                 var isAdapted = false;
                 foreach (var parameterAdapter in parameterAdapters)
                 {
-                    isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
+                    try
+                    {
+                        isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
+                    }
+                    catch (Exception exception)
+                    {
+                        return Fail(exception, boaContext);
+
+                    }
                     if (isAdapted)
                     {
                         invocationParameters.Add(parameterAdapterInput.InvocationValue);
@@ -133,10 +147,6 @@ namespace ApiInspector.Invoking
                     trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
                     continue;
                 }
-
-                trace("Parameter not adapted.");
-
-                boaContext.Dispose();
 
                 return Fail(new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}"), boaContext);
             }
