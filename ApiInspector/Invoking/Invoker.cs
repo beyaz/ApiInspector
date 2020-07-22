@@ -132,8 +132,8 @@ namespace ApiInspector.Invoking
                     catch (Exception exception)
                     {
                         return Fail(exception, boaContext);
-
                     }
+
                     if (isAdapted)
                     {
                         invocationParameters.Add(parameterAdapterInput.InvocationValue);
