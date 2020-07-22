@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrapper\Config.cs" />
     <Compile Include="Bootstrapper\Launcher.cs" />
     <Compile Include="Bootstrapper\Program.cs" />
     <Compile Include="Infrastructure\EmbeddedZippedAssemblyResolver.cs" />
