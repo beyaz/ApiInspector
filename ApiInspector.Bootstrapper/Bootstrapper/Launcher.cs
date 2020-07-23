@@ -1,59 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using BOA.DataFlow;
 using Dapper;
-using Dapper.Contrib.Extensions;
+using static ApiInspector.Bootstrapper.Key;
 
 namespace ApiInspector.Bootstrapper
 {
-    /// <summary>
-    ///     The file model
-    /// </summary>
-    [Table("[WHT].[File]")]
-    class FileModel
-    {
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the name of the application.
-        /// </summary>
-        [ExplicitKey]
-        public string ApplicationName { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the content.
-        /// </summary>
-        public byte[] Content { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the key.
-        /// </summary>
-        [ExplicitKey]
-        public string FullName { get; set; }
-        #endregion
-    }
-
-    /// <summary>
-    ///     The key
-    /// </summary>
-    class Key
-    {
-        #region Static Fields
-        /// <summary>
-        ///     The files
-        /// </summary>
-        public static DataKey<IReadOnlyList<FileModel>> Files = new DataKey<IReadOnlyList<FileModel>>(nameof(Files));
-
-        /// <summary>
-        ///     The target directory path
-        /// </summary>
-        public static DataKey<string> TargetDirectoryPath = new DataKey<string>(nameof(TargetDirectoryPath));
-        #endregion
-    }
-
     /// <summary>
     ///     The launcher
     /// </summary>
@@ -69,7 +24,7 @@ namespace ApiInspector.Bootstrapper
 
             var context = new DataContext
             {
-                {Key.TargetDirectoryPath, @"d:\boa\server\bin\"}
+                {TargetDirectoryPath, @"d:\boa\server\bin\"}
             };
 
             FetchFiles(context);
@@ -88,14 +43,25 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         static void ExportFiles(DataContext context)
         {
-            var targetDir = context.Get(Key.TargetDirectoryPath);
+            var targetDirectoryPath = context.Get(TargetDirectoryPath);
 
-            foreach (var file in context.Get(Key.Files))
+            foreach (var file in context.Get(Files))
             {
-                var path = Path.Combine(targetDir, file.FullName);
+                var path = Path.Combine(targetDirectoryPath, file.Name);
 
+                File.Delete(path);
                 File.WriteAllBytes(path, file.Content);
             }
+        }
+
+        static bool IsFileUpToDate(string path, DateTime lastModification)
+        {
+            if (!File.Exists(path))
+            {
+                return false;
+            }
+
+            return new FileInfo(path).CreationTime < lastModification;
         }
 
         /// <summary>
@@ -107,7 +73,15 @@ namespace ApiInspector.Bootstrapper
 
             var connection = new SqlConnection(ConnectionString);
 
-            context.Add(Key.Files, connection.Query<FileModel>("SELECT * FROM  [WHT].[File] WITH(NOLOCK) WHERE ApplicationName = 'ApiInspector'").ToList().AsReadOnly());
+            var files=connection.Query<FileModel>($"SELECT {nameof(FileModel.Name)}, {nameof(FileModel.LastModification)} FROM  [WHT].[File] WITH(NOLOCK) WHERE ApplicationName = 'ApiInspector'").ToList().AsReadOnly();
+            
+            var targetDirectoryPath = context.Get(TargetDirectoryPath);
+
+            var requiredFiles = files.Where(x => IsFileUpToDate(Path.Combine(targetDirectoryPath, x.Name), x.LastModification)).Select(x => x.Name).ToList();
+
+            var sql = $"SELECT * FROM  [WHT].[File] WITH(NOLOCK) WHERE ApplicationName = 'ApiInspector' AND {nameof(FileModel.Name)} IN ({"'"+string.Join("','",requiredFiles)+"'"})";
+
+            context.Add(Files, connection.Query<FileModel>(sql).ToList().AsReadOnly());
         }
 
         /// <summary>
@@ -115,9 +89,9 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         static void StartProcess(DataContext context)
         {
-            var targetDir = context.Get(Key.TargetDirectoryPath);
+            var targetDirectoryPath = context.Get(TargetDirectoryPath);
 
-            Process.Start(Path.Combine(targetDir, "Run.bat"));
+            Process.Start(Path.Combine(targetDirectoryPath, "ApiInspector.Run.bat"));
         }
         #endregion
     }
