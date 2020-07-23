@@ -80,8 +80,10 @@ namespace ApiInspector.History
         /// </summary>
         string GetFilePath(InvocationInfo info)
         {
-            return Path.Combine(directoryPath, info.ToString().Replace(":", "____") + ".json");
+            return Path.Combine(directoryPath, Utility.CleanPath(info+".json"));
         }
+
+        
         #endregion
     }
 }

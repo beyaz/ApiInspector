@@ -1,18 +1,23 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ApiInspector
 {
     static class AssemblySearchDirectories
     {
-        public const string serverBin = @"d:\boa\server\bin\";
+        #region Constants
         public const string clientBin = @"d:\boa\client\bin\";
+        public const string serverBin = @"d:\boa\server\bin\";
+        #endregion
     }
 
     static class EndOfDay
     {
+        #region Constants
         public const string MethodAccessText = "InitializeParameters -> BeforeProcess -> Process -> AfterProcess";
+        #endregion
     }
 
     /// <summary>
@@ -31,6 +36,17 @@ namespace ApiInspector
         #endregion
 
         #region Public Methods
+        /// <summary>
+        ///     Cleans the path.
+        /// </summary>
+        public static string CleanPath(string path)
+        {
+
+            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            Regex  r           = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            return r.Replace(path, "");
+        }
+
         /// <summary>
         ///     Determines whether the specified action is success.
         /// </summary>
