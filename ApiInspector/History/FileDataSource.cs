@@ -29,10 +29,7 @@ namespace ApiInspector.History
         /// </summary>
         public FileDataSource()
         {
-            directoryPath = Path.GetDirectoryName(typeof(DataSource).Assembly.Location) +
-                            Path.DirectorySeparatorChar +
-                            nameof(ApiInspector) + "History" +
-                            Path.DirectorySeparatorChar;
+            directoryPath = @"d:\boa\server\bin\ApiInspectorHistory\";
         }
         #endregion
 

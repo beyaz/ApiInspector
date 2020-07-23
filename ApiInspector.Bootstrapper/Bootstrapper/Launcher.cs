@@ -61,7 +61,7 @@ namespace ApiInspector.Bootstrapper
                 return false;
             }
 
-            return new FileInfo(path).CreationTime < lastModification;
+            return new FileInfo(path).CreationTime > lastModification;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace ApiInspector.Bootstrapper
             
             var targetDirectoryPath = context.Get(TargetDirectoryPath);
 
-            var requiredFiles = files.Where(x => IsFileUpToDate(Path.Combine(targetDirectoryPath, x.Name), x.LastModification)).Select(x => x.Name).ToList();
+            var requiredFiles = files.Where(x => !IsFileUpToDate(Path.Combine(targetDirectoryPath, x.Name), x.LastModification)).Select(x => x.Name).ToList();
 
             var sql = $"SELECT * FROM  [WHT].[File] WITH(NOLOCK) WHERE ApplicationName = 'ApiInspector' AND {nameof(FileModel.Name)} IN ({"'"+string.Join("','",requiredFiles)+"'"})";
 
