@@ -11,53 +11,21 @@ namespace ApiInspector.Invoking
     /// </summary>
     public static class EODTestHelper
     {
-        #region Enums
-        /// <summary>
-        ///     The method name
-        /// </summary>
-        enum MethodName
-        {
-            /// <summary>
-            ///     The process
-            /// </summary>
-            Process
-        }
-
-        /// <summary>
-        ///     The property name
-        /// </summary>
-        enum PropertyName
-        {
-            /// <summary>
-            ///     The context
-            /// </summary>
-            Context
-        }
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Gets the context.
         /// </summary>
         public static EODExecutionContext GetContext<T>(this T eodInstance) where T : EODBase
         {
-            var methodInfo = eodInstance.GetType().GetProperty(PropertyName.Context.ToString(), BindingFlags.Instance | BindingFlags.NonPublic);
+            const string propertyName = "Context";
+
+            var methodInfo = eodInstance.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic);
             if (methodInfo == null)
             {
-                throw new MissingMemberException(PropertyName.Context.ToString());
+                throw new MissingMemberException(propertyName);
             }
 
             return (EODExecutionContext) methodInfo.GetMethod.Invoke(eodInstance, null);
-        }
-
-        /// <summary>
-        ///     Initialize new instance of <see cref="T:EODBaseInheritedType" /> with given <paramref name="businessDate" />.
-        /// </summary>
-        public static EODBaseInheritedType GetInstanceOfEOD<EODBaseInheritedType>(DateTime businessDate) where EODBaseInheritedType : EODBase, new()
-        {
-            var eodInstance = new EODBaseInheritedType();
-            InitializeContextPropertyOfEOD(eodInstance, businessDate);
-            return eodInstance;
         }
 
         /// <summary>
@@ -70,15 +38,12 @@ namespace ApiInspector.Invoking
             return eodInstance;
         }
 
-        /// <summary>
-        ///     Invokes the process.
-        /// </summary>
-        public static void InvokeProcess<EODBaseInheritedType>(EODBaseInheritedType eodInstance) where EODBaseInheritedType : EODBase
+        public static void InvokeMethod<EODBaseInheritedType>(EODBaseInheritedType eodInstance, string methodName) where EODBaseInheritedType : EODBase
         {
-            var methodInfo = eodInstance.GetType().GetMethod(MethodName.Process.ToString(), BindingFlags.Instance | BindingFlags.NonPublic);
+            var methodInfo = eodInstance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
             if (methodInfo == null)
             {
-                throw new MissingMemberException(MethodName.Process.ToString());
+                throw new MissingMemberException(methodName);
             }
 
             methodInfo.Invoke(eodInstance, null);
@@ -123,8 +88,13 @@ namespace ApiInspector.Invoking
         public void Invoke(Type eodType)
         {
             var eodInstance = (EODBase) Activator.CreateInstance(eodType);
+
             EODTestHelper.InitializeContextPropertyOfEOD(eodInstance, DateTime.Today);
-            EODTestHelper.InvokeProcess(eodInstance);
+
+            EODTestHelper.InvokeMethod(eodInstance, "InitializeParameters");
+            EODTestHelper.InvokeMethod(eodInstance, "BeforeProcess");
+            EODTestHelper.InvokeMethod(eodInstance, "Process");
+            EODTestHelper.InvokeMethod(eodInstance, "AfterProcess");
         }
         #endregion
     }

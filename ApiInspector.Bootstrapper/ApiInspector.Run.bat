@@ -1,2 +1,1 @@
-cd d:\BOA\server\bin\
-start ApiInspector.exe
+start d:\BOA\server\bin\ApiInspector.exe
