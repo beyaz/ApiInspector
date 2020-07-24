@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Invoking\CardServiceInvocationTests.cs" />
     <Compile Include="TestData\AnyClass.cs" />
     <Compile Include="InvocationInfoEditor\ViewControllerTest.cs" />
     <Compile Include="Invoking\InvocationTests.cs" />
