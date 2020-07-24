@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using ApiInspector.Models;
+using BOA.DataFlow;
+using static ApiInspector.DataFlow.DataKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -9,6 +11,9 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     public partial class View
     {
+
+        public DataContext Context;
+
         #region Fields
         /// <summary>
         ///     The view controller
@@ -44,7 +49,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Gets or sets the model.
         /// </summary>
-        public InvocationEditorViewModel Model { get; set; }
+        InvocationEditorViewModel Model => MainWindowViewModelKey[Context].InvocationEditor;
         #endregion
 
         #region Properties

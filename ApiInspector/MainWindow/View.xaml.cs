@@ -28,10 +28,6 @@ namespace ApiInspector.MainWindow
         /// </summary>
         readonly DataSource history = new DataSource();
 
-        /// <summary>
-        ///     The invoker
-        /// </summary>
-        readonly Invoker invoker;
 
         /// <summary>
         ///     The Model
@@ -47,9 +43,9 @@ namespace ApiInspector.MainWindow
         {
             InitializeComponent();
 
-            currentInvocationInfo.Model = Model.InvocationEditor;
+            currentInvocationInfo.Context = context;
 
-            invoker = new Invoker(TraceKey[context]);
+            
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, Model.TraceMessages);
 
@@ -101,6 +97,8 @@ namespace ApiInspector.MainWindow
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
 
             trace("------------- EXECUTE STARTED -----------------");
+
+            var invoker = new Invoker(TraceKey[context]);
 
             var invokerOutput = invoker.Invoke(invocationInfo);
 
