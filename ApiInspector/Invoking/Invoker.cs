@@ -50,9 +50,7 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Public Methods
-
-
-        public static void InitializeTargetType(DataContext context)
+        public static Type InitializeTargetType(DataContext context)
         {
             var invocationInfo = context.Get(InvocationContextKeys.InvocationInfo);
 
@@ -71,7 +69,9 @@ namespace ApiInspector.Invoking
                 }
             }
 
-            context.Add(InvocationContextKeys.TargetType,targetType);
+            context.Add(InvocationContextKeys.TargetType, targetType);
+
+            return  targetType;
         }
 
         /// <summary>
@@ -81,7 +81,6 @@ namespace ApiInspector.Invoking
         {
             var boaContext = new BOAContext(invocationInfo.Environment);
 
-
             var dataContext = new DataContext
             {
                 {InvocationContextKeys.BOAContext, boaContext},
@@ -89,14 +88,12 @@ namespace ApiInspector.Invoking
                 {InvocationContextKeys.Trace, trace},
             };
 
-            var methodName   = invocationInfo.MethodName;
-            var className    = invocationInfo.ClassName;
+            var methodName = invocationInfo.MethodName;
+            var className  = invocationInfo.ClassName;
 
             trace($"Started to search class: {className}");
 
-            InitializeTargetType(dataContext);
-
-            Type targetType = dataContext.Get(InvocationContextKeys.TargetType);
+            var targetType = InitializeTargetType(dataContext);
 
             if (methodName == EndOfDay.MethodAccessText)
             {
@@ -187,8 +184,7 @@ namespace ApiInspector.Invoking
             try
             {
                 dataContext.Add(InvocationContextKeys.MethodInfo, methodInfo);
-        dataContext.Add(InvocationContextKeys.InvocationParameters, invocationParameters);
-
+                dataContext.Add(InvocationContextKeys.InvocationParameters, invocationParameters);
 
                 trace("Invoke started. Response waiting...");
                 var stopwatch = Stopwatch.StartNew();
@@ -196,10 +192,14 @@ namespace ApiInspector.Invoking
                 var invokeSuccess = TryInvokeStaticMethod(dataContext);
                 if (invokeSuccess == false)
                 {
-                    invokeSuccess = TryInvokeNonStaticMethod(dataContext);
+                    invokeSuccess = TryInvokeAsCardServiceMethod(dataContext);
                     if (invokeSuccess == false)
                     {
-                        throw new InvalidOperationException("Unknown invocation type.");
+                        invokeSuccess = TryInvokeNonStaticMethod(dataContext);
+                        if (invokeSuccess == false)
+                        {
+                            throw new InvalidOperationException("Unknown invocation type.");
+                        }
                     }
                 }
 
@@ -234,6 +234,27 @@ namespace ApiInspector.Invoking
             }
 
             return InstanceCreatorDefault.TryCreate(targetType, boaContext);
+        }
+
+        static bool TryInvokeAsCardServiceMethod(DataContext context)
+        {
+            var targetType = context.Get(InvocationContextKeys.TargetType);
+
+            if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
+            {
+                return false;
+            }
+
+            try
+            {
+                CardServiceMethodInvoker.Invoke(context);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+
+            return true;
         }
 
         static bool TryInvokeNonStaticMethod(DataContext context)

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Models;
 using BOA.Card.Contracts.CreditCard.Limit;
+using BOA.Common.Types;
 using BOA.DataFlow;
 using BOA.UnitTestHelper;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.Invoking
@@ -45,14 +47,20 @@ namespace ApiInspector.Invoking
                         }
                     }
                 },
-                {InvocationContextKeys.InvocationInfo,invocationInfo}
+                {InvocationContextKeys.InvocationInfo,invocationInfo},
+                {InvocationContextKeys.Trace,(message)=>{}}
                 
             };
 
             Invoker.InitializeTargetType(context);
+
             CardServiceMethodInvoker.Invoke(context);
 
-            
+            var response = (GenericResponse<GetCardAvailableLimitResponse>) InvocationContextKeys.Response[context];
+
+            response.Success.Should().BeTrue();
+
+            response.Value.Should().NotBeNull();
         }
     }
 }

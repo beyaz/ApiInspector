@@ -53,6 +53,8 @@
     <Reference Include="Mono.Cecil">
       <HintPath>d:\BOA\Server\bin\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Invoking\CardServiceInvocationTests.cs" />
@@ -63,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions">
-      <Version>5.10.3</Version>
+      <Version>6.0.0-alpha0001</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.1.2</Version>
