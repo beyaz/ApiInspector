@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
+using BOA.DataFlow;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
@@ -163,20 +164,30 @@ namespace ApiInspector.Invoking
 
             try
             {
+                var dataContext = new DataContext
+                {
+                    {InvocationContextKeys.MethodInfo, methodInfo},
+                    {InvocationContextKeys.BOAContext, boaContext},
+                    {InvocationContextKeys.InvocationInfo, invocationInfo},
+                    {InvocationContextKeys.InvocationParameters, invocationParameters},
+                    {InvocationContextKeys.Trace, trace},
+                    {InvocationContextKeys.TargetType, targetType}
+                };
+
                 trace("Invoke started. Response waiting...");
                 var stopwatch = Stopwatch.StartNew();
 
-                object response = null;
-                if (methodInfo.IsStatic)
+                var invokeSuccess = TryInvokeStaticMethod(dataContext);
+                if (invokeSuccess == false)
                 {
-                    response = methodInfo.Invoke(null, invocationParameters.ToArray());
+                    invokeSuccess = TryInvokeNonStaticMethod(dataContext);
+                    if (invokeSuccess == false)
+                    {
+                        throw new InvalidOperationException("Unknown invocation type.");
+                    }
                 }
-                else
-                {
-                    var instance = CreateInstance(targetType, boaContext);
 
-                    response = methodInfo.Invoke(instance, invocationParameters.ToArray());
-                }
+                var response = dataContext.Get(InvocationContextKeys.Response);
 
                 stopwatch.Stop();
                 trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
@@ -209,6 +220,44 @@ namespace ApiInspector.Invoking
             return InstanceCreatorDefault.TryCreate(targetType, boaContext);
         }
 
+        static bool TryInvokeNonStaticMethod(DataContext context)
+        {
+            var targetType           = context.Get(InvocationContextKeys.TargetType);
+            var boaContext           = context.Get(InvocationContextKeys.BOAContext);
+            var methodInfo           = context.Get(InvocationContextKeys.MethodInfo);
+            var invocationParameters = context.Get(InvocationContextKeys.InvocationParameters);
+
+            if (methodInfo.IsStatic)
+            {
+                return false;
+            }
+
+            var instance = CreateInstance(targetType, boaContext);
+
+            var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+
+            context.Add(InvocationContextKeys.Response, response);
+
+            return true;
+        }
+
+        static bool TryInvokeStaticMethod(DataContext context)
+        {
+            var methodInfo           = context.Get(InvocationContextKeys.MethodInfo);
+            var invocationParameters = context.Get(InvocationContextKeys.InvocationParameters);
+
+            if (!methodInfo.IsStatic)
+            {
+                return false;
+            }
+
+            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
+
+            context.Add(InvocationContextKeys.Response, response);
+
+            return true;
+        }
+
         /// <summary>
         ///     Fails the specified exception.
         /// </summary>
@@ -218,6 +267,21 @@ namespace ApiInspector.Invoking
 
             return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
         }
+        #endregion
+    }
+
+    static class InvocationContextKeys
+    {
+        #region Static Fields
+        public static DataKey<BOAContext>     BOAContext           = new DataKey<BOAContext>(nameof(BOAContext));
+        public static DataKey<InvocationInfo> InvocationInfo       = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+        public static DataKey<List<object>>   InvocationParameters = new DataKey<List<object>>(nameof(InvocationParameters));
+        public static DataKey<MethodInfo>     MethodInfo           = new DataKey<MethodInfo>(nameof(MethodInfo));
+        public static DataKey<object>         Response             = new DataKey<object>(nameof(Response));
+
+        public static DataKey<Type> TargetType = new DataKey<Type>(nameof(TargetType));
+
+        public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
         #endregion
     }
 }
