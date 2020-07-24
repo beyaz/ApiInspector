@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -37,6 +37,18 @@
   <ItemGroup>
     <Reference Include="BOA.Base">
       <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="BOA.Card.Core">
+      <HintPath>d:\BOA\Server\bin\BOA.Card.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="BOA.Card.Definitions">
+      <HintPath>..\..\..\BOA\Server\bin\BOA.Card.Definitions.dll</HintPath>
+    </Reference>
+    <Reference Include="BOA.Card.Services.CreditCard.Lifecycle">
+      <HintPath>d:\BOA\Server\bin\BOA.Card.Services.CreditCard.Lifecycle.dll</HintPath>
+    </Reference>
+    <Reference Include="BOA.Card.Contracts">
+      <HintPath>d:\BOA\Server\bin\BOA.Card.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="BOA.Common.TaskScheduler">
       <HintPath>d:\BOA\Client\bin\BOA.Common.TaskScheduler.dll</HintPath>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Models;
+using BOA.UnitTestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.Invoking
@@ -10,6 +11,8 @@ namespace ApiInspector.Invoking
         [TestMethod]
         public void Should_invoke_any_service_method()
         {
+            BOAAssemblyResolver.AttachToCurrentDomain();
+
             var invocationInfo = new InvocationInfo
             {
                 AssemblyName            ="BOA.Card.Services.CreditCard.Lifecycle.dll",
