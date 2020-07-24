@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Models;
+using BOA.Card.Contracts.CreditCard.Limit;
+using BOA.DataFlow;
 using BOA.UnitTestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -31,9 +33,22 @@ namespace ApiInspector.Invoking
                 }
             };
 
-            var invoker = new Invoker(message => { });
+            var context = new DataContext
+            {
+                {InvocationContextKeys.BOAContext, new BOAContext("dev")},
+                {
+                    InvocationContextKeys.InvocationParameters, new List<object>()
+                    {
+                        new GetCardAvailableLimitRequest
+                        {
+                            CardRefNumber = "1"
+                        }
+                    }
+                }
+            };
 
-            invoker.Invoke(invocationInfo);
+            CardServiceMethodInvoker.Invoke(context);
+
             
         }
     }

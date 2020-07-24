@@ -93,6 +93,7 @@
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
+    <Compile Include="Invoking\CardServiceMethodInvoker.cs" />
     <Compile Include="Invoking\EndOfDayInvoker.cs" />
     <Compile Include="Invoking\InstanceCreatorDefault.cs" />
     <Compile Include="Invoking\InstanceCreatorForObjectHelperDerivedClasses.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Invoking\ParameterAdapterForSerializableTypes.cs" />
     <Compile Include="Invoking\ParameterAdapterForStringType.cs" />
     <Compile Include="Invoking\ParameterAdapterInput.cs" />
+    <Compile Include="Invoking\Wrapper.cs" />
     <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
