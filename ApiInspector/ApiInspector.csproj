@@ -108,6 +108,9 @@
     <Compile Include="Invoking\Wrapper.cs" />
     <Compile Include="DataFlow\DataContextBuilder.cs" />
     <Compile Include="DataFlow\DataKeys.cs" />
+    <Compile Include="MainWindow\HistoryPanel.xaml.cs">
+      <DependentUpon>HistoryPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
@@ -122,6 +125,10 @@
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow\HistoryPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
