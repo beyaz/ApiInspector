@@ -106,12 +106,13 @@
     <Compile Include="Invoking\ParameterAdapterForStringType.cs" />
     <Compile Include="Invoking\ParameterAdapterInput.cs" />
     <Compile Include="Invoking\Wrapper.cs" />
+    <Compile Include="DataFlow\DataContextBuilder.cs" />
+    <Compile Include="DataFlow\DataKeys.cs" />
     <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="InvocationInfoEditor\InvocationEditorViewModel.cs" />
     <Compile Include="Invoking\BOAContext.cs" />
-    <Compile Include="MainWindow\MainWindowViewModelBuilder.cs" />
     <Compile Include="Invoking\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />
@@ -150,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BOA.DataFlow">
-      <Version>1.0.0.7</Version>
+      <Version>1.0.0.8</Version>
     </PackageReference>
     <PackageReference Include="BOA.UnitTestHelper">
       <Version>1.0.0.11</Version>

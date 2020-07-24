@@ -6,9 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApiInspector.Application;
+using ApiInspector.DataFlow;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
+using BOA.DataFlow;
+using static ApiInspector.DataFlow.DataKeys;
 
 namespace ApiInspector.MainWindow
 {
@@ -17,6 +20,8 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class View
     {
+        readonly DataContext context = new DataContextBuilder().Build();
+
         #region Fields
         /// <summary>
         ///     The history
@@ -29,9 +34,9 @@ namespace ApiInspector.MainWindow
         readonly Invoker invoker;
 
         /// <summary>
-        ///     The model
+        ///     The Model
         /// </summary>
-        readonly MainWindowViewModel model = new MainWindowViewModelBuilder().Build();
+        MainWindowViewModel Model => MainWindowViewModelKey[context];
         #endregion
 
         #region Constructors
@@ -42,11 +47,11 @@ namespace ApiInspector.MainWindow
         {
             InitializeComponent();
 
-            currentInvocationInfo.Model = model.InvocationEditor;
+            currentInvocationInfo.Model = Model.InvocationEditor;
 
-            invoker = new Invoker(model.TraceMessages.Add);
+            invoker = new Invoker(TraceKey[context]);
 
-            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, model.TraceMessages);
+            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, Model.TraceMessages);
 
             traceMonitor.StartToMonitor();
 
@@ -58,20 +63,13 @@ namespace ApiInspector.MainWindow
        
 
         #region Methods
-        /// <summary>
-        ///     Appends the trace message.
-        /// </summary>
-        void AppendTraceMessage(string message)
-        {
-            model.TraceMessages.Add(message);
-        }
-
+        
         /// <summary>
         ///     Handles the OnSelected event of the HistoryListBox control.
         /// </summary>
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            model.TraceMessages.Add("History item clicked.");
+            Model.TraceMessages.Add("History item clicked.");
             SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
         }
 
@@ -80,13 +78,13 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            if (model.InvocationEditor.InvocationInfo == null || string.IsNullOrWhiteSpace(model.InvocationEditor.InvocationInfo.MethodName) )
+            if (Model.InvocationEditor.InvocationInfo == null || string.IsNullOrWhiteSpace(Model.InvocationEditor.InvocationInfo.MethodName) )
             {
                 ((App)System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
                 return;
             }
 
-            Task.Run(() => history.SaveToHistory(model.InvocationEditor.InvocationInfo));
+            Task.Run(() => history.SaveToHistory(Model.InvocationEditor.InvocationInfo));
 
             new Thread(OnExecuteClicked).Start();
         }
@@ -96,9 +94,9 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked()
         {
-            Action<string> trace = model.TraceMessages.Add;
+            Action<string> trace = Model.TraceMessages.Add;
 
-            var invocationInfo = model.InvocationEditor.InvocationInfo;
+            var invocationInfo = Model.InvocationEditor.InvocationInfo;
 
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
 
@@ -122,7 +120,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            model.InvocationEditor.InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
+            Model.InvocationEditor.InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 
         /// <summary>
@@ -130,7 +128,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
         {
-            model.InvocationEditor.InvocationInfo = invocationInfo;
+            Model.InvocationEditor.InvocationInfo = invocationInfo;
 
             invokingResponseView.SetText(string.Empty);
 
@@ -141,7 +139,7 @@ namespace ApiInspector.MainWindow
 
             currentInvocationInfo.OnInvocationInfoChanged();
 
-            model.TraceMessages.Add("Selected invocation was changed.");
+            Model.TraceMessages.Add("Selected invocation was changed.");
         }
 
         /// <summary>
@@ -172,7 +170,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void InitializeHistoryPanel()
         {
-            model.TraceMessages.Add("History is loading...");
+            Model.TraceMessages.Add("History is loading...");
 
             historyListBox.ItemsSource = history.GetHistory();
 
@@ -180,7 +178,7 @@ namespace ApiInspector.MainWindow
 
             view.Filter = HistoryFilter;
 
-            model.TraceMessages.Add("History is loaded.");
+            Model.TraceMessages.Add("History is loaded.");
         }
 
         /// <summary>

@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.InvocationInfoEditor;
+using ApiInspector.MainWindow;
 using ApiInspector.Models;
+using BOA.DataFlow;
+using static ApiInspector.DataFlow.DataKeys;
 
-namespace ApiInspector.MainWindow
+namespace ApiInspector.DataFlow
 {
-    /// <summary>
-    ///     The main window view model builder
-    /// </summary>
-    class MainWindowViewModelBuilder
+    class DataContextBuilder
     {
-        #region Public Methods
-        /// <summary>
-        ///     Builds this instance.
-        /// </summary>
-        public MainWindowViewModel Build()
+        public DataContext Build()
         {
+            var context = new DataContext();
+
             var traceMessages = new List<string>();
 
-            return new MainWindowViewModel
+            MainWindowViewModelKey[context] = new MainWindowViewModel
             {
                 InvocationEditor = new InvocationEditorViewModel
                 {
@@ -34,7 +32,11 @@ namespace ApiInspector.MainWindow
                 },
                 TraceMessages = traceMessages
             };
+
+            TraceKey[context] = traceMessages.Add;
+            
+            
+            return context;
         }
-        #endregion
     }
 }
