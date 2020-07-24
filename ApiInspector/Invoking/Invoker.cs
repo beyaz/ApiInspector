@@ -5,8 +5,6 @@ using System.IO;
 using System.Reflection;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
-using BOA.Base;
-using BOA.Base.Data;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
@@ -84,7 +82,7 @@ namespace ApiInspector.Invoking
                     BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
 
                     new EndOfDayInvoker().Invoke(targetType);
-                
+
                     return new InvokeOutput(null, null, null);
                 }
                 catch (Exception exception)
@@ -92,7 +90,6 @@ namespace ApiInspector.Invoking
                     return Fail(exception, boaContext);
                 }
             }
-
 
             trace($"Started to search method: {methodName}");
 
@@ -203,33 +200,13 @@ namespace ApiInspector.Invoking
         /// </summary>
         static object CreateInstance(Type targetType, BOAContext boaContext)
         {
-            // constructor with ExecutionDataContext
+            var instance = InstanceCreatorForObjectHelperDerivedClasses.TryCreate(targetType, boaContext);
+            if (instance != null)
             {
-                var constructorInfo = targetType.GetConstructor(new[]
-                {
-                    typeof(ExecutionDataContext)
-                });
-                if (constructorInfo != null)
-                {
-                    var instance = constructorInfo.Invoke(new object[]
-                    {
-                        boaContext.GetObjectHelper().Context
-                    });
-                    return instance;
-                }
-            }
-
-            // simple constructor
-            {
-                var instance     = Activator.CreateInstance(targetType);
-                var objectHelper = instance as ObjectHelper;
-                if (objectHelper != null)
-                {
-                    objectHelper.Context = boaContext.GetObjectHelper().Context;
-                }
-
                 return instance;
             }
+
+            return InstanceCreatorDefault.TryCreate(targetType, boaContext);
         }
 
         /// <summary>

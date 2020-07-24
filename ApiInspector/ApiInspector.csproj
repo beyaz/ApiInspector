@@ -94,6 +94,8 @@
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
     <Compile Include="Invoking\EndOfDayInvoker.cs" />
+    <Compile Include="Invoking\InstanceCreatorDefault.cs" />
+    <Compile Include="Invoking\InstanceCreatorForObjectHelperDerivedClasses.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
     <Compile Include="Invoking\IParameterAdapter.cs" />
     <Compile Include="Invoking\ParameterAdapterForConvertibleTypes.cs" />
