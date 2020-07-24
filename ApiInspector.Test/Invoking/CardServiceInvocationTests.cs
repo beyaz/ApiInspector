@@ -17,18 +17,18 @@ namespace ApiInspector.Invoking
 
             var invocationInfo = new InvocationInfo
             {
-                AssemblyName            ="BOA.Card.Services.CreditCard.Lifecycle.dll",
+                AssemblyName            ="BOA.Card.Services.CreditCard.Limit.dll",
                 AssemblySearchDirectory = "d:\\boa\\server\\bin\\",
-                ClassName               = "BOA.Card.Services.CreditCard.Lifecycle.CRDLifecycleService",
+                ClassName               = "BOA.Card.Services.CreditCard.Limit.CRDLimitService",
 
 
                 Environment = "dev",
-                MethodName  = "SaveCustomerTemporaryAddress",
+                MethodName  = "GetCardAvailableLimit",
                 Parameters = new List<InvocationMethodParameterInfo>
                 {
                     new InvocationMethodParameterInfo
                     {
-                        Value = "{  CustomerNumber:100,  CustomerTemporaryAddressText:''}"
+                        Value = "{  CardRefNumber:'1000'}"
                     }
                 }
             };
@@ -44,9 +44,12 @@ namespace ApiInspector.Invoking
                             CardRefNumber = "1"
                         }
                     }
-                }
+                },
+                {InvocationContextKeys.InvocationInfo,invocationInfo}
+                
             };
 
+            Invoker.InitializeTargetType(context);
             CardServiceMethodInvoker.Invoke(context);
 
             

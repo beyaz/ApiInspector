@@ -50,21 +50,16 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Public Methods
-        /// <summary>
-        ///     Invokes the specified invocation information.
-        /// </summary>
-        public InvokeOutput Invoke(InvocationInfo invocationInfo)
+
+
+        public static void InitializeTargetType(DataContext context)
         {
-            var boaContext = new BOAContext(invocationInfo.Environment);
+            var invocationInfo = context.Get(InvocationContextKeys.InvocationInfo);
 
             var assemblyName = invocationInfo.AssemblyName;
-            var methodName   = invocationInfo.MethodName;
             var className    = invocationInfo.ClassName;
 
             Type targetType = null;
-
-            trace($"Started to search class: {className}");
-
             if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
             {
                 var assemblyPath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
@@ -75,6 +70,33 @@ namespace ApiInspector.Invoking
                     throw new TypeLoadException(className);
                 }
             }
+
+            context.Add(InvocationContextKeys.TargetType,targetType);
+        }
+
+        /// <summary>
+        ///     Invokes the specified invocation information.
+        /// </summary>
+        public InvokeOutput Invoke(InvocationInfo invocationInfo)
+        {
+            var boaContext = new BOAContext(invocationInfo.Environment);
+
+
+            var dataContext = new DataContext
+            {
+                {InvocationContextKeys.BOAContext, boaContext},
+                {InvocationContextKeys.InvocationInfo, invocationInfo},
+                {InvocationContextKeys.Trace, trace},
+            };
+
+            var methodName   = invocationInfo.MethodName;
+            var className    = invocationInfo.ClassName;
+
+            trace($"Started to search class: {className}");
+
+            InitializeTargetType(dataContext);
+
+            Type targetType = dataContext.Get(InvocationContextKeys.TargetType);
 
             if (methodName == EndOfDay.MethodAccessText)
             {
@@ -164,15 +186,9 @@ namespace ApiInspector.Invoking
 
             try
             {
-                var dataContext = new DataContext
-                {
-                    {InvocationContextKeys.MethodInfo, methodInfo},
-                    {InvocationContextKeys.BOAContext, boaContext},
-                    {InvocationContextKeys.InvocationInfo, invocationInfo},
-                    {InvocationContextKeys.InvocationParameters, invocationParameters},
-                    {InvocationContextKeys.Trace, trace},
-                    {InvocationContextKeys.TargetType, targetType}
-                };
+                dataContext.Add(InvocationContextKeys.MethodInfo, methodInfo);
+        dataContext.Add(InvocationContextKeys.InvocationParameters, invocationParameters);
+
 
                 trace("Invoke started. Response waiting...");
                 var stopwatch = Stopwatch.StartNew();
