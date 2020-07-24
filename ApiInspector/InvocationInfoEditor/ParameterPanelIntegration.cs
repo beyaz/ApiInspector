@@ -98,15 +98,25 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 // complex items should be as json input
                 editor.TextWrapping  = TextWrapping.Wrap;
-                editor.MaxLines      = 5;
+                editor.MaxLines      = 10;
                 editor.AcceptsReturn = true;
-                //editor.MaxHeight = 300;
-                //editor.Height = Double.MaxValue;
 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
                     parameterInfo.Value = serializer.SerializeToJson(parameterInfo.Value);
                 }
+
+                if (string.IsNullOrWhiteSpace(parameterInfo.Value+string.Empty))
+                {
+                    var parameterType = Type.GetType(definition.ParameterType.FullName);
+                    if (parameterType != null)
+                    {
+                        parameterInfo.Value = serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));    
+                    }
+
+                    
+                }
+
 
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
                 {
