@@ -92,7 +92,7 @@ namespace ApiInspector.MainWindow
 
             trace("------------- EXECUTE STARTED -----------------");
 
-            var invoker = new Invoker(TraceKey[context]);
+            var invoker = new Invoker(ServiceKeys.TraceKey[context]);
 
             var invokerOutput = invoker.Invoke(invocationInfo);
 
