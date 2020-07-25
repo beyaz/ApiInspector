@@ -16,15 +16,6 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class HistoryPanel
     {
-        #region Fields
-        public View parent;
-
-        /// <summary>
-        ///     The History
-        /// </summary>
-        DataSource History => HistoryServiceKey[Context];
-        #endregion
-
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="HistoryPanel" /> class.
@@ -42,6 +33,12 @@ namespace ApiInspector.MainWindow
         public DataContext Context { get; set; }
         #endregion
 
+        #region Properties
+        /// <summary>
+        ///     The History
+        /// </summary>
+        DataSource History => HistoryServiceKey[Context];
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -113,7 +110,8 @@ namespace ApiInspector.MainWindow
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
             Trace("History item clicked.");
-            parent.SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
+
+            Context.Update(SelectedInvocationInfoKey, (InvocationInfo) historyListBox.SelectedItem);
         }
 
         void Trace(string message)

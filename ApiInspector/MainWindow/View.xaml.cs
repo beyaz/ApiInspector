@@ -10,6 +10,7 @@ using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
+using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.MainWindow
 {
@@ -18,19 +19,11 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class View
     {
-        readonly DataContext context = new DataContextBuilder().Build();
-
         #region Fields
         /// <summary>
-        ///     The history
+        ///     The context
         /// </summary>
-        readonly DataSource history = new DataSource();
-
-
-        /// <summary>
-        ///     The Model
-        /// </summary>
-        MainWindowViewModel Model => MainWindowViewModelKey[context];
+        readonly DataContext context = new DataContextBuilder().Build();
         #endregion
 
         #region Constructors
@@ -42,39 +35,65 @@ namespace ApiInspector.MainWindow
             InitializeComponent();
 
             historyPanel.Context = context;
-            historyPanel.parent = this;
+
+            context.OnUpdate(SelectedInvocationInfoKey, () => SetSelectedInvocationInfo(SelectedInvocationInfoKey[context]));
 
             currentInvocationInfo.Context = context;
-
-            
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, Model.TraceMessages);
 
             traceMonitor.StartToMonitor();
 
             Loaded += (s, e) => { historyPanel.InitializeHistoryPanel(); };
-
         }
         #endregion
 
-       
+        #region Properties
+        /// <summary>
+        ///     The history
+        /// </summary>
+        DataSource History => HistoryServiceKey[context];
+
+        /// <summary>
+        ///     The Model
+        /// </summary>
+        MainWindowViewModel Model => MainWindowViewModelKey[context];
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Sets the selected invocation information.
+        /// </summary>
+        public void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
+        {
+            Model.InvocationEditor.InvocationInfo = invocationInfo;
+
+            invokingResponseView.SetText(string.Empty);
+
+            if (invocationInfo != null)
+            {
+                responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
+            }
+
+            currentInvocationInfo.OnInvocationInfoChanged();
+
+            Model.TraceMessages.Add("Selected invocation was changed.");
+        }
+        #endregion
 
         #region Methods
-        
-        
-
         /// <summary>
         ///     Called when [execute clicked].
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            if (Model.InvocationEditor.InvocationInfo == null || string.IsNullOrWhiteSpace(Model.InvocationEditor.InvocationInfo.MethodName) )
+            if (Model.InvocationEditor.InvocationInfo == null || string.IsNullOrWhiteSpace(Model.InvocationEditor.InvocationInfo.MethodName))
             {
-                ((App)System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
+                ((App) System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
                 return;
             }
 
-            Task.Run(() => history.SaveToHistory(Model.InvocationEditor.InvocationInfo));
+            Task.Run(() => History.SaveToHistory(Model.InvocationEditor.InvocationInfo));
 
             new Thread(OnExecuteClicked).Start();
         }
@@ -92,7 +111,7 @@ namespace ApiInspector.MainWindow
 
             trace("------------- EXECUTE STARTED -----------------");
 
-            var invoker = new Invoker(ServiceKeys.TraceKey[context]);
+            var invoker = new Invoker(TraceKey[context]);
 
             var invokerOutput = invoker.Invoke(invocationInfo);
 
@@ -116,25 +135,6 @@ namespace ApiInspector.MainWindow
         }
 
         /// <summary>
-        ///     Sets the selected invocation information.
-        /// </summary>
-        public void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
-        {
-            Model.InvocationEditor.InvocationInfo = invocationInfo;
-
-            invokingResponseView.SetText(string.Empty);
-
-            if (invocationInfo != null)
-            {
-                responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
-            }
-
-            currentInvocationInfo.OnInvocationInfoChanged();
-
-            Model.TraceMessages.Add("Selected invocation was changed.");
-        }
-
-        /// <summary>
         ///     Updates the UI.
         /// </summary>
         void UpdateUI(Action action)
@@ -142,10 +142,5 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(action);
         }
         #endregion
-
-        
-
-        
-
     }
 }
