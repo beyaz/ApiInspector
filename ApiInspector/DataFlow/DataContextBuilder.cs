@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
+using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.DataFlow
 {
@@ -34,6 +36,7 @@ namespace ApiInspector.DataFlow
             };
 
             TraceKey[context] = traceMessages.Add;
+            HistoryServiceKey[context] = new DataSource();
             
             
             return context;

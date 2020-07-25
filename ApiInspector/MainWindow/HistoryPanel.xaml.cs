@@ -7,6 +7,7 @@ using ApiInspector.History;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
+using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.MainWindow
 {
@@ -19,9 +20,9 @@ namespace ApiInspector.MainWindow
         public View parent;
 
         /// <summary>
-        ///     The history
+        ///     The History
         /// </summary>
-        readonly DataSource history = new DataSource();
+        DataSource History => HistoryServiceKey[Context];
         #endregion
 
         #region Constructors
@@ -44,13 +45,13 @@ namespace ApiInspector.MainWindow
 
         #region Public Methods
         /// <summary>
-        ///     Initializes the history panel.
+        ///     Initializes the History panel.
         /// </summary>
         public void InitializeHistoryPanel()
         {
             Trace("History is loading...");
 
-            historyListBox.ItemsSource = history.GetHistory();
+            historyListBox.ItemsSource = History.GetHistory();
 
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
 
@@ -62,11 +63,11 @@ namespace ApiInspector.MainWindow
 
         #region Methods
         /// <summary>
-        ///     Deletes the selected item from history.
+        ///     Deletes the selected item from History.
         /// </summary>
         void DeleteSelectedItemFromHistory(InvocationInfo info)
         {
-            history.Remove(info);
+            History.Remove(info);
 
             InitializeHistoryPanel();
         }

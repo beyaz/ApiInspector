@@ -1,4 +1,5 @@
 ﻿using System;
+using ApiInspector.History;
 using ApiInspector.MainWindow;
 using BOA.DataFlow;
 
@@ -20,5 +21,10 @@ namespace ApiInspector.DataFlow
         /// </summary>
         public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
         #endregion
+    }
+
+    static class ServiceKeys
+    {
+        public static DataKey<DataSource> HistoryServiceKey = new DataKey<DataSource>(nameof(History));
     }
 }
