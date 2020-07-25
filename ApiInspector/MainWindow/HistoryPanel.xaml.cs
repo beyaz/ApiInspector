@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using ApiInspector.DataFlow;
 using ApiInspector.History;
 using ApiInspector.Models;
 using BOA.DataFlow;
@@ -17,10 +16,7 @@ namespace ApiInspector.MainWindow
     public partial class HistoryPanel
     {
         #region Fields
-        /// <summary>
-        ///     The Context
-        /// </summary>
-        public DataContext Context { get; set; }
+        public View parent;
 
         /// <summary>
         ///     The history
@@ -38,11 +34,30 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        #region Properties
+        #region Public Properties
         /// <summary>
-        ///     The Model
+        ///     The Context
         /// </summary>
-        MainWindowViewModel Model => MainWindowViewModelKey[Context];
+        public DataContext Context { get; set; }
+        #endregion
+
+
+        #region Public Methods
+        /// <summary>
+        ///     Initializes the history panel.
+        /// </summary>
+        public void InitializeHistoryPanel()
+        {
+            Trace("History is loading...");
+
+            historyListBox.ItemsSource = history.GetHistory();
+
+            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+
+            view.Filter = HistoryFilter;
+
+            Trace("History is loaded.");
+        }
         #endregion
 
         #region Methods
@@ -54,16 +69,6 @@ namespace ApiInspector.MainWindow
             history.Remove(info);
 
             InitializeHistoryPanel();
-        }
-
-        public ApiInspector.MainWindow.View parent;
-        /// <summary>
-        ///     Handles the OnSelected event of the HistoryListBox control.
-        /// </summary>
-        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
-        {
-            Model.TraceMessages.Add("History item clicked.");
-            parent.SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
         }
 
         /// <summary>
@@ -102,19 +107,17 @@ namespace ApiInspector.MainWindow
         }
 
         /// <summary>
-        ///     Initializes the history panel.
+        ///     Handles the OnSelected event of the HistoryListBox control.
         /// </summary>
-        public void InitializeHistoryPanel()
+        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            Model.TraceMessages.Add("History is loading...");
+            Trace("History item clicked.");
+            parent.SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
+        }
 
-            historyListBox.ItemsSource = history.GetHistory();
-
-            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
-
-            view.Filter = HistoryFilter;
-
-            Model.TraceMessages.Add("History is loaded.");
+        void Trace(string message)
+        {
+            TraceKey[Context](message);
         }
         #endregion
     }
