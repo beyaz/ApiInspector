@@ -64,7 +64,7 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Sets the selected invocation information.
         /// </summary>
-        public void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
+        void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
         {
             Model.InvocationEditor.InvocationInfo = invocationInfo;
 
@@ -77,7 +77,7 @@ namespace ApiInspector.MainWindow
 
             currentInvocationInfo.OnInvocationInfoChanged();
 
-            Model.TraceMessages.Add("Selected invocation was changed.");
+            Trace("Selected invocation was changed.");
         }
         #endregion
 
@@ -103,13 +103,11 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked()
         {
-            Action<string> trace = Model.TraceMessages.Add;
-
             var invocationInfo = Model.InvocationEditor.InvocationInfo;
 
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
 
-            trace("------------- EXECUTE STARTED -----------------");
+            Trace("------------- EXECUTE STARTED -----------------");
 
             var invoker = new Invoker(TraceKey[context]);
 
@@ -122,8 +120,13 @@ namespace ApiInspector.MainWindow
                 Utility.WriteAllText(invocationInfo.ResponseOutputFilePath, invokerOutput.ExecutionResponseAsJson);
             }
 
-            trace(string.Empty);
-            trace(string.Empty);
+            Trace(string.Empty);
+            Trace(string.Empty);
+        }
+
+        void Trace(string message)
+        {
+            TraceKey[context](message);
         }
 
         /// <summary>
