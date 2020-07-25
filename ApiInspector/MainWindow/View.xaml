@@ -21,20 +21,7 @@
             <ColumnDefinition Width = "5*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel>
-            <Grid Margin = "5" Visibility="Collapsed" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height = "Auto" />
-                    <RowDefinition Height = "*" />
-                </Grid.RowDefinitions>
-                <StackPanel>
-                    <Label FontWeight = "Bold" >History</Label>
-                    <TextBox x:Name = "historyFilterTextBox" TextChanged = "HistoryFilterTextBox_OnTextChanged" />
-                </StackPanel>
-                <ListBox Grid.Row = "1" x:Name = "historyListBox" SelectionChanged = "HistoryListBox_OnSelected" KeyDown="HistoryListBox_OnKeyDown" />
-            </Grid>
-            <mainWindow:HistoryPanel x:Name="historyPanel" VerticalContentAlignment="Center"/>
-        </StackPanel>
+        <mainWindow:HistoryPanel Margin = "5" x:Name="historyPanel" />
 
         <GridSplitter Grid.Row = "0" Grid.Column = "1" Width = "5" HorizontalAlignment = "Stretch" />
 

@@ -3,8 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 using ApiInspector.Application;
 using ApiInspector.DataFlow;
 using ApiInspector.History;
@@ -54,7 +52,6 @@ namespace ApiInspector.MainWindow
 
             traceMonitor.StartToMonitor();
 
-            // Loaded += (s, e) => { InitializeHistoryPanel(); };
             Loaded += (s, e) => { historyPanel.InitializeHistoryPanel(); };
 
         }
@@ -64,14 +61,7 @@ namespace ApiInspector.MainWindow
 
         #region Methods
         
-        /// <summary>
-        ///     Handles the OnSelected event of the HistoryListBox control.
-        /// </summary>
-        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
-        {
-            Model.TraceMessages.Add("History item clicked.");
-            SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
-        }
+        
 
         /// <summary>
         ///     Called when [execute clicked].
@@ -153,62 +143,9 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        #region History
-        /// <summary>
-        ///     Histories the filter.
-        /// </summary>
-        bool HistoryFilter(object item)
-        {
-            if (string.IsNullOrEmpty(historyFilterTextBox.Text))
-            {
-                return true;
-            }
+        
 
-            return ((InvocationInfo) item).ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
+        
 
-        /// <summary>
-        ///     Initializes the history panel.
-        /// </summary>
-        void InitializeHistoryPanel()
-        {
-            Model.TraceMessages.Add("History is loading...");
-
-            historyListBox.ItemsSource = history.GetHistory();
-
-            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
-
-            view.Filter = HistoryFilter;
-
-            Model.TraceMessages.Add("History is loaded.");
-        }
-
-        /// <summary>
-        ///     Handles the OnTextChanged event of the HistoryFilterTextBox control.
-        /// </summary>
-        void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
-        }
-        #endregion
-
-        void HistoryListBox_OnKeyDown(object sender, KeyEventArgs e)
-        {
-
-            if (e.Key == Key.Delete)
-            {
-                if (historyListBox.SelectedItem != null)
-                {
-                    DeleteSelectedItemFromHistory((InvocationInfo)historyListBox.SelectedItem);
-                }
-            }
-        }
-
-        void DeleteSelectedItemFromHistory(InvocationInfo info)
-        {
-            history.Remove(info);
-
-            InitializeHistoryPanel();
-        }
     }
 }
