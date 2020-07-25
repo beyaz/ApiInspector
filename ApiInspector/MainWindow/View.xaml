@@ -4,6 +4,7 @@
         xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:invocationInfoEditor = "clr-namespace:ApiInspector.InvocationInfoEditor"
+        xmlns:mainWindow = "clr-namespace:ApiInspector.MainWindow"
         mc:Ignorable = "d"
         x:Name = "CodeBehind"
         DataContext = "{Binding ElementName=CodeBehind}"
@@ -19,17 +20,21 @@
             <ColumnDefinition Width = "5" />
             <ColumnDefinition Width = "5*" />
         </Grid.ColumnDefinitions>
-        <Grid Margin = "5" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height = "Auto" />
-                <RowDefinition Height = "*" />
-            </Grid.RowDefinitions>
-            <StackPanel>
-                <Label FontWeight = "Bold" >History</Label>
-                <TextBox x:Name = "historyFilterTextBox" TextChanged = "HistoryFilterTextBox_OnTextChanged" />
-            </StackPanel>
-            <ListBox Grid.Row = "1" x:Name = "historyListBox" SelectionChanged = "HistoryListBox_OnSelected" KeyDown="HistoryListBox_OnKeyDown" />
-        </Grid>
+
+        <StackPanel>
+            <Grid Margin = "5" Visibility="Collapsed" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height = "Auto" />
+                    <RowDefinition Height = "*" />
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <Label FontWeight = "Bold" >History</Label>
+                    <TextBox x:Name = "historyFilterTextBox" TextChanged = "HistoryFilterTextBox_OnTextChanged" />
+                </StackPanel>
+                <ListBox Grid.Row = "1" x:Name = "historyListBox" SelectionChanged = "HistoryListBox_OnSelected" KeyDown="HistoryListBox_OnKeyDown" />
+            </Grid>
+            <mainWindow:HistoryPanel x:Name="historyPanel" VerticalContentAlignment="Center"/>
+        </StackPanel>
 
         <GridSplitter Grid.Row = "0" Grid.Column = "1" Width = "5" HorizontalAlignment = "Stretch" />
 

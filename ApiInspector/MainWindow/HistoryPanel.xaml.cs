@@ -1,43 +1,121 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ApiInspector.DataFlow;
+using ApiInspector.History;
+using ApiInspector.Models;
+using BOA.DataFlow;
+using static ApiInspector.DataFlow.DataKeys;
 
 namespace ApiInspector.MainWindow
 {
     /// <summary>
-    /// Interaction logic for HistoryPanel.xaml
+    ///     Interaction logic for HistoryPanel.xaml
     /// </summary>
-    public partial class HistoryPanel : UserControl
+    public partial class HistoryPanel
     {
+        #region Fields
+        /// <summary>
+        ///     The Context
+        /// </summary>
+        public DataContext Context { get; set; }
+
+        /// <summary>
+        ///     The history
+        /// </summary>
+        readonly DataSource history = new DataSource();
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="HistoryPanel" /> class.
+        /// </summary>
         public HistoryPanel()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region Properties
+        /// <summary>
+        ///     The Model
+        /// </summary>
+        MainWindowViewModel Model => MainWindowViewModelKey[Context];
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Deletes the selected item from history.
+        /// </summary>
+        void DeleteSelectedItemFromHistory(InvocationInfo info)
+        {
+            history.Remove(info);
+
+            InitializeHistoryPanel();
+        }
+
+        public ApiInspector.MainWindow.View parent;
+        /// <summary>
+        ///     Handles the OnSelected event of the HistoryListBox control.
+        /// </summary>
+        void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
+        {
+            Model.TraceMessages.Add("History item clicked.");
+            parent.SetSelectedInvocationInfo((InvocationInfo) historyListBox.SelectedItem);
+        }
+
+        /// <summary>
+        ///     Histories the filter.
+        /// </summary>
+        bool HistoryFilter(object item)
+        {
+            if (string.IsNullOrEmpty(historyFilterTextBox.Text))
+            {
+                return true;
+            }
+
+            return ((InvocationInfo) item).ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        /// <summary>
+        ///     Handles the OnTextChanged event of the HistoryFilterTextBox control.
+        /// </summary>
         void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
         }
 
-        void HistoryListBox_OnSelected(object sender, SelectionChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        ///     Handles the OnKeyDown event of the HistoryListBox control.
+        /// </summary>
         void HistoryListBox_OnKeyDown(object sender, KeyEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Key == Key.Delete)
+            {
+                if (historyListBox.SelectedItem != null)
+                {
+                    DeleteSelectedItemFromHistory((InvocationInfo) historyListBox.SelectedItem);
+                }
+            }
         }
+
+        /// <summary>
+        ///     Initializes the history panel.
+        /// </summary>
+        public void InitializeHistoryPanel()
+        {
+            Model.TraceMessages.Add("History is loading...");
+
+            historyListBox.ItemsSource = history.GetHistory();
+
+            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+
+            view.Filter = HistoryFilter;
+
+            Model.TraceMessages.Add("History is loaded.");
+        }
+        #endregion
     }
 }

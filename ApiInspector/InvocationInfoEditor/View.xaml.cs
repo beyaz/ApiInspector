@@ -177,7 +177,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            if (Model == null || Model.ItemSourceList == null)
+            if (Context == null || Model == null || Model.ItemSourceList == null)
             {
                 return;
             }

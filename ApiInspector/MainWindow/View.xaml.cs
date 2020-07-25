@@ -43,6 +43,9 @@ namespace ApiInspector.MainWindow
         {
             InitializeComponent();
 
+            historyPanel.Context = context;
+            historyPanel.parent = this;
+
             currentInvocationInfo.Context = context;
 
             
@@ -51,7 +54,8 @@ namespace ApiInspector.MainWindow
 
             traceMonitor.StartToMonitor();
 
-            Loaded += (s, e) => { InitializeHistoryPanel(); };
+            // Loaded += (s, e) => { InitializeHistoryPanel(); };
+            Loaded += (s, e) => { historyPanel.InitializeHistoryPanel(); };
 
         }
         #endregion
@@ -124,7 +128,7 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Sets the selected invocation information.
         /// </summary>
-        void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
+        public void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
         {
             Model.InvocationEditor.InvocationInfo = invocationInfo;
 
