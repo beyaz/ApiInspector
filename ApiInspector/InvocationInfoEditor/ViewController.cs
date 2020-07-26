@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
+using BOA.DataFlow;
+using static ApiInspector.DataFlow.DataKeys;
+using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -11,76 +14,87 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ViewController
     {
+        public DataContext context;
+
+        InvocationInfo InvocationInfo => SelectedInvocationInfoKey[context];
+        ItemSourceList ItemSourceList => ItemSourceListKey[context];
+
+
         #region Public Methods
         /// <summary>
         ///     Called when [assembly name changed].
         /// </summary>
-        public void OnAssemblyNameChanged(InvocationEditorViewModel model)
+        public void OnAssemblyNameChanged()
         {
-            var assemblyFilePath = GetAssemblyFilePath(model.InvocationInfo);
+            var log = TraceKey[context];
+
+            var assemblyFilePath = GetAssemblyFilePath(InvocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
-                model.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                log($"File not exists. File:{assemblyFilePath}");
                 return;
             }
 
-            var assemblySearchDirectory = model.InvocationInfo.AssemblySearchDirectory;
+            var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
 
-            var typeVisitor = new TypeVisitor(model.Logs.Add, new List<string> {assemblySearchDirectory});
+            
+            var typeVisitor = new TypeVisitor(log, new List<string> {assemblySearchDirectory});
 
-            model.ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
+            ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
         }
 
         /// <summary>
         ///     Called when [assembly search directory changed].
         /// </summary>
-        public void OnAssemblySearchDirectoryChanged(InvocationEditorViewModel model)
+        public void OnAssemblySearchDirectoryChanged()
         {
-            var assemblySearchDirectory = model.InvocationInfo.AssemblySearchDirectory;
+            var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
             if (!Directory.Exists(assemblySearchDirectory))
             {
                 return;
             }
 
-            model.ItemSourceList.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
+            ItemSourceList.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
 
             if (assemblySearchDirectory == AssemblySearchDirectories.clientBin)
             {
-                model.ItemSourceList.AssemblyNameList = model.ItemSourceList.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
+                ItemSourceList.AssemblyNameList = ItemSourceList.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
             }
         }
 
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public void OnClassNameChanged(InvocationEditorViewModel model)
+        public void OnClassNameChanged()
         {
-            var invocationInfo = model.InvocationInfo;
+            var log = TraceKey[context];
+            var invocationInfo = InvocationInfo;
 
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
             if (!File.Exists(assemblyFilePath))
             {
-                model.Logs.Add($"File not exists. File:{assemblyFilePath}");
+                log($"File not exists. File:{assemblyFilePath}");
                 return;
             }
 
-            var assemblySearchDirectory = model.InvocationInfo.AssemblySearchDirectory;
+            var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
 
-            var typeVisitor = new TypeVisitor(model.Logs.Add, new List<string> {assemblySearchDirectory});
+            var typeVisitor = new TypeVisitor(log, new List<string> {assemblySearchDirectory});
 
-            var typeDefinition = model.TypeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
+            var typeDefinition =  typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
+            context.Update(TypeDefinitionKey,typeDefinition);
             if (typeDefinition == null)
             {
-                model.Logs.Add($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
+                log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
                 return;
             }
 
-            model.ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
+            ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
 
             if (assemblySearchDirectory == AssemblySearchDirectories.clientBin)
             {
-                model.ItemSourceList.MethodNameList = new List<string> {EndOfDay.MethodAccessText};
+                ItemSourceList.MethodNameList = new List<string> {EndOfDay.MethodAccessText};
             }
             
         }
@@ -88,11 +102,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [method name selected].
         /// </summary>
-        public void OnMethodNameSelected(InvocationEditorViewModel model)
+        public void OnMethodNameSelected()
         {
-            var invocationInfo = model.InvocationInfo;
+            var invocationInfo = InvocationInfo;
             
-            model.MethodDefinition = model.TypeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+            context.Update(MethodDefinitionKey,TypeDefinitionKey[context].Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+            
         }
         #endregion
 

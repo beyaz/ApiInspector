@@ -10,15 +10,7 @@ namespace ApiInspector.InvocationInfoEditor
     public class InvocationEditorViewModel
     {
         #region Fields
-        /// <summary>
-        ///     The method definition
-        /// </summary>
-        public MethodDefinition MethodDefinition;
-
-        /// <summary>
-        ///     The type definition
-        /// </summary>
-        public TypeDefinition TypeDefinition;
+        
         #endregion
 
         #region Public Properties
@@ -32,10 +24,6 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public ItemSourceList ItemSourceList { get; set; }
 
-        /// <summary>
-        ///     Gets or sets the logs.
-        /// </summary>
-        public List<string> Logs { get; set; }
         #endregion
     }
 }

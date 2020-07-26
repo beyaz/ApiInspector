@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using ApiInspector.Models;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
 
@@ -12,13 +11,13 @@ namespace ApiInspector.InvocationInfoEditor
     public partial class View
     {
 
-        public DataContext Context;
+        public DataContext Context { get; set; }
 
         #region Fields
         /// <summary>
         ///     The view controller
         /// </summary>
-        readonly ViewController viewController = new ViewController();
+        internal readonly ViewController viewController = new ViewController();
         #endregion
 
         #region Constructors
@@ -28,7 +27,7 @@ namespace ApiInspector.InvocationInfoEditor
         public View()
         {
             InitializeComponent();
-
+            
             Loaded += RegisterEvents;
             Loaded += (s, e) => { UpdateSuggestions(); };
         }
@@ -45,19 +44,9 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the model.
-        /// </summary>
-        InvocationEditorViewModel Model => MainWindowViewModelKey[Context].InvocationEditor;
-        #endregion
+        
 
-        #region Properties
-        /// <summary>
-        ///     Gets the invocation information.
-        /// </summary>
-        InvocationInfo InvocationInfo => Model.InvocationInfo;
-        #endregion
+      
 
         #region Public Methods
         /// <summary>
@@ -83,51 +72,53 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void FireEvent(ViewEvents name)
         {
+            var invocationInfo = SelectedInvocationInfoKey[Context];
+
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:
                 {
-                    InvocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
+                    invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnAssemblySearchDirectoryChanged(Model);
+                    viewController.OnAssemblySearchDirectoryChanged();
 
                     break;
                 }
 
                 case ViewEvents.OnEnvironmentChanged:
                 {
-                    InvocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+                    invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
 
                     break;
                 }
 
                 case ViewEvents.OnAssemblyNameChanged:
                 {
-                    InvocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
+                    invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnAssemblyNameChanged(Model);
+                    viewController.OnAssemblyNameChanged();
 
                     break;
                 }
 
                 case ViewEvents.OnClassNameChanged:
                 {
-                    InvocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
+                    invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnClassNameChanged(Model);
+                    viewController.OnClassNameChanged();
 
                     break;
                 }
 
                 case ViewEvents.OnMethodNameChanged:
                 {
-                    InvocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
+                    invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnMethodNameSelected(Model);
+                    viewController.OnMethodNameSelected();
 
-                    if (Model.MethodDefinition != null)
+                    if (Context.Contains(MethodDefinitionKey))
                     {
-                        new ParameterPanelIntegration().Connect(InvocationInfo, parametersPanel, Model.MethodDefinition);
+                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, MethodDefinitionKey[Context]);
                     }
 
                     break;
@@ -144,16 +135,18 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            if (InvocationInfo == null)
+            if (!Context.Contains(SelectedInvocationInfoKey))
             {
                 return;
             }
+            var invocationInfo = SelectedInvocationInfoKey[Context];
 
-            environmentIntellisenseTextBox.SetValue(InvocationInfo.Environment);
-            assemblySearchDirectoryIntellisenseTextBox.SetValue(InvocationInfo.AssemblySearchDirectory);
-            assemblyIntellisenseTextBox.SetValue(InvocationInfo.AssemblyName);
-            classNameIntellisenseTextBox.SetValue(InvocationInfo.ClassName);
-            methodNameIntellisenseTextBox.SetValue(InvocationInfo.MethodName);
+
+            environmentIntellisenseTextBox.SetValue(invocationInfo.Environment);
+            assemblySearchDirectoryIntellisenseTextBox.SetValue(invocationInfo.AssemblySearchDirectory);
+            assemblyIntellisenseTextBox.SetValue(invocationInfo.AssemblyName);
+            classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
+            methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
         }
 
         /// <summary>
@@ -177,12 +170,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            if (Context == null || Model == null || Model.ItemSourceList == null)
+            if (Context == null || !Context.Contains(ItemSourceListKey))
             {
                 return;
             }
 
-            var source = Model.ItemSourceList;
+            var source = ItemSourceListKey[Context];
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;

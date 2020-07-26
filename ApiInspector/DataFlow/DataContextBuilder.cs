@@ -17,6 +17,12 @@ namespace ApiInspector.DataFlow
 
             var traceMessages = new List<string>();
 
+            var itemSourceList = new ItemSourceList
+            {
+                AssemblySearchDirectoryList = new List<string> {AssemblySearchDirectories.serverBin, AssemblySearchDirectories.clientBin},
+                EnvironmentNameList         = new List<string> {"dev", "test"}
+            };
+
             MainWindowViewModelKey[context] = new MainWindowViewModel
             {
                 InvocationEditor = new InvocationEditorViewModel
@@ -25,18 +31,14 @@ namespace ApiInspector.DataFlow
                     {
                         AssemblySearchDirectory = AssemblySearchDirectories.serverBin
                     },
-                    ItemSourceList = new ItemSourceList
-                    {
-                        AssemblySearchDirectoryList = new List<string> {AssemblySearchDirectories.serverBin, AssemblySearchDirectories.clientBin},
-                        EnvironmentNameList         = new List<string> {"dev", "test"}
-                    },
-                    Logs = traceMessages
+                    ItemSourceList = itemSourceList,
                 },
                 TraceMessages = traceMessages
             };
 
             TraceKey[context] = traceMessages.Add;
             HistoryServiceKey[context] = new DataSource();
+            ItemSourceListKey[context] = itemSourceList;
             
             
             return context;

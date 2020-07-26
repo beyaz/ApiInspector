@@ -24,6 +24,8 @@ namespace ApiInspector.MainWindow
         ///     The context
         /// </summary>
         readonly DataContext context = new DataContextBuilder().Build();
+
+        InvocationInfo InvocationInfo => SelectedInvocationInfoKey[context];
         #endregion
 
         #region Constructors
@@ -37,8 +39,15 @@ namespace ApiInspector.MainWindow
             historyPanel.Context = context;
 
             context.OnUpdate(SelectedInvocationInfoKey, () => SetSelectedInvocationInfo(SelectedInvocationInfoKey[context]));
+            context.OnUpdate(SelectedInvocationInfoKey, () => currentInvocationInfo.OnInvocationInfoChanged());
+            
+            context.OnUpdate(SelectedInvocationInfoKey, RefreshResponseOutputFilePath);
+            context.OnUpdate(SelectedInvocationInfoKey, ()=>invokingResponseView.SetText(string.Empty));
+            
+            
 
             currentInvocationInfo.Context = context;
+            currentInvocationInfo.viewController.context = context;
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, Model.TraceMessages);
 
@@ -61,23 +70,26 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Public Methods
+
+
+        void RefreshResponseOutputFilePath()
+        {
+            var invocationInfo = SelectedInvocationInfoKey[context];
+            if (invocationInfo == null)
+            {
+                responseOutputFilePath.Text = string.Empty;
+                return;
+            }
+
+            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
+        }
+
         /// <summary>
         ///     Sets the selected invocation information.
         /// </summary>
         void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
         {
-            Model.InvocationEditor.InvocationInfo = invocationInfo;
-
-            invokingResponseView.SetText(string.Empty);
-
-            if (invocationInfo != null)
-            {
-                responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
-            }
-
-            currentInvocationInfo.OnInvocationInfoChanged();
-
-            Trace("Selected invocation was changed.");
+           Model.InvocationEditor.InvocationInfo = invocationInfo;
         }
         #endregion
 
@@ -87,13 +99,13 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            if (Model.InvocationEditor.InvocationInfo == null || string.IsNullOrWhiteSpace(Model.InvocationEditor.InvocationInfo.MethodName))
+            if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
                 ((App) System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
                 return;
             }
 
-            Task.Run(() => History.SaveToHistory(Model.InvocationEditor.InvocationInfo));
+            Task.Run(() => History.SaveToHistory(InvocationInfo));
 
             new Thread(OnExecuteClicked).Start();
         }
@@ -103,7 +115,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnExecuteClicked()
         {
-            var invocationInfo = Model.InvocationEditor.InvocationInfo;
+            var invocationInfo = InvocationInfo;
 
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
 
@@ -134,7 +146,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            Model.InvocationEditor.InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
+            InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 
         /// <summary>
