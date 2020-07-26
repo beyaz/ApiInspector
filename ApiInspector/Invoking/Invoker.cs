@@ -14,9 +14,9 @@ namespace ApiInspector.Invoking
     /// </summary>
     class Invoker
     {
+        #region Fields
         readonly InstanceCreator InstanceCreator = new InstanceCreator();
 
-        #region Fields
         /// <summary>
         ///     The parameter adapters
         /// </summary>
@@ -68,15 +68,14 @@ namespace ApiInspector.Invoking
                 }
             }
 
-
-            return  targetType;
+            return targetType;
         }
 
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
             var boaContext = new BOAContext(invocationInfo.Environment);
 
-            var input = new InvokerInput(invocationInfo,trace,boaContext);
+            var input = new InvokerInput(invocationInfo, trace, boaContext);
 
             return Invoke(input);
         }
@@ -90,14 +89,12 @@ namespace ApiInspector.Invoking
 
             var invocationInfo = input.InvocationInfo;
 
-            
-
             var methodName = invocationInfo.MethodName;
             var className  = invocationInfo.ClassName;
 
             trace($"Started to search class: {className}");
 
-            var targetType = input.TargetType =  InitializeTargetType(invocationInfo);
+            var targetType = input.TargetType = InitializeTargetType(invocationInfo);
 
             if (methodName == EndOfDay.MethodAccessText)
             {
@@ -190,29 +187,14 @@ namespace ApiInspector.Invoking
             input.InvocationParameters = invocationParameters;
             try
             {
-               
-
                 trace("Invoke started. Response waiting...");
+
                 var stopwatch = Stopwatch.StartNew();
 
-                
-                var invokeOutput = TryInvokeStaticMethod(input);
-                if (invokeOutput == null)
-                {
-                    invokeOutput = TryInvokeAsCardServiceMethod(input);
-                    if (invokeOutput == null)
-                    {
-                        invokeOutput = TryInvokeNonStaticMethod(input);
-                        if (invokeOutput == null)
-                        {
-                            throw new InvalidOperationException("Unknown invocation type.");
-                        }
-                    }
-                }
-
-                var response = invokeOutput.ExecutionResponse;
+                var response = InvokeMethod(input);
 
                 stopwatch.Stop();
+
                 trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
                 boaContext.Dispose();
@@ -221,31 +203,29 @@ namespace ApiInspector.Invoking
             }
             catch (Exception exception)
             {
-                trace($"Failed when invoking method. {exception}");
-
                 return Fail(exception, boaContext);
             }
         }
         #endregion
 
-       
         #region Methods
-        
+        static InvokeOutput Success(object response)
+        {
+            return new InvokeOutput(response);
+        }
 
         static InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
         {
-            var targetType = input.TargetType;
+            var targetType           = input.TargetType;
             var invocationParameters = input.InvocationParameters;
             var boaContext           = input.BoaContext;
-            var methodName = input.InvocationInfo.MethodName;
-            var trace      = input.Trace;
+            var methodName           = input.InvocationInfo.MethodName;
+            var trace                = input.Trace;
 
             if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
             {
                 return null;
             }
-
-            
 
             var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters, trace, boaContext);
 
@@ -253,18 +233,60 @@ namespace ApiInspector.Invoking
 
             var response = cardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput);
 
-            
+            return Success(response);
+        }
+
+        static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
+        {
+            var methodInfo           = input.MethodInfo;
+            var invocationParameters = input.InvocationParameters;
+
+            if (!methodInfo.IsStatic)
+            {
+                return null;
+            }
+
+            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
 
             return Success(response);
         }
-        
+
+        /// <summary>
+        ///     Fails the specified exception.
+        /// </summary>
+        InvokeOutput Fail(Exception exception, BOAContext boaContext)
+        {
+            boaContext.Dispose();
+
+            return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
+        }
+
+        object InvokeMethod(InvokerInput input)
+        {
+            var invokeOutput = TryInvokeStaticMethod(input);
+            if (invokeOutput == null)
+            {
+                invokeOutput = TryInvokeAsCardServiceMethod(input);
+                if (invokeOutput == null)
+                {
+                    invokeOutput = TryInvokeNonStaticMethod(input);
+                    if (invokeOutput == null)
+                    {
+                        throw new InvalidOperationException("Unknown invocation type.");
+                    }
+                }
+            }
+
+            var response = invokeOutput.ExecutionResponse;
+            return response;
+        }
 
         InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
         {
             var targetType           = input.TargetType;
             var invocationParameters = input.InvocationParameters;
             var boaContext           = input.BoaContext;
-            var methodInfo = input.MethodInfo;
+            var methodInfo           = input.MethodInfo;
 
             if (methodInfo.IsStatic)
             {
@@ -277,38 +299,6 @@ namespace ApiInspector.Invoking
 
             return Success(response);
         }
-
-        static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
-        {
-            var methodInfo = input.MethodInfo;
-            var invocationParameters = input.InvocationParameters;
-
-            if (!methodInfo.IsStatic)
-            {
-                return null;
-            }
-
-            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
-
-
-            return Success(response);
-        }
-
-        static InvokeOutput Success(object response)
-        {
-            return new InvokeOutput(response);
-        }
-
-        /// <summary>
-        ///     Fails the specified exception.
-        /// </summary>
-        InvokeOutput Fail(Exception exception, BOAContext boaContext)
-        {
-            boaContext.Dispose();
-
-            return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
-        }
         #endregion
     }
-
 }
