@@ -27,7 +27,13 @@ namespace ApiInspector.DataFlow
             TraceQueueKey[context] = traceQueue;
             TraceKey[context]      = traceQueue.AddMessage;
 
-            ViewController.TraceKey = TraceKey;
+            {
+                ViewControllerKeys.TraceKey                  = TraceKey;
+                ViewControllerKeys.ItemSourceListKey         = ItemSourceListKey;
+                ViewControllerKeys.SelectedInvocationInfoKey = SelectedInvocationInfoKey;
+                ViewControllerKeys.MethodDefinitionKey       = MethodDefinitionKey;
+                ViewControllerKeys.TypeDefinitionKey         = TypeDefinitionKey;
+            }
 
             return context;
         }

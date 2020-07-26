@@ -5,17 +5,39 @@ using System.Linq;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.DataFlow;
-using static ApiInspector.DataFlow.DataKeys;
+using Mono.Cecil;
+
+ using static ApiInspector.InvocationInfoEditor.ViewControllerKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
+    class ViewControllerKeys
+    {
+        public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
+
+
+        public static DataKey<ItemSourceList> ItemSourceListKey = new DataKey<ItemSourceList>(nameof(ItemSourceList));
+
+        /// <summary>
+        ///     The selected invocation information key
+        /// </summary>
+        public static DataKey<InvocationInfo> SelectedInvocationInfoKey = new DataKey<InvocationInfo>(nameof(InvocationInfo));
+
+
+
+        public static DataKey<MethodDefinition> MethodDefinitionKey = new DataKey<MethodDefinition>(nameof(MethodDefinition));
+
+        public static DataKey<TypeDefinition>   TypeDefinitionKey   = new DataKey<TypeDefinition>(nameof(TypeDefinition));
+    }
+
     /// <summary>
     ///     The view controller
     /// </summary>
     class ViewController
     {
 
-        public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
+        
+
 
         public DataContext context;
 

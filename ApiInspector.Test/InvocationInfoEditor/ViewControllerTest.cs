@@ -1,7 +1,7 @@
 ﻿using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static ApiInspector.DataFlow.DataKeys;
+using static ApiInspector.InvocationInfoEditor.ViewControllerKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
