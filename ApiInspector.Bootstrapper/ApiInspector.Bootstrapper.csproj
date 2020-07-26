@@ -46,7 +46,7 @@
     <Compile Include="Bootstrapper\Key.cs" />
     <Compile Include="Bootstrapper\Launcher.cs" />
     <Compile Include="Bootstrapper\Program.cs" />
-    <Compile Include="Infrastructure\EmbeddedZippedAssemblyResolver.cs" />
+    <Compile Include="Infrastructure\EmbeddedCompressedAssemblyReferencesResolver.cs" />
     <Compile Include="Infrastructure\ModuleLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
