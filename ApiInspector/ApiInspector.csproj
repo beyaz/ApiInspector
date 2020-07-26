@@ -91,6 +91,7 @@
     </ApplicationDefinition>
     <Compile Include="Application\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
+    <Compile Include="DataFlow\TraceQueue.cs" />
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
     <Compile Include="Invoking\CardServiceMethodInvoker.cs" />

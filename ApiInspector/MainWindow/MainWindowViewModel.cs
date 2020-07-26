@@ -8,13 +8,6 @@ namespace ApiInspector.MainWindow
     /// </summary>
     class MainWindowViewModel
     {
-        #region Public Properties
-       
-
-        /// <summary>
-        ///     Gets or sets the trace messages.
-        /// </summary>
-        public List<string> TraceMessages { get; set; }
-        #endregion
+        
     }
 }
