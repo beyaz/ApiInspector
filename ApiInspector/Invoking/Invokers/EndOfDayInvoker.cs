@@ -3,9 +3,15 @@ using BOA.EOD.Base;
 
 namespace ApiInspector.Invoking.Invokers
 {
+    /// <summary>
+    ///     The end of day invoker
+    /// </summary>
     class EndOfDayInvoker
     {
         #region Public Methods
+        /// <summary>
+        ///     Invokes the specified eod type.
+        /// </summary>
         public void Invoke(Type eodType)
         {
             var eodInstance = (EODBase) Activator.CreateInstance(eodType);

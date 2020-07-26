@@ -8,16 +8,14 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     public partial class View
     {
+        #region Fields
+        /// <summary>
+        ///     The model
+        /// </summary>
         readonly ViewModel model = new ViewModel
         {
             ItemSourceList = new ItemSourceList()
         };
-
-        #region Fields
-        /// <summary>
-        ///     The view controller
-        /// </summary>
-        internal ViewController viewController => new ViewController(model);
         #endregion
 
         #region Constructors
@@ -30,11 +28,54 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
+        #region Enums
+        /// <summary>
+        ///     The view events
+        /// </summary>
+        enum ViewEvents
+        {
+            /// <summary>
+            ///     The on assembly search directory changed
+            /// </summary>
+            OnAssemblySearchDirectoryChanged,
+
+            /// <summary>
+            ///     The on environment changed
+            /// </summary>
+            OnEnvironmentChanged,
+
+            /// <summary>
+            ///     The on assembly name changed
+            /// </summary>
+            OnAssemblyNameChanged,
+
+            /// <summary>
+            ///     The on class name changed
+            /// </summary>
+            OnClassNameChanged,
+
+            /// <summary>
+            ///     The on method name changed
+            /// </summary>
+            OnMethodNameChanged
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        ///     The view controller
+        /// </summary>
+        internal ViewController viewController => new ViewController(model);
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Connects the specified invocation information.
+        /// </summary>
         public void Connect(InvocationInfo invocationInfo, Action<string> traceHandler)
         {
             model.InvocationInfo = invocationInfo;
-            model.Trace = traceHandler;
-
+            model.Trace          = traceHandler;
 
             RegisterEvents();
             UpdateSuggestions();
@@ -42,22 +83,6 @@ namespace ApiInspector.InvocationInfoEditor
             OnInvocationInfoChanged();
         }
 
-        #region Enums
-        enum ViewEvents
-        {
-            OnAssemblySearchDirectoryChanged,
-            OnEnvironmentChanged,
-            OnAssemblyNameChanged,
-            OnClassNameChanged,
-            OnMethodNameChanged
-        }
-        #endregion
-
-        
-
-      
-
-        #region Public Methods
         /// <summary>
         ///     Called when [invocation information changed].
         /// </summary>
@@ -144,8 +169,6 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            
-
             var invocationInfo = model.InvocationInfo;
 
             if (invocationInfo == null)

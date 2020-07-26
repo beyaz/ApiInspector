@@ -12,16 +12,6 @@ namespace ApiInspector
     /// </summary>
     static class Utility
     {
-
-        /// <summary>
-        ///     Sets the text.
-        /// </summary>
-       public static void SetText(this RichTextBox richTextBox, string text)
-        {
-            richTextBox.Document.Blocks.Clear();
-            richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
-        }
-
         #region Public Properties
         /// <summary>
         ///     Gets all bindings.
@@ -38,9 +28,8 @@ namespace ApiInspector
         /// </summary>
         public static string CleanPath(string path)
         {
-
-            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            Regex  r           = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            var r           = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             return r.Replace(path, "");
         }
 
@@ -59,6 +48,15 @@ namespace ApiInspector
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        ///     Sets the text.
+        /// </summary>
+        public static void SetText(this RichTextBox richTextBox, string text)
+        {
+            richTextBox.Document.Blocks.Clear();
+            richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
         }
 
         /// <summary>

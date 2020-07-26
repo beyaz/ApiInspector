@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

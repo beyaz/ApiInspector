@@ -51,8 +51,6 @@ namespace ApiInspector.Tracing
         #endregion
 
         #region Methods
-       
-
         /// <summary>
         ///     Called when [timed event].
         /// </summary>

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Application;
 using ApiInspector.History;
-using ApiInspector.Invoking;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
@@ -18,11 +17,15 @@ namespace ApiInspector.MainWindow
     public partial class View
     {
         #region Fields
-       
+        /// <summary>
+        ///     The history
+        /// </summary>
+        readonly DataSource History = new DataSource();
 
-         readonly TraceQueue traceQueue = new TraceQueue();
-
-         InvocationInfo InvocationInfo => historyPanel.SelectedInvocationInfo;
+        /// <summary>
+        ///     The trace queue
+        /// </summary>
+        readonly TraceQueue traceQueue = new TraceQueue();
         #endregion
 
         #region Constructors
@@ -33,15 +36,7 @@ namespace ApiInspector.MainWindow
         {
             InitializeComponent();
 
-            
-
-            
-            
-            
-
-            
-
-            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher,traceQueue);
+            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
             traceMonitor.StartToMonitor();
 
@@ -49,38 +44,18 @@ namespace ApiInspector.MainWindow
             {
                 historyPanel.Connect(traceQueue.AddMessage);
                 historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
-                historyPanel.SelectedInvocationChanged += ()=>invokingResponseView.SetText(string.Empty);
+                historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
 
-                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo,traceQueue.AddMessage);
+                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo, traceQueue.AddMessage);
             };
         }
         #endregion
 
-
         #region Properties
         /// <summary>
-        ///     The history
+        ///     Gets the invocation information.
         /// </summary>
-        readonly DataSource History = new DataSource();
-
-        #endregion
-
-        #region Public Methods
-
-
-        void RefreshResponseOutputFilePath()
-        {
-            var invocationInfo = InvocationInfo;
-            if (invocationInfo == null)
-            {
-                responseOutputFilePath.Text = string.Empty;
-                return;
-            }
-
-            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
-        }
-
-      
+        InvocationInfo InvocationInfo => historyPanel.SelectedInvocationInfo;
         #endregion
 
         #region Methods
@@ -126,9 +101,19 @@ namespace ApiInspector.MainWindow
             Trace(string.Empty);
         }
 
-        void Trace(string message)
+        /// <summary>
+        ///     Refreshes the response output file path.
+        /// </summary>
+        void RefreshResponseOutputFilePath()
         {
-            traceQueue.AddMessage(message);
+            var invocationInfo = InvocationInfo;
+            if (invocationInfo == null)
+            {
+                responseOutputFilePath.Text = string.Empty;
+                return;
+            }
+
+            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
         }
 
         /// <summary>
@@ -142,6 +127,14 @@ namespace ApiInspector.MainWindow
             }
 
             InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
+        }
+
+        /// <summary>
+        ///     Traces the specified message.
+        /// </summary>
+        void Trace(string message)
+        {
+            traceQueue.AddMessage(message);
         }
 
         /// <summary>

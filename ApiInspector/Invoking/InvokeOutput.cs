@@ -18,13 +18,14 @@ namespace ApiInspector.Invoking
             ExecutionResponseAsJson = executionResponseAsJson;
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="InvokeOutput" /> class.
+        /// </summary>
         public InvokeOutput(object response)
         {
             ExecutionResponse = response;
         }
         #endregion
-
-        public bool IsSuccess => Error != null;
 
         #region Public Properties
         /// <summary>
@@ -41,6 +42,11 @@ namespace ApiInspector.Invoking
         ///     The execution response as json
         /// </summary>
         public string ExecutionResponseAsJson { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is success.
+        /// </summary>
+        public bool IsSuccess => Error != null;
         #endregion
     }
 }

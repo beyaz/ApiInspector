@@ -32,13 +32,11 @@ namespace ApiInspector.InvocationInfoEditor
             };
             var viewController = new ViewController(model);
 
-
             // On Search Directory Changed
             {
                 itemSourceList.AssemblyNameList.Should().BeNull();
 
                 viewController.OnAssemblySearchDirectoryChanged();
-                
 
                 itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
             }
@@ -67,7 +65,6 @@ namespace ApiInspector.InvocationInfoEditor
 
             // On Method Name Changed
             {
-
                 model.MethodDefinition.Should().BeNull();
 
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";

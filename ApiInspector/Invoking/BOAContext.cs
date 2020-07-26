@@ -36,6 +36,24 @@ namespace ApiInspector.Invoking
 
         #region Public Methods
         /// <summary>
+        ///     Creates the test context.
+        /// </summary>
+        public static BOATestContext CreateTestContext(string targetEnvironment)
+        {
+            if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return new BOATestContextDev();
+            }
+
+            if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return new BOATestContextTest();
+            }
+
+            throw new NotImplementedException(nameof(targetEnvironment));
+        }
+
+        /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -63,23 +81,6 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Methods
-
-        public static BOATestContext CreateTestContext(string targetEnvironment)
-        {
-            if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                return new BOATestContextDev();
-            }
-
-            if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                return new BOATestContextTest();
-                
-            }
-
-            throw new NotImplementedException(nameof(targetEnvironment));
-        }
-
         /// <summary>
         ///     Creates the object helper.
         /// </summary>
@@ -101,11 +102,7 @@ namespace ApiInspector.Invoking
             {
                 objectHelper = testContext.objectHelper;
 
-                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
-                {
-                    //{Databases.BOACard, @"Data Source=srvxtest\zumrut;Initial Catalog=BOACard2;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"},
-                    //{Databases.BanksoftCC, @"Data Source=srvxtest\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
-                };
+                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>();
             }
             else
             {

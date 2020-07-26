@@ -22,15 +22,15 @@ namespace ApiInspector.Bootstrapper
         public byte[] Content { get; set; }
 
         /// <summary>
+        ///     Gets or sets the last modification.
+        /// </summary>
+        public DateTime LastModification { get; set; }
+
+        /// <summary>
         ///     Gets or sets the key.
         /// </summary>
         [ExplicitKey]
         public string Name { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the last modification.
-        /// </summary>
-        public DateTime LastModification { get; set; }
         #endregion
     }
 }

@@ -9,10 +9,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiInspector.Invoking
 {
+    /// <summary>
+    ///     The card service invocation tests
+    /// </summary>
     [TestClass]
     public class CardServiceInvocationTests
     {
         #region Public Methods
+        /// <summary>
+        ///     Shoulds the invoke any service method.
+        /// </summary>
         [TestMethod]
         public void Should_invoke_any_service_method()
         {

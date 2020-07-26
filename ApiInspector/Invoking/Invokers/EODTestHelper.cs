@@ -38,6 +38,9 @@ namespace ApiInspector.Invoking.Invokers
             return eodInstance;
         }
 
+        /// <summary>
+        ///     Invokes the method.
+        /// </summary>
         public static void InvokeMethod<EODBaseInheritedType>(EODBaseInheritedType eodInstance, string methodName) where EODBaseInheritedType : EODBase
         {
             var methodInfo = eodInstance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);

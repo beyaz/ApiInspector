@@ -12,6 +12,17 @@ namespace ApiInspector.Invoking.Invokers
     /// </summary>
     class InvocationParameterPreparer
     {
+        #region Fields
+        /// <summary>
+        ///     The boa context
+        /// </summary>
+        readonly BOAContext boaContext;
+
+        /// <summary>
+        ///     The method information
+        /// </summary>
+        readonly MethodInfo methodInfo;
+
         /// <summary>
         ///     The parameter adapters
         /// </summary>
@@ -28,17 +39,11 @@ namespace ApiInspector.Invoking.Invokers
         ///     The trace
         /// </summary>
         readonly Action<string> trace;
-        /// <summary>
-        ///     The method information
-        /// </summary>
-        readonly MethodInfo     methodInfo;
-        /// <summary>
-        ///     The boa context
-        /// </summary>
-        readonly BOAContext     boaContext;
+        #endregion
 
+        #region Constructors
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InvocationParameterPreparer"/> class.
+        ///     Initializes a new instance of the <see cref="InvocationParameterPreparer" /> class.
         /// </summary>
         public InvocationParameterPreparer(BOAContext boaContext, MethodInfo methodInfo, Action<string> trace)
         {
@@ -46,7 +51,9 @@ namespace ApiInspector.Invoking.Invokers
             this.methodInfo = methodInfo;
             this.trace      = trace;
         }
+        #endregion
 
+        #region Public Methods
         /// <summary>
         ///     Prepares the specified parameters.
         /// </summary>
@@ -96,6 +103,6 @@ namespace ApiInspector.Invoking.Invokers
 
             return invocationParameters;
         }
-
+        #endregion
     }
 }

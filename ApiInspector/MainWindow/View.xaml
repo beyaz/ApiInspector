@@ -4,7 +4,6 @@
         xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:invocationInfoEditor = "clr-namespace:ApiInspector.InvocationInfoEditor"
-        xmlns:mainWindow = "clr-namespace:ApiInspector.MainWindow"
         xmlns:history = "clr-namespace:ApiInspector.History"
         mc:Ignorable = "d"
         x:Name = "CodeBehind"
@@ -22,7 +21,7 @@
             <ColumnDefinition Width = "5*" />
         </Grid.ColumnDefinitions>
 
-        <history:HistoryPanel Margin = "5" x:Name="historyPanel" />
+        <history:HistoryPanel Margin = "5" x:Name = "historyPanel" />
 
         <GridSplitter Grid.Row = "0" Grid.Column = "1" Width = "5" HorizontalAlignment = "Stretch" />
 

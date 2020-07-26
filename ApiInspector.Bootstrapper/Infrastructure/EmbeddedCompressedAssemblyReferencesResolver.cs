@@ -12,8 +12,6 @@ namespace ApiInspector.Infrastructure
     /// </summary>
     class EmbeddedCompressedAssemblyReferencesResolver
     {
-        public Action<string> Trace { get; set; } = Console.WriteLine;
-
         #region Fields
         /// <summary>
         ///     The application domain
@@ -51,10 +49,10 @@ namespace ApiInspector.Infrastructure
             this.locatedAssembly     = locatedAssembly;
             this.embeddedZipFileName = embeddedZipFileName;
 
-            temporaryDirectory   = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                   Path.DirectorySeparatorChar  + 
-                                   Path.GetFileNameWithoutExtension(locatedAssembly.Location) + "-" + Path.GetFileNameWithoutExtension(embeddedZipFileName) +
-                                   Path.DirectorySeparatorChar;
+            temporaryDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+                                 Path.DirectorySeparatorChar +
+                                 Path.GetFileNameWithoutExtension(locatedAssembly.Location) + "-" + Path.GetFileNameWithoutExtension(embeddedZipFileName) +
+                                 Path.DirectorySeparatorChar;
 
             temporaryZipFilePath = temporaryDirectory + embeddedZipFileName;
         }
@@ -65,6 +63,13 @@ namespace ApiInspector.Infrastructure
         public EmbeddedCompressedAssemblyReferencesResolver(Assembly locatedAssembly, string assemblyFullName) : this(AppDomain.CurrentDomain, locatedAssembly, assemblyFullName)
         {
         }
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        ///     Gets or sets the trace.
+        /// </summary>
+        public Action<string> Trace { get; set; } = Console.WriteLine;
         #endregion
 
         #region Public Methods
@@ -120,7 +125,7 @@ namespace ApiInspector.Infrastructure
                 return data;
             }
         }
-        
+
         /// <summary>
         ///     Extracts the zip file.
         /// </summary>
@@ -152,7 +157,6 @@ namespace ApiInspector.Infrastructure
 
             Trace($"Creating directory {targetDirectory}");
             Directory.CreateDirectory(targetDirectory);
-
 
             File.WriteAllBytes(temporaryZipFilePath, ReadResource(locatedAssembly, "." + embeddedZipFileName));
 

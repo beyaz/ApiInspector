@@ -36,6 +36,7 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 return;
             }
+
             var len = methodDefinition.Parameters.Count;
 
             // arrange invocationParameters
@@ -110,17 +111,14 @@ namespace ApiInspector.InvocationInfoEditor
                     parameterInfo.Value = serializer.SerializeToJson(parameterInfo.Value);
                 }
 
-                if (string.IsNullOrWhiteSpace(parameterInfo.Value+string.Empty))
+                if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
                 {
                     var parameterType = Type.GetType(definition.ParameterType.FullName);
                     if (parameterType != null)
                     {
-                        parameterInfo.Value = serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));    
+                        parameterInfo.Value = serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
                     }
-
-                    
                 }
-
 
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
                 {

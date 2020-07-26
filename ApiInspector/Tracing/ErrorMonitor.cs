@@ -34,6 +34,14 @@ namespace ApiInspector.Tracing
 
         #region Public Methods
         /// <summary>
+        ///     Shows the error notification.
+        /// </summary>
+        public void ShowErrorNotification(string message)
+        {
+            ShowNotification(null, message, NotificationType.Error);
+        }
+
+        /// <summary>
         ///     Starts the monitor.
         /// </summary>
         public void StartMonitor()
@@ -44,14 +52,6 @@ namespace ApiInspector.Tracing
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Shows the error notification.
-        /// </summary>
-         public void ShowErrorNotification(string message)
-        {
-            ShowNotification(null, message, NotificationType.Error);
-        }
-
         /// <summary>
         ///     Shows the notification.
         /// </summary>
@@ -69,7 +69,7 @@ namespace ApiInspector.Tracing
         ///     Called when [dispatcher unhandled exception].
         /// </summary>
         void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        { 
+        {
             ShowErrorNotification(e.Exception.Message);
 
             // Setting 'Handled' to 'true' will prevent the application from terminating.

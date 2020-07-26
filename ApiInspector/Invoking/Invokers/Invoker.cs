@@ -16,6 +16,9 @@ namespace ApiInspector.Invoking.Invokers
     class Invoker
     {
         #region Fields
+        /// <summary>
+        ///     The instance creator
+        /// </summary>
         readonly InstanceCreator InstanceCreator = new InstanceCreator();
 
         /// <summary>
@@ -40,6 +43,9 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Public Methods
+        /// <summary>
+        ///     Gets the type of the target.
+        /// </summary>
         public static Type GetTargetType(InvocationInfo invocationInfo)
         {
             var assemblyName = invocationInfo.AssemblyName;
@@ -60,6 +66,9 @@ namespace ApiInspector.Invoking.Invokers
             return targetType;
         }
 
+        /// <summary>
+        ///     Invokes the specified invocation information.
+        /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
             var boaContext = new BOAContext(invocationInfo.Environment);
@@ -138,8 +147,6 @@ namespace ApiInspector.Invoking.Invokers
 
             try
             {
-               
-
                 var stopwatch = Stopwatch.StartNew();
 
                 var response = InvokeMethod(input);
@@ -160,11 +167,17 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Successes the specified response.
+        /// </summary>
         static InvokeOutput Success(object response)
         {
             return new InvokeOutput(response);
         }
 
+        /// <summary>
+        ///     Tries the invoke as card service method.
+        /// </summary>
         static InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
         {
             var targetType           = input.TargetType;
@@ -187,6 +200,9 @@ namespace ApiInspector.Invoking.Invokers
             return Success(response);
         }
 
+        /// <summary>
+        ///     Tries the invoke static method.
+        /// </summary>
         static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
         {
             var methodInfo           = input.MethodInfo;
@@ -212,6 +228,9 @@ namespace ApiInspector.Invoking.Invokers
             return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
         }
 
+        /// <summary>
+        ///     Invokes the method.
+        /// </summary>
         object InvokeMethod(InvokerInput input)
         {
             var invokeOutput = TryInvokeStaticMethod(input);
@@ -232,6 +251,9 @@ namespace ApiInspector.Invoking.Invokers
             return response;
         }
 
+        /// <summary>
+        ///     Tries the invoke non static method.
+        /// </summary>
         InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
         {
             var targetType           = input.TargetType;
@@ -251,6 +273,9 @@ namespace ApiInspector.Invoking.Invokers
             return Success(response);
         }
 
+        /// <summary>
+        ///     Tries to invoke as end of day.
+        /// </summary>
         InvokeOutput TryToInvokeAsEndOfDay(InvokerInput input)
         {
             var invocationInfo = input.InvocationInfo;

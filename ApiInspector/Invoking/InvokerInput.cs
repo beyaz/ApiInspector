@@ -5,17 +5,15 @@ using ApiInspector.Models;
 
 namespace ApiInspector.Invoking
 {
+    /// <summary>
+    ///     The invoker input
+    /// </summary>
     class InvokerInput
     {
-        public InvocationInfo InvocationInfo       { get; }
-        public Action<string> Trace                { get; }
-        public BOAContext     BoaContext           { get; }
-        public MethodInfo     MethodInfo           { get; set; }
-        public List<object>   InvocationParameters { get; set; }
-        public Type           TargetType           { get; set; }
-
         #region Constructors
-       
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="InvokerInput" /> class.
+        /// </summary>
         public InvokerInput(InvocationInfo invocationInfo, Action<string> trace, BOAContext boaContext)
         {
             InvocationInfo = invocationInfo;
@@ -23,6 +21,37 @@ namespace ApiInspector.Invoking
             BoaContext     = boaContext;
         }
         #endregion
-        
+
+        #region Public Properties
+        /// <summary>
+        ///     Gets the boa context.
+        /// </summary>
+        public BOAContext BoaContext { get; }
+
+        /// <summary>
+        ///     Gets the invocation information.
+        /// </summary>
+        public InvocationInfo InvocationInfo { get; }
+
+        /// <summary>
+        ///     Gets or sets the invocation parameters.
+        /// </summary>
+        public List<object> InvocationParameters { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the method information.
+        /// </summary>
+        public MethodInfo MethodInfo { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the type of the target.
+        /// </summary>
+        public Type TargetType { get; set; }
+
+        /// <summary>
+        ///     Gets the trace.
+        /// </summary>
+        public Action<string> Trace { get; }
+        #endregion
     }
 }
