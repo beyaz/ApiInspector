@@ -11,7 +11,7 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Gets or sets the boa context.
         /// </summary>
-        public BOAContext boaContext { get; set; }
+        public BOAContext BoaContext { get; set; }
 
         /// <summary>
         ///     Gets or sets the invocation value.

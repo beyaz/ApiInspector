@@ -9,33 +9,13 @@ using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
 {
-
-    class InvokerInput
-    {
-        public InvocationInfo InvocationInfo { get; }
-        public Action<string> Trace { get; }
-        public BOAContext BoaContext { get; }
-        public MethodInfo MethodInfo { get; set; }
-        public List<object> InvocationParameters { get; set; }
-        public Type TargetType { get; set; }
-
-        #region Constructors
-       
-        public InvokerInput(InvocationInfo invocationInfo, Action<string> trace, BOAContext boaContext)
-        {
-            InvocationInfo = invocationInfo;
-            Trace = trace;
-            BoaContext = boaContext;
-        }
-        #endregion
-        
-    }
-
     /// <summary>
     ///     The invoker
     /// </summary>
     class Invoker
     {
+        readonly InstanceCreator InstanceCreator = new InstanceCreator();
+
         #region Fields
         /// <summary>
         ///     The parameter adapters
@@ -169,7 +149,7 @@ namespace ApiInspector.Invoking
                 {
                     InvocationValue = parameters[i].Value,
                     ParameterInfo   = methodParametersInDotNet[i],
-                    boaContext      = boaContext
+                    BoaContext      = boaContext
                 };
                 parameterAdapterInputs.Add(parameterAdapterInput);
             }
@@ -248,20 +228,9 @@ namespace ApiInspector.Invoking
         }
         #endregion
 
+       
         #region Methods
-        /// <summary>
-        ///     Creates the instance.
-        /// </summary>
-        static object CreateInstance(Type targetType, BOAContext boaContext)
-        {
-            var instance = InstanceCreatorForObjectHelperDerivedClasses.TryCreate(targetType, boaContext);
-            if (instance != null)
-            {
-                return instance;
-            }
-
-            return InstanceCreatorDefault.TryCreate(targetType, boaContext);
-        }
+        
 
         static InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
         {
@@ -288,8 +257,9 @@ namespace ApiInspector.Invoking
 
             return Success(response);
         }
+        
 
-        static InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
+        InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
         {
             var targetType           = input.TargetType;
             var invocationParameters = input.InvocationParameters;
@@ -301,7 +271,7 @@ namespace ApiInspector.Invoking
                 return null;
             }
 
-            var instance = CreateInstance(targetType, boaContext);
+            var instance = InstanceCreator.Create(targetType, boaContext);
 
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 

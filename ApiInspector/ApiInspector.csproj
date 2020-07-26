@@ -86,6 +86,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
+    <Compile Include="Invoking\InvokerInput.cs" />
     <Compile Include="Tracing\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="Tracing\TraceQueue.cs" />
@@ -94,17 +96,16 @@
     <Compile Include="InvocationInfoEditor\ViewModel.cs" />
     <Compile Include="Invoking\CardServiceMethodInvoker.cs" />
     <Compile Include="Invoking\EndOfDayInvoker.cs" />
-    <Compile Include="Invoking\InstanceCreatorDefault.cs" />
-    <Compile Include="Invoking\InstanceCreatorForObjectHelperDerivedClasses.cs" />
+    <Compile Include="Invoking\InstanceCreators\InstanceCreatorDefault.cs" />
+    <Compile Include="Invoking\InstanceCreators\InstanceCreatorForObjectHelperDerivedClasses.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
-    <Compile Include="Invoking\IParameterAdapter.cs" />
-    <Compile Include="Invoking\ParameterAdapterForConvertibleTypes.cs" />
-    <Compile Include="Invoking\ParameterAdapterForObjectHelperType.cs" />
-    <Compile Include="Invoking\ParameterAdapterForObjectType.cs" />
-    <Compile Include="Invoking\ParameterAdapterForSerializableTypes.cs" />
-    <Compile Include="Invoking\ParameterAdapterForStringType.cs" />
-    <Compile Include="Invoking\ParameterAdapterInput.cs" />
-    <Compile Include="Invoking\Wrapper.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\IParameterAdapter.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForConvertibleTypes.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForObjectHelperType.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForObjectType.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForSerializableTypes.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForStringType.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterInput.cs" />
     <Compile Include="History\HistoryPanel.xaml.cs">
       <DependentUpon>HistoryPanel.xaml</DependentUpon>
     </Compile>

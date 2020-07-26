@@ -17,7 +17,7 @@ namespace ApiInspector.Invoking
 
             if (targetParameterType == typeof(ObjectHelper))
             {
-                input.InvocationValue = new ObjectHelper {Context = input.boaContext.GetObjectHelper().Context};
+                input.InvocationValue = new ObjectHelper {Context = input.BoaContext.GetObjectHelper().Context};
                 return true;
             }
 
