@@ -131,22 +131,27 @@ namespace ApiInspector.Invoking
 
             trace($"Started to search method: {methodName}");
 
+
+
             MethodInfo methodInfo = null;
             try
             {
-                methodInfo = targetType.GetMethod(methodName, AllBindings);
+                methodInfo = input.TargetType.GetMethod(input.InvocationInfo.MethodName, AllBindings);
             }
             catch (Exception e)
             {
-                return Fail(e, boaContext);
+                return Fail(e, input.BoaContext);
             }
 
             if (methodInfo == null)
             {
-                return Fail(new Exception("Method not found."), boaContext);
+                return Fail(new Exception("Method not found."), input.BoaContext);
             }
 
             input.MethodInfo = methodInfo;
+
+
+
 
             trace("Preparing invocation parameters");
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
