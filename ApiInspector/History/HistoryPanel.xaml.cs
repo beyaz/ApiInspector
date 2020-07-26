@@ -5,9 +5,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using ApiInspector.History;
 using ApiInspector.Models;
-using BOA.DataFlow;
-using static ApiInspector.DataFlow.DataKeys;
-using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.MainWindow
 {
@@ -18,9 +15,14 @@ namespace ApiInspector.MainWindow
     {
         #region Fields
         /// <summary>
-        ///     The context
+        ///     The History
         /// </summary>
-        DataContext context;
+        readonly DataSource History = new DataSource();
+
+        /// <summary>
+        ///     The trace
+        /// </summary>
+        Action<string> Trace;
         #endregion
 
         #region Constructors
@@ -33,17 +35,27 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        #region Properties
+        #region Public Events
         /// <summary>
-        ///     The History
+        ///     Occurs when [selected invocation changed].
         /// </summary>
-        DataSource History => HistoryServiceKey[context];
+        public event Action SelectedInvocationChanged;
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        ///     Gets the selected invocation information.
+        /// </summary>
+        public InvocationInfo SelectedInvocationInfo { get; private set; }
         #endregion
 
         #region Public Methods
-        public void Connect(DataContext dataContext)
+        /// <summary>
+        ///     Connects the specified trace.
+        /// </summary>
+        public void Connect(Action<string> trace)
         {
-            context = dataContext;
+            Trace = trace;
             Refresh();
         }
 
@@ -109,7 +121,8 @@ namespace ApiInspector.MainWindow
         {
             Trace("History item clicked.");
 
-            context.Update(SelectedInvocationInfoKey, (InvocationInfo) historyListBox.SelectedItem);
+            SelectedInvocationInfo = (InvocationInfo) historyListBox.SelectedItem;
+            OnSelectedInvocationChanged();
         }
 
         /// <summary>
@@ -129,11 +142,11 @@ namespace ApiInspector.MainWindow
         }
 
         /// <summary>
-        ///     Traces the specified message.
+        ///     Called when [selected invocation changed].
         /// </summary>
-        void Trace(string message)
+        void OnSelectedInvocationChanged()
         {
-            TraceKey[context](message);
+            SelectedInvocationChanged?.Invoke();
         }
         #endregion
     }

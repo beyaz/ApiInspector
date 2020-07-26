@@ -17,7 +17,14 @@ namespace ApiInspector.Invoking
             ExecutionResponse       = executionResponse;
             ExecutionResponseAsJson = executionResponseAsJson;
         }
+
+        public InvokeOutput(object response)
+        {
+            ExecutionResponse = response;
+        }
         #endregion
+
+        public bool IsSuccess => Error != null;
 
         #region Public Properties
         /// <summary>

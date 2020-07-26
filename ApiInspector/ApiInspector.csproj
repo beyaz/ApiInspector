@@ -94,6 +94,7 @@
     <Compile Include="DataFlow\TraceQueue.cs" />
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
+    <Compile Include="InvocationInfoEditor\ViewModel.cs" />
     <Compile Include="Invoking\CardServiceMethodInvoker.cs" />
     <Compile Include="Invoking\EndOfDayInvoker.cs" />
     <Compile Include="Invoking\InstanceCreatorDefault.cs" />

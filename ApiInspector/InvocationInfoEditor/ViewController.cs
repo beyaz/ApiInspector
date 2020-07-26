@@ -4,49 +4,42 @@ using System.IO;
 using System.Linq;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
-using BOA.DataFlow;
-using Mono.Cecil;
-
- using static ApiInspector.InvocationInfoEditor.ViewControllerKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
-    class ViewControllerKeys
-    {
-        public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
-
-
-        public static DataKey<ItemSourceList> ItemSourceListKey = new DataKey<ItemSourceList>(nameof(ItemSourceList));
-
-        /// <summary>
-        ///     The selected invocation information key
-        /// </summary>
-        public static DataKey<InvocationInfo> SelectedInvocationInfoKey = new DataKey<InvocationInfo>(nameof(InvocationInfo));
-
-
-
-        public static DataKey<MethodDefinition> MethodDefinitionKey = new DataKey<MethodDefinition>(nameof(MethodDefinition));
-
-        public static DataKey<TypeDefinition>   TypeDefinitionKey   = new DataKey<TypeDefinition>(nameof(TypeDefinition));
-    }
-
     /// <summary>
     ///     The view controller
     /// </summary>
     class ViewController
     {
-        public ViewController()
+        #region Fields
+        /// <summary>
+        ///     The model
+        /// </summary>
+        readonly ViewModel model;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ViewController" /> class.
+        /// </summary>
+        public ViewController(ViewModel model)
         {
-            
+            this.model = model ?? throw new ArgumentNullException(nameof(model));
         }
-        
+        #endregion
 
+        #region Properties
+        /// <summary>
+        ///     Gets the invocation information.
+        /// </summary>
+        InvocationInfo InvocationInfo => model.InvocationInfo;
 
-        public DataContext context;
-
-        InvocationInfo InvocationInfo => SelectedInvocationInfoKey[context];
-        ItemSourceList ItemSourceList => ItemSourceListKey[context];
-
+        /// <summary>
+        ///     Gets the item source list.
+        /// </summary>
+        ItemSourceList ItemSourceList => model.ItemSourceList;
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -54,7 +47,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public void OnAssemblyNameChanged()
         {
-            var log = TraceKey[context];
+            var log = model.Trace;
 
             var assemblyFilePath = GetAssemblyFilePath(InvocationInfo);
 
@@ -66,7 +59,6 @@ namespace ApiInspector.InvocationInfoEditor
 
             var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
 
-            
             var typeVisitor = new TypeVisitor(log, new List<string> {assemblySearchDirectory});
 
             ItemSourceList.ClassNameList = typeVisitor.GeTypeDefinitions(assemblyFilePath).Select(x => x.FullName).ToList();
@@ -96,7 +88,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public void OnClassNameChanged()
         {
-            var log = TraceKey[context];
+            var log            = model.Trace;
             var invocationInfo = InvocationInfo;
 
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
@@ -110,8 +102,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             var typeVisitor = new TypeVisitor(log, new List<string> {assemblySearchDirectory});
 
-            var typeDefinition =  typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
-            context.Update(TypeDefinitionKey,typeDefinition);
+            var typeDefinition = model.TypeDefinition = typeVisitor.FindType(assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -124,7 +115,6 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 ItemSourceList.MethodNameList = new List<string> {EndOfDay.MethodAccessText};
             }
-            
         }
 
         /// <summary>
@@ -133,9 +123,8 @@ namespace ApiInspector.InvocationInfoEditor
         public void OnMethodNameSelected()
         {
             var invocationInfo = InvocationInfo;
-            
-            context.Update(MethodDefinitionKey,TypeDefinitionKey[context].Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
-            
+
+            model.MethodDefinition = model.TypeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
         }
         #endregion
 

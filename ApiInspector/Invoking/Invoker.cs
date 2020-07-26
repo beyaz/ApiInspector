@@ -5,11 +5,32 @@ using System.IO;
 using System.Reflection;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
-using BOA.DataFlow;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking
 {
+
+    class InvokerInput
+    {
+        public InvocationInfo InvocationInfo { get; }
+        public Action<string> Trace { get; }
+        public BOAContext BoaContext { get; }
+        public MethodInfo MethodInfo { get; set; }
+        public List<object> InvocationParameters { get; set; }
+        public Type TargetType { get; set; }
+
+        #region Constructors
+       
+        public InvokerInput(InvocationInfo invocationInfo, Action<string> trace, BOAContext boaContext)
+        {
+            InvocationInfo = invocationInfo;
+            Trace = trace;
+            BoaContext = boaContext;
+        }
+        #endregion
+        
+    }
+
     /// <summary>
     ///     The invoker
     /// </summary>
@@ -50,10 +71,8 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Public Methods
-        public static Type InitializeTargetType(DataContext context)
+        public static Type InitializeTargetType(InvocationInfo invocationInfo)
         {
-            var invocationInfo = context.Get(InvocationContextKeys.InvocationInfo);
-
             var assemblyName = invocationInfo.AssemblyName;
             var className    = invocationInfo.ClassName;
 
@@ -69,31 +88,36 @@ namespace ApiInspector.Invoking
                 }
             }
 
-            context.Add(InvocationContextKeys.TargetType, targetType);
 
             return  targetType;
+        }
+
+        public InvokeOutput Invoke(InvocationInfo invocationInfo)
+        {
+            var boaContext = new BOAContext(invocationInfo.Environment);
+
+            var input = new InvokerInput(invocationInfo,trace,boaContext);
+
+            return Invoke(input);
         }
 
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public InvokeOutput Invoke(InvocationInfo invocationInfo)
+        public InvokeOutput Invoke(InvokerInput input)
         {
-            var boaContext = new BOAContext(invocationInfo.Environment);
+            var boaContext = input.BoaContext;
 
-            var dataContext = new DataContext
-            {
-                {InvocationContextKeys.BOAContext, boaContext},
-                {InvocationContextKeys.InvocationInfo, invocationInfo},
-                {InvocationContextKeys.Trace, trace},
-            };
+            var invocationInfo = input.InvocationInfo;
+
+            
 
             var methodName = invocationInfo.MethodName;
             var className  = invocationInfo.ClassName;
 
             trace($"Started to search class: {className}");
 
-            var targetType = InitializeTargetType(dataContext);
+            var targetType = input.TargetType =  InitializeTargetType(invocationInfo);
 
             if (methodName == EndOfDay.MethodAccessText)
             {
@@ -127,6 +151,8 @@ namespace ApiInspector.Invoking
             {
                 return Fail(new Exception("Method not found."), boaContext);
             }
+
+            input.MethodInfo = methodInfo;
 
             trace("Preparing invocation parameters");
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
@@ -181,29 +207,30 @@ namespace ApiInspector.Invoking
                 return Fail(new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}"), boaContext);
             }
 
+            input.InvocationParameters = invocationParameters;
             try
             {
-                dataContext.Add(InvocationContextKeys.MethodInfo, methodInfo);
-                dataContext.Add(InvocationContextKeys.InvocationParameters, invocationParameters);
+               
 
                 trace("Invoke started. Response waiting...");
                 var stopwatch = Stopwatch.StartNew();
 
-                var invokeSuccess = TryInvokeStaticMethod(dataContext);
-                if (invokeSuccess == false)
+                
+                var invokeOutput = TryInvokeStaticMethod(input);
+                if (invokeOutput == null)
                 {
-                    invokeSuccess = TryInvokeAsCardServiceMethod(dataContext);
-                    if (invokeSuccess == false)
+                    invokeOutput = TryInvokeAsCardServiceMethod(input);
+                    if (invokeOutput == null)
                     {
-                        invokeSuccess = TryInvokeNonStaticMethod(dataContext);
-                        if (invokeSuccess == false)
+                        invokeOutput = TryInvokeNonStaticMethod(input);
+                        if (invokeOutput == null)
                         {
                             throw new InvalidOperationException("Unknown invocation type.");
                         }
                     }
                 }
 
-                var response = dataContext.Get(InvocationContextKeys.Response);
+                var response = invokeOutput.ExecutionResponse;
 
                 stopwatch.Stop();
                 trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
@@ -236,63 +263,70 @@ namespace ApiInspector.Invoking
             return InstanceCreatorDefault.TryCreate(targetType, boaContext);
         }
 
-        static bool TryInvokeAsCardServiceMethod(DataContext context)
+        static InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
         {
-            var targetType = context.Get(InvocationContextKeys.TargetType);
+            var targetType = input.TargetType;
+            var invocationParameters = input.InvocationParameters;
+            var boaContext           = input.BoaContext;
+            var methodName = input.InvocationInfo.MethodName;
+            var trace      = input.Trace;
 
             if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
             {
-                return false;
+                return null;
             }
 
-            try
-            {
-                CardServiceMethodInvoker.Invoke(context);
-            }
-            catch (Exception exception)
-            {
-                throw exception;
-            }
+            
 
-            return true;
+            var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters, trace, boaContext);
+
+            var cardServiceMethodInvoker = new CardServiceMethodInvoker();
+
+            var response = cardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput);
+
+            
+
+            return Success(response);
         }
 
-        static bool TryInvokeNonStaticMethod(DataContext context)
+        static InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
         {
-            var targetType           = context.Get(InvocationContextKeys.TargetType);
-            var boaContext           = context.Get(InvocationContextKeys.BOAContext);
-            var methodInfo           = context.Get(InvocationContextKeys.MethodInfo);
-            var invocationParameters = context.Get(InvocationContextKeys.InvocationParameters);
+            var targetType           = input.TargetType;
+            var invocationParameters = input.InvocationParameters;
+            var boaContext           = input.BoaContext;
+            var methodInfo = input.MethodInfo;
 
             if (methodInfo.IsStatic)
             {
-                return false;
+                return null;
             }
 
             var instance = CreateInstance(targetType, boaContext);
 
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
-            context.Add(InvocationContextKeys.Response, response);
-
-            return true;
+            return Success(response);
         }
 
-        static bool TryInvokeStaticMethod(DataContext context)
+        static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
         {
-            var methodInfo           = context.Get(InvocationContextKeys.MethodInfo);
-            var invocationParameters = context.Get(InvocationContextKeys.InvocationParameters);
+            var methodInfo = input.MethodInfo;
+            var invocationParameters = input.InvocationParameters;
 
             if (!methodInfo.IsStatic)
             {
-                return false;
+                return null;
             }
 
             var response = methodInfo.Invoke(null, invocationParameters.ToArray());
 
-            context.Add(InvocationContextKeys.Response, response);
 
-            return true;
+            return Success(response);
+        }
+
+        static InvokeOutput Success(object response)
+        {
+            return new InvokeOutput(response);
         }
 
         /// <summary>
@@ -307,18 +341,4 @@ namespace ApiInspector.Invoking
         #endregion
     }
 
-    static class InvocationContextKeys
-    {
-        #region Static Fields
-        public static DataKey<BOAContext>     BOAContext           = new DataKey<BOAContext>(nameof(BOAContext));
-        public static DataKey<InvocationInfo> InvocationInfo       = new DataKey<InvocationInfo>(nameof(InvocationInfo));
-        public static DataKey<List<object>>   InvocationParameters = new DataKey<List<object>>(nameof(InvocationParameters));
-        public static DataKey<MethodInfo>     MethodInfo           = new DataKey<MethodInfo>(nameof(MethodInfo));
-        public static DataKey<object>         Response             = new DataKey<object>(nameof(Response));
-
-        public static DataKey<Type> TargetType = new DataKey<Type>(nameof(TargetType));
-
-        public static DataKey<Action<string>> Trace = new DataKey<Action<string>>(nameof(Trace));
-        #endregion
-    }
 }

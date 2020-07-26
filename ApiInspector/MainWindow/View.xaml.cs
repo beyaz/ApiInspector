@@ -51,7 +51,11 @@ namespace ApiInspector.MainWindow
 
             traceMonitor.StartToMonitor();
 
-            Loaded += (s, e) => { historyPanel.Connect(context); };
+            Loaded += (s, e) =>
+            {
+                historyPanel.Connect(TraceKey[context]);
+                historyPanel.SelectedInvocationChanged += () => context.Update(SelectedInvocationInfoKey, historyPanel.SelectedInvocationInfo);
+            };
             Loaded += (s, e) => { currentInvocationInfo.Connect(context); };
         }
         #endregion

@@ -2,7 +2,6 @@
 using ApiInspector.Models;
 using BOA.Card.Contracts.CreditCard.Limit;
 using BOA.Common.Types;
-using BOA.DataFlow;
 using BOA.UnitTestHelper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,6 +11,7 @@ namespace ApiInspector.Invoking
     [TestClass]
     public class CardServiceInvocationTests
     {
+        #region Public Methods
         [TestMethod]
         public void Should_invoke_any_service_method()
         {
@@ -19,10 +19,9 @@ namespace ApiInspector.Invoking
 
             var invocationInfo = new InvocationInfo
             {
-                AssemblyName            ="BOA.Card.Services.CreditCard.Limit.dll",
+                AssemblyName            = "BOA.Card.Services.CreditCard.Limit.dll",
                 AssemblySearchDirectory = "d:\\boa\\server\\bin\\",
                 ClassName               = "BOA.Card.Services.CreditCard.Limit.CRDLimitService",
-
 
                 Environment = "dev",
                 MethodName  = "GetCardAvailableLimit",
@@ -35,32 +34,25 @@ namespace ApiInspector.Invoking
                 }
             };
 
-            var context = new DataContext
+            var targetType = Invoker.InitializeTargetType(invocationInfo);
+
+            var invocationParameters = new List<object>
             {
-                {InvocationContextKeys.BOAContext, new BOAContext("dev")},
+                new GetCardAvailableLimitRequest
                 {
-                    InvocationContextKeys.InvocationParameters, new List<object>()
-                    {
-                        new GetCardAvailableLimitRequest
-                        {
-                            CardRefNumber = "1"
-                        }
-                    }
-                },
-                {InvocationContextKeys.InvocationInfo,invocationInfo},
-                {InvocationContextKeys.Trace,(message)=>{}}
-                
+                    CardRefNumber = "1"
+                }
             };
+            var input = new CardServiceMethodInvokerInput(targetType, invocationInfo.MethodName, invocationParameters, message => { }, new BOAContext("dev"));
 
-            Invoker.InitializeTargetType(context);
+            var cardServiceMethodInvoker = new CardServiceMethodInvoker();
 
-            CardServiceMethodInvoker.Invoke(context);
-
-            var response = (GenericResponse<GetCardAvailableLimitResponse>) InvocationContextKeys.Response[context];
+            var response = (GenericResponse<GetCardAvailableLimitResponse>) cardServiceMethodInvoker.Invoke(input);
 
             response.Success.Should().BeTrue();
 
             response.Value.Should().NotBeNull();
         }
+        #endregion
     }
 }

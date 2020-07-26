@@ -1,7 +1,6 @@
 ﻿using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static ApiInspector.InvocationInfoEditor.ViewControllerKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -18,18 +17,21 @@ namespace ApiInspector.InvocationInfoEditor
         [TestMethod]
         public void Should_load_data_according_to_component_interaction()
         {
-            var viewController = new ViewController();
-
-            var context = viewController.context =new DataFlow.DataContextBuilder().Build();
-
-            var invocationInfo = SelectedInvocationInfoKey[context] = new InvocationInfo
+            var invocationInfo = new InvocationInfo
             {
                 AssemblySearchDirectory = @"d:\boa\server\bin\"
             };
 
-            var itemSourceList = ItemSourceListKey[context];
+            var itemSourceList = new ItemSourceList();
 
-            
+            var model = new ViewModel
+            {
+                InvocationInfo = invocationInfo,
+                Trace          = message => { },
+                ItemSourceList = itemSourceList
+            };
+            var viewController = new ViewController(model);
+
 
             // On Search Directory Changed
             {
@@ -66,13 +68,13 @@ namespace ApiInspector.InvocationInfoEditor
             // On Method Name Changed
             {
 
-                context.Contains(MethodDefinitionKey).Should().BeFalse();
+                model.MethodDefinition.Should().BeNull();
 
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";
 
                 viewController.OnMethodNameSelected();
 
-                MethodDefinitionKey[context].Should().NotBeNull();
+                model.MethodDefinition.Should().NotBeNull();
             }
         }
         #endregion

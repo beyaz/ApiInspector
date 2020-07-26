@@ -1,4 +1,5 @@
 ﻿using System;
+using ApiInspector.DataFlow;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
 
@@ -16,7 +17,14 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     The view controller
         /// </summary>
-        internal ViewController viewController => new ViewController {context = context};
+        internal ViewController viewController => new ViewController(new ViewModel
+        {
+            Trace = ServiceKeys.TraceKey[context],
+            ItemSourceList = DataKeys.ItemSourceListKey[context],
+            InvocationInfo = DataKeys.SelectedInvocationInfoKey[context],
+            MethodDefinition = DataKeys.MethodDefinitionKey[context],
+            TypeDefinition = DataKeys.TypeDefinitionKey[context]
+        });
         #endregion
 
         #region Constructors
@@ -32,7 +40,6 @@ namespace ApiInspector.InvocationInfoEditor
         public void Connect(DataContext context)
         {
             this.context = context;
-            viewController.context = context;
 
             RegisterEvents();
             UpdateSuggestions();

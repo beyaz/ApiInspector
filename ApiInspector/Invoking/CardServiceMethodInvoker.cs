@@ -3,10 +3,56 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BOA.DataFlow;
 
 namespace ApiInspector.Invoking
 {
+    /// <summary>
+    ///     The card service method invoker input
+    /// </summary>
+    class CardServiceMethodInvokerInput
+    {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="CardServiceMethodInvokerInput" /> class.
+        /// </summary>
+        public CardServiceMethodInvokerInput(Type targetType, string methodName, List<object> invocationParameters, Action<string> trace, BOAContext boaContext)
+        {
+            TargetType           = targetType;
+            MethodName           = methodName;
+            InvocationParameters = invocationParameters;
+            Trace                = trace;
+            BoaContext           = boaContext;
+        }
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        ///     Gets the boa context.
+        /// </summary>
+        public BOAContext BoaContext { get; }
+
+        /// <summary>
+        ///     Gets the invocation parameters.
+        /// </summary>
+        public List<object> InvocationParameters { get; }
+
+        /// <summary>
+        ///     Gets the name of the method.
+        /// </summary>
+        public string MethodName { get; }
+
+        /// <summary>
+        ///     Gets the type of the target.
+        /// </summary>
+        public Type TargetType { get; }
+
+        /// <summary>
+        ///     Gets the trace.
+        /// </summary>
+        public Action<string> Trace { get; }
+        #endregion
+    }
+
     /// <summary>
     ///     The card service method invoker
     /// </summary>
@@ -16,13 +62,13 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Invokes the specified context.
         /// </summary>
-        public static bool Invoke(DataContext context)
+        public object Invoke(CardServiceMethodInvokerInput input)
         {
-            var invocationParameters = context.Get(InvocationContextKeys.InvocationParameters);
-            var boaContext           = context.Get(InvocationContextKeys.BOAContext);
-            var targetType           = context.Get(InvocationContextKeys.TargetType);
-            var methodName           = context.Get(InvocationContextKeys.InvocationInfo).MethodName;
-            var trace                = context.Get(InvocationContextKeys.Trace);
+            var invocationParameters = input.InvocationParameters;
+            var boaContext           = input.BoaContext;
+            var targetType           = input.TargetType;
+            var methodName           = input.MethodName;
+            var trace                = input.Trace;
 
             trace("Searching service interface...");
 
@@ -99,7 +145,6 @@ namespace ApiInspector.Invoking.Dynamic
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
-
             trace("Creating ObjectHelper...");
             var wrapMethodParameters = new List<object>
             {
@@ -113,9 +158,7 @@ namespace ApiInspector.Invoking.Dynamic
 
             trace("Service invocation is success.");
 
-            context.Add(InvocationContextKeys.Response, response);
-
-            return true;
+            return response;
         }
         #endregion
 
