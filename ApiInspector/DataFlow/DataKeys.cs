@@ -14,11 +14,7 @@ namespace ApiInspector.DataFlow
     class DataKeys
     {
         #region Static Fields
-        /// <summary>
-        ///     The main window view model key
-        /// </summary>
-        public static DataKey<MainWindowViewModel> MainWindowViewModelKey = new DataKey<MainWindowViewModel>(nameof(MainWindowViewModel));
-
+      
 
         
         public static DataKey<ItemSourceList> ItemSourceListKey = new DataKey<ItemSourceList>(nameof(ItemSourceList));

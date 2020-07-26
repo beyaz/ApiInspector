@@ -120,7 +120,6 @@
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />
     <Compile Include="MainWindow\Extensions.cs" />
-    <Compile Include="MainWindow\MainWindowViewModel.cs" />
     <Compile Include="MainWindow\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />

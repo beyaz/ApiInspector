@@ -15,7 +15,6 @@ namespace ApiInspector.DataFlow
             var context = new DataContext();
             var traceQueue = new TraceQueue();
 
-            List<string> traceMessages = new List<string>();
 
             var itemSourceList = new ItemSourceList
             {
@@ -23,9 +22,7 @@ namespace ApiInspector.DataFlow
                 EnvironmentNameList         = new List<string> {"dev", "test"}
             };
 
-            MainWindowViewModelKey[context] = new MainWindowViewModel
-            {
-            };
+           
 
             
             HistoryServiceKey[context] = new DataSource();

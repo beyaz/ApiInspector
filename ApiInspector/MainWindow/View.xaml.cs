@@ -62,10 +62,6 @@ namespace ApiInspector.MainWindow
         /// </summary>
         DataSource History => HistoryServiceKey[context];
 
-        /// <summary>
-        ///     The Model
-        /// </summary>
-        MainWindowViewModel Model => MainWindowViewModelKey[context];
         #endregion
 
         #region Public Methods
