@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
-using ApiInspector.MainWindow;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
 using static ApiInspector.DataFlow.ServiceKeys;
@@ -10,11 +9,11 @@ namespace ApiInspector.DataFlow
 {
     class DataContextBuilder
     {
+        #region Public Methods
         public DataContext Build()
         {
-            var context = new DataContext();
+            var context    = new DataContext();
             var traceQueue = new TraceQueue();
-
 
             var itemSourceList = new ItemSourceList
             {
@@ -22,16 +21,16 @@ namespace ApiInspector.DataFlow
                 EnvironmentNameList         = new List<string> {"dev", "test"}
             };
 
-           
-
-            
             HistoryServiceKey[context] = new DataSource();
             ItemSourceListKey[context] = itemSourceList;
-            
+
             TraceQueueKey[context] = traceQueue;
-            TraceKey[context] = traceQueue.AddMessage;
-            
+            TraceKey[context]      = traceQueue.AddMessage;
+
+            ViewController.TraceKey = TraceKey;
+
             return context;
         }
+        #endregion
     }
 }

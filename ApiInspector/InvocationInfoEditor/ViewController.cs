@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
-using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -14,6 +14,9 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ViewController
     {
+
+        public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
+
         public DataContext context;
 
         InvocationInfo InvocationInfo => SelectedInvocationInfoKey[context];
