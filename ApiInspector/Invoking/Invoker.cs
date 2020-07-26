@@ -80,32 +80,6 @@ namespace ApiInspector.Invoking
             return Invoke(input);
         }
 
-        InvokeOutput TryToInvokeAsEndOfDay(InvokerInput input)
-        {
-            var invocationInfo = input.InvocationInfo;
-
-            var methodName = invocationInfo.MethodName;
-
-            if (methodName != EndOfDay.MethodAccessText)
-            {
-                return null;
-            }
-
-            try
-            {
-                BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
-
-                new EndOfDayInvoker().Invoke(input.TargetType);
-
-                return new InvokeOutput(null, null, null);
-            }
-            catch (Exception exception)
-            {
-                return Fail(exception, input.BoaContext);
-            }
-        }
-
-        
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
@@ -120,8 +94,8 @@ namespace ApiInspector.Invoking
 
             trace($"Started to search class: {className}");
 
-            var targetType = input.TargetType = InitializeTargetType(invocationInfo);
-            
+            input.TargetType = InitializeTargetType(invocationInfo);
+
             // TRY CALL AS EOD
             {
                 var output = TryToInvokeAsEndOfDay(input);
@@ -132,7 +106,6 @@ namespace ApiInspector.Invoking
             }
 
             trace($"Started to search method: {methodName}");
-
 
             // INITIALIZE METHOD INFO
             {
@@ -152,66 +125,66 @@ namespace ApiInspector.Invoking
                 }
 
                 input.MethodInfo = methodInfo;
-
             }
-
-
 
             trace("Preparing invocation parameters");
 
-            var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
-
-            var invocationParameters = new List<object>();
-
-            var methodParametersInDotNet =  input.MethodInfo.GetParameters();
-
-            var parameterAdapterInputs = new List<ParameterAdapterInput>();
-
-            for (var i = 0; i < methodParametersInDotNet.Length; i++)
+            // PREPARE PARAMETERS
             {
-                var parameterAdapterInput = new ParameterAdapterInput
-                {
-                    InvocationValue = parameters[i].Value,
-                    ParameterInfo   = methodParametersInDotNet[i],
-                    BoaContext      = boaContext
-                };
-                parameterAdapterInputs.Add(parameterAdapterInput);
-            }
+                var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-            foreach (var parameterAdapterInput in parameterAdapterInputs)
-            {
-                var stopwatch = Stopwatch.StartNew();
+                var invocationParameters = new List<object>();
 
-                var isAdapted = false;
-                foreach (var parameterAdapter in parameterAdapters)
+                var methodParametersInDotNet = input.MethodInfo.GetParameters();
+
+                var parameterAdapterInputs = new List<ParameterAdapterInput>();
+
+                for (var i = 0; i < methodParametersInDotNet.Length; i++)
                 {
-                    try
+                    var parameterAdapterInput = new ParameterAdapterInput
                     {
-                        isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
-                    }
-                    catch (Exception exception)
+                        InvocationValue = parameters[i].Value,
+                        ParameterInfo   = methodParametersInDotNet[i],
+                        BoaContext      = boaContext
+                    };
+                    parameterAdapterInputs.Add(parameterAdapterInput);
+                }
+
+                foreach (var parameterAdapterInput in parameterAdapterInputs)
+                {
+                    var stopwatch = Stopwatch.StartNew();
+
+                    var isAdapted = false;
+                    foreach (var parameterAdapter in parameterAdapters)
                     {
-                        return Fail(exception, boaContext);
+                        try
+                        {
+                            isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
+                        }
+                        catch (Exception exception)
+                        {
+                            return Fail(exception, boaContext);
+                        }
+
+                        if (isAdapted)
+                        {
+                            invocationParameters.Add(parameterAdapterInput.InvocationValue);
+                            break;
+                        }
                     }
 
                     if (isAdapted)
                     {
-                        invocationParameters.Add(parameterAdapterInput.InvocationValue);
-                        break;
+                        stopwatch.Stop();
+                        trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+                        continue;
                     }
+
+                    return Fail(new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}"), boaContext);
                 }
 
-                if (isAdapted)
-                {
-                    stopwatch.Stop();
-                    trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
-                    continue;
-                }
-
-                return Fail(new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}"), boaContext);
+                input.InvocationParameters = invocationParameters;
             }
-
-            input.InvocationParameters = invocationParameters;
 
             try
             {
@@ -326,6 +299,31 @@ namespace ApiInspector.Invoking
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
             return Success(response);
+        }
+
+        InvokeOutput TryToInvokeAsEndOfDay(InvokerInput input)
+        {
+            var invocationInfo = input.InvocationInfo;
+
+            var methodName = invocationInfo.MethodName;
+
+            if (methodName != EndOfDay.MethodAccessText)
+            {
+                return null;
+            }
+
+            try
+            {
+                BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
+
+                new EndOfDayInvoker().Invoke(input.TargetType);
+
+                return new InvokeOutput(null, null, null);
+            }
+            catch (Exception exception)
+            {
+                return Fail(exception, input.BoaContext);
+            }
         }
         #endregion
     }
