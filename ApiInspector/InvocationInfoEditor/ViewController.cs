@@ -35,7 +35,10 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ViewController
     {
-
+        public ViewController()
+        {
+            
+        }
         
 
 

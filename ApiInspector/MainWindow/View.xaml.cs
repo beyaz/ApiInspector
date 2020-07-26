@@ -46,7 +46,6 @@ namespace ApiInspector.MainWindow
             
 
             
-            currentInvocationInfo.viewController.context = context;
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, TraceQueueKey[context]);
 

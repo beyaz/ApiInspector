@@ -16,7 +16,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     The view controller
         /// </summary>
-        internal readonly ViewController viewController = new ViewController();
+        internal ViewController viewController => new ViewController {context = context};
         #endregion
 
         #region Constructors
