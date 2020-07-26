@@ -9,6 +9,21 @@ namespace ApiInspector.InvocationInfoEditor
     [Serializable]
     public class ItemSourceList
     {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ItemSourceList" /> class.
+        /// </summary>
+        public ItemSourceList()
+        {
+            AssemblySearchDirectoryList = new List<string>
+            {
+                AssemblySearchDirectories.serverBin,
+                AssemblySearchDirectories.clientBin
+            };
+            EnvironmentNameList = new List<string> {"dev", "test"};
+        }
+        #endregion
+
         #region Public Properties
         /// <summary>
         ///     Gets or sets the assembly name list.
@@ -18,7 +33,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Gets or sets the assembly search directory list.
         /// </summary>
-        public IReadOnlyList<string> AssemblySearchDirectoryList { get; set; }
+        public IReadOnlyList<string> AssemblySearchDirectoryList { get; }
 
         /// <summary>
         ///     Gets or sets the class name list.
@@ -28,7 +43,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Gets or sets the environment name list.
         /// </summary>
-        public IReadOnlyList<string> EnvironmentNameList { get; set; }
+        public IReadOnlyList<string> EnvironmentNameList { get; }
 
         /// <summary>
         ///     Gets or sets the method name list.

@@ -31,25 +31,5 @@ namespace ApiInspector.DataFlow
         
         #endregion
     }
-
-    /// <summary>
-    ///     The service keys
-    /// </summary>
-    static class ServiceKeys
-    {
-        #region Static Fields
-        /// <summary>
-        ///     The history service key
-        /// </summary>
-        public static DataKey<DataSource> HistoryServiceKey = new DataKey<DataSource>(nameof(History));
-
-        /// <summary>
-        ///     The trace key
-        /// </summary>
-        public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
-
-        public static DataKey<TraceQueue> TraceQueueKey = new DataKey<TraceQueue>(nameof(TraceQueue));
-        
-        #endregion
-    }
+    
 }

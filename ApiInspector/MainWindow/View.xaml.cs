@@ -10,7 +10,6 @@ using ApiInspector.Invoking;
 using ApiInspector.Models;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
-using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.MainWindow
 {
@@ -24,6 +23,9 @@ namespace ApiInspector.MainWindow
         ///     The context
         /// </summary>
         readonly DataContext context = new DataContextBuilder().Build();
+
+
+         readonly TraceQueue traceQueue = new TraceQueue();
 
         InvocationInfo InvocationInfo => SelectedInvocationInfoKey[context];
         #endregion
@@ -47,15 +49,15 @@ namespace ApiInspector.MainWindow
 
             
 
-            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, TraceQueueKey[context]);
+            var traceMonitor = new TraceMonitor(traceViewer, Dispatcher,traceQueue);
 
             traceMonitor.StartToMonitor();
 
             Loaded += (s, e) =>
             {
-                historyPanel.Connect(TraceKey[context]);
+                historyPanel.Connect(traceQueue.AddMessage);
                 historyPanel.SelectedInvocationChanged += () => context.Update(SelectedInvocationInfoKey, historyPanel.SelectedInvocationInfo);
-                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo,TraceKey[context]);
+                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo,traceQueue.AddMessage);
             };
         }
         #endregion
@@ -69,7 +71,7 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     The history
         /// </summary>
-        DataSource History => HistoryServiceKey[context];
+        readonly DataSource History = new DataSource();
 
         #endregion
 
@@ -119,7 +121,7 @@ namespace ApiInspector.MainWindow
 
             Trace("------------- EXECUTE STARTED -----------------");
 
-            var invoker = new Invoker(TraceKey[context]);
+            var invoker = new Invoker(Trace);
 
             var invokerOutput = invoker.Invoke(invocationInfo);
 
@@ -136,7 +138,7 @@ namespace ApiInspector.MainWindow
 
         void Trace(string message)
         {
-            TraceKey[context](message);
+            traceQueue.AddMessage(message);
         }
 
         bool anyItemSelectedInHistoryPanel => context.Contains(SelectedInvocationInfoKey);

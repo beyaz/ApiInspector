@@ -3,7 +3,6 @@ using ApiInspector.History;
 using ApiInspector.InvocationInfoEditor;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
-using static ApiInspector.DataFlow.ServiceKeys;
 
 namespace ApiInspector.DataFlow
 {
@@ -17,15 +16,11 @@ namespace ApiInspector.DataFlow
 
             var itemSourceList = new ItemSourceList
             {
-                AssemblySearchDirectoryList = new List<string> {AssemblySearchDirectories.serverBin, AssemblySearchDirectories.clientBin},
-                EnvironmentNameList         = new List<string> {"dev", "test"}
+                
             };
 
-            HistoryServiceKey[context] = new DataSource();
             ItemSourceListKey[context] = itemSourceList;
 
-            TraceQueueKey[context] = traceQueue;
-            TraceKey[context]      = traceQueue.AddMessage;
             
             return context;
         }
