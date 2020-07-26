@@ -80,6 +80,30 @@ namespace ApiInspector.Invoking
             return Invoke(input);
         }
 
+        InvokeOutput TryToInvokeAsEndOfDay(InvokerInput input)
+        {
+            var invocationInfo = input.InvocationInfo;
+
+            var methodName = invocationInfo.MethodName;
+
+            if (methodName != EndOfDay.MethodAccessText)
+            {
+                return null;
+            }
+
+            try
+            {
+                BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
+
+                new EndOfDayInvoker().Invoke(input.TargetType);
+
+                return new InvokeOutput(null, null, null);
+            }
+            catch (Exception exception)
+            {
+                return Fail(exception, input.BoaContext);
+            }
+        }
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
@@ -95,20 +119,13 @@ namespace ApiInspector.Invoking
             trace($"Started to search class: {className}");
 
             var targetType = input.TargetType = InitializeTargetType(invocationInfo);
-
-            if (methodName == EndOfDay.MethodAccessText)
+            
+            // E O D 
             {
-                try
+                var output = TryToInvokeAsEndOfDay(input);
+                if (output != null)
                 {
-                    BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
-
-                    new EndOfDayInvoker().Invoke(targetType);
-
-                    return new InvokeOutput(null, null, null);
-                }
-                catch (Exception exception)
-                {
-                    return Fail(exception, boaContext);
+                    return output;
                 }
             }
 
@@ -136,7 +153,7 @@ namespace ApiInspector.Invoking
 
             var invocationParameters = new List<object>();
 
-            var methodParametersInDotNet = methodInfo.GetParameters();
+            var methodParametersInDotNet =  input.MethodInfo.GetParameters();
 
             var parameterAdapterInputs = new List<ParameterAdapterInput>();
 
