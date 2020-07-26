@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.InvokingParameterAdapters
 {
     /// <summary>
     ///     The parameter adapter for serializable types

@@ -7,21 +7,6 @@ using System.Windows.Documents;
 
 namespace ApiInspector
 {
-    static class AssemblySearchDirectories
-    {
-        #region Constants
-        public const string clientBin = @"d:\boa\client\bin\";
-        public const string serverBin = @"d:\boa\server\bin\";
-        #endregion
-    }
-
-    static class EndOfDay
-    {
-        #region Constants
-        public const string MethodAccessText = "InitializeParameters -> BeforeProcess -> Process -> AfterProcess";
-        #endregion
-    }
-
     /// <summary>
     ///     The utility
     /// </summary>

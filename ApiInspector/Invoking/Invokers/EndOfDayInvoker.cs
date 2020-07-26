@@ -4,7 +4,7 @@ using System.Reflection;
 using BOA.Common.TaskScheduler.Types;
 using BOA.EOD.Base;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.Invokers
 {
     /// <summary>
     ///     The eod test helper
@@ -78,10 +78,7 @@ namespace ApiInspector.Invoking
         }
         #endregion
     }
-}
 
-namespace ApiInspector.Invoking
-{
     class EndOfDayInvoker
     {
         #region Public Methods

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.Invokers
 {
     /// <summary>
     ///     The card service method invoker input

@@ -1,7 +1,7 @@
 ﻿using System;
 using BOA.Base.Data;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.InstanceCreators
 {
     /// <summary>
     ///     The instance creator for object helper derived classes

@@ -1,7 +1,7 @@
 ﻿using System;
 using BOA.Base;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.InstanceCreators
 {
     /// <summary>
     ///     The instance creator default

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.InvokingParameterAdapters
 {
     /// <summary>
     ///     The parameter adapter input

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using ApiInspector.Invoking.InstanceCreators;
+using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using static ApiInspector.Utility;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.Invokers
 {
     /// <summary>
     ///     The invoker

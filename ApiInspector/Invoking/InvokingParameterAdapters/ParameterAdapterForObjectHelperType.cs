@@ -1,6 +1,6 @@
 ﻿using BOA.Base;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.InvokingParameterAdapters
 {
     /// <summary>
     ///     The parameter adapter for object helper type

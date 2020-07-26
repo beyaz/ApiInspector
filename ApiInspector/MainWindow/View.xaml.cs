@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using ApiInspector.Application;
 using ApiInspector.History;
 using ApiInspector.Invoking;
+using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 

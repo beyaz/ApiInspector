@@ -86,6 +86,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AssemblySearchDirectories.cs" />
+    <Compile Include="EndOfDay.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />
     <Compile Include="Tracing\ErrorMonitor.cs" />
@@ -94,8 +96,8 @@
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
     <Compile Include="InvocationInfoEditor\ViewModel.cs" />
-    <Compile Include="Invoking\CardServiceMethodInvoker.cs" />
-    <Compile Include="Invoking\EndOfDayInvoker.cs" />
+    <Compile Include="Invoking\Invokers\CardServiceMethodInvoker.cs" />
+    <Compile Include="Invoking\Invokers\EndOfDayInvoker.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorDefault.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorForObjectHelperDerivedClasses.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
@@ -113,12 +115,11 @@
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="Invoking\BOAContext.cs" />
-    <Compile Include="Invoking\Invoker.cs" />
+    <Compile Include="Invoking\Invokers\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />
     <Compile Include="Tracing\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
-    <Compile Include="TypeMixer.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.InstanceCreators
 {
     class InstanceCreator
     {
