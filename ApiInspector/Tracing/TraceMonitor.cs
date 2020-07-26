@@ -1,9 +1,8 @@
 ﻿using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ApiInspector.DataFlow;
 
-namespace ApiInspector.MainWindow
+namespace ApiInspector.Tracing
 {
     /// <summary>
     ///     The trace monitor
@@ -52,6 +51,8 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
+       
+
         /// <summary>
         ///     Called when [timed event].
         /// </summary>

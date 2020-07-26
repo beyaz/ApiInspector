@@ -3,10 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using ApiInspector.History;
 using ApiInspector.Models;
 
-namespace ApiInspector.MainWindow
+namespace ApiInspector.History
 {
     /// <summary>
     ///     Interaction logic for HistoryPanel.xaml

@@ -1,4 +1,5 @@
-﻿using BOA.UnitTestHelper;
+﻿using ApiInspector.Tracing;
+using BOA.UnitTestHelper;
 
 namespace ApiInspector.Application
 {

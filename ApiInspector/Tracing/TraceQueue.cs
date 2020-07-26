@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ApiInspector.DataFlow
+namespace ApiInspector.Tracing
 {
     /// <summary>
     ///     The trace queue

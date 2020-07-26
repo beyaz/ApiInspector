@@ -1,7 +1,7 @@
 ﻿using BOA.Base;
 using BOA.Proxy.Kernel.Card;
 
-namespace ApiInspector.Invoking.Dynamic
+namespace ApiInspector.Invoking
 {
     class ServiceWrapper
     {

@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Application;
-using ApiInspector.DataFlow;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
+using ApiInspector.Tracing;
 
 namespace ApiInspector.MainWindow
 {

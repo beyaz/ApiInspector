@@ -1,7 +1,7 @@
 ﻿using System.Windows.Threading;
 using Notifications.Wpf;
 
-namespace ApiInspector.Application
+namespace ApiInspector.Tracing
 {
     /// <summary>
     ///     The error monitor

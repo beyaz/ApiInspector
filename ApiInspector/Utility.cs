@@ -2,6 +2,8 @@
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace ApiInspector
 {
@@ -25,6 +27,16 @@ namespace ApiInspector
     /// </summary>
     static class Utility
     {
+
+        /// <summary>
+        ///     Sets the text.
+        /// </summary>
+       public static void SetText(this RichTextBox richTextBox, string text)
+        {
+            richTextBox.Document.Blocks.Clear();
+            richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
+        }
+
         #region Public Properties
         /// <summary>
         ///     Gets all bindings.

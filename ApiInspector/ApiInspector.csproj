@@ -86,9 +86,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Application\ErrorMonitor.cs" />
+    <Compile Include="Tracing\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
-    <Compile Include="DataFlow\TraceQueue.cs" />
+    <Compile Include="Tracing\TraceQueue.cs" />
     <Compile Include="History\BoaDevDataSource.cs" />
     <Compile Include="History\FileDataSource.cs" />
     <Compile Include="InvocationInfoEditor\ViewModel.cs" />
@@ -115,8 +115,7 @@
     <Compile Include="Invoking\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />
-    <Compile Include="MainWindow\Extensions.cs" />
-    <Compile Include="MainWindow\TraceMonitor.cs" />
+    <Compile Include="Tracing\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="TypeMixer.cs" />
     <Compile Include="Utility.cs" />
