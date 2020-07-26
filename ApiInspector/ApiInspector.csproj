@@ -90,6 +90,7 @@
     <Compile Include="EndOfDay.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />
+    <Compile Include="Invoking\Invokers\InvocationParameterPreparer.cs" />
     <Compile Include="Tracing\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="Tracing\TraceQueue.cs" />

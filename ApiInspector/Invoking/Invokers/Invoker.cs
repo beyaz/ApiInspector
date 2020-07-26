@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using ApiInspector.Invoking.InstanceCreators;
-using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using static ApiInspector.Utility;
@@ -18,18 +17,6 @@ namespace ApiInspector.Invoking.Invokers
     {
         #region Fields
         readonly InstanceCreator InstanceCreator = new InstanceCreator();
-
-        /// <summary>
-        ///     The parameter adapters
-        /// </summary>
-        readonly IParameterAdapter[] parameterAdapters =
-        {
-            new ParameterAdapterForObjectType(),
-            new ParameterAdapterForStringType(),
-            new ParameterAdapterForObjectHelperType(),
-            new ParameterAdapterForSerializableTypes(),
-            new ParameterAdapterForConvertibleTypes()
-        };
 
         /// <summary>
         ///     The serializer
@@ -53,7 +40,7 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Public Methods
-        public static Type InitializeTargetType(InvocationInfo invocationInfo)
+        public static Type GetTargetType(InvocationInfo invocationInfo)
         {
             var assemblyName = invocationInfo.AssemblyName;
             var className    = invocationInfo.ClassName;
@@ -87,16 +74,15 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvokerInput input)
         {
-            var boaContext = input.BoaContext;
+            Func<Exception, InvokeOutput> fail = e => Fail(e, input);
 
             var invocationInfo = input.InvocationInfo;
-
 
             trace($"Started to search class: {invocationInfo.ClassName}");
 
             // INITIALIZE TargetType
             {
-                input.TargetType = InitializeTargetType(invocationInfo);
+                input.TargetType = GetTargetType(invocationInfo);
             }
 
             // TRY CALL AS EOD
@@ -119,12 +105,12 @@ namespace ApiInspector.Invoking.Invokers
                 }
                 catch (Exception e)
                 {
-                    return Fail(e, input.BoaContext);
+                    return fail(e);
                 }
 
                 if (methodInfo == null)
                 {
-                    return Fail(new Exception("Method not found."), input.BoaContext);
+                    return fail(new Exception("Method not found."));
                 }
 
                 input.MethodInfo = methodInfo;
@@ -134,64 +120,25 @@ namespace ApiInspector.Invoking.Invokers
 
             // PREPARE PARAMETERS
             {
+                var invocationParameterPreparer = new InvocationParameterPreparer(input.BoaContext, input.MethodInfo, input.Trace);
+
                 var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-                var invocationParameters = new List<object>();
-
-                var methodParametersInDotNet = input.MethodInfo.GetParameters();
-
-                var parameterAdapterInputs = new List<ParameterAdapterInput>();
-
-                for (var i = 0; i < methodParametersInDotNet.Length; i++)
+                try
                 {
-                    var parameterAdapterInput = new ParameterAdapterInput
-                    {
-                        InvocationValue = parameters[i].Value,
-                        ParameterInfo   = methodParametersInDotNet[i],
-                        BoaContext      = boaContext
-                    };
-                    parameterAdapterInputs.Add(parameterAdapterInput);
+                    input.InvocationParameters = invocationParameterPreparer.Prepare(parameters);
                 }
-
-                foreach (var parameterAdapterInput in parameterAdapterInputs)
+                catch (Exception exception)
                 {
-                    var stopwatch = Stopwatch.StartNew();
-
-                    var isAdapted = false;
-                    foreach (var parameterAdapter in parameterAdapters)
-                    {
-                        try
-                        {
-                            isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
-                        }
-                        catch (Exception exception)
-                        {
-                            return Fail(exception, boaContext);
-                        }
-
-                        if (isAdapted)
-                        {
-                            invocationParameters.Add(parameterAdapterInput.InvocationValue);
-                            break;
-                        }
-                    }
-
-                    if (isAdapted)
-                    {
-                        stopwatch.Stop();
-                        trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
-                        continue;
-                    }
-
-                    return Fail(new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}"), boaContext);
+                    return fail(exception);
                 }
-
-                input.InvocationParameters = invocationParameters;
             }
+
+            trace("Invoke started. Response waiting...");
 
             try
             {
-                trace("Invoke started. Response waiting...");
+               
 
                 var stopwatch = Stopwatch.StartNew();
 
@@ -201,13 +148,13 @@ namespace ApiInspector.Invoking.Invokers
 
                 trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
-                boaContext.Dispose();
+                input.BoaContext.Dispose();
 
                 return new InvokeOutput(null, response, serializer.SerializeToJsonDoNotIgnoreDefaultValues(response));
             }
             catch (Exception exception)
             {
-                return Fail(exception, boaContext);
+                return fail(exception);
             }
         }
         #endregion
@@ -258,9 +205,9 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Fails the specified exception.
         /// </summary>
-        InvokeOutput Fail(Exception exception, BOAContext boaContext)
+        InvokeOutput Fail(Exception exception, InvokerInput input)
         {
-            boaContext.Dispose();
+            input.BoaContext.Dispose();
 
             return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
         }
@@ -325,7 +272,7 @@ namespace ApiInspector.Invoking.Invokers
             }
             catch (Exception exception)
             {
-                return Fail(exception, input.BoaContext);
+                return Fail(exception, input);
             }
         }
         #endregion

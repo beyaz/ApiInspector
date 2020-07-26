@@ -35,7 +35,7 @@ namespace ApiInspector.Invoking
                 }
             };
 
-            var targetType = Invoker.InitializeTargetType(invocationInfo);
+            var targetType = Invoker.GetTargetType(invocationInfo);
 
             var invocationParameters = new List<object>
             {
