@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
-using ApiInspector.Models;
+﻿using ApiInspector.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static ApiInspector.DataFlow.DataKeys;

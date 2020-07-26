@@ -52,7 +52,7 @@ namespace ApiInspector.MainWindow
 
             traceMonitor.StartToMonitor();
 
-            Loaded += (s, e) => { historyPanel.InitializeHistoryPanel(); };
+            Loaded += (s, e) => { historyPanel.Refresh(); };
         }
         #endregion
 

@@ -42,19 +42,11 @@ namespace ApiInspector.MainWindow
 
         #region Public Methods
         /// <summary>
-        ///     Initializes the History panel.
+        ///     Refreshes this instance.
         /// </summary>
-        public void InitializeHistoryPanel()
+        public void Refresh()
         {
-            Trace("History is loading...");
-
-            historyListBox.ItemsSource = History.GetHistory();
-
-            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
-
-            view.Filter = HistoryFilter;
-
-            Trace("History is loaded.");
+            InitializeHistoryPanel();
         }
         #endregion
 
@@ -66,7 +58,7 @@ namespace ApiInspector.MainWindow
         {
             History.Remove(info);
 
-            InitializeHistoryPanel();
+            Refresh();
         }
 
         /// <summary>
@@ -114,6 +106,25 @@ namespace ApiInspector.MainWindow
             Context.Update(SelectedInvocationInfoKey, (InvocationInfo) historyListBox.SelectedItem);
         }
 
+        /// <summary>
+        ///     Initializes the History panel.
+        /// </summary>
+        void InitializeHistoryPanel()
+        {
+            Trace("History is loading...");
+
+            historyListBox.ItemsSource = History.GetHistory();
+
+            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+
+            view.Filter = HistoryFilter;
+
+            Trace("History is loaded.");
+        }
+
+        /// <summary>
+        ///     Traces the specified message.
+        /// </summary>
         void Trace(string message)
         {
             TraceKey[Context](message);
