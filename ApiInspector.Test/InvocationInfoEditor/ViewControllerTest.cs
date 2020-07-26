@@ -31,11 +31,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             var itemSourceList = ItemSourceListKey[context];
 
-            var viewData = new InvocationEditorViewModel
-            {
-                InvocationInfo = invocationInfo,
-                ItemSourceList = itemSourceList,
-            };
+            
 
             // On Search Directory Changed
             {

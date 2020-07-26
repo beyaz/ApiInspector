@@ -114,7 +114,6 @@
     <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
-    <Compile Include="InvocationInfoEditor\InvocationEditorViewModel.cs" />
     <Compile Include="Invoking\BOAContext.cs" />
     <Compile Include="Invoking\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />

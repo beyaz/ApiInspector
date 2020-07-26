@@ -38,7 +38,6 @@ namespace ApiInspector.MainWindow
 
             historyPanel.Context = context;
 
-            context.OnUpdate(SelectedInvocationInfoKey, () => SetSelectedInvocationInfo(SelectedInvocationInfoKey[context]));
             context.OnUpdate(SelectedInvocationInfoKey, () => currentInvocationInfo.OnInvocationInfoChanged());
             
             context.OnUpdate(SelectedInvocationInfoKey, RefreshResponseOutputFilePath);
@@ -84,13 +83,7 @@ namespace ApiInspector.MainWindow
             responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
         }
 
-        /// <summary>
-        ///     Sets the selected invocation information.
-        /// </summary>
-        void SetSelectedInvocationInfo(InvocationInfo invocationInfo)
-        {
-           Model.InvocationEditor.InvocationInfo = invocationInfo;
-        }
+      
         #endregion
 
         #region Methods

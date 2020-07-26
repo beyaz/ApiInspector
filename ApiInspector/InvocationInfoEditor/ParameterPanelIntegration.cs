@@ -32,6 +32,10 @@ namespace ApiInspector.InvocationInfoEditor
 
             panel.Children.Clear();
 
+            if (methodDefinition == null)
+            {
+                return;
+            }
             var len = methodDefinition.Parameters.Count;
 
             // arrange invocationParameters

@@ -9,10 +9,7 @@ namespace ApiInspector.MainWindow
     class MainWindowViewModel
     {
         #region Public Properties
-        /// <summary>
-        ///     Gets or sets the invocation editor.
-        /// </summary>
-        public InvocationEditorViewModel InvocationEditor { get; set; }
+       
 
         /// <summary>
         ///     Gets or sets the trace messages.

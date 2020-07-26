@@ -25,15 +25,7 @@ namespace ApiInspector.DataFlow
 
             MainWindowViewModelKey[context] = new MainWindowViewModel
             {
-                InvocationEditor = new InvocationEditorViewModel
-                {
-                    InvocationInfo = new InvocationInfo
-                    {
-                        AssemblySearchDirectory = AssemblySearchDirectories.serverBin
-                    },
-                    ItemSourceList = itemSourceList,
-                },
-                TraceMessages = traceMessages
+                 TraceMessages = traceMessages
             };
 
             TraceKey[context] = traceMessages.Add;
