@@ -12,9 +12,10 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     The model
         /// </summary>
-        readonly ViewModel model = new ViewModel
+        internal readonly ViewModel model = new ViewModel
         {
-            ItemSourceList = new ItemSourceList()
+            ItemSourceList = new ItemSourceList(),
+            InvocationInfo = new InvocationInfo()
         };
         #endregion
 
@@ -25,6 +26,8 @@ namespace ApiInspector.InvocationInfoEditor
         public View()
         {
             InitializeComponent();
+            Loaded += (s, e) => { UpdateSuggestions(); };
+            Loaded += (s, e) => { RegisterEvents(); };
         }
         #endregion
 
@@ -72,22 +75,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Connects the specified invocation information.
         /// </summary>
-        public void Connect(InvocationInfo invocationInfo, Action<string> traceHandler)
+        public void Connect(InvocationInfo invocationInfo)
         {
             model.InvocationInfo = invocationInfo;
-            model.Trace          = traceHandler;
 
-            RegisterEvents();
             UpdateSuggestions();
 
-            OnInvocationInfoChanged();
-        }
-
-        /// <summary>
-        ///     Called when [invocation information changed].
-        /// </summary>
-        public void OnInvocationInfoChanged()
-        {
             RefreshValues();
         }
         #endregion
@@ -204,11 +197,6 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            if (model == null)
-            {
-                return;
-            }
-
             var source = model.ItemSourceList;
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;

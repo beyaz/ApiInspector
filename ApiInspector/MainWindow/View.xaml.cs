@@ -39,6 +39,7 @@ namespace ApiInspector.MainWindow
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
             traceMonitor.StartToMonitor();
+            currentInvocationInfo.model.Trace = traceQueue.AddMessage;
 
             Loaded += (s, e) =>
             {
@@ -46,7 +47,7 @@ namespace ApiInspector.MainWindow
                 historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
                 historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
 
-                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo, traceQueue.AddMessage);
+                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo);
             };
         }
         #endregion
@@ -55,7 +56,7 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Gets the invocation information.
         /// </summary>
-        InvocationInfo InvocationInfo => historyPanel.SelectedInvocationInfo;
+        InvocationInfo InvocationInfo => currentInvocationInfo.model.InvocationInfo;
         #endregion
 
         #region Methods
@@ -66,7 +67,7 @@ namespace ApiInspector.MainWindow
         {
             if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
-                ((App) System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("Item should selected from history.");
+                ((App) System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
 
