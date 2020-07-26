@@ -1,7 +1,5 @@
 ﻿using System;
-using ApiInspector.DataFlow;
-using BOA.DataFlow;
-using static ApiInspector.DataFlow.DataKeys;
+using ApiInspector.Models;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -10,21 +8,16 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     public partial class View
     {
-
-        DataContext context;
+        readonly ViewModel model = new ViewModel
+        {
+            ItemSourceList = new ItemSourceList()
+        };
 
         #region Fields
         /// <summary>
         ///     The view controller
         /// </summary>
-        internal ViewController viewController => new ViewController(new ViewModel
-        {
-            Trace = ServiceKeys.TraceKey[context],
-            ItemSourceList = DataKeys.ItemSourceListKey[context],
-            InvocationInfo = DataKeys.SelectedInvocationInfoKey[context],
-            MethodDefinition = DataKeys.MethodDefinitionKey[context],
-            TypeDefinition = DataKeys.TypeDefinitionKey[context]
-        });
+        internal ViewController viewController => new ViewController(model);
         #endregion
 
         #region Constructors
@@ -37,14 +30,16 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
-        public void Connect(DataContext context)
+        public void Connect(InvocationInfo invocationInfo, Action<string> traceHandler)
         {
-            this.context = context;
+            model.InvocationInfo = invocationInfo;
+            model.Trace = traceHandler;
+
 
             RegisterEvents();
             UpdateSuggestions();
 
-            context.OnUpdate(SelectedInvocationInfoKey, OnInvocationInfoChanged);
+            OnInvocationInfoChanged();
         }
 
         #region Enums
@@ -86,7 +81,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void FireEvent(ViewEvents name)
         {
-            var invocationInfo = SelectedInvocationInfoKey[context];
+            var invocationInfo = model.InvocationInfo;
 
             switch (name)
             {
@@ -130,9 +125,9 @@ namespace ApiInspector.InvocationInfoEditor
 
                     viewController.OnMethodNameSelected();
 
-                    if (context.Contains(MethodDefinitionKey))
+                    if (model.MethodDefinition != null)
                     {
-                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, MethodDefinitionKey[context]);
+                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, model.MethodDefinition);
                     }
 
                     break;
@@ -149,12 +144,14 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            if (!context.Contains(SelectedInvocationInfoKey))
+            
+
+            var invocationInfo = model.InvocationInfo;
+
+            if (invocationInfo == null)
             {
                 return;
             }
-            var invocationInfo = SelectedInvocationInfoKey[context];
-
 
             environmentIntellisenseTextBox.SetValue(invocationInfo.Environment);
             assemblySearchDirectoryIntellisenseTextBox.SetValue(invocationInfo.AssemblySearchDirectory);
@@ -184,12 +181,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            if (context == null || !context.Contains(ItemSourceListKey))
+            if (model == null)
             {
                 return;
             }
 
-            var source = ItemSourceListKey[context];
+            var source = model.ItemSourceList;
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;

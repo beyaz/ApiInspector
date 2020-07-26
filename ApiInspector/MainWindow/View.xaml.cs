@@ -55,8 +55,8 @@ namespace ApiInspector.MainWindow
             {
                 historyPanel.Connect(TraceKey[context]);
                 historyPanel.SelectedInvocationChanged += () => context.Update(SelectedInvocationInfoKey, historyPanel.SelectedInvocationInfo);
+                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo,TraceKey[context]);
             };
-            Loaded += (s, e) => { currentInvocationInfo.Connect(context); };
         }
         #endregion
 
