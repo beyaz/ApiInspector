@@ -15,7 +15,7 @@ namespace ApiInspector.DataFlow
         {
             var context = new DataContext();
 
-            var traceMessages = new List<string>();
+            List<string> traceMessages = new List<string>();
 
             var itemSourceList = new ItemSourceList
             {
@@ -31,9 +31,32 @@ namespace ApiInspector.DataFlow
             TraceKey[context] = traceMessages.Add;
             HistoryServiceKey[context] = new DataSource();
             ItemSourceListKey[context] = itemSourceList;
+            TraceQueueKey[context] = new Tracer();
             
             
             return context;
         }
+    }
+
+    class Tracer
+    {
+        readonly List<string> traceMessages = new List<string>();
+
+        public void AddMessage(string message)
+        {
+            traceMessages.Add(message);
+        }
+
+        public void ClearQueue()
+        {
+            traceMessages.Clear();
+        }
+
+
+        public IReadOnlyList<string> GetAllMessagesInQueue()
+        {
+            return traceMessages;
+        }
+
     }
 }

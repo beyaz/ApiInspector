@@ -51,6 +51,9 @@ namespace ApiInspector.DataFlow
         ///     The trace key
         /// </summary>
         public static DataKey<Action<string>> TraceKey = new DataKey<Action<string>>(nameof(TraceKey));
+
+        public static DataKey<Tracer> TraceQueueKey = new DataKey<Tracer>("TraceQueue");
+        
         #endregion
     }
 }
