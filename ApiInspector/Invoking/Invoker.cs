@@ -89,12 +89,13 @@ namespace ApiInspector.Invoking
 
             var invocationInfo = input.InvocationInfo;
 
-            var methodName = invocationInfo.MethodName;
-            var className  = invocationInfo.ClassName;
 
-            trace($"Started to search class: {className}");
+            trace($"Started to search class: {invocationInfo.ClassName}");
 
-            input.TargetType = InitializeTargetType(invocationInfo);
+            // INITIALIZE TargetType
+            {
+                input.TargetType = InitializeTargetType(invocationInfo);
+            }
 
             // TRY CALL AS EOD
             {
@@ -105,7 +106,7 @@ namespace ApiInspector.Invoking
                 }
             }
 
-            trace($"Started to search method: {methodName}");
+            trace($"Started to search method: {invocationInfo.MethodName}");
 
             // INITIALIZE METHOD INFO
             {
