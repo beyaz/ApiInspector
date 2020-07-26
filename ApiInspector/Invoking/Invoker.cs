@@ -104,6 +104,8 @@ namespace ApiInspector.Invoking
                 return Fail(exception, input.BoaContext);
             }
         }
+
+        
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
@@ -120,7 +122,7 @@ namespace ApiInspector.Invoking
 
             var targetType = input.TargetType = InitializeTargetType(invocationInfo);
             
-            // E O D 
+            // TRY CALL AS EOD
             {
                 var output = TryToInvokeAsEndOfDay(input);
                 if (output != null)
@@ -132,28 +134,31 @@ namespace ApiInspector.Invoking
             trace($"Started to search method: {methodName}");
 
 
-
-            MethodInfo methodInfo = null;
-            try
+            // INITIALIZE METHOD INFO
             {
-                methodInfo = input.TargetType.GetMethod(input.InvocationInfo.MethodName, AllBindings);
-            }
-            catch (Exception e)
-            {
-                return Fail(e, input.BoaContext);
-            }
+                MethodInfo methodInfo = null;
+                try
+                {
+                    methodInfo = input.TargetType.GetMethod(input.InvocationInfo.MethodName, AllBindings);
+                }
+                catch (Exception e)
+                {
+                    return Fail(e, input.BoaContext);
+                }
 
-            if (methodInfo == null)
-            {
-                return Fail(new Exception("Method not found."), input.BoaContext);
+                if (methodInfo == null)
+                {
+                    return Fail(new Exception("Method not found."), input.BoaContext);
+                }
+
+                input.MethodInfo = methodInfo;
+
             }
-
-            input.MethodInfo = methodInfo;
-
 
 
 
             trace("Preparing invocation parameters");
+
             var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
             var invocationParameters = new List<object>();
@@ -207,6 +212,7 @@ namespace ApiInspector.Invoking
             }
 
             input.InvocationParameters = invocationParameters;
+
             try
             {
                 trace("Invoke started. Response waiting...");
