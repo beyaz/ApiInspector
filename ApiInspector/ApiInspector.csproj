@@ -44,9 +44,6 @@
     <Reference Include="BOA.Card.Definitions">
       <HintPath>..\..\..\BOA\Server\bin\BOA.Card.Definitions.dll</HintPath>
     </Reference>
-    <Reference Include="BOA.Card.Services.CreditCard.Lifecycle">
-      <HintPath>d:\BOA\Server\bin\BOA.Card.Services.CreditCard.Lifecycle.dll</HintPath>
-    </Reference>
     <Reference Include="BOA.Card.Contracts">
       <HintPath>d:\BOA\Server\bin\BOA.Card.Contracts.dll</HintPath>
     </Reference>
@@ -108,8 +105,6 @@
     <Compile Include="Invoking\ParameterAdapterForStringType.cs" />
     <Compile Include="Invoking\ParameterAdapterInput.cs" />
     <Compile Include="Invoking\Wrapper.cs" />
-    <Compile Include="DataFlow\DataContextBuilder.cs" />
-    <Compile Include="DataFlow\DataKeys.cs" />
     <Compile Include="History\HistoryPanel.xaml.cs">
       <DependentUpon>HistoryPanel.xaml</DependentUpon>
     </Compile>
@@ -158,9 +153,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BOA.DataFlow">
-      <Version>1.0.0.8</Version>
-    </PackageReference>
     <PackageReference Include="BOA.UnitTestHelper">
       <Version>1.0.0.11</Version>
     </PackageReference>

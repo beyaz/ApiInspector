@@ -8,8 +8,6 @@ using ApiInspector.DataFlow;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
-using BOA.DataFlow;
-using static ApiInspector.DataFlow.DataKeys;
 
 namespace ApiInspector.MainWindow
 {
@@ -19,15 +17,11 @@ namespace ApiInspector.MainWindow
     public partial class View
     {
         #region Fields
-        /// <summary>
-        ///     The context
-        /// </summary>
-        readonly DataContext context = new DataContextBuilder().Build();
-
+       
 
          readonly TraceQueue traceQueue = new TraceQueue();
 
-        InvocationInfo InvocationInfo => SelectedInvocationInfoKey[context];
+         InvocationInfo InvocationInfo => historyPanel.SelectedInvocationInfo;
         #endregion
 
         #region Constructors
@@ -42,9 +36,6 @@ namespace ApiInspector.MainWindow
 
             
             
-            context.OnUpdate(SelectedInvocationInfoKey, RefreshResponseOutputFilePath);
-            context.OnUpdate(SelectedInvocationInfoKey, ()=>invokingResponseView.SetText(string.Empty));
-            
             
 
             
@@ -56,16 +47,14 @@ namespace ApiInspector.MainWindow
             Loaded += (s, e) =>
             {
                 historyPanel.Connect(traceQueue.AddMessage);
-                historyPanel.SelectedInvocationChanged += () => context.Update(SelectedInvocationInfoKey, historyPanel.SelectedInvocationInfo);
+                historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
+                historyPanel.SelectedInvocationChanged += ()=>invokingResponseView.SetText(string.Empty);
+
                 historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo,traceQueue.AddMessage);
             };
         }
         #endregion
 
-        public void Connect(DataContext context)
-        {
-            
-        }
 
         #region Properties
         /// <summary>
@@ -80,7 +69,7 @@ namespace ApiInspector.MainWindow
 
         void RefreshResponseOutputFilePath()
         {
-            var invocationInfo = SelectedInvocationInfoKey[context];
+            var invocationInfo = InvocationInfo;
             if (invocationInfo == null)
             {
                 responseOutputFilePath.Text = string.Empty;
@@ -141,13 +130,12 @@ namespace ApiInspector.MainWindow
             traceQueue.AddMessage(message);
         }
 
-        bool anyItemSelectedInHistoryPanel => context.Contains(SelectedInvocationInfoKey);
         /// <summary>
         ///     Handles the OnTextChanged event of the ResponseOutputFilePath control.
         /// </summary>
         void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!anyItemSelectedInHistoryPanel)
+            if (InvocationInfo == null)
             {
                 return;
             }
