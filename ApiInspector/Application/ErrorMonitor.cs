@@ -69,7 +69,7 @@ namespace ApiInspector.Application
         ///     Called when [dispatcher unhandled exception].
         /// </summary>
         void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
+        { 
             ShowErrorNotification(e.Exception.Message);
 
             // Setting 'Handled' to 'true' will prevent the application from terminating.

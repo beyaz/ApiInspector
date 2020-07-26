@@ -36,25 +36,31 @@ namespace ApiInspector.MainWindow
         {
             InitializeComponent();
 
-            historyPanel.Context = context;
+            
 
-            context.OnUpdate(SelectedInvocationInfoKey, () => currentInvocationInfo.OnInvocationInfoChanged());
+            
             
             context.OnUpdate(SelectedInvocationInfoKey, RefreshResponseOutputFilePath);
             context.OnUpdate(SelectedInvocationInfoKey, ()=>invokingResponseView.SetText(string.Empty));
             
             
 
-            currentInvocationInfo.Context = context;
+            
             currentInvocationInfo.viewController.context = context;
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, TraceQueueKey[context]);
 
             traceMonitor.StartToMonitor();
 
-            Loaded += (s, e) => { historyPanel.Refresh(); };
+            Loaded += (s, e) => { historyPanel.Connect(context); };
+            Loaded += (s, e) => { currentInvocationInfo.Connect(context); };
         }
         #endregion
+
+        public void Connect(DataContext context)
+        {
+            
+        }
 
         #region Properties
         /// <summary>
@@ -130,11 +136,17 @@ namespace ApiInspector.MainWindow
             TraceKey[context](message);
         }
 
+        bool anyItemSelectedInHistoryPanel => context.Contains(SelectedInvocationInfoKey);
         /// <summary>
         ///     Handles the OnTextChanged event of the ResponseOutputFilePath control.
         /// </summary>
         void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            if (!anyItemSelectedInHistoryPanel)
+            {
+                return;
+            }
+
             InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 

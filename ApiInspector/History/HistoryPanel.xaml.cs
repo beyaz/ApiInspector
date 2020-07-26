@@ -16,6 +16,13 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class HistoryPanel
     {
+        #region Fields
+        /// <summary>
+        ///     The context
+        /// </summary>
+        DataContext context;
+        #endregion
+
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="HistoryPanel" /> class.
@@ -26,21 +33,20 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        #region Public Properties
-        /// <summary>
-        ///     The Context
-        /// </summary>
-        public DataContext Context { get; set; }
-        #endregion
-
         #region Properties
         /// <summary>
         ///     The History
         /// </summary>
-        DataSource History => HistoryServiceKey[Context];
+        DataSource History => HistoryServiceKey[context];
         #endregion
 
         #region Public Methods
+        public void Connect(DataContext dataContext)
+        {
+            context = dataContext;
+            Refresh();
+        }
+
         /// <summary>
         ///     Refreshes this instance.
         /// </summary>
@@ -103,7 +109,7 @@ namespace ApiInspector.MainWindow
         {
             Trace("History item clicked.");
 
-            Context.Update(SelectedInvocationInfoKey, (InvocationInfo) historyListBox.SelectedItem);
+            context.Update(SelectedInvocationInfoKey, (InvocationInfo) historyListBox.SelectedItem);
         }
 
         /// <summary>
@@ -127,7 +133,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void Trace(string message)
         {
-            TraceKey[Context](message);
+            TraceKey[context](message);
         }
         #endregion
     }

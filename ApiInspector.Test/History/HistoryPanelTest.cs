@@ -17,13 +17,14 @@ namespace ApiInspector.History
         {
             var context = new DataContextBuilder().Build();
 
-            var historyPanel = new HistoryPanel {Context = context};
+            var historyPanel = new HistoryPanel();
+            
 
-            // should load histories when refresh method called
+            // should load histories when context connected
             {
                 historyPanel.historyListBox.ItemsSource.Should().BeNullOrEmpty();
 
-                historyPanel.Refresh();
+                historyPanel.Connect(context);
 
                 historyPanel.historyListBox.ItemsSource.Should().NotBeNullOrEmpty();
             }

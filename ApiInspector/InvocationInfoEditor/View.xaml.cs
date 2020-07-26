@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using BOA.DataFlow;
 using static ApiInspector.DataFlow.DataKeys;
 
@@ -11,7 +10,7 @@ namespace ApiInspector.InvocationInfoEditor
     public partial class View
     {
 
-        public DataContext Context { get; set; }
+        DataContext context;
 
         #region Fields
         /// <summary>
@@ -27,11 +26,19 @@ namespace ApiInspector.InvocationInfoEditor
         public View()
         {
             InitializeComponent();
-            
-            Loaded += RegisterEvents;
-            Loaded += (s, e) => { UpdateSuggestions(); };
         }
         #endregion
+
+        public void Connect(DataContext context)
+        {
+            this.context = context;
+            viewController.context = context;
+
+            RegisterEvents();
+            UpdateSuggestions();
+
+            context.OnUpdate(SelectedInvocationInfoKey, OnInvocationInfoChanged);
+        }
 
         #region Enums
         enum ViewEvents
@@ -72,7 +79,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void FireEvent(ViewEvents name)
         {
-            var invocationInfo = SelectedInvocationInfoKey[Context];
+            var invocationInfo = SelectedInvocationInfoKey[context];
 
             switch (name)
             {
@@ -116,9 +123,9 @@ namespace ApiInspector.InvocationInfoEditor
 
                     viewController.OnMethodNameSelected();
 
-                    if (Context.Contains(MethodDefinitionKey))
+                    if (context.Contains(MethodDefinitionKey))
                     {
-                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, MethodDefinitionKey[Context]);
+                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, MethodDefinitionKey[context]);
                     }
 
                     break;
@@ -135,11 +142,11 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            if (!Context.Contains(SelectedInvocationInfoKey))
+            if (!context.Contains(SelectedInvocationInfoKey))
             {
                 return;
             }
-            var invocationInfo = SelectedInvocationInfoKey[Context];
+            var invocationInfo = SelectedInvocationInfoKey[context];
 
 
             environmentIntellisenseTextBox.SetValue(invocationInfo.Environment);
@@ -152,7 +159,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Registers the events.
         /// </summary>
-        void RegisterEvents(object sender, RoutedEventArgs routedEventArgs)
+        void RegisterEvents()
         {
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnAssemblySearchDirectoryChanged); };
 
@@ -170,12 +177,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            if (Context == null || !Context.Contains(ItemSourceListKey))
+            if (context == null || !context.Contains(ItemSourceListKey))
             {
                 return;
             }
 
-            var source = ItemSourceListKey[Context];
+            var source = ItemSourceListKey[context];
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;
