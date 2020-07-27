@@ -6,6 +6,7 @@ using System.Reflection;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
+using ApiInspector.Tracing;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking.Invokers
@@ -19,26 +20,28 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     The instance creator
         /// </summary>
-        readonly InstanceCreator InstanceCreator = new InstanceCreator();
+        readonly InstanceCreator instanceCreator;
 
         /// <summary>
         ///     The serializer
         /// </summary>
-        readonly Serializer serializer = new Serializer();
+        readonly Serializer serializer;
 
         /// <summary>
-        ///     The trace
+        ///     The tracer
         /// </summary>
-        readonly Action<string> trace;
+        readonly ITracer tracer;
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="Invoker" /> class.
         /// </summary>
-        public Invoker(Action<string> trace)
+        public Invoker(ITracer tracer, Serializer serializer, InstanceCreator instanceCreator)
         {
-            this.trace = trace;
+            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.serializer      = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            this.instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
         }
         #endregion
 
@@ -73,7 +76,7 @@ namespace ApiInspector.Invoking.Invokers
         {
             var boaContext = new BOAContext(invocationInfo.Environment);
 
-            var input = new InvokerInput(invocationInfo, trace, boaContext);
+            var input = new InvokerInput(invocationInfo, Trace, boaContext);
 
             return Invoke(input);
         }
@@ -87,7 +90,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var invocationInfo = input.InvocationInfo;
 
-            trace($"Started to search class: {invocationInfo.ClassName}");
+            Trace($"Started to search class: {invocationInfo.ClassName}");
 
             // INITIALIZE TargetType
             {
@@ -103,7 +106,7 @@ namespace ApiInspector.Invoking.Invokers
                 }
             }
 
-            trace($"Started to search method: {invocationInfo.MethodName}");
+            Trace($"Started to search method: {invocationInfo.MethodName}");
 
             // INITIALIZE METHOD INFO
             {
@@ -125,7 +128,7 @@ namespace ApiInspector.Invoking.Invokers
                 input.MethodInfo = methodInfo;
             }
 
-            trace("Preparing invocation parameters");
+            Trace("Preparing invocation parameters");
 
             // PREPARE PARAMETERS
             {
@@ -143,7 +146,7 @@ namespace ApiInspector.Invoking.Invokers
                 }
             }
 
-            trace("Invoke started. Response waiting...");
+            Trace("Invoke started. Response waiting...");
 
             try
             {
@@ -153,7 +156,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 stopwatch.Stop();
 
-                trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+                Trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
                 input.BoaContext.Dispose();
 
@@ -252,6 +255,14 @@ namespace ApiInspector.Invoking.Invokers
         }
 
         /// <summary>
+        ///     The trace
+        /// </summary>
+        void Trace(string message)
+        {
+            tracer.Trace(message);
+        }
+
+        /// <summary>
         ///     Tries the invoke non static method.
         /// </summary>
         InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
@@ -266,7 +277,7 @@ namespace ApiInspector.Invoking.Invokers
                 return null;
             }
 
-            var instance = InstanceCreator.Create(targetType, boaContext);
+            var instance = instanceCreator.Create(targetType, boaContext);
 
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 

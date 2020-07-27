@@ -5,9 +5,11 @@ using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Application;
 using ApiInspector.History;
+using ApiInspector.Invoking;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
+using Ninject;
 
 namespace ApiInspector.MainWindow
 {
@@ -87,9 +89,15 @@ namespace ApiInspector.MainWindow
 
             Trace("------------- EXECUTE STARTED -----------------");
 
-            var invoker = new Invoker(Trace);
+            InvokeOutput invokerOutput = null;
 
-            var invokerOutput = invoker.Invoke(invocationInfo);
+            using (var injector = new Injector(traceQueue))
+            {
+                var invoker = injector.Get<Invoker>();
+
+                invokerOutput = invoker.Invoke(invocationInfo);
+            }
+
 
             UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
 

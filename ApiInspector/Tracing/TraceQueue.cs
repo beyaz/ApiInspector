@@ -3,9 +3,22 @@
 namespace ApiInspector.Tracing
 {
     /// <summary>
+    ///     The tracer
+    /// </summary>
+    public interface ITracer
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Traces the specified message.
+        /// </summary>
+        void Trace(string message);
+        #endregion
+    }
+
+    /// <summary>
     ///     The trace queue
     /// </summary>
-    class TraceQueue
+    class TraceQueue : ITracer
     {
         #region Fields
         /// <summary>
@@ -37,6 +50,14 @@ namespace ApiInspector.Tracing
         public IReadOnlyList<string> GetAllMessagesInQueue()
         {
             return traceMessages.ToArray();
+        }
+
+        /// <summary>
+        ///     Traces the specified message.
+        /// </summary>
+        public void Trace(string message)
+        {
+            AddMessage(message);
         }
         #endregion
     }
