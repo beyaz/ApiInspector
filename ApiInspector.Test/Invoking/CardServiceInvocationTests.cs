@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Invoking.Invokers;
+using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 using BOA.Card.Contracts.CreditCard.Limit;
@@ -7,6 +8,7 @@ using BOA.Common.Types;
 using BOA.UnitTestHelper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Ninject;
 
 namespace ApiInspector.Invoking
 {
@@ -53,9 +55,16 @@ namespace ApiInspector.Invoking
             };
             var input = new CardServiceMethodInvokerInput(targetType, invocationInfo.MethodName, invocationParameters, message => { }, new BOAContext(new EnvironmentInfo(true,false), new TraceQueue()));
 
-            var cardServiceMethodInvoker = new CardServiceMethodInvoker();
+            GenericResponse<GetCardAvailableLimitResponse> response = null;
 
-            var response = (GenericResponse<GetCardAvailableLimitResponse>) cardServiceMethodInvoker.Invoke(input);
+            using (var injector = new Injector(new TraceQueue(),"dev"))
+            {
+                var cardServiceMethodInvoker = injector.Get<CardServiceMethodInvoker>();
+                response = (GenericResponse<GetCardAvailableLimitResponse>) cardServiceMethodInvoker.Invoke(input);
+            }
+
+
+            
 
             response.Success.Should().BeTrue();
 

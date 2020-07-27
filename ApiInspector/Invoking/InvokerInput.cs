@@ -14,20 +14,13 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="InvokerInput" /> class.
         /// </summary>
-        public InvokerInput(InvocationInfo invocationInfo, Action<string> trace, BOAContext boaContext)
+        public InvokerInput(InvocationInfo invocationInfo)
         {
             InvocationInfo = invocationInfo;
-            Trace          = trace;
-            BoaContext     = boaContext;
         }
         #endregion
 
         #region Public Properties
-        /// <summary>
-        ///     Gets the boa context.
-        /// </summary>
-        public BOAContext BoaContext { get; }
-
         /// <summary>
         ///     Gets the invocation information.
         /// </summary>
@@ -48,10 +41,6 @@ namespace ApiInspector.Invoking
         /// </summary>
         public Type TargetType { get; set; }
 
-        /// <summary>
-        ///     Gets the trace.
-        /// </summary>
-        public Action<string> Trace { get; }
         #endregion
     }
 }

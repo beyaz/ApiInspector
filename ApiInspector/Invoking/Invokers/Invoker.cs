@@ -18,9 +18,29 @@ namespace ApiInspector.Invoking.Invokers
     {
         #region Fields
         /// <summary>
+        ///     The boa context
+        /// </summary>
+        readonly BOAContext boaContext;
+
+        /// <summary>
+        ///     The card service method invoker
+        /// </summary>
+        readonly CardServiceMethodInvoker cardServiceMethodInvoker;
+
+        /// <summary>
+        ///     The environment information
+        /// </summary>
+        readonly EnvironmentInfo environmentInfo;
+
+        /// <summary>
         ///     The instance creator
         /// </summary>
         readonly InstanceCreator instanceCreator;
+
+        /// <summary>
+        ///     The invocation parameter preparer
+        /// </summary>
+        readonly InvocationParameterPreparer invocationParameterPreparer;
 
         /// <summary>
         ///     The serializer
@@ -37,13 +57,22 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Initializes a new instance of the <see cref="Invoker" /> class.
         /// </summary>
-        public Invoker(ITracer tracer, Serializer serializer, InstanceCreator instanceCreator, BOAContext boaContext,EnvironmentInfo environmentInfo)
+        public Invoker(ITracer                     tracer,
+                       Serializer                  serializer,
+                       InstanceCreator             instanceCreator,
+                       BOAContext                  boaContext,
+                       EnvironmentInfo             environmentInfo,
+                       CardServiceMethodInvoker    cardServiceMethodInvoker,
+                       InvocationParameterPreparer invocationParameterPreparer
+        )
         {
-            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.serializer      = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            this.instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
-            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
-            this.environmentInfo = environmentInfo?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.tracer                      = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.serializer                  = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            this.instanceCreator             = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
+            this.boaContext                  = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
+            this.environmentInfo             = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.cardServiceMethodInvoker    = cardServiceMethodInvoker ?? throw new ArgumentNullException(nameof(cardServiceMethodInvoker));
+            this.invocationParameterPreparer = invocationParameterPreparer ?? throw new ArgumentNullException(nameof(invocationParameterPreparer));
         }
         #endregion
 
@@ -71,17 +100,12 @@ namespace ApiInspector.Invoking.Invokers
             return targetType;
         }
 
-        readonly BOAContext boaContext;
-        readonly EnvironmentInfo environmentInfo;
-
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-           
-
-            var input = new InvokerInput(invocationInfo, Trace, boaContext);
+            var input = new InvokerInput(invocationInfo);
 
             return Invoke(input);
         }
@@ -137,13 +161,11 @@ namespace ApiInspector.Invoking.Invokers
 
             // PREPARE PARAMETERS
             {
-                var invocationParameterPreparer = new InvocationParameterPreparer(input.BoaContext, input.MethodInfo, input.Trace);
-
                 var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
                 try
                 {
-                    input.InvocationParameters = invocationParameterPreparer.Prepare(parameters);
+                    input.InvocationParameters = invocationParameterPreparer.Prepare(parameters, input.MethodInfo);
                 }
                 catch (Exception exception)
                 {
@@ -163,7 +185,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 Trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
-                input.BoaContext.Dispose();
+                boaContext.Dispose();
 
                 return new InvokeOutput(null, response, serializer.SerializeToJsonDoNotIgnoreDefaultValues(response));
             }
@@ -181,31 +203,6 @@ namespace ApiInspector.Invoking.Invokers
         static InvokeOutput Success(object response)
         {
             return new InvokeOutput(response);
-        }
-
-        /// <summary>
-        ///     Tries the invoke as card service method.
-        /// </summary>
-        static InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
-        {
-            var targetType           = input.TargetType;
-            var invocationParameters = input.InvocationParameters;
-            var boaContext           = input.BoaContext;
-            var methodName           = input.InvocationInfo.MethodName;
-            var trace                = input.Trace;
-
-            if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
-            {
-                return null;
-            }
-
-            var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters, trace, boaContext);
-
-            var cardServiceMethodInvoker = new CardServiceMethodInvoker();
-
-            var response = cardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput);
-
-            return Success(response);
         }
 
         /// <summary>
@@ -231,7 +228,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         InvokeOutput Fail(Exception exception, InvokerInput input)
         {
-            input.BoaContext.Dispose();
+            boaContext.Dispose();
 
             return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
         }
@@ -265,6 +262,27 @@ namespace ApiInspector.Invoking.Invokers
         void Trace(string message)
         {
             tracer.Trace(message);
+        }
+
+        /// <summary>
+        ///     Tries the invoke as card service method.
+        /// </summary>
+        InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
+        {
+            var targetType           = input.TargetType;
+            var invocationParameters = input.InvocationParameters;
+            var methodName           = input.InvocationInfo.MethodName;
+
+            if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
+            {
+                return null;
+            }
+
+            var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters, Trace, boaContext);
+
+            var response = cardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput);
+
+            return Success(response);
         }
 
         /// <summary>

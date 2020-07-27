@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
+using ApiInspector.Tracing;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -19,11 +20,6 @@ namespace ApiInspector.Invoking.Invokers
         readonly BOAContext boaContext;
 
         /// <summary>
-        ///     The method information
-        /// </summary>
-        readonly MethodInfo methodInfo;
-
-        /// <summary>
         ///     The parameter adapters
         /// </summary>
         readonly IParameterAdapter[] parameterAdapters =
@@ -36,20 +32,19 @@ namespace ApiInspector.Invoking.Invokers
         };
 
         /// <summary>
-        ///     The trace
+        ///     The tracer
         /// </summary>
-        readonly Action<string> trace;
+        readonly ITracer tracer;
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="InvocationParameterPreparer" /> class.
         /// </summary>
-        public InvocationParameterPreparer(BOAContext boaContext, MethodInfo methodInfo, Action<string> trace)
+        public InvocationParameterPreparer(BOAContext boaContext, ITracer tracer)
         {
-            this.boaContext = boaContext;
-            this.methodInfo = methodInfo;
-            this.trace      = trace;
+            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
+            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -57,7 +52,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Prepares the specified parameters.
         /// </summary>
-        public List<object> Prepare(List<InvocationMethodParameterInfo> parameters)
+        public List<object> Prepare(List<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo)
         {
             var invocationParameters = new List<object>();
 
@@ -94,7 +89,7 @@ namespace ApiInspector.Invoking.Invokers
                 if (isAdapted)
                 {
                     stopwatch.Stop();
-                    trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+                    tracer.Trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
                     continue;
                 }
 
