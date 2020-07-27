@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
+using ApiInspector.Tracing;
 using BOA.Card.Contracts.CreditCard.Limit;
 using BOA.Common.Types;
 using BOA.UnitTestHelper;
@@ -50,7 +51,7 @@ namespace ApiInspector.Invoking
                     CardRefNumber = "1"
                 }
             };
-            var input = new CardServiceMethodInvokerInput(targetType, invocationInfo.MethodName, invocationParameters, message => { }, new BOAContext("dev"));
+            var input = new CardServiceMethodInvokerInput(targetType, invocationInfo.MethodName, invocationParameters, message => { }, new BOAContext("dev",new TraceQueue()));
 
             var cardServiceMethodInvoker = new CardServiceMethodInvoker();
 
