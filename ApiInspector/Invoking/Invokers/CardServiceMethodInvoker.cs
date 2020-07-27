@@ -98,7 +98,7 @@ namespace ApiInspector.Invoking.Dynamic
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
-            trace("Creating ObjectHelper...");
+            trace($"Creating ObjectHelper...");
             var wrapMethodParameters = new List<object>
             {
                 boaContext.GetObjectHelper()

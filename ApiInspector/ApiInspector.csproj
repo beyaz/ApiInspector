@@ -88,6 +88,7 @@
     </ApplicationDefinition>
     <Compile Include="AssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
+    <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />
     <Compile Include="Invoking\Invokers\CardServiceMethodInvokerInput.cs" />

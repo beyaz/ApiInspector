@@ -20,6 +20,7 @@ namespace ApiInspector.InvocationInfoEditor
         ///     The serializer
         /// </summary>
         readonly Serializer serializer = new Serializer();
+        readonly TypeFinder TypeFinder = new TypeFinder();
         #endregion
 
         #region Public Methods
@@ -113,7 +114,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
                 {
-                    var parameterType = Type.GetType(definition.ParameterType.FullName);
+                    var parameterType = TypeFinder.Find(definition.ParameterType.FullName);
                     if (parameterType != null)
                     {
                         parameterInfo.Value = serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
