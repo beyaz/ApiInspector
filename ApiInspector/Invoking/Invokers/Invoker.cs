@@ -74,7 +74,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-            var boaContext = new BOAContext(invocationInfo.Environment);
+            var boaContext = new BOAContext(invocationInfo.Environment,tracer);
 
             var input = new InvokerInput(invocationInfo, Trace, boaContext);
 

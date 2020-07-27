@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ApiInspector.Tracing;
 using BOA.Base;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
@@ -18,6 +19,8 @@ namespace ApiInspector.Invoking
         /// </summary>
         readonly string targetEnvironment;
 
+        readonly ITracer tracer;
+
         /// <summary>
         ///     The object helper
         /// </summary>
@@ -28,9 +31,10 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(string targetEnvironment)
+        public BOAContext(string targetEnvironment, ITracer tracer)
         {
-            this.targetEnvironment = targetEnvironment;
+            this.targetEnvironment = targetEnvironment?? throw new ArgumentNullException(nameof(targetEnvironment));
+            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -84,14 +88,14 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Creates the object helper.
         /// </summary>
-        static ObjectHelper CreateObjectHelper(string targetEnvironment)
+        ObjectHelper CreateObjectHelper(string targetEnvironment)
         {
             var testContext = CreateTestContext(targetEnvironment);
 
-            ObjectHelper objectHelper = null;
+            ObjectHelper instance = null;
             if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                objectHelper = testContext.objectHelper;
+                instance = testContext.objectHelper;
 
                 //objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
                 //{
@@ -100,16 +104,21 @@ namespace ApiInspector.Invoking
             }
             else if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                objectHelper = testContext.objectHelper;
+                instance = testContext.objectHelper;
 
-                objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>();
+                instance.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
+                {
+                    {Databases.BOACard, @"Data Source=srvxtest\zumrut;Initial Catalog=BOACard2;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
+                };
+
+                tracer.Trace(@"BOACard cconnection is: srvxtest\zumrut;Initial Catalog=BOACard2");
             }
             else
             {
                 throw new NotImplementedException(nameof(targetEnvironment));
             }
 
-            return objectHelper;
+            return instance;
         }
 
         /// <summary>

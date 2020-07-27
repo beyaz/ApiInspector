@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Invoking.Invokers;
+using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using ApiInspector.TestData;
+using ApiInspector.Tracing;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Ninject;
 
 namespace ApiInspector.Invoking
 {
@@ -115,7 +118,12 @@ namespace ApiInspector.Invoking
         {
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
-            var output = new Invoker(message => { }).Invoke(invocationInfo);
+            InvokeOutput output = null;
+            using (var injector = new Injector(new TraceQueue()))
+            {
+                var invoker = injector.Get<Invoker>();
+                output = invoker.Invoke(invocationInfo);
+            }
 
             output.ExecutionResponse.Should().Be(expectedResponse);
         }
