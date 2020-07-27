@@ -37,11 +37,13 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Initializes a new instance of the <see cref="Invoker" /> class.
         /// </summary>
-        public Invoker(ITracer tracer, Serializer serializer, InstanceCreator instanceCreator)
+        public Invoker(ITracer tracer, Serializer serializer, InstanceCreator instanceCreator, BOAContext boaContext,EnvironmentInfo environmentInfo)
         {
             this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.serializer      = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.instanceCreator = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
+            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
+            this.environmentInfo = environmentInfo?? throw new ArgumentNullException(nameof(environmentInfo));
         }
         #endregion
 
@@ -69,12 +71,15 @@ namespace ApiInspector.Invoking.Invokers
             return targetType;
         }
 
+        readonly BOAContext boaContext;
+        readonly EnvironmentInfo environmentInfo;
+
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-            var boaContext = new BOAContext(invocationInfo.Environment,tracer);
+           
 
             var input = new InvokerInput(invocationInfo, Trace, boaContext);
 
@@ -269,7 +274,6 @@ namespace ApiInspector.Invoking.Invokers
         {
             var targetType           = input.TargetType;
             var invocationParameters = input.InvocationParameters;
-            var boaContext           = input.BoaContext;
             var methodInfo           = input.MethodInfo;
 
             if (methodInfo.IsStatic)
@@ -300,7 +304,7 @@ namespace ApiInspector.Invoking.Invokers
 
             try
             {
-                BOAContext.CreateTestContext(invocationInfo.Environment).AuthenticateUser();
+                BOAContext.CreateTestContext(environmentInfo).AuthenticateUser();
 
                 new EndOfDayInvoker().Invoke(input.TargetType);
 

@@ -15,10 +15,13 @@ namespace ApiInspector.Invoking
     {
         #region Fields
         /// <summary>
-        ///     The target environment
+        ///     The environment information
         /// </summary>
-        readonly string targetEnvironment;
+        readonly EnvironmentInfo environmentInfo;
 
+        /// <summary>
+        ///     The tracer
+        /// </summary>
         readonly ITracer tracer;
 
         /// <summary>
@@ -31,32 +34,14 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(string targetEnvironment, ITracer tracer)
+        public BOAContext(EnvironmentInfo environmentInfo, ITracer tracer)
         {
-            this.targetEnvironment = targetEnvironment?? throw new ArgumentNullException(nameof(targetEnvironment));
-            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.environmentInfo = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
         #region Public Methods
-        /// <summary>
-        ///     Creates the test context.
-        /// </summary>
-        public static BOATestContext CreateTestContext(string targetEnvironment)
-        {
-            if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                return new BOATestContextDev();
-            }
-
-            if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                return new BOATestContextTest();
-            }
-
-            throw new NotImplementedException(nameof(targetEnvironment));
-        }
-
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
@@ -88,12 +73,12 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Creates the object helper.
         /// </summary>
-        ObjectHelper CreateObjectHelper(string targetEnvironment)
+        ObjectHelper CreateObjectHelper()
         {
-            var testContext = CreateTestContext(targetEnvironment);
+            var testContext = CreateTestContext(environmentInfo);
 
             ObjectHelper instance = null;
-            if (targetEnvironment.IndexOf("dev", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (environmentInfo.IsDev)
             {
                 instance = testContext.objectHelper;
 
@@ -102,7 +87,7 @@ namespace ApiInspector.Invoking
                 //    {Databases.BanksoftCC, @"Data Source=srvxdev\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
                 //};
             }
-            else if (targetEnvironment.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+            else if (environmentInfo.IsTest)
             {
                 instance = testContext.objectHelper;
 
@@ -115,10 +100,28 @@ namespace ApiInspector.Invoking
             }
             else
             {
-                throw new NotImplementedException(nameof(targetEnvironment));
+                throw new NotImplementedException(nameof(environmentInfo));
             }
 
             return instance;
+        }
+
+        /// <summary>
+        ///     Creates the test context.
+        /// </summary>
+        public static BOATestContext CreateTestContext(EnvironmentInfo environmentInfo)
+        {
+            if (environmentInfo.IsDev)
+            {
+                return new BOATestContextDev();
+            }
+
+            if (environmentInfo.IsTest)
+            {
+                return new BOATestContextTest();
+            }
+
+            throw new NotImplementedException(nameof(environmentInfo));
         }
 
         /// <summary>
@@ -126,7 +129,7 @@ namespace ApiInspector.Invoking
         /// </summary>
         void Initialize()
         {
-            objectHelper = CreateObjectHelper(targetEnvironment);
+            objectHelper = CreateObjectHelper();
 
             objectHelper.Context.DBLayer.BeginTransaction();
 

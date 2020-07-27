@@ -119,7 +119,7 @@ namespace ApiInspector.Invoking
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
             InvokeOutput output = null;
-            using (var injector = new Injector(new TraceQueue()))
+            using (var injector = new Injector(new TraceQueue(),string.Empty))
             {
                 var invoker = injector.Get<Invoker>();
                 output = invoker.Invoke(invocationInfo);

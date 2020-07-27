@@ -51,7 +51,7 @@ namespace ApiInspector.Invoking
                     CardRefNumber = "1"
                 }
             };
-            var input = new CardServiceMethodInvokerInput(targetType, invocationInfo.MethodName, invocationParameters, message => { }, new BOAContext("dev",new TraceQueue()));
+            var input = new CardServiceMethodInvokerInput(targetType, invocationInfo.MethodName, invocationParameters, message => { }, new BOAContext(new EnvironmentInfo(true,false), new TraceQueue()));
 
             var cardServiceMethodInvoker = new CardServiceMethodInvoker();
 
