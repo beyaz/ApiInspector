@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ApiInspector.Tracing;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -11,6 +12,13 @@ namespace ApiInspector.Invoking.Invokers
     /// </summary>
     class CardServiceMethodInvoker
     {
+        readonly ITracer tracer;
+
+        public CardServiceMethodInvoker(ITracer tracer)
+        {
+            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+        }
+
         #region Public Methods
         /// <summary>
         ///     Invokes the specified context.
