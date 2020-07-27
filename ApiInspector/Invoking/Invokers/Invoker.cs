@@ -278,7 +278,7 @@ namespace ApiInspector.Invoking.Invokers
                 return null;
             }
 
-            var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters, Trace, boaContext);
+            var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
             var response = cardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput);
 

@@ -14,6 +14,11 @@ namespace ApiInspector.Invoking.Invokers
     {
         #region Fields
         /// <summary>
+        ///     The boa context
+        /// </summary>
+        readonly BOAContext boaContext;
+
+        /// <summary>
         ///     The tracer
         /// </summary>
         readonly ITracer tracer;
@@ -23,9 +28,10 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Initializes a new instance of the <see cref="CardServiceMethodInvoker" /> class.
         /// </summary>
-        public CardServiceMethodInvoker(ITracer tracer)
+        public CardServiceMethodInvoker(ITracer tracer, BOAContext boaContext)
         {
-            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
         }
         #endregion
 
@@ -36,7 +42,6 @@ namespace ApiInspector.Invoking.Invokers
         public object Invoke(CardServiceMethodInvokerInput input)
         {
             var invocationParameters = input.InvocationParameters;
-            var boaContext           = input.BoaContext;
             var targetType           = input.TargetType;
             var methodName           = input.MethodName;
 
