@@ -35,7 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-  
     <Reference Include="BOA.Business.Kernel.General">
       <HintPath>d:\BOA\Server\bin\BOA.Business.Kernel.General.dll</HintPath>
     </Reference>
@@ -98,6 +97,7 @@
     <Compile Include="EndOfDay.cs" />
     <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
     <Compile Include="Invoking\BoaConfigurationFile.cs" />
+    <Compile Include="Invoking\BoaDirectInvokeDisposer.cs" />
     <Compile Include="Invoking\EnvironmentInfo.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />

@@ -83,16 +83,6 @@ namespace ApiInspector.Invoking
 
             ConfigurationManager.LoadConfiguration(configFilePath);
 
-            // System.Configuration.ConfigurationManager .RefreshSection("BOAConfiguration");
-
-            ConfigurationManager.ApplicationEnvironmentSection.ApplicationEnvironment.Environment.ToString();
-
-            System.Configuration.ConfigurationManager .RefreshSection("ApplicationEnvironmentSection");
-            System.Configuration.ConfigurationManager .RefreshSection("BOAServiceSection");
-            System.Configuration.ConfigurationManager .RefreshSection("DatabaseSection");
-            
-            
-
             isLoaded = true;
         }
         #endregion

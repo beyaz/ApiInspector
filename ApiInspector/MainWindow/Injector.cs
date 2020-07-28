@@ -20,7 +20,11 @@ namespace ApiInspector.MainWindow
             
         }
 
-        
+        public override void Dispose(bool disposing)
+        {
+            new BoaDirectInvokeDisposer().Dispose();
+            base.Dispose(disposing);
+        }
         #endregion
     }
 }

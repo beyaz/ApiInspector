@@ -18,6 +18,7 @@ namespace ApiInspector.Invoking
     class BOAContext : IDisposable
     {
         #region Fields
+
         /// <summary>
         ///     The environment information
         /// </summary>
