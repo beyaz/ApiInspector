@@ -1,8 +1,8 @@
 ﻿using System;
+using ApiInspector.Application;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
 using BOA.Common.Types;
-using BOA.UnitTestHelper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
@@ -16,7 +16,7 @@ namespace ApiInspector.Invoking
         [TestMethod]
         public void Authenticate()
         {
-            BOAAssemblyResolver.AttachToCurrentDomain();
+            BoaAssemblyResolver.AttachToCurrentDomain();
 
             CallDev();
             CallTest();

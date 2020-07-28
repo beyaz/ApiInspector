@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using ApiInspector.Application;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.MainWindow;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 using BOA.Card.Contracts.CreditCard.Limit;
 using BOA.Common.Types;
-using BOA.UnitTestHelper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
@@ -25,7 +25,7 @@ namespace ApiInspector.Invoking
         [TestMethod]
         public void Should_invoke_any_service_method()
         {
-            BOAAssemblyResolver.AttachToCurrentDomain();
+            BoaAssemblyResolver.AttachToCurrentDomain();
 
             var invocationInfo = new InvocationInfo
             {
