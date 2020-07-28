@@ -17,8 +17,9 @@ namespace ApiInspector.MainWindow
 
             Bind<BOAContext>().ToSelf().InSingletonScope();
             Bind<BoaConfigurationFile>().ToSelf().InSingletonScope();
-            
         }
+
+
 
         public override void Dispose(bool disposing)
         {

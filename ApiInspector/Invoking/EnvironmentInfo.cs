@@ -7,6 +7,18 @@ namespace ApiInspector.Invoking
     /// </summary>
     class EnvironmentInfo
     {
+        #region Static Fields
+        /// <summary>
+        ///     The dev
+        /// </summary>
+        public static readonly EnvironmentInfo Dev = Parse("Dev");
+
+        /// <summary>
+        ///     The test
+        /// </summary>
+        public static readonly EnvironmentInfo Test = Parse("Test");
+        #endregion
+
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="EnvironmentInfo" /> class.
