@@ -1,4 +1,6 @@
-﻿using ApiInspector.Tracing;
+﻿using System;
+using System.Windows;
+using ApiInspector.Tracing;
 using BOA.UnitTestHelper;
 
 namespace ApiInspector.Application
@@ -17,6 +19,7 @@ namespace ApiInspector.Application
             BOAAssemblyResolver.AttachToCurrentDomain();
 
             ErrorMonitor = new ErrorMonitor(this);
+            
             ErrorMonitor.StartMonitor();
         }
         #endregion

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.IO;
-using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Configuration;
-using BOA.Common.Helpers;
-using BOA.Common.Types;
 
 namespace ApiInspector.Invoking
 {
@@ -46,27 +42,6 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Public Methods
-        public AuthenticationRequest GetAuthenticationRequest()
-        {
-            var jsonFilePath = $"{path}{environmentInfo}.AuthenticationRequest.json";
-
-            if (!File.Exists(jsonFilePath))
-            {
-                var request = new AuthenticationRequest
-                {
-                    AuthenticationContext = new AuthenticationContext
-                    {
-                        UserName = Environment.UserName,
-                        Channel  = ChannelContract.Branch,
-                        ApplicationEnvironment = ConfigurationManager.ApplicationEnvironmentSection.ApplicationEnvironment.Environment
-                    }
-                };
-                File.WriteAllText(jsonFilePath, new Serializer().SerializeToJsonDoNotIgnoreDefaultValues(request));
-            }
-
-            return SerializeHelper.JsonToObject<AuthenticationRequest>(File.ReadAllText(jsonFilePath));
-        }
-
         /// <summary>
         ///     Loads this instance.
         /// </summary>

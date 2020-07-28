@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Authentication;
 using ApiInspector.Tracing;
 using BOA.Base;
@@ -9,6 +8,7 @@ using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
 using BOA.UnitTestHelper;
+using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking
 {
@@ -18,11 +18,10 @@ namespace ApiInspector.Invoking
     class BOAContext : IDisposable
     {
         #region Fields
-
         /// <summary>
-        ///     The environment information
+        ///     The boa configuration file
         /// </summary>
-        readonly EnvironmentInfo environmentInfo;
+        readonly BoaConfigurationFile boaConfigurationFile;
 
         /// <summary>
         ///     The tracer
@@ -30,26 +29,91 @@ namespace ApiInspector.Invoking
         readonly ITracer tracer;
 
         /// <summary>
+        ///     The authentication response
+        /// </summary>
+        AuthenticationResponse authenticationResponse;
+
+        /// <summary>
+        ///     The context
+        /// </summary>
+        ExecutionDataContext context;
+
+        /// <summary>
         ///     The object helper
         /// </summary>
         ObjectHelper objectHelper;
         #endregion
 
-        readonly BoaConfigurationFile boaConfigurationFile;
-
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(EnvironmentInfo environmentInfo, ITracer tracer, BoaConfigurationFile boaConfigurationFile)
+        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile)
         {
-            this.environmentInfo      = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
             this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
         }
         #endregion
 
+        #region Properties
+        /// <summary>
+        ///     Gets the context.
+        /// </summary>
+        internal ExecutionDataContext Context
+        {
+            get
+            {
+                if (context != null)
+                {
+                    return context;
+                }
+
+                boaConfigurationFile.Load();
+
+                context = new ExecutionDataContext
+                {
+                    EngineContext = new EngineContext()
+                };
+
+                Authenticate();
+
+                context.ApplicationContext            = authenticationResponse.ApplicationContext;
+                context.EngineContext.MainBusinessKey = CreateNewBusinessKey();
+
+                return context;
+            }
+        }
+        #endregion
+
         #region Public Methods
+        /// <summary>
+        ///     Authenticates the specified channel contract.
+        /// </summary>
+        public void Authenticate(ChannelContract channelContract)
+        {
+            if (authenticationResponse != null)
+            {
+                tracer.Trace("Already authenticated.");
+                return;
+            }
+
+            var request = new AuthenticationRequest
+            {
+                AuthenticationContext = new AuthenticationContext
+                {
+                    Channel = channelContract
+                }
+            };
+
+            var response = new UserManager().Authenticate(request);
+            if (!response.Success)
+            {
+                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
+            }
+
+            authenticationResponse = response;
+        }
+
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
@@ -68,10 +132,19 @@ namespace ApiInspector.Invoking
         /// </summary>
         public ObjectHelper GetObjectHelper()
         {
-            if (objectHelper == null)
+            if (objectHelper != null)
             {
-                Initialize();
+                return objectHelper;
             }
+
+            objectHelper = new ObjectHelper
+            {
+                Context = Context
+            };
+
+            objectHelper.Context.DBLayer.BeginTransaction();
+
+            CardService.UseLocalProxy = true;
 
             return objectHelper;
         }
@@ -79,119 +152,16 @@ namespace ApiInspector.Invoking
 
         #region Methods
         /// <summary>
-        ///     Creates the object helper.
+        ///     Authenticates this instance.
         /// </summary>
-        ObjectHelper CreateObjectHelper()
+        void Authenticate()
         {
-            var testContext = CreateTestContext(environmentInfo);
-
-            ObjectHelper instance = null;
-            if (environmentInfo.IsDev)
-            {
-                instance = testContext.objectHelper;
-
-                //objectHelper.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
-                //{
-                //    {Databases.BanksoftCC, @"Data Source=srvxdev\zumrut;Initial Catalog=KrediKuveyt;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
-                //};
-            }
-            else if (environmentInfo.IsTest)
-            {
-                instance = testContext.objectHelper;
-
-                instance.Context.DBLayer.ConnectionMock = new Dictionary<Databases, string>
-                {
-                    {Databases.BOACard, @"Data Source=srvxtest\zumrut;Initial Catalog=BOACard2;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;"}
-                };
-
-                tracer.Trace(@"BOACard cconnection is: srvxtest\zumrut;Initial Catalog=BOACard2");
-            }
-            else
-            {
-                throw new NotImplementedException(nameof(environmentInfo));
-            }
-
-            return instance;
+            Authenticate(ChannelContract.Branch);
         }
 
         /// <summary>
-        ///     Creates the test context.
+        ///     Creates the new business key.
         /// </summary>
-        public static BOATestContext CreateTestContext(EnvironmentInfo environmentInfo)
-        {
-            if (environmentInfo.IsDev)
-            {
-                return new BOATestContextDev();
-            }
-
-            if (environmentInfo.IsTest)
-            {
-                return new BOATestContextTest();
-            }
-
-            throw new NotImplementedException(nameof(environmentInfo));
-        }
-
-        /// <summary>
-        ///     Initializes this instance.
-        /// </summary>
-        void Initialize()
-        {
-            objectHelper = CreateObjectHelper();
-
-            objectHelper.Context.DBLayer.BeginTransaction();
-
-            CardService.UseLocalProxy = true;
-        }
-
-
-        AuthenticationResponse authenticationResponse;
-
-        public void Authenticate()
-        {
-            if (authenticationResponse != null)
-            {
-                tracer.Trace("Already authenticated.");
-                return;
-            }
-
-            var request = boaConfigurationFile.GetAuthenticationRequest();
-
-            var response = new BOA.Proxy.UserManager().Authenticate(request);
-            if (!response.Success)
-            {
-                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
-            }
-
-            authenticationResponse = response;
-
-
-        }
-
-        ExecutionDataContext _context;
-        public ExecutionDataContext Context
-        {
-            get
-            {
-                if (_context == null)
-                {
-                    boaConfigurationFile.Load();
-
-                    _context = new ExecutionDataContext
-                    {
-                        EngineContext = new EngineContext()
-                    };
-
-                    Authenticate();
-
-                    _context.ApplicationContext            = authenticationResponse.ApplicationContext;
-                    _context.EngineContext.MainBusinessKey = CreateNewBusinessKey();
-                }
-
-                return _context;
-            }
-        }
-
         decimal CreateNewBusinessKey()
         {
             const string ResourceCode = "ODSTATMTCP";
@@ -200,8 +170,6 @@ namespace ApiInspector.Invoking
                    .CreateBusinessKey(ResourceCode, Context.ApplicationContext.User.BranchId, DateTime.Now.Date)
                    .AssertSuccess();
         }
-
-
         #endregion
     }
 }

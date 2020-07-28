@@ -7,6 +7,7 @@ using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using ApiInspector.Tracing;
+using BOA.Common.Types;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking.Invokers
@@ -26,11 +27,6 @@ namespace ApiInspector.Invoking.Invokers
         ///     The card service method invoker
         /// </summary>
         readonly CardServiceMethodInvoker cardServiceMethodInvoker;
-
-        /// <summary>
-        ///     The environment information
-        /// </summary>
-        readonly EnvironmentInfo environmentInfo;
 
         /// <summary>
         ///     The instance creator
@@ -61,7 +57,6 @@ namespace ApiInspector.Invoking.Invokers
                        Serializer                  serializer,
                        InstanceCreator             instanceCreator,
                        BOAContext                  boaContext,
-                       EnvironmentInfo             environmentInfo,
                        CardServiceMethodInvoker    cardServiceMethodInvoker,
                        InvocationParameterPreparer invocationParameterPreparer
         )
@@ -70,7 +65,6 @@ namespace ApiInspector.Invoking.Invokers
             this.serializer                  = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.instanceCreator             = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             this.boaContext                  = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
-            this.environmentInfo             = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
             this.cardServiceMethodInvoker    = cardServiceMethodInvoker ?? throw new ArgumentNullException(nameof(cardServiceMethodInvoker));
             this.invocationParameterPreparer = invocationParameterPreparer ?? throw new ArgumentNullException(nameof(invocationParameterPreparer));
         }
@@ -115,7 +109,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvokerInput input)
         {
-            Func<Exception, InvokeOutput> fail = e => Fail(e, input);
+            Func<Exception, InvokeOutput> fail = e => Fail(e);
 
             var invocationInfo = input.InvocationInfo;
 
@@ -226,7 +220,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Fails the specified exception.
         /// </summary>
-        InvokeOutput Fail(Exception exception, InvokerInput input)
+        InvokeOutput Fail(Exception exception)
         {
             boaContext.Dispose();
 
@@ -322,7 +316,7 @@ namespace ApiInspector.Invoking.Invokers
 
             try
             {
-                BOAContext.CreateTestContext(environmentInfo).AuthenticateUser();
+                boaContext.Authenticate(ChannelContract.EOD);
 
                 new EndOfDayInvoker().Invoke(input.TargetType);
 
@@ -330,7 +324,7 @@ namespace ApiInspector.Invoking.Invokers
             }
             catch (Exception exception)
             {
-                return Fail(exception, input);
+                return Fail(exception);
             }
         }
         #endregion
