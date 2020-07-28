@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Security.Authentication;
 using ApiInspector.Tracing;
 using BOA.Base;
+using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
 using BOA.UnitTestHelper;
@@ -30,14 +33,17 @@ namespace ApiInspector.Invoking
         ObjectHelper objectHelper;
         #endregion
 
+        readonly BoaConfigurationFile boaConfigurationFile;
+
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(EnvironmentInfo environmentInfo, ITracer tracer)
+        public BOAContext(EnvironmentInfo environmentInfo, ITracer tracer, BoaConfigurationFile boaConfigurationFile)
         {
-            this.environmentInfo = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
-            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.environmentInfo      = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
         }
         #endregion
 
@@ -134,6 +140,30 @@ namespace ApiInspector.Invoking
             objectHelper.Context.DBLayer.BeginTransaction();
 
             CardService.UseLocalProxy = true;
+        }
+
+
+        AuthenticationResponse authenticationResponse;
+
+        public void Authenticate()
+        {
+            if (authenticationResponse != null)
+            {
+                tracer.Trace("Already authenticated.");
+                return;
+            }
+
+            var request = boaConfigurationFile.GetAuthenticationRequest();
+
+            var response = new BOA.Proxy.UserManager().Authenticate(request);
+            if (!response.Success)
+            {
+                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
+            }
+
+            authenticationResponse = response;
+
+
         }
         #endregion
     }

@@ -38,6 +38,9 @@
     <Reference Include="BOA.Base">
       <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>
+    <Reference Include="BOA.Proxy">
+      <HintPath>d:\BOA\Server\bin\BOA.Proxy.dll</HintPath>
+    </Reference>
     <Reference Include="BOA.Card.Core">
       <HintPath>d:\BOA\Server\bin\BOA.Card.Core.dll</HintPath>
     </Reference>
@@ -89,6 +92,7 @@
     <Compile Include="AssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
     <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
+    <Compile Include="Invoking\BoaConfigurationFile.cs" />
     <Compile Include="Invoking\EnvironmentInfo.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />

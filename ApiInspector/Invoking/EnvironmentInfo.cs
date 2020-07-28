@@ -48,6 +48,24 @@ namespace ApiInspector.Invoking
 
             throw new NotImplementedException(nameof(targetEnvironment));
         }
+
+        /// <summary>
+        ///     Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        public override string ToString()
+        {
+            if (IsDev)
+            {
+                return "Dev";
+            }
+
+            if (IsTest)
+            {
+                return "Test";
+            }
+
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

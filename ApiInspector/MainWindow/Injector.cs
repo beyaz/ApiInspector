@@ -16,6 +16,8 @@ namespace ApiInspector.MainWindow
             Bind<EnvironmentInfo>().ToMethod(c => environmentInfo);
 
             Bind<BOAContext>().ToSelf().InSingletonScope();
+            Bind<BoaConfigurationFile>().ToSelf().InSingletonScope();
+            
         }
 
         
