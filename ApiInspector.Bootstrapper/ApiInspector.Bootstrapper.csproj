@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper\FileModel.cs" />
-    <Compile Include="Bootstrapper\Key.cs" />
     <Compile Include="Bootstrapper\Launcher.cs" />
     <Compile Include="Bootstrapper\Program.cs" />
     <Compile Include="Infrastructure\EmbeddedCompressedAssemblyReferencesResolver.cs" />
@@ -54,9 +53,6 @@
     <EmbeddedResource Include="Infrastructure\EmbeddedReferences.zip" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BOA.DataFlow">
-      <Version>1.0.0.6</Version>
-    </PackageReference>
     <PackageReference Include="Dapper">
       <Version>2.0.35</Version>
     </PackageReference>

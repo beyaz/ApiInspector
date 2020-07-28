@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using BOA.DataFlow;
 using Dapper;
-using static ApiInspector.Bootstrapper.Key;
 
 namespace ApiInspector.Bootstrapper
 {
@@ -14,6 +13,13 @@ namespace ApiInspector.Bootstrapper
     /// </summary>
     class Launcher
     {
+        #region Constants
+        /// <summary>
+        ///     The target directory path
+        /// </summary>
+        const string TargetDirectoryPath = @"d:\boa\server\bin\";
+        #endregion
+
         #region Public Methods
         /// <summary>
         ///     Starts this instance.
@@ -22,16 +28,11 @@ namespace ApiInspector.Bootstrapper
         {
             Console.WriteLine("Yükleniyor...");
 
-            var context = new DataContext
-            {
-                {TargetDirectoryPath, @"d:\boa\server\bin\"}
-            };
+            var files = FetchFiles();
 
-            FetchFiles(context);
+            ExportFiles(files);
 
-            ExportFiles(context);
-
-            StartProcess(context);
+            StartProcess();
 
             Console.WriteLine("Process is started.");
         }
@@ -41,23 +42,20 @@ namespace ApiInspector.Bootstrapper
         /// <summary>
         ///     Downloads the files.
         /// </summary>
-        static void ExportFiles(DataContext context)
+        static void ExportFiles(IReadOnlyCollection<FileModel> files)
         {
-            var targetDirectoryPath = context.Get(TargetDirectoryPath);
-
-            foreach (var file in context.Get(Files))
+            foreach (var file in files)
             {
-                var path = Path.Combine(targetDirectoryPath, file.Name);
+                var path = Path.Combine(TargetDirectoryPath, file.Name);
 
-                File.Delete(path);
-                File.WriteAllBytes(path, file.Content);
+                WriteAllBytes(path, file.Content);
             }
         }
 
         /// <summary>
         ///     Fetches the files.
         /// </summary>
-        static void FetchFiles(DataContext context)
+        static IReadOnlyCollection<FileModel> FetchFiles()
         {
             const string ConnectionString = "server=srvdev\\ATLAS;database =BOA;integrated security=true";
 
@@ -65,13 +63,11 @@ namespace ApiInspector.Bootstrapper
 
             var files = connection.Query<FileModel>($"SELECT {nameof(FileModel.Name)}, {nameof(FileModel.LastModification)} FROM  [WHT].[File] WITH(NOLOCK) WHERE ApplicationName = 'ApiInspector'").ToList().AsReadOnly();
 
-            var targetDirectoryPath = context.Get(TargetDirectoryPath);
-
-            var requiredFiles = files.Where(x => !IsFileUpToDate(Path.Combine(targetDirectoryPath, x.Name), x.LastModification)).Select(x => x.Name).ToList();
+            var requiredFiles = files.Where(x => !IsFileUpToDate(Path.Combine(TargetDirectoryPath, x.Name), x.LastModification)).Select(x => x.Name).ToList();
 
             var sql = $"SELECT * FROM  [WHT].[File] WITH(NOLOCK) WHERE ApplicationName = 'ApiInspector' AND {nameof(FileModel.Name)} IN ({"'" + string.Join("','", requiredFiles) + "'"})";
 
-            context.Add(Files, connection.Query<FileModel>(sql).ToList().AsReadOnly());
+            return connection.Query<FileModel>(sql).ToList().AsReadOnly();
         }
 
         /// <summary>
@@ -90,11 +86,25 @@ namespace ApiInspector.Bootstrapper
         /// <summary>
         ///     Starts the process.
         /// </summary>
-        static void StartProcess(DataContext context)
+        static void StartProcess()
         {
-            var targetDirectoryPath = context.Get(TargetDirectoryPath);
+            Process.Start(Path.Combine(TargetDirectoryPath, "ApiInspector.Run.bat"));
+        }
 
-            Process.Start(Path.Combine(targetDirectoryPath, "ApiInspector.Run.bat"));
+        /// <summary>
+        ///     Writes all bytes.
+        /// </summary>
+        static void WriteAllBytes(string path, byte[] content)
+        {
+            var directoryName = Path.GetDirectoryName(path);
+
+            if (directoryName != null)
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
+            File.Delete(path);
+            File.WriteAllBytes(path, content);
         }
         #endregion
     }
