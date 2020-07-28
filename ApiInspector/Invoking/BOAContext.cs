@@ -7,7 +7,6 @@ using BOA.Business.Kernel.General;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
-using BOA.UnitTestHelper;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking
@@ -168,7 +167,7 @@ namespace ApiInspector.Invoking
 
             return new BusinessKey(Context)
                    .CreateBusinessKey(ResourceCode, Context.ApplicationContext.User.BranchId, DateTime.Now.Date)
-                   .AssertSuccess();
+                   .Value;
         }
         #endregion
     }
