@@ -57,7 +57,7 @@ namespace ApiInspector.Invoking
 
             GenericResponse<GetCardAvailableLimitResponse> response = null;
 
-            using (var injector = new Injector(new TraceQueue(),"dev"))
+            using (var injector = new Injector(new TraceQueue(),EnvironmentInfo.Dev))
             {
                 var cardServiceMethodInvoker = injector.Get<CardServiceMethodInvoker>();
                 response = (GenericResponse<GetCardAvailableLimitResponse>) cardServiceMethodInvoker.Invoke(input);

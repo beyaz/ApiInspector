@@ -91,7 +91,7 @@ namespace ApiInspector.MainWindow
 
             InvokeOutput invokerOutput = null;
 
-            using (var injector = new Injector(traceQueue,invocationInfo.Environment))
+            using (var injector = new Injector(traceQueue,EnvironmentInfo.Parse(invocationInfo.Environment)))
             {
                 var invoker = injector.Get<Invoker>();
 
