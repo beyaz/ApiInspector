@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+  
+    <Reference Include="BOA.Business.Kernel.General">
+      <HintPath>d:\BOA\Server\bin\BOA.Business.Kernel.General.dll</HintPath>
+    </Reference>
     <Reference Include="BOA.Base">
       <HintPath>d:\BOA\Server\bin\BOA.Base.dll</HintPath>
     </Reference>

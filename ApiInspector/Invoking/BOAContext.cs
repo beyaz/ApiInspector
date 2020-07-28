@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security.Authentication;
 using ApiInspector.Tracing;
 using BOA.Base;
+using BOA.Base.Data;
+using BOA.Business.Kernel.General;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
@@ -165,6 +166,41 @@ namespace ApiInspector.Invoking
 
 
         }
+
+        ExecutionDataContext _context;
+        public ExecutionDataContext Context
+        {
+            get
+            {
+                if (_context == null)
+                {
+                    boaConfigurationFile.Load();
+
+                    _context = new ExecutionDataContext
+                    {
+                        EngineContext = new EngineContext()
+                    };
+
+                    Authenticate();
+
+                    _context.ApplicationContext            = authenticationResponse.ApplicationContext;
+                    _context.EngineContext.MainBusinessKey = CreateNewBusinessKey();
+                }
+
+                return _context;
+            }
+        }
+
+        decimal CreateNewBusinessKey()
+        {
+            const string ResourceCode = "ODSTATMTCP";
+
+            return new BusinessKey(Context)
+                   .CreateBusinessKey(ResourceCode, Context.ApplicationContext.User.BranchId, DateTime.Now.Date)
+                   .AssertSuccess();
+        }
+
+
         #endregion
     }
 }
