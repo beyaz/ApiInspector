@@ -57,7 +57,8 @@ namespace ApiInspector.Invoking
                     AuthenticationContext = new AuthenticationContext
                     {
                         UserName = Environment.UserName,
-                        Channel  = ChannelContract.Branch
+                        Channel  = ChannelContract.Branch,
+                        ApplicationEnvironment = ConfigurationManager.ApplicationEnvironmentSection.ApplicationEnvironment.Environment
                     }
                 };
                 File.WriteAllText(jsonFilePath, new Serializer().SerializeToJsonDoNotIgnoreDefaultValues(request));
@@ -81,6 +82,16 @@ namespace ApiInspector.Invoking
             tracer.Trace("Loading configuration.");
 
             ConfigurationManager.LoadConfiguration(configFilePath);
+
+            // System.Configuration.ConfigurationManager .RefreshSection("BOAConfiguration");
+
+            ConfigurationManager.ApplicationEnvironmentSection.ApplicationEnvironment.Environment.ToString();
+
+            System.Configuration.ConfigurationManager .RefreshSection("ApplicationEnvironmentSection");
+            System.Configuration.ConfigurationManager .RefreshSection("BOAServiceSection");
+            System.Configuration.ConfigurationManager .RefreshSection("DatabaseSection");
+            
+            
 
             isLoaded = true;
         }
