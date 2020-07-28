@@ -8,7 +8,7 @@ namespace ApiInspector.Application
     /// <summary>
     ///     Defines the boa assembly resolver.
     /// </summary>
-    public static class BOAAssemblyResolver
+    public static class BoaAssemblyResolver
     {
         #region Static Fields
         /// <summary>
