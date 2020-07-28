@@ -76,7 +76,7 @@ namespace ApiInspector.Invoking
                 return;
             }
 
-            var configFilePath = $"{path}{environmentInfo}.Config.xml";
+            var configFilePath = $"{path}{environmentInfo}.config";
 
             tracer.Trace("Loading configuration.");
 
