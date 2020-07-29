@@ -88,7 +88,7 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         static void StartProcess()
         {
-            Process.Start(Path.Combine(TargetDirectoryPath, "ApiInspector.Run.bat"));
+            Process.Start(Path.Combine(TargetDirectoryPath, "ApiInspector.exe"));
         }
 
         /// <summary>
