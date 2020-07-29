@@ -9,11 +9,9 @@ namespace ApiInspector.Invoking
     /// </summary>
     class BoaConfigurationFile
     {
-        #region Constants
-        const string path = @"d:\boa\server\bin\ApiInspectorConfiguration\";
-        #endregion
-
         #region Fields
+        readonly BoaConfigurationDirectory configurationDirectory;
+
         /// <summary>
         ///     The environment information
         /// </summary>
@@ -34,10 +32,11 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="BoaConfigurationFile" /> class.
         /// </summary>
-        public BoaConfigurationFile(EnvironmentInfo environmentInfo, ITracer tracer)
+        public BoaConfigurationFile(EnvironmentInfo environmentInfo, ITracer tracer, BoaConfigurationDirectory configurationDirectory)
         {
-            this.environmentInfo = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
-            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.environmentInfo        = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.tracer                 = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.configurationDirectory = configurationDirectory ?? throw new ArgumentNullException(nameof(configurationDirectory));
         }
         #endregion
 
@@ -52,7 +51,9 @@ namespace ApiInspector.Invoking
                 return;
             }
 
-            var configFilePath = $"{path}{environmentInfo}.config";
+            var configurationDirectoryPath = configurationDirectory.GetDirectoryPath();
+
+            var configFilePath = $"{configurationDirectoryPath}{environmentInfo}.config";
 
             tracer.Trace("Loading configuration.");
 
