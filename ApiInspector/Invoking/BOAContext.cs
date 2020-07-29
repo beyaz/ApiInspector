@@ -4,6 +4,7 @@ using ApiInspector.Tracing;
 using BOA.Base;
 using BOA.Base.Data;
 using BOA.Business.Kernel.General;
+using BOA.Common.Configuration;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
@@ -96,11 +97,13 @@ namespace ApiInspector.Invoking
                 return;
             }
 
+            boaConfigurationFile.Load();
+
             var request = new AuthenticationRequest
             {
                 AuthenticationContext = new AuthenticationContext
                 {
-                    Channel = channelContract,
+                    Channel  = channelContract,
                     UserName = Environment.UserName
                 }
             };
@@ -115,6 +118,16 @@ namespace ApiInspector.Invoking
             tracer.Trace("Authenticate is success.");
 
             authenticationResponse = response;
+        }
+
+        /// <summary>
+        ///     Authenticates this instance.
+        /// </summary>
+        public void Authenticate()
+        {
+            boaConfigurationFile.Load();
+
+            Authenticate(ConfigurationManager.ChannelSection.Channel.DefaultChannel);
         }
 
         /// <summary>
@@ -154,14 +167,6 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Authenticates this instance.
-        /// </summary>
-        void Authenticate()
-        {
-            Authenticate(ChannelContract.Branch);
-        }
-
         /// <summary>
         ///     Creates the new business key.
         /// </summary>

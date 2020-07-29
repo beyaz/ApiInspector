@@ -109,7 +109,9 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvokerInput input)
         {
-            Func<Exception, InvokeOutput> fail = e => Fail(e);
+            Func<Exception, InvokeOutput> fail = Fail;
+
+          
 
             var invocationInfo = input.InvocationInfo;
 
@@ -151,6 +153,12 @@ namespace ApiInspector.Invoking.Invokers
                 input.MethodInfo = methodInfo;
             }
 
+            if (invocationInfo.AssemblyName.StartsWith("BOA."))
+            {
+                tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
+                boaContext.Authenticate();
+            }
+
             Trace("Preparing invocation parameters");
 
             // PREPARE PARAMETERS
@@ -168,6 +176,8 @@ namespace ApiInspector.Invoking.Invokers
             }
 
             Trace("Invoke started. Response waiting...");
+
+           
 
             try
             {
