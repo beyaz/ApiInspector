@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -154,5 +155,10 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(action);
         }
         #endregion
+
+        void OnConfigureClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
+        }
     }
 }

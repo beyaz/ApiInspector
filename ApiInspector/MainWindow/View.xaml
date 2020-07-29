@@ -33,7 +33,11 @@
             </Grid.RowDefinitions>
 
             <StackPanel>
-                <Button HorizontalAlignment = "Right" x:Name = "executeButton" Click = "OnExecuteClicked" > Execute</Button>
+                <Grid>
+                    <Button HorizontalAlignment = "Right" x:Name = "executeButton" Click = "OnExecuteClicked" > Execute</Button>
+                    <Button HorizontalAlignment = "Left" x:Name = "configure" Click = "OnConfigureClicked" > Config</Button>
+                </Grid>
+               
 
                 <invocationInfoEditor:View x:Name = "currentInvocationInfo" Margin = "0,10,0,0" />
 

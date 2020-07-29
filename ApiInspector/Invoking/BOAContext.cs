@@ -100,15 +100,19 @@ namespace ApiInspector.Invoking
             {
                 AuthenticationContext = new AuthenticationContext
                 {
-                    Channel = channelContract
+                    Channel = channelContract,
+                    UserName = Environment.UserName
                 }
             };
 
+            tracer.Trace("Authenticate response waiting...");
             var response = new UserManager().Authenticate(request);
             if (!response.Success)
             {
                 throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
             }
+
+            tracer.Trace("Authenticate is success.");
 
             authenticationResponse = response;
         }
