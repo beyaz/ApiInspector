@@ -14,9 +14,9 @@ namespace ApiInspector.History
     {
         #region Fields
         /// <summary>
-        ///     The History
+        ///     The history
         /// </summary>
-        readonly DataSource History = new DataSource();
+        readonly DataSource history;
 
         /// <summary>
         ///     The trace
@@ -30,6 +30,8 @@ namespace ApiInspector.History
         /// </summary>
         public HistoryPanel()
         {
+            history = new Injector().Get<DataSource>();
+
             InitializeComponent();
         }
         #endregion
@@ -73,7 +75,7 @@ namespace ApiInspector.History
         /// </summary>
         void DeleteSelectedItemFromHistory(InvocationInfo info)
         {
-            History.Remove(info);
+            history.Remove(info);
 
             Refresh();
         }
@@ -131,7 +133,7 @@ namespace ApiInspector.History
         {
             Trace("History is loading...");
 
-            historyListBox.ItemsSource = History.GetHistory();
+            historyListBox.ItemsSource = history.GetHistory();
 
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
 

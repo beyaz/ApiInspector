@@ -24,6 +24,11 @@ namespace ApiInspector.Invoking
         readonly BoaConfigurationFile boaConfigurationFile;
 
         /// <summary>
+        ///     The environment variable
+        /// </summary>
+        readonly EnvironmentVariable environmentVariable;
+
+        /// <summary>
         ///     The tracer
         /// </summary>
         readonly ITracer tracer;
@@ -48,10 +53,11 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile)
+        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile, EnvironmentVariable environmentVariable)
         {
             this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
+            this.environmentVariable  = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
         }
         #endregion
 
@@ -104,7 +110,7 @@ namespace ApiInspector.Invoking
                 AuthenticationContext = new AuthenticationContext
                 {
                     Channel  = channelContract,
-                    UserName = Environment.UserName
+                    UserName = environmentVariable.GetUserName()
                 }
             };
 

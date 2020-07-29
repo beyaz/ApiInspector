@@ -10,7 +10,6 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
-using Ninject;
 
 namespace ApiInspector.MainWindow
 {
@@ -20,11 +19,6 @@ namespace ApiInspector.MainWindow
     public partial class View
     {
         #region Fields
-        /// <summary>
-        ///     The history
-        /// </summary>
-        readonly DataSource History = new DataSource();
-
         /// <summary>
         ///     The trace queue
         /// </summary>
@@ -74,9 +68,25 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
-            Task.Run(() => History.SaveToHistory(InvocationInfo));
+            Task.Run(() => SaveToHistory());
 
             new Thread(OnExecuteClicked).Start();
+        }
+
+        void SaveToHistory( )
+        {
+            
+            using (var injector = CreateNewInjector())
+            {
+                var dataSource = injector.Get<DataSource>();
+                
+                dataSource.SaveToHistory(InvocationInfo);
+            }
+        }
+
+        Injector CreateNewInjector()
+        {
+            return new Injector(traceQueue, EnvironmentInfo.Parse(InvocationInfo.Environment));
         }
 
         /// <summary>
@@ -92,7 +102,7 @@ namespace ApiInspector.MainWindow
 
             InvokeOutput invokerOutput = null;
 
-            using (var injector = new Injector(traceQueue,EnvironmentInfo.Parse(invocationInfo.Environment)))
+            using (var injector = CreateNewInjector())
             {
                 var invoker = injector.Get<Invoker>();
 

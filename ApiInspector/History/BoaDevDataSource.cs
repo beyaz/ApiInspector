@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using ApiInspector.Invoking;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using Dapper;
@@ -16,6 +17,7 @@ namespace ApiInspector.History
     /// </summary>
     class BoaDevDataSource
     {
+        readonly EnvironmentVariable environmentVariable;
         #region Fields
         /// <summary>
         ///     The connection
@@ -32,8 +34,11 @@ namespace ApiInspector.History
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataSource" /> class.
         /// </summary>
-        public BoaDevDataSource()
+        public BoaDevDataSource(EnvironmentVariable environmentVariable)
         {
+            this.environmentVariable = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
+
+
             const string ConnectionString = "server=srvdev\\ATLAS;database =BOA;integrated security=true";
 
             connection = new SqlConnection(ConnectionString);
@@ -46,7 +51,9 @@ namespace ApiInspector.History
         /// </summary>
         public IReadOnlyList<InvocationInfo> GetHistory()
         {
-            var records = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(Environment.UserName)}", new {Environment.UserName});
+            var userName = environmentVariable.GetUserName();
+
+            var records  = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)}", new {userName});
 
             return records.Select(x => JsonConvert.DeserializeObject<InvocationInfo>(x.Value)).ToList();
         }
@@ -85,7 +92,7 @@ namespace ApiInspector.History
             return new RecordModel
             {
                 Key      = key,
-                UserName = Environment.UserName,
+                UserName = environmentVariable.GetUserName(),
                 Value    = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info)
             };
         }

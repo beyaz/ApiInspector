@@ -26,6 +26,11 @@ namespace ApiInspector.MainWindow
 
             base.Dispose(disposing);
         }
+
+        public T Get<T>()
+        {
+            return ResolutionExtensions.Get<T>(this);
+        }
         #endregion
     }
 }

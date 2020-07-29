@@ -96,11 +96,13 @@
     <Compile Include="Application\BoaAssemblyResolver.cs" />
     <Compile Include="AssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
+    <Compile Include="History\Injector.cs" />
     <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
     <Compile Include="Invoking\BoaConfigurationDirectory.cs" />
     <Compile Include="Invoking\BoaConfigurationFile.cs" />
     <Compile Include="Invoking\BoaDirectInvokeDisposer.cs" />
     <Compile Include="Invoking\EnvironmentInfo.cs" />
+    <Compile Include="Invoking\EnvironmentVariable.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />
     <Compile Include="Invoking\Invokers\CardServiceMethodInvokerInput.cs" />

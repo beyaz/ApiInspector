@@ -14,12 +14,21 @@ namespace ApiInspector.History
         /// <summary>
         ///     The boa dev data source
         /// </summary>
-        readonly BoaDevDataSource boaDevDataSource = new BoaDevDataSource();
+        readonly BoaDevDataSource boaDevDataSource;
 
         /// <summary>
         ///     The file data source
         /// </summary>
-        readonly FileDataSource fileDataSource = new FileDataSource();
+        readonly FileDataSource fileDataSource;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DataSource"/> class.
+        /// </summary>
+        public DataSource(FileDataSource fileDataSource, BoaDevDataSource boaDevDataSource)
+        {
+            this.fileDataSource   = fileDataSource ?? throw new ArgumentNullException(nameof(fileDataSource));
+            this.boaDevDataSource = boaDevDataSource ?? throw new ArgumentNullException(nameof(boaDevDataSource));
+        }
         #endregion
 
         #region Public Methods
