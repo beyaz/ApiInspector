@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ApiInspector.Models;
 
 namespace ApiInspector.History
@@ -15,18 +14,14 @@ namespace ApiInspector.History
         ///     The boa dev data source
         /// </summary>
         readonly BoaDevDataSource boaDevDataSource;
+        #endregion
 
+        #region Constructors
         /// <summary>
-        ///     The file data source
+        ///     Initializes a new instance of the <see cref="DataSource" /> class.
         /// </summary>
-        readonly FileDataSource fileDataSource;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DataSource"/> class.
-        /// </summary>
-        public DataSource(FileDataSource fileDataSource, BoaDevDataSource boaDevDataSource)
+        public DataSource(BoaDevDataSource boaDevDataSource)
         {
-            this.fileDataSource   = fileDataSource ?? throw new ArgumentNullException(nameof(fileDataSource));
             this.boaDevDataSource = boaDevDataSource ?? throw new ArgumentNullException(nameof(boaDevDataSource));
         }
         #endregion
@@ -37,13 +32,7 @@ namespace ApiInspector.History
         /// </summary>
         public IReadOnlyList<InvocationInfo> GetHistory()
         {
-            IReadOnlyList<InvocationInfo> records = null;
-            if (Utility.IsSuccess(() => boaDevDataSource.GetHistory(), ref records))
-            {
-                Array.ForEach(records.ToArray(), fileDataSource.SaveToHistory);
-            }
-
-            return fileDataSource.GetHistory();
+            return Utility.TryRun(() => boaDevDataSource.GetHistory()) ?? new InvocationInfo[0];
         }
 
         /// <summary>
@@ -51,9 +40,7 @@ namespace ApiInspector.History
         /// </summary>
         public void Remove(InvocationInfo info)
         {
-            Utility.TryRun(() => boaDevDataSource.Remove(info));
-
-            fileDataSource.Remove(info);
+            boaDevDataSource.Remove(info);
         }
 
         /// <summary>
@@ -61,9 +48,7 @@ namespace ApiInspector.History
         /// </summary>
         public void SaveToHistory(InvocationInfo info)
         {
-            Utility.TryRun(() => boaDevDataSource.SaveToHistory(info));
-
-            fileDataSource.SaveToHistory(info);
+            boaDevDataSource.SaveToHistory(info);
         }
         #endregion
     }

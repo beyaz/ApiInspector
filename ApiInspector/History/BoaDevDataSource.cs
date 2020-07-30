@@ -53,7 +53,7 @@ namespace ApiInspector.History
         {
             var userName = environmentVariable.GetUserName();
 
-            var records  = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)}", new {userName});
+            var records  = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
 
             return records.Select(x => JsonConvert.DeserializeObject<InvocationInfo>(x.Value)).ToList();
         }

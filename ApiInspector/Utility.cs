@@ -76,6 +76,38 @@ namespace ApiInspector
         }
 
         /// <summary>
+        ///     Tries the run.
+        /// </summary>
+        public static T TryRun<T>(Func<T> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
+        }
+
+        /// <summary>
+        ///     Tries the run.
+        /// </summary>
+        public static T TryRun<T>(Func<T> action, ref Exception exception)
+        {
+            try
+            {
+                return action();
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
         ///     Writes all text.
         /// </summary>
         public static void WriteAllText(string filePath, string content)
