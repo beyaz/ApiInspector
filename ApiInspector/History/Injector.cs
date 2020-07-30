@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using ApiInspector.Invoking;
+using Ninject;
 
 namespace ApiInspector.History
 {
@@ -7,6 +8,10 @@ namespace ApiInspector.History
     /// </summary>
     class Injector : StandardKernel
     {
+        public Injector()
+        {
+            Bind<EnvironmentVariable>().ToSelf().InSingletonScope();
+        }
         #region Public Methods
         /// <summary>
         ///     Gets this instance.
