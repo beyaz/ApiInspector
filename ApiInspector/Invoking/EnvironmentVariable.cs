@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ApiInspector.Serialization;
+using ApiInspector.Tracing;
 using BOA.Common.Helpers;
 
 namespace ApiInspector.Invoking
@@ -17,6 +18,11 @@ namespace ApiInspector.Invoking
         readonly BoaConfigurationDirectory configurationDirectory;
 
         /// <summary>
+        ///     The tracer
+        /// </summary>
+        readonly TraceQueue tracer;
+
+        /// <summary>
         ///     The user name
         /// </summary>
         string userName;
@@ -26,9 +32,10 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="EnvironmentVariable" /> class.
         /// </summary>
-        public EnvironmentVariable(BoaConfigurationDirectory configurationDirectory)
+        public EnvironmentVariable(BoaConfigurationDirectory configurationDirectory, TraceQueue tracer)
         {
             this.configurationDirectory = configurationDirectory ?? throw new ArgumentNullException(nameof(configurationDirectory));
+            this.tracer                 = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -62,10 +69,18 @@ namespace ApiInspector.Invoking
 
             if (!string.IsNullOrWhiteSpace(model.UserName))
             {
-                return userName = model.UserName.Trim();
+                userName = model.UserName.Trim();
+
+                tracer.Trace($"UserName:{userName}");
+
+                return userName;
             }
 
-            return userName = Environment.UserName;
+            userName = Environment.UserName;
+
+            tracer.Trace($"UserName:{userName}");
+
+            return userName;
         }
         #endregion
     }

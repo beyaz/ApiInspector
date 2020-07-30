@@ -93,7 +93,8 @@ namespace ApiInspector.History
             {
                 Key      = key,
                 UserName = environmentVariable.GetUserName(),
-                Value    = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info)
+                Value    = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info),
+                LastExecutionTime = DateTime.Now
             };
         }
         #endregion
@@ -121,6 +122,8 @@ namespace ApiInspector.History
             ///     Gets or sets the value.
             /// </summary>
             public string Value { get; set; }
+
+            public DateTime? LastExecutionTime { get; set; }
             #endregion
         }
     }
