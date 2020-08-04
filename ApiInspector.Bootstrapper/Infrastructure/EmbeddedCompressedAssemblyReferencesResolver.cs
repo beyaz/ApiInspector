@@ -37,6 +37,11 @@ namespace ApiInspector.Infrastructure
         ///     The temporary zip file path
         /// </summary>
         readonly string temporaryZipFilePath;
+
+        /// <summary>
+        ///     Gets or sets the trace.
+        /// </summary>
+        readonly Action<string> trace = Console.WriteLine;
         #endregion
 
         #region Constructors
@@ -45,14 +50,15 @@ namespace ApiInspector.Infrastructure
         /// </summary>
         public EmbeddedCompressedAssemblyReferencesResolver(AppDomain appDomain, Assembly locatedAssembly, string embeddedZipFileName)
         {
-            this.appDomain           = appDomain;
-            this.locatedAssembly     = locatedAssembly;
-            this.embeddedZipFileName = embeddedZipFileName;
+            this.appDomain           = appDomain ?? throw new ArgumentNullException(nameof(appDomain));
+            this.locatedAssembly     = locatedAssembly ?? throw new ArgumentNullException(nameof(locatedAssembly));
+            this.embeddedZipFileName = embeddedZipFileName ?? throw new ArgumentNullException(nameof(embeddedZipFileName));
 
-            temporaryDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                 Path.DirectorySeparatorChar +
-                                 Path.GetFileNameWithoutExtension(locatedAssembly.Location) + "-" + Path.GetFileNameWithoutExtension(embeddedZipFileName) +
-                                 Path.DirectorySeparatorChar;
+            var myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            var zipFolderName = Path.GetFileNameWithoutExtension(locatedAssembly.Location) + "-" + Path.GetFileNameWithoutExtension(embeddedZipFileName);
+
+            temporaryDirectory = Path.Combine(myDocuments, zipFolderName) + Path.DirectorySeparatorChar;
 
             temporaryZipFilePath = temporaryDirectory + embeddedZipFileName;
         }
@@ -63,13 +69,6 @@ namespace ApiInspector.Infrastructure
         public EmbeddedCompressedAssemblyReferencesResolver(Assembly locatedAssembly, string assemblyFullName) : this(AppDomain.CurrentDomain, locatedAssembly, assemblyFullName)
         {
         }
-        #endregion
-
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the trace.
-        /// </summary>
-        public Action<string> Trace { get; set; } = Console.WriteLine;
         #endregion
 
         #region Public Methods
@@ -133,7 +132,7 @@ namespace ApiInspector.Infrastructure
         {
             if (File.Exists(temporaryZipFilePath))
             {
-                Trace($"Deleting file {temporaryZipFilePath}");
+                trace($"Deleting file {temporaryZipFilePath}");
                 File.Delete(temporaryZipFilePath);
             }
 
@@ -145,17 +144,17 @@ namespace ApiInspector.Infrastructure
 
             if (File.Exists(targetDirectory))
             {
-                Trace($"Deleting file {targetDirectory}");
+                trace($"Deleting file {targetDirectory}");
                 File.Delete(targetDirectory);
             }
 
             if (Directory.Exists(targetDirectory))
             {
-                Trace($"Deleting directory {targetDirectory}");
+                trace($"Deleting directory {targetDirectory}");
                 Directory.Delete(targetDirectory, true);
             }
 
-            Trace($"Creating directory {targetDirectory}");
+            trace($"Creating directory {targetDirectory}");
             Directory.CreateDirectory(targetDirectory);
 
             File.WriteAllBytes(temporaryZipFilePath, ReadResource(locatedAssembly, "." + embeddedZipFileName));

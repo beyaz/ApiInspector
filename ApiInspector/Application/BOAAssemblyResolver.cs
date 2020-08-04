@@ -24,7 +24,6 @@ namespace ApiInspector.Application
         #endregion
 
         #region Public Properties
-
         /// <summary>
         ///     Gets or sets the trace.
         /// </summary>
@@ -62,7 +61,6 @@ namespace ApiInspector.Application
 
             throw new ArgumentException("AssemblyNotFound:" + args.Name);
         }
-
 
         /// <summary>
         ///     Finds the assembly.

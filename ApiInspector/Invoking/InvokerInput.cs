@@ -40,7 +40,6 @@ namespace ApiInspector.Invoking
         ///     Gets or sets the type of the target.
         /// </summary>
         public Type TargetType { get; set; }
-
         #endregion
     }
 }

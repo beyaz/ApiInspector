@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
@@ -18,12 +17,13 @@ namespace ApiInspector.History
     /// </summary>
     class BoaDevDataSource
     {
-        readonly EnvironmentVariable environmentVariable;
         #region Fields
         /// <summary>
         ///     The connection
         /// </summary>
         readonly IDbConnection connection;
+
+        readonly EnvironmentVariable environmentVariable;
 
         /// <summary>
         ///     The serializer
@@ -39,7 +39,6 @@ namespace ApiInspector.History
         {
             this.environmentVariable = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
 
-
             const string ConnectionString = "server=srvdev\\ATLAS;database =BOA;integrated security=true";
 
             connection = new SqlConnection(ConnectionString);
@@ -54,7 +53,7 @@ namespace ApiInspector.History
         {
             var userName = environmentVariable.GetUserName();
 
-            var records  = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
+            var records = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
 
             return records.Select(x => JsonConvert.DeserializeObject<InvocationInfo>(x.Value)).ToList();
         }
@@ -92,9 +91,9 @@ namespace ApiInspector.History
 
             return new RecordModel
             {
-                Key      = key,
-                UserName = environmentVariable.GetUserName(),
-                Value    = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info),
+                Key               = key,
+                UserName          = environmentVariable.GetUserName(),
+                Value             = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info),
                 LastExecutionTime = DateTime.Now
             };
         }
@@ -113,6 +112,8 @@ namespace ApiInspector.History
             [ExplicitKey]
             public string Key { get; set; }
 
+            public DateTime? LastExecutionTime { get; set; }
+
             /// <summary>
             ///     Gets or sets the name of the user.
             /// </summary>
@@ -123,8 +124,6 @@ namespace ApiInspector.History
             ///     Gets or sets the value.
             /// </summary>
             public string Value { get; set; }
-
-            public DateTime? LastExecutionTime { get; set; }
             #endregion
         }
     }

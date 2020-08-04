@@ -112,8 +112,6 @@ namespace ApiInspector.Invoking.Invokers
         {
             Func<Exception, InvokeOutput> fail = Fail;
 
-          
-
             var invocationInfo = input.InvocationInfo;
 
             Trace($"Started to search class: {invocationInfo.ClassName}");
@@ -177,8 +175,6 @@ namespace ApiInspector.Invoking.Invokers
             }
 
             Trace("Invoke started. Response waiting...");
-
-           
 
             try
             {

@@ -45,6 +45,7 @@
     <Compile Include="Bootstrapper\ApplicationFilesSynchronizer.cs" />
     <Compile Include="Bootstrapper\FileModel.cs" />
     <Compile Include="Bootstrapper\Launcher.cs" />
+    <Compile Include="Bootstrapper\ProcessKiller.cs" />
     <Compile Include="Bootstrapper\Program.cs" />
     <Compile Include="Infrastructure\EmbeddedCompressedAssemblyReferencesResolver.cs" />
     <Compile Include="Infrastructure\ModuleLoader.cs" />

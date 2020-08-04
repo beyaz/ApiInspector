@@ -20,6 +20,7 @@ namespace ApiInspector.InvocationInfoEditor
         ///     The serializer
         /// </summary>
         readonly Serializer serializer = new Serializer();
+
         readonly TypeFinder TypeFinder = new TypeFinder();
         #endregion
 

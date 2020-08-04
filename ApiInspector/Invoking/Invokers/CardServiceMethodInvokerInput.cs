@@ -21,7 +21,6 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Public Properties
-
         /// <summary>
         ///     Gets the invocation parameters.
         /// </summary>
@@ -36,7 +35,6 @@ namespace ApiInspector.Invoking.Invokers
         ///     Gets the type of the target.
         /// </summary>
         public Type TargetType { get; }
-
         #endregion
     }
 }

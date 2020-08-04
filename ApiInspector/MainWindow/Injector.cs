@@ -1,5 +1,4 @@
-﻿using ApiInspector.Invoking;
-using ApiInspector.Invoking.BoaSystem;
+﻿using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Tracing;
 using Ninject;
 
@@ -19,7 +18,6 @@ namespace ApiInspector.MainWindow
             Bind<BoaConfigurationFile>().ToSelf().InSingletonScope();
 
             Bind<EnvironmentVariable>().ToSelf().InSingletonScope();
-            
         }
         #endregion
 

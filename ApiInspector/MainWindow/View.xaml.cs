@@ -58,6 +58,16 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
+        Injector CreateNewInjector()
+        {
+            return new Injector(traceQueue, EnvironmentInfo.Parse(InvocationInfo.Environment));
+        }
+
+        void OnConfigureClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
+        }
+
         /// <summary>
         ///     Called when [execute clicked].
         /// </summary>
@@ -72,22 +82,6 @@ namespace ApiInspector.MainWindow
             Task.Run(() => SaveToHistory());
 
             new Thread(OnExecuteClicked).Start();
-        }
-
-        void SaveToHistory( )
-        {
-            
-            using (var injector = CreateNewInjector())
-            {
-                var dataSource = injector.Get<DataSource>();
-                
-                dataSource.SaveToHistory(InvocationInfo);
-            }
-        }
-
-        Injector CreateNewInjector()
-        {
-            return new Injector(traceQueue, EnvironmentInfo.Parse(InvocationInfo.Environment));
         }
 
         /// <summary>
@@ -109,7 +103,6 @@ namespace ApiInspector.MainWindow
 
                 invokerOutput = invoker.Invoke(invocationInfo);
             }
-
 
             UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
 
@@ -150,6 +143,16 @@ namespace ApiInspector.MainWindow
             InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 
+        void SaveToHistory()
+        {
+            using (var injector = CreateNewInjector())
+            {
+                var dataSource = injector.Get<DataSource>();
+
+                dataSource.SaveToHistory(InvocationInfo);
+            }
+        }
+
         /// <summary>
         ///     Traces the specified message.
         /// </summary>
@@ -166,10 +169,5 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(action);
         }
         #endregion
-
-        void OnConfigureClicked(object sender, RoutedEventArgs e)
-        {
-            Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
-        }
     }
 }

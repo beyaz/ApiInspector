@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using ApiInspector.Infrastructure;
+﻿using ApiInspector.Infrastructure;
 
 namespace ApiInspector.Bootstrapper
 {
@@ -14,10 +13,7 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         public static void Main(string[] args)
         {
-            foreach (var process in Process.GetProcessesByName("ApiInspector"))
-            {
-                process.Kill();
-            }
+            ProcessKiller.KillAll("ApiInspector");
 
             ModuleLoader.Load();
 
