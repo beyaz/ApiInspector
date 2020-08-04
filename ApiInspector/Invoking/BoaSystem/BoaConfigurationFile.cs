@@ -55,8 +55,8 @@ namespace ApiInspector.Invoking.BoaSystem
 
             var configFilePath = $"{configurationDirectoryPath}{environmentInfo}.config";
 
-            tracer.Trace("Loading configuration.");
-
+            tracer.Trace($"Loading configuration. File: {configFilePath}");
+            
             ConfigurationManager.LoadConfiguration(configFilePath);
 
             isLoaded = true;

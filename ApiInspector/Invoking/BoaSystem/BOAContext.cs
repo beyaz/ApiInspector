@@ -99,7 +99,6 @@ namespace ApiInspector.Invoking.BoaSystem
         {
             if (authenticationResponse != null)
             {
-                tracer.Trace("Already authenticated.");
                 return;
             }
 
