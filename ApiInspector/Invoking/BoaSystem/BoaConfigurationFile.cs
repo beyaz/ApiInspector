@@ -2,7 +2,7 @@
 using ApiInspector.Tracing;
 using BOA.Common.Configuration;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.BoaSystem
 {
     /// <summary>
     ///     The boa configuration file

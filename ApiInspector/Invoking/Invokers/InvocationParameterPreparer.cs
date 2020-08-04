@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
 using ApiInspector.Tracing;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.BoaSystem
 {
     /// <summary>
     ///     The boa direct invoke disposer

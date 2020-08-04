@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Tracing;
 
 namespace ApiInspector.Invoking.Invokers

@@ -1,4 +1,5 @@
 ﻿using System;
+using ApiInspector.Invoking.BoaSystem;
 using BOA.Base;
 
 namespace ApiInspector.Invoking.InstanceCreators

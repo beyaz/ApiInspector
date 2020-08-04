@@ -4,7 +4,7 @@ using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Helpers;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.BoaSystem
 {
     /// <summary>
     ///     The environment variable

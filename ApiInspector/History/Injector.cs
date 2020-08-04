@@ -1,4 +1,5 @@
 ﻿using ApiInspector.Invoking;
+using ApiInspector.Invoking.BoaSystem;
 using Ninject;
 
 namespace ApiInspector.History

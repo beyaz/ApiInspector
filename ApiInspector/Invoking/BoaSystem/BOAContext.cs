@@ -10,7 +10,7 @@ using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
 using UserManager = BOA.Proxy.UserManager;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.BoaSystem
 {
     /// <summary>
     ///     The boa context

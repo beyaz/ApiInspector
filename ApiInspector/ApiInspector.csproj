@@ -98,11 +98,11 @@
     <Compile Include="EndOfDay.cs" />
     <Compile Include="History\Injector.cs" />
     <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
-    <Compile Include="Invoking\BoaConfigurationDirectory.cs" />
-    <Compile Include="Invoking\BoaConfigurationFile.cs" />
-    <Compile Include="Invoking\BoaDirectInvokeDisposer.cs" />
-    <Compile Include="Invoking\EnvironmentInfo.cs" />
-    <Compile Include="Invoking\EnvironmentVariable.cs" />
+    <Compile Include="Invoking\BoaSystem\BoaConfigurationDirectory.cs" />
+    <Compile Include="Invoking\BoaSystem\BoaConfigurationFile.cs" />
+    <Compile Include="Invoking\BoaSystem\BoaDirectInvokeDisposer.cs" />
+    <Compile Include="Invoking\BoaSystem\EnvironmentInfo.cs" />
+    <Compile Include="Invoking\BoaSystem\EnvironmentVariable.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\InvokerInput.cs" />
     <Compile Include="Invoking\Invokers\CardServiceMethodInvokerInput.cs" />
@@ -133,7 +133,7 @@
     <Compile Include="Serialization\DecimalConverter.cs" />
     <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
-    <Compile Include="Invoking\BOAContext.cs" />
+    <Compile Include="Invoking\BoaSystem\BOAContext.cs" />
     <Compile Include="Invoking\Invokers\Invoker.cs" />
     <Compile Include="InvocationInfoEditor\ViewController.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using ApiInspector.Invoking;
+using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using Dapper;

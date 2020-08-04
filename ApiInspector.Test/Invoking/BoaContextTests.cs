@@ -1,5 +1,6 @@
 ﻿using System;
 using ApiInspector.Application;
+using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
 using BOA.Common.Types;

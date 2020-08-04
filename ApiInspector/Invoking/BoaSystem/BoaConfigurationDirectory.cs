@@ -1,4 +1,4 @@
-﻿namespace ApiInspector.Invoking
+﻿namespace ApiInspector.Invoking.BoaSystem
 {
     /// <summary>
     ///     The boa configuration directory

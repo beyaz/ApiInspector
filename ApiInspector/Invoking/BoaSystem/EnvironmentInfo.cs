@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ApiInspector.Invoking
+namespace ApiInspector.Invoking.BoaSystem
 {
     /// <summary>
     ///     The environment information
