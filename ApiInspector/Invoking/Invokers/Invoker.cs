@@ -155,7 +155,14 @@ namespace ApiInspector.Invoking.Invokers
             if (invocationInfo.AssemblyName.StartsWith("BOA."))
             {
                 tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
-                boaContext.Authenticate();
+                try
+                {
+                    boaContext.Authenticate();
+                }
+                catch (Exception exception)
+                {
+                    return fail(exception);
+                }
             }
 
             Trace("Preparing invocation parameters");
