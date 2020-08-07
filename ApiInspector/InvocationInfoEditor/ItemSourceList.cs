@@ -20,7 +20,7 @@ namespace ApiInspector.InvocationInfoEditor
                 AssemblySearchDirectories.serverBin,
                 AssemblySearchDirectories.clientBin
             };
-            EnvironmentNameList = new List<string> {"dev", "test"};
+            EnvironmentNameList = new List<string> {"dev", "test","prep"};
         }
         #endregion
 
