@@ -23,21 +23,25 @@ namespace ApiInspector.History
         /// </summary>
         readonly IDbConnection connection;
 
+        /// <summary>
+        ///     The environment variable
+        /// </summary>
         readonly EnvironmentVariable environmentVariable;
 
         /// <summary>
         ///     The serializer
         /// </summary>
-        readonly Serializer serializer = new Serializer();
+        readonly Serializer serializer;
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataSource" /> class.
         /// </summary>
-        public BoaDevDataSource(EnvironmentVariable environmentVariable)
+        public BoaDevDataSource(EnvironmentVariable environmentVariable, Serializer serializer)
         {
             this.environmentVariable = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
+            this.serializer          = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
             const string ConnectionString = "server=srvdev\\ATLAS;database =BOA;integrated security=true";
 
@@ -112,6 +116,9 @@ namespace ApiInspector.History
             [ExplicitKey]
             public string Key { get; set; }
 
+            /// <summary>
+            ///     Gets or sets the last execution time.
+            /// </summary>
             public DateTime? LastExecutionTime { get; set; }
 
             /// <summary>
