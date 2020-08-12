@@ -16,18 +16,7 @@ namespace ApiInspector.Application
         public App()
         {
             BoaAssemblyResolver.AttachToCurrentDomain();
-
-            ErrorMonitor = new ErrorMonitor(this);
-
-            ErrorMonitor.StartMonitor();
         }
-        #endregion
-
-        #region Properties
-        /// <summary>
-        ///     Gets the error monitor.
-        /// </summary>
-        internal ErrorMonitor ErrorMonitor { get; }
         #endregion
 
         #region Methods
@@ -36,7 +25,11 @@ namespace ApiInspector.Application
         /// </summary>
         void OnStartup(object sender, StartupEventArgs e)
         {
-            var injector = new AppInjector();
+            var errorMonitor = new ErrorMonitor(this);
+
+            errorMonitor.StartMonitor();
+
+            var injector = new AppInjector(errorMonitor);
 
             MainWindow = injector.Get<View>();
 

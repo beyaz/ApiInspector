@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using ApiInspector.Application;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
@@ -24,15 +23,18 @@ namespace ApiInspector.MainWindow
         ///     The trace queue
         /// </summary>
         readonly TraceQueue traceQueue;
+
+        readonly ErrorMonitor errorMonitor;
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="View" /> class.
         /// </summary>
-        public View(TraceQueue traceQueue)
+        public View(TraceQueue traceQueue, ErrorMonitor errorMonitor)
         {
-            this.traceQueue = traceQueue;
+            this.traceQueue   = traceQueue ?? throw new ArgumentNullException(nameof(traceQueue));
+            this.errorMonitor = errorMonitor ?? throw new ArgumentNullException(nameof(errorMonitor));
 
             InitializeComponent();
 
@@ -77,7 +79,7 @@ namespace ApiInspector.MainWindow
         {
             if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
-                ((App) System.Windows.Application.Current).ErrorMonitor.ShowErrorNotification("MethodName can not be empty.");
+                errorMonitor.ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
 

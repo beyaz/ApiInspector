@@ -13,11 +13,12 @@ namespace ApiInspector.Application
         /// <summary>
         ///     Initializes a new instance of the <see cref="AppInjector" /> class.
         /// </summary>
-        public AppInjector()
+        public AppInjector(ErrorMonitor errorMonitor)
         {
             Bind<TraceQueue>().ToSelf().InSingletonScope();
             Bind<ITracer>().To<TraceQueue>();
             Bind<View>().ToSelf().InSingletonScope();
+            Bind<ErrorMonitor>().ToMethod(x => errorMonitor);
         }
         #endregion
 

@@ -6,7 +6,7 @@ namespace ApiInspector.Tracing
     /// <summary>
     ///     The error monitor
     /// </summary>
-    class ErrorMonitor
+    public class ErrorMonitor
     {
         #region Static Fields
         /// <summary>
