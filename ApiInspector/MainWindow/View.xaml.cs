@@ -17,21 +17,23 @@ namespace ApiInspector.MainWindow
     /// <summary>
     ///     The view
     /// </summary>
-    public partial class View
+    partial class View
     {
         #region Fields
         /// <summary>
         ///     The trace queue
         /// </summary>
-        readonly TraceQueue traceQueue = new TraceQueue();
+        readonly TraceQueue traceQueue;
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="View" /> class.
         /// </summary>
-        public View()
+        public View(TraceQueue traceQueue)
         {
+            this.traceQueue = traceQueue;
+
             InitializeComponent();
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);

@@ -93,6 +93,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Application\AppInjector.cs" />
     <Compile Include="Application\BoaAssemblyResolver.cs" />
     <Compile Include="AssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />

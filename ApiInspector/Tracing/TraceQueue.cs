@@ -18,7 +18,7 @@ namespace ApiInspector.Tracing
     /// <summary>
     ///     The trace queue
     /// </summary>
-    class TraceQueue : ITracer
+    public class TraceQueue : ITracer
     {
         #region Fields
         /// <summary>
