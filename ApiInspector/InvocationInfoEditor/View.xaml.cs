@@ -98,8 +98,13 @@ namespace ApiInspector.InvocationInfoEditor
         ///     Fires the event.
         /// </summary>
         void FireEvent(ViewEvents name)
-        {
+        { 
             var invocationInfo = model.InvocationInfo;
+
+            if (invocationInfo == null)
+            {
+                return; // TODO: nasıl olabilir
+            }
 
             switch (name)
             {
