@@ -124,7 +124,7 @@ namespace ApiInspector.InvocationInfoEditor
         {
             var invocationInfo = InvocationInfo;
 
-            model.MethodDefinition = model.TypeDefinition.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+            model.MethodDefinition = model.TypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
         }
         #endregion
 

@@ -117,8 +117,13 @@ namespace ApiInspector.Invoking.Invokers
             Trace($"Started to search class: {invocationInfo.ClassName}");
 
             // INITIALIZE TargetType
+            try
             {
                 input.TargetType = GetTargetType(invocationInfo);
+            }
+            catch (Exception e)
+            {
+                return fail(e);
             }
 
             // TRY CALL AS EOD

@@ -57,10 +57,10 @@ namespace ApiInspector.MainWindow
             Loaded += (s, e) =>
             {
                 historyPanel.Connect(traceQueue,dataSource);
-                historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
-                historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
 
                 historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo);
+                historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
+                historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
             };
         }
         #endregion

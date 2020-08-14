@@ -20,7 +20,7 @@ namespace ApiInspector.History
         public void ExpectedBehaviour()
         {
             var historyPanel = new HistoryPanel();
-            var injector     = new Injector();
+            var injector     = new  ApiInspector.Application.AppInjector(null);
 
             // should load histories when connected
             {

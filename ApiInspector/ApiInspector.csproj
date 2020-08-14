@@ -97,7 +97,6 @@
     <Compile Include="Application\BoaAssemblyResolver.cs" />
     <Compile Include="AssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
-    <Compile Include="History\Injector.cs" />
     <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
     <Compile Include="Invoking\BoaSystem\BoaConfigurationDirectory.cs" />
     <Compile Include="Invoking\BoaSystem\BoaConfigurationFile.cs" />
