@@ -20,11 +20,14 @@ namespace ApiInspector.MainWindow
     {
         #region Fields
         /// <summary>
+        ///     The error monitor
+        /// </summary>
+        readonly ErrorMonitor errorMonitor;
+
+        /// <summary>
         ///     The trace queue
         /// </summary>
         readonly TraceQueue traceQueue;
-
-        readonly ErrorMonitor errorMonitor;
         #endregion
 
         #region Constructors
@@ -35,6 +38,8 @@ namespace ApiInspector.MainWindow
         {
             this.traceQueue   = traceQueue ?? throw new ArgumentNullException(nameof(traceQueue));
             this.errorMonitor = errorMonitor ?? throw new ArgumentNullException(nameof(errorMonitor));
+
+            InitializeGlobalFontStyle();
 
             InitializeComponent();
 
@@ -62,11 +67,22 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Creates the new injector.
+        /// </summary>
         Injector CreateNewInjector()
         {
             return new Injector(traceQueue, EnvironmentInfo.Parse(InvocationInfo.Environment));
         }
 
+        void InitializeGlobalFontStyle()
+        {
+            FontSize = 15;
+        }
+
+        /// <summary>
+        ///     Called when [configure clicked].
+        /// </summary>
         void OnConfigureClicked(object sender, RoutedEventArgs e)
         {
             Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
@@ -147,6 +163,9 @@ namespace ApiInspector.MainWindow
             InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
         }
 
+        /// <summary>
+        ///     Saves to history.
+        /// </summary>
         void SaveToHistory()
         {
             using (var injector = CreateNewInjector())
