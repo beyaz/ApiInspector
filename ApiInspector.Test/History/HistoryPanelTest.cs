@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ApiInspector.Models;
+using ApiInspector.Tracing;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,12 +20,13 @@ namespace ApiInspector.History
         public void ExpectedBehaviour()
         {
             var historyPanel = new HistoryPanel();
+            var injector     = new Injector();
 
             // should load histories when connected
             {
                 historyPanel.historyListBox.ItemsSource.Should().BeNullOrEmpty();
 
-                historyPanel.Connect(message => { });
+                historyPanel.Connect(injector.Get<ITracer>(),injector.Get<DataSource>());
 
                 historyPanel.historyListBox.ItemsSource.Should().NotBeNullOrEmpty();
             }

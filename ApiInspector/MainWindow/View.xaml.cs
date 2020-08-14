@@ -16,7 +16,7 @@ namespace ApiInspector.MainWindow
     /// <summary>
     ///     The view
     /// </summary>
-    partial class View
+    partial  class View
     {
         #region Fields
         /// <summary>
@@ -34,10 +34,16 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Initializes a new instance of the <see cref="View" /> class.
         /// </summary>
-        public View(TraceQueue traceQueue, ErrorMonitor errorMonitor)
+        public View(TraceQueue traceQueue, ErrorMonitor errorMonitor, DataSource dataSource)
         {
+            if (dataSource == null)
+            {
+                throw new ArgumentNullException(nameof(dataSource));
+            }
+
             this.traceQueue   = traceQueue ?? throw new ArgumentNullException(nameof(traceQueue));
             this.errorMonitor = errorMonitor ?? throw new ArgumentNullException(nameof(errorMonitor));
+            
 
             InitializeGlobalFontStyle();
 
@@ -50,7 +56,7 @@ namespace ApiInspector.MainWindow
 
             Loaded += (s, e) =>
             {
-                historyPanel.Connect(traceQueue.AddMessage);
+                historyPanel.Connect(traceQueue,dataSource);
                 historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
                 historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
 

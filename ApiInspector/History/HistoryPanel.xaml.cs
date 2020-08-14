@@ -4,24 +4,25 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApiInspector.Models;
+using ApiInspector.Tracing;
 
 namespace ApiInspector.History
 {
     /// <summary>
     ///     Interaction logic for HistoryPanel.xaml
     /// </summary>
-    public partial class HistoryPanel
+    partial class HistoryPanel
     {
         #region Fields
         /// <summary>
-        ///     The history
+        ///     The dataSource
         /// </summary>
-        readonly DataSource history;
+        DataSource dataSource;
 
         /// <summary>
         ///     The trace
         /// </summary>
-        Action<string> Trace;
+        ITracer tracer;
         #endregion
 
         #region Constructors
@@ -30,8 +31,6 @@ namespace ApiInspector.History
         /// </summary>
         public HistoryPanel()
         {
-            history = new Injector().Get<DataSource>();
-
             InitializeComponent();
         }
         #endregion
@@ -54,9 +53,11 @@ namespace ApiInspector.History
         /// <summary>
         ///     Connects the specified trace.
         /// </summary>
-        public void Connect(Action<string> trace)
+        public void Connect(ITracer tracer, DataSource dataSource)
         {
-            Trace = trace;
+            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.dataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
+
             Refresh();
         }
 
@@ -75,7 +76,7 @@ namespace ApiInspector.History
         /// </summary>
         void DeleteSelectedItemFromHistory(InvocationInfo info)
         {
-            history.Remove(info);
+            dataSource.Remove(info);
 
             Refresh();
         }
@@ -120,7 +121,7 @@ namespace ApiInspector.History
         /// </summary>
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            Trace("History item clicked.");
+            tracer.Trace("History item clicked.");
 
             SelectedInvocationInfo = (InvocationInfo) historyListBox.SelectedItem;
             OnSelectedInvocationChanged();
@@ -131,15 +132,15 @@ namespace ApiInspector.History
         /// </summary>
         void InitializeHistoryPanel()
         {
-            Trace("History is loading...");
+            tracer.Trace("History is loading...");
 
-            historyListBox.ItemsSource = history.GetHistory();
+            historyListBox.ItemsSource = dataSource.GetHistory();
 
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
 
             view.Filter = HistoryFilter;
 
-            Trace("History is loaded.");
+            tracer.Trace("History is loaded.");
         }
 
         /// <summary>
