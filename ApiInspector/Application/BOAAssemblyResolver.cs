@@ -19,7 +19,8 @@ namespace ApiInspector.Application
             @"D:\BOA\server\bin",
             @"D:\BOA\client\bin",
             @"D:\BOA\client\bin\en",
-            @"D:\BOA\HSM\server\bin"
+            @"D:\BOA\HSM\server\bin",
+            @"D:\BOA\BOA.Integration\server\bin"
         };
         #endregion
 

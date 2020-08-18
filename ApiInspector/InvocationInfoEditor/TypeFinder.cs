@@ -25,6 +25,12 @@ namespace ApiInspector.InvocationInfoEditor
                 type = Assembly.Load(@"BOA.Process.Kernel.Card").GetTypes().FirstOrDefault(t => t.FullName == fullName);
             }
 
+            if (fullName.StartsWith("BOA.Integration.Model.MobileBranch.", StringComparison.OrdinalIgnoreCase))
+            {
+                type = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
+            }
+            
+
             return type;
         }
         #endregion
