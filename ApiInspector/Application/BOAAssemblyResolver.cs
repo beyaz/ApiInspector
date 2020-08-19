@@ -70,6 +70,11 @@ namespace ApiInspector.Application
         {
             Trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 
+            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
+            {
+                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
+            }
+
             foreach (var searchDirectory in AssemblySearchDirectories)
             {
                 var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
