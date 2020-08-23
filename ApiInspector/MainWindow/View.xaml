@@ -47,7 +47,7 @@
 
             </StackPanel>
 
-            <RichTextBox Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView" />
+            <RichTextBox Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView" VerticalScrollBarVisibility="Auto" />
 
             <StackPanel Grid.Row = "2" Margin = "0,4,0,0" >
                 <Label FontWeight = "Bold" > Response Output File </Label>

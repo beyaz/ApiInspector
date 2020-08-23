@@ -21,6 +21,9 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         readonly Serializer serializer = new Serializer();
 
+        /// <summary>
+        ///     The type finder
+        /// </summary>
         readonly TypeFinder TypeFinder = new TypeFinder();
         #endregion
 
@@ -104,9 +107,10 @@ namespace ApiInspector.InvocationInfoEditor
             else
             {
                 // complex items should be as json input
-                editor.TextWrapping  = TextWrapping.Wrap;
-                editor.MaxLines      = 10;
-                editor.AcceptsReturn = true;
+                editor.TextWrapping                = TextWrapping.Wrap;
+                editor.MaxLines                    = 10;
+                editor.AcceptsReturn               = true;
+                editor.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
