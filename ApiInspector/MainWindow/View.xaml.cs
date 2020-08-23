@@ -110,14 +110,30 @@ namespace ApiInspector.MainWindow
             new Thread(OnExecuteClicked).Start();
         }
 
+        void OnEnteredToExecution()
+        {
+            UpdateUI(()=>executeButton.Content   = "Executing...");
+            UpdateUI(()=>executeButton.IsEnabled = false);
+        }
+
+        void OnExitToExecution()
+        {
+            UpdateUI(()=>executeButton.Content   = "Execute");
+            UpdateUI(()=>executeButton.IsEnabled = true);
+        }
+
+
         /// <summary>
         ///     Called when [execute clicked].
         /// </summary>
         void OnExecuteClicked()
         {
+            OnEnteredToExecution();
+
             var invocationInfo = InvocationInfo;
 
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
+            
 
             Trace("------------- EXECUTE STARTED -----------------");
 
@@ -139,6 +155,8 @@ namespace ApiInspector.MainWindow
 
             Trace(string.Empty);
             Trace(string.Empty);
+
+            OnExitToExecution();
         }
 
         /// <summary>
