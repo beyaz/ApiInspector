@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using BOA.Process.Kernel.Card;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -27,7 +28,9 @@ namespace ApiInspector.InvocationInfoEditor
 
             if (fullName.StartsWith("BOA.Integration.Model.MobileBranch.", StringComparison.OrdinalIgnoreCase))
             {
-                type = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
+                CardService.UseLocalProxy = true;
+
+                type                      = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
             }
             
 
