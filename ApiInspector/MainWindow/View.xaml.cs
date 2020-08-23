@@ -10,6 +10,7 @@ using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
+using BOA.Process.Kernel.Card;
 
 namespace ApiInspector.MainWindow
 {
@@ -114,6 +115,8 @@ namespace ApiInspector.MainWindow
         {
             UpdateUI(()=>executeButton.Content   = "Executing...");
             UpdateUI(()=>executeButton.IsEnabled = false);
+
+           
         }
 
         void OnExitToExecution()

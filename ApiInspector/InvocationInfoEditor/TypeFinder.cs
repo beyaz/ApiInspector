@@ -28,8 +28,6 @@ namespace ApiInspector.InvocationInfoEditor
 
             if (fullName.StartsWith("BOA.Integration.Model.MobileBranch.", StringComparison.OrdinalIgnoreCase))
             {
-                CardService.UseLocalProxy = true;
-
                 type                      = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
             }
             
