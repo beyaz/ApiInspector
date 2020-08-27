@@ -179,6 +179,12 @@ namespace ApiInspector.InvocationInfoEditor
             assemblyIntellisenseTextBox.SetValue(invocationInfo.AssemblyName);
             classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
             methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
+            
+            // force method name change for update parameter panel
+            if (methodNameIntellisenseTextBox.Editor.Text == invocationInfo.MethodName)
+            {
+                FireEvent(ViewEvents.OnMethodNameChanged);
+            }
         }
 
         /// <summary>
