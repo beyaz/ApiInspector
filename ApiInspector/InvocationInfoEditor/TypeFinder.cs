@@ -23,7 +23,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             if (type != null)
             {
-                return null;
+                return type;
             }
 
             if (fullName.StartsWith("BOA.Process.Kernel.Card.", StringComparison.OrdinalIgnoreCase))
@@ -33,7 +33,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             if (type != null)
             {
-                return null;
+                return type;
             }
 
             if (fullName.StartsWith("BOA.Integration.Model.MobileBranch.", StringComparison.OrdinalIgnoreCase))
@@ -43,7 +43,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             if (type != null)
             {
-                return null;
+                return type;
             }
 
             var names = fullName.Split('.');
