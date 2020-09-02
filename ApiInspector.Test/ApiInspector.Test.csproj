@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="History\HistoryPanelTest.cs" />
+    <Compile Include="InvocationInfoEditor\TypeFinderTest.cs" />
     <Compile Include="Invoking\BoaContextTests.cs" />
     <Compile Include="Invoking\CardServiceInvocationTests.cs" />
     <Compile Include="TestData\AnyClass.cs" />

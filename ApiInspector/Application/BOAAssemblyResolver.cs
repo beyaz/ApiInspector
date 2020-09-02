@@ -66,7 +66,7 @@ namespace ApiInspector.Application
         /// <summary>
         ///     Finds the assembly.
         /// </summary>
-        static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
+        internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
         {
             Trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 

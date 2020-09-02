@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using BOA.Process.Kernel.Card;
+using ApiInspector.Application;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -21,18 +21,44 @@ namespace ApiInspector.InvocationInfoEditor
                 type = Assembly.Load(@"BOA.Card.Contracts").GetTypes().FirstOrDefault(t => t.FullName == fullName);
             }
 
+            if (type != null)
+            {
+                return null;
+            }
+
             if (fullName.StartsWith("BOA.Process.Kernel.Card.", StringComparison.OrdinalIgnoreCase))
             {
                 type = Assembly.Load(@"BOA.Process.Kernel.Card").GetTypes().FirstOrDefault(t => t.FullName == fullName);
             }
 
+            if (type != null)
+            {
+                return null;
+            }
+
             if (fullName.StartsWith("BOA.Integration.Model.MobileBranch.", StringComparison.OrdinalIgnoreCase))
             {
-                type                      = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
+                type = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
             }
-            
 
-            return type;
+            if (type != null)
+            {
+                return null;
+            }
+
+            var names = fullName.Split('.');
+            if (names.FirstOrDefault() == "BOA")
+            {
+                var destination = new string[names.Length - 1];
+
+                Array.Copy(names, destination, destination.Length);
+
+                var assemblyName = string.Join(".", destination);
+
+                return BoaAssemblyResolver.FindAssembly(assemblyName)?.GetType(fullName);
+            }
+
+            return null;
         }
         #endregion
     }
