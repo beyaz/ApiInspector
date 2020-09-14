@@ -49,6 +49,7 @@
     <Compile Include="Bootstrapper\Program.cs" />
     <Compile Include="Infrastructure\EmbeddedCompressedAssemblyReferencesResolver.cs" />
     <Compile Include="Infrastructure\ModuleLoader.cs" />
+    <Compile Include="Infrastructure\Tracer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

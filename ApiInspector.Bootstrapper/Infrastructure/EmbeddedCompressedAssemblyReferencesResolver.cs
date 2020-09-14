@@ -38,21 +38,29 @@ namespace ApiInspector.Infrastructure
         /// </summary>
         readonly string temporaryZipFilePath;
 
-        /// <summary>
-        ///     Gets or sets the trace.
-        /// </summary>
-        readonly Action<string> trace = Console.WriteLine;
+        readonly Tracer tracer;
+       
+
+
+        void Trace(string message)
+        {
+            tracer.Trace(message);
+        }
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="EmbeddedCompressedAssemblyReferencesResolver" /> class.
         /// </summary>
-        public EmbeddedCompressedAssemblyReferencesResolver(AppDomain appDomain, Assembly locatedAssembly, string embeddedZipFileName)
+        public EmbeddedCompressedAssemblyReferencesResolver(AppDomain appDomain, 
+                                                            Assembly locatedAssembly, 
+                                                            string embeddedZipFileName,
+                                                            Tracer tracer)
         {
             this.appDomain           = appDomain ?? throw new ArgumentNullException(nameof(appDomain));
             this.locatedAssembly     = locatedAssembly ?? throw new ArgumentNullException(nameof(locatedAssembly));
             this.embeddedZipFileName = embeddedZipFileName ?? throw new ArgumentNullException(nameof(embeddedZipFileName));
+            this.tracer              = tracer ?? throw new ArgumentNullException(nameof(tracer));
 
             var myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -66,7 +74,7 @@ namespace ApiInspector.Infrastructure
         /// <summary>
         ///     Initializes a new instance of the <see cref="EmbeddedCompressedAssemblyReferencesResolver" /> class.
         /// </summary>
-        public EmbeddedCompressedAssemblyReferencesResolver(Assembly locatedAssembly, string assemblyFullName) : this(AppDomain.CurrentDomain, locatedAssembly, assemblyFullName)
+        public EmbeddedCompressedAssemblyReferencesResolver(Assembly locatedAssembly, string assemblyFullName, Tracer tracer) : this(AppDomain.CurrentDomain, locatedAssembly, assemblyFullName, tracer)
         {
         }
         #endregion
@@ -77,7 +85,8 @@ namespace ApiInspector.Infrastructure
         /// </summary>
         public static void Resolve(string embeddedZipFileName)
         {
-            new EmbeddedCompressedAssemblyReferencesResolver(typeof(EmbeddedCompressedAssemblyReferencesResolver).Assembly, embeddedZipFileName).Resolve();
+            var assembly = typeof(EmbeddedCompressedAssemblyReferencesResolver).Assembly;
+            new EmbeddedCompressedAssemblyReferencesResolver(assembly, embeddedZipFileName,new Tracer()).Resolve();
         }
 
         /// <summary>
@@ -132,7 +141,7 @@ namespace ApiInspector.Infrastructure
         {
             if (File.Exists(temporaryZipFilePath))
             {
-                trace($"Deleting file {temporaryZipFilePath}");
+                Trace($"Deleting file {temporaryZipFilePath}");
                 File.Delete(temporaryZipFilePath);
             }
 
@@ -144,17 +153,17 @@ namespace ApiInspector.Infrastructure
 
             if (File.Exists(targetDirectory))
             {
-                trace($"Deleting file {targetDirectory}");
+                Trace($"Deleting file {targetDirectory}");
                 File.Delete(targetDirectory);
             }
 
             if (Directory.Exists(targetDirectory))
             {
-                trace($"Deleting directory {targetDirectory}");
+                Trace($"Deleting directory {targetDirectory}");
                 Directory.Delete(targetDirectory, true);
             }
 
-            trace($"Creating directory {targetDirectory}");
+            Trace($"Creating directory {targetDirectory}");
             Directory.CreateDirectory(targetDirectory);
 
             File.WriteAllBytes(temporaryZipFilePath, ReadResource(locatedAssembly, "." + embeddedZipFileName));

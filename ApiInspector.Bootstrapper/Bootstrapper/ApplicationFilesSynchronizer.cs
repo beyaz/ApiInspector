@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using ApiInspector.Infrastructure;
 using Dapper;
 
 namespace ApiInspector.Bootstrapper
@@ -18,6 +19,8 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         readonly string applicationName;
 
+        readonly Tracer tracer;
+
         /// <summary>
         ///     The target directory path
         /// </summary>
@@ -28,10 +31,11 @@ namespace ApiInspector.Bootstrapper
         /// <summary>
         ///     Initializes a new instance of the <see cref="ApplicationFilesSynchronizer" /> class.
         /// </summary>
-        public ApplicationFilesSynchronizer(string targetDirectoryPath, string applicationName)
+        public ApplicationFilesSynchronizer(string targetDirectoryPath, string applicationName, Tracer tracer)
         {
             this.targetDirectoryPath = targetDirectoryPath ?? throw new ArgumentNullException(nameof(targetDirectoryPath));
             this.applicationName     = applicationName ?? throw new ArgumentNullException(nameof(applicationName));
+            this.tracer              = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -41,7 +45,11 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         public void Synchronize()
         {
+            tracer.Trace("Fetching files...");
+
             var files = FetchFiles();
+
+            tracer.Trace("Files fetched.");
 
             ExportFiles(files);
         }
@@ -86,6 +94,7 @@ namespace ApiInspector.Bootstrapper
             {
                 var path = Path.Combine(targetDirectoryPath, file.Name);
 
+                tracer.Trace($"Writing file: {Path.GetFileName(path)}");
                 WriteAllBytes(path, file.Content);
             }
         }

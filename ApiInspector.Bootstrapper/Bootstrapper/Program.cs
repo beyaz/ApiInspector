@@ -20,7 +20,7 @@ namespace ApiInspector.Bootstrapper
 
             ModuleLoader.Load();
 
-            new Launcher(TargetDirectoryPath,applicationName).Start();
+            new Launcher(TargetDirectoryPath,applicationName,new Tracer()).Start();
         }
         #endregion
     }

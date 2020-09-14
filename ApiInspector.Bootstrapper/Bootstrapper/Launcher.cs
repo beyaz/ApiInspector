@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using ApiInspector.Infrastructure;
 
 namespace ApiInspector.Bootstrapper
 {
@@ -15,6 +16,8 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         readonly string applicationName;
 
+        readonly Tracer tracer;
+
         /// <summary>
         ///     The target directory path
         /// </summary>
@@ -25,10 +28,11 @@ namespace ApiInspector.Bootstrapper
         /// <summary>
         ///     Initializes a new instance of the <see cref="Launcher" /> class.
         /// </summary>
-        public Launcher(string targetDirectoryPath, string applicationName)
+        public Launcher(string targetDirectoryPath, string applicationName, Tracer tracer)
         {
             this.targetDirectoryPath = targetDirectoryPath ?? throw new ArgumentNullException(nameof(targetDirectoryPath));
             this.applicationName     = applicationName ?? throw new ArgumentNullException(nameof(applicationName));
+            this.tracer              = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -38,15 +42,15 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         public void Start()
         {
-            Console.WriteLine("Yükleniyor...");
+            tracer.Trace("Yükleniyor...");
 
-            var synchronizer = new ApplicationFilesSynchronizer(targetDirectoryPath, applicationName);
+            var synchronizer = new ApplicationFilesSynchronizer(targetDirectoryPath, applicationName,tracer);
 
             synchronizer.Synchronize();
 
             StartProcess();
 
-            Console.WriteLine("Process is started.");
+            tracer.Trace("Process is started.");
         }
         #endregion
 
