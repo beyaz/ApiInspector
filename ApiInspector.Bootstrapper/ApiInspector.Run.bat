@@ -1,1 +1,0 @@
-start d:\BOA\server\bin\ApiInspector.exe

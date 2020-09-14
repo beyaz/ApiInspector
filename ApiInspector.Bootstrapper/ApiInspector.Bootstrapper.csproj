@@ -62,11 +62,6 @@
       <Version>2.0.35</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ApiInspector.Run.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
