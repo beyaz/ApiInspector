@@ -13,11 +13,14 @@ namespace ApiInspector.Bootstrapper
         /// </summary>
         public static void Main(string[] args)
         {
-            ProcessKiller.KillAll("ApiInspector");
+            const string applicationName     = "ApiInspector";
+            const string TargetDirectoryPath = @"d:\boa\server\bin\";
+
+            ProcessKiller.KillAll(applicationName);
 
             ModuleLoader.Load();
 
-            new Launcher().Start();
+            new Launcher(TargetDirectoryPath,applicationName).Start();
         }
         #endregion
     }

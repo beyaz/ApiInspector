@@ -9,11 +9,27 @@ namespace ApiInspector.Bootstrapper
     /// </summary>
     class Launcher
     {
-        #region Constants
+        #region Fields
+        /// <summary>
+        ///     The application name
+        /// </summary>
+        readonly string applicationName;
+
         /// <summary>
         ///     The target directory path
         /// </summary>
-        const string TargetDirectoryPath = @"d:\boa\server\bin\";
+        readonly string targetDirectoryPath;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Launcher" /> class.
+        /// </summary>
+        public Launcher(string targetDirectoryPath, string applicationName)
+        {
+            this.targetDirectoryPath = targetDirectoryPath ?? throw new ArgumentNullException(nameof(targetDirectoryPath));
+            this.applicationName     = applicationName ?? throw new ArgumentNullException(nameof(applicationName));
+        }
         #endregion
 
         #region Public Methods
@@ -24,7 +40,7 @@ namespace ApiInspector.Bootstrapper
         {
             Console.WriteLine("Yükleniyor...");
 
-            var synchronizer = new ApplicationFilesSynchronizer(TargetDirectoryPath, "ApiInspector");
+            var synchronizer = new ApplicationFilesSynchronizer(targetDirectoryPath, applicationName);
 
             synchronizer.Synchronize();
 
@@ -38,9 +54,9 @@ namespace ApiInspector.Bootstrapper
         /// <summary>
         ///     Starts the process.
         /// </summary>
-        static void StartProcess()
+        void StartProcess()
         {
-            Process.Start(Path.Combine(TargetDirectoryPath, "ApiInspector.exe"));
+            Process.Start(Path.Combine(targetDirectoryPath, $"{applicationName}.exe"));
         }
         #endregion
     }
