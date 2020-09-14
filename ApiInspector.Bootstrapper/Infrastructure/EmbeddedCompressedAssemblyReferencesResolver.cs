@@ -38,24 +38,20 @@ namespace ApiInspector.Infrastructure
         /// </summary>
         readonly string temporaryZipFilePath;
 
+        /// <summary>
+        ///     The tracer
+        /// </summary>
         readonly Tracer tracer;
-       
-
-
-        void Trace(string message)
-        {
-            tracer.Trace(message);
-        }
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="EmbeddedCompressedAssemblyReferencesResolver" /> class.
         /// </summary>
-        public EmbeddedCompressedAssemblyReferencesResolver(AppDomain appDomain, 
-                                                            Assembly locatedAssembly, 
-                                                            string embeddedZipFileName,
-                                                            Tracer tracer)
+        public EmbeddedCompressedAssemblyReferencesResolver(AppDomain appDomain,
+                                                            Assembly  locatedAssembly,
+                                                            string    embeddedZipFileName,
+                                                            Tracer    tracer)
         {
             this.appDomain           = appDomain ?? throw new ArgumentNullException(nameof(appDomain));
             this.locatedAssembly     = locatedAssembly ?? throw new ArgumentNullException(nameof(locatedAssembly));
@@ -86,7 +82,7 @@ namespace ApiInspector.Infrastructure
         public static void Resolve(string embeddedZipFileName)
         {
             var assembly = typeof(EmbeddedCompressedAssemblyReferencesResolver).Assembly;
-            new EmbeddedCompressedAssemblyReferencesResolver(assembly, embeddedZipFileName,new Tracer()).Resolve();
+            new EmbeddedCompressedAssemblyReferencesResolver(assembly, embeddedZipFileName, new Tracer()).Resolve();
         }
 
         /// <summary>
@@ -191,6 +187,14 @@ namespace ApiInspector.Infrastructure
             var bytes = File.ReadAllBytes(temporaryDirectory + searchFileName);
 
             return Assembly.Load(bytes);
+        }
+
+        /// <summary>
+        ///     Traces the specified message.
+        /// </summary>
+        void Trace(string message)
+        {
+            tracer.Trace(message);
         }
         #endregion
     }
