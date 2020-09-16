@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>d:\boa\server\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -88,11 +88,14 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>  
     <ApplicationDefinition Include="Application\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+     <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Application\AppInjector.cs" />
     <Compile Include="Application\BoaAssemblyResolver.cs" />
     <Compile Include="AssemblySearchDirectories.cs" />
@@ -165,12 +168,30 @@
       <DependentUpon>View.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Resource Include="Themes\Metro\Light\Metro.MSControls.Core.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Themes\Metro\Light\Metro.MSControls.Toolkit.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Themes\Metro\Light\Styles.Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Themes\Metro\Light\Styles.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Themes\Metro\Light\Theme.Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
   </ItemGroup>
+  
   <ItemGroup>
     <Compile Include="Models\InvocationMethodParameterInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper">
@@ -178,7 +199,7 @@
     </PackageReference>
     <PackageReference Include="Dapper.Contrib">
       <Version>2.0.35</Version>
-    </PackageReference>
+    </PackageReference>    
     <PackageReference Include="Ninject">
       <Version>3.3.4</Version>
     </PackageReference>
@@ -192,20 +213,12 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(TargetDir)$(TargetName).*" "d:\boa\server\bin\"
-
-
-copy /y "$(TargetDir)BOA.DataFlow.dll" "d:\boa\server\bin\"
-copy /y "$(TargetDir)BOA.UnitTestHelper.dll" "d:\boa\server\bin\"
-copy /y "$(TargetDir)Notifications.Wpf.dll" "d:\boa\server\bin\"
-copy /y "$(TargetDir)WpfControls.dll" "d:\boa\server\bin\"
-copy /y "$(TargetDir)Dapper.dll" "d:\boa\server\bin\"
-copy /y "$(TargetDir)Dapper.Contrib.dll" "d:\boa\server\bin\"
-copy /y "$(TargetDir)Ninject.dll" "d:\boa\server\bin\"
-
+    <PostBuildEvent>
 
 </PostBuildEvent>
   </PropertyGroup>

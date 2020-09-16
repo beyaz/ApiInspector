@@ -4,6 +4,13 @@
              Startup = "OnStartup" 
              >
     <Application.Resources>
-
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>   
+                
+                <ResourceDictionary Source="/ApiInspector;component/Themes/Metro/Light/Metro.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="/ApiInspector;component/Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml" />
+             
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
