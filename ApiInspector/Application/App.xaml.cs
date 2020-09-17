@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
 
@@ -19,12 +20,38 @@ namespace ApiInspector.Application
         }
         #endregion
 
-        #region Methods
+        #region Methods        
+        /// <summary>
+        ///     Applies the skin.
+        /// </summary>
+        void ApplySkin()
+        {
+            try
+            {
+                var xamlPathList = new[]
+                {
+                    "Themes/Metro/Light/Metro.MSControls.Core.Implicit.xaml",
+                    "Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml"
+                };
+
+                foreach (var pathInAssembly in xamlPathList)
+                {
+                    Resources.MergedDictionaries.Add(new ResourceDictionary {Source = new Uri($"pack://application:,,,/ApiInspector;component/{pathInAssembly}")});
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
         /// <summary>
         ///     Called when [startup].
         /// </summary>
         void OnStartup(object sender, StartupEventArgs e)
         {
+            ApplySkin();
+
             var errorMonitor = new ErrorMonitor(this);
 
             errorMonitor.StartMonitor();
