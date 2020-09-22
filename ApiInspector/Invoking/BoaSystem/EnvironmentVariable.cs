@@ -39,6 +39,13 @@ namespace ApiInspector.Invoking.BoaSystem
         }
         #endregion
 
+        #region Properties
+        /// <summary>
+        ///     Gets the output file path.
+        /// </summary>
+        string OutputFilePath => Path.Combine(configurationDirectory.GetDirectoryPath(), "EnvironmentVariables.json");
+        #endregion
+
         #region Public Methods
         /// <summary>
         ///     Gets the name of the user.
@@ -50,22 +57,12 @@ namespace ApiInspector.Invoking.BoaSystem
                 return userName;
             }
 
-            var filePath = Path.Combine(configurationDirectory.GetDirectoryPath(), "EnvironmentVariables.json");
-            if (!File.Exists(filePath))
+            if (!File.Exists(OutputFilePath))
             {
-                var environmentVariableFileModel = new EnvironmentVariableFileModel
-                {
-                    UserName = Environment.UserName
-                };
-
-                var serializer = new Serializer();
-
-                var fileContent = serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
-
-                Utility.WriteAllText(filePath, fileContent);
+                CreateOutputFile();
             }
 
-            var model = SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(File.ReadAllText(filePath));
+            var model = SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(File.ReadAllText(OutputFilePath));
 
             if (!string.IsNullOrWhiteSpace(model.UserName))
             {
@@ -81,6 +78,25 @@ namespace ApiInspector.Invoking.BoaSystem
             tracer.Trace($"UserName:{userName}");
 
             return userName;
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Creates the output file.
+        /// </summary>
+        void CreateOutputFile()
+        {
+            var environmentVariableFileModel = new EnvironmentVariableFileModel
+            {
+                UserName = Environment.UserName
+            };
+
+            var serializer = new Serializer();
+
+            var fileContent = serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
+
+            Utility.WriteAllText(OutputFilePath, fileContent);
         }
         #endregion
     }
