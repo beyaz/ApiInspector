@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
@@ -38,14 +39,14 @@ namespace ApiInspector.History
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataSource" /> class.
         /// </summary>
-        public BoaDevDataSource(EnvironmentVariable environmentVariable, Serializer serializer)
+        public BoaDevDataSource(EnvironmentVariable environmentVariable, Serializer serializer, ConnectionString connectionString)
         {
             this.environmentVariable = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
             this.serializer          = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            
+            connectionString    = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
 
-            const string ConnectionString = "server=srvdev\\ATLAS;database =BOA;integrated security=true";
-
-            connection = new SqlConnection(ConnectionString);
+            connection = new SqlConnection(connectionString.CurrentConnectionString);
         }
         #endregion
 

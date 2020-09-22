@@ -88,12 +88,14 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
-  <ItemGroup>  
+  <ItemGroup>
     <ApplicationDefinition Include="Application\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-     <Compile Include="Properties\AssemblyInfo.cs">
+    <Compile Include="Application\BoaUserDataSource.cs" />
+    <Compile Include="Application\ConnectionString.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\AppInjector.cs" />
@@ -189,7 +191,6 @@
       <SubType>Designer</SubType>
     </Resource>
   </ItemGroup>
-  
   <ItemGroup>
     <Compile Include="Models\InvocationMethodParameterInfo.cs" />
   </ItemGroup>
@@ -199,7 +200,7 @@
     </PackageReference>
     <PackageReference Include="Dapper.Contrib">
       <Version>2.0.35</Version>
-    </PackageReference>    
+    </PackageReference>
     <PackageReference Include="Ninject">
       <Version>3.3.4</Version>
     </PackageReference>
@@ -213,14 +214,11 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /fi "imagename eq $(TargetFileName)"</PreBuildEvent>
