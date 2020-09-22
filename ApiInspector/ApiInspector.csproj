@@ -100,6 +100,7 @@
     <Compile Include="Components\KeyValueEditor\CodeWithDescriptionEditor.xaml.cs">
       <DependentUpon>CodeWithDescriptionEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\KeyValueEditor\SuggestionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

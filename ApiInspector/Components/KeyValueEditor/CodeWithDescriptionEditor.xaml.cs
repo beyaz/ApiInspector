@@ -1,25 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-
 using WpfControls;
 
 namespace ApiInspector.Components.KeyValueEditor
 {
-  public  class SuggestionHandler
-    {
-        public IReadOnlyList<CodeWithDescriptionContract> Handle(string filter)
-        {
-            if (string.IsNullOrEmpty(filter))
-            {
-                return null;
-            }
-
-            return new List<CodeWithDescriptionContract>();
-        }
-    }
     /// <summary>
     ///     Interaction logic for CodeWithDescriptionEditor.xaml
     /// </summary>
