@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ApiInspector.Application;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
@@ -54,6 +55,8 @@ namespace ApiInspector.MainWindow
 
             traceMonitor.StartToMonitor();
             currentInvocationInfo.model.Trace = traceQueue.AddMessage;
+
+            
 
             Loaded += (s, e) =>
             {

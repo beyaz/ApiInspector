@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using ApiInspector.Application;
 using WpfControls;
 
 namespace ApiInspector.Components
@@ -20,14 +20,7 @@ namespace ApiInspector.Components
             Provider = this;
         }
         #endregion
-
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the context.
-        /// </summary>
-        public Func<IReadOnlyList<string>> Suggestions { get; set; }
-        #endregion
-
+        
         #region Public Methods
         /// <summary>
         ///     Sets the value.
@@ -50,12 +43,12 @@ namespace ApiInspector.Components
                 return null;
             }
 
-            if (Suggestions == null)
-            {
-                return null;
-            }
+            var source = new BoaUserDataSource(new ConnectionString());
 
-            return Suggestions()?.Where(x => x.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0).Take(10);
+           
+            
+            return source.GetUsers(filter)?.Where(x => x.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                                       x.UserCode.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0).Take(10);
         }
         #endregion
     }

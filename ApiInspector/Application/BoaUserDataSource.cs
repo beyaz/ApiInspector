@@ -37,7 +37,7 @@ namespace ApiInspector.Application
         /// </summary>
         public IReadOnlyList<BoaUserModel> GetUsers(string search)
         {
-            return connection.Query<BoaUserModel>($"SELECT [UserCode], [Name]  FROM COR.BoaUser WITH(NOLOCK) WHERE [Name] LIKE @{nameof(search)}", new {search}).ToList();
+            return connection.Query<BoaUserModel>($"SELECT [UserCode], [Name]  FROM COR.BoaUser WITH(NOLOCK) WHERE [Name] LIKE '%' + @{nameof(search)} + '%'", new {search}).ToList();
         }
         #endregion
     }
@@ -57,6 +57,16 @@ namespace ApiInspector.Application
         ///     Gets or sets the user code.
         /// </summary>
         public string UserCode { get; set; }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        public override string ToString()
+        {
+            return Name;
+        }
         #endregion
     }
 }
