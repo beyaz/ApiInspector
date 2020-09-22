@@ -4,14 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using ApiInspector.Application;
 using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
-using BOA.Process.Kernel.Card;
 
 namespace ApiInspector.MainWindow
 {
@@ -65,10 +63,20 @@ namespace ApiInspector.MainWindow
                 historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo);
                 historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
                 historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
+
+                UpdateTitle();
             };
         }
         #endregion
 
+        void UpdateTitle()
+        {
+            using (var injector = new Injector(traceQueue, EnvironmentInfo.Dev))
+            {
+                var userName = injector.Get<EnvironmentVariable>().GetUserName();
+                Title = "ApiInspector - " + userName;
+            }
+        }
         #region Properties
         /// <summary>
         ///     Gets the invocation information.
