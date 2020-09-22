@@ -95,6 +95,7 @@
     </ApplicationDefinition>
     <Compile Include="Application\BoaUserDataSource.cs" />
     <Compile Include="Application\ConnectionString.cs" />
+    <Compile Include="Components\BoaUserIntellisenseTextBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
