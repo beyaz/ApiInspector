@@ -38,7 +38,6 @@
                     <Button HorizontalAlignment = "Right" x:Name = "executeButton" Click = "OnExecuteClicked" > Execute</Button>
                     <StackPanel HorizontalAlignment = "Left" Orientation="Horizontal">
                           <Button  Click = "OnConfigureClicked" > Config</Button>
-                          <components:BoaUserIntellisenseTextBox Width="200" Margin="10,0,0,0" />
                     </StackPanel>
                   
                 </Grid>
