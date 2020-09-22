@@ -96,6 +96,10 @@
     <Compile Include="Application\BoaUserDataSource.cs" />
     <Compile Include="Application\ConnectionString.cs" />
     <Compile Include="Components\BoaUserIntellisenseTextBox.cs" />
+    <Compile Include="Components\KeyValueEditor\CodeWithDescriptionContract.cs" />
+    <Compile Include="Components\KeyValueEditor\CodeWithDescriptionEditor.xaml.cs">
+      <DependentUpon>CodeWithDescriptionEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -146,6 +150,10 @@
     <Compile Include="Tracing\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
+    <Page Include="Components\KeyValueEditor\CodeWithDescriptionEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
