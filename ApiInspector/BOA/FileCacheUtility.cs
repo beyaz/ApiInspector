@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using Newtonsoft.Json;
-
-namespace BOA
+﻿namespace BOA
 {
+    using System;
+    using System.IO;
+    using Newtonsoft.Json;
+
     /// <summary>
     ///     The file cache utility
     /// </summary>

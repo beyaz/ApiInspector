@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Reflection;
 using System.Security.Authentication;
 using ApiInspector.Tracing;
+using BOA;
 using BOA.Base;
 using BOA.Base.Data;
 using BOA.Business.Kernel.General;
 using BOA.Common.Configuration;
 using BOA.Common.Helpers;
+using BOA.Common.Logger;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
+using BOA.Proxy;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -22,6 +26,10 @@ namespace ApiInspector.Invoking.BoaSystem
         ///     The boa configuration file
         /// </summary>
         readonly BoaConfigurationFile boaConfigurationFile;
+
+        readonly bool cacheEnabled = true;
+
+        readonly EnvironmentInfo environmentInfo;
 
         /// <summary>
         ///     The environment variable
@@ -53,11 +61,12 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile, EnvironmentVariable environmentVariable)
+        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile, EnvironmentVariable environmentVariable, EnvironmentInfo environmentInfo)
         {
             this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
             this.environmentVariable  = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
+            this.environmentInfo      = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
         }
         #endregion
 
@@ -113,16 +122,51 @@ namespace ApiInspector.Invoking.BoaSystem
                 }
             };
 
-            tracer.Trace("Authenticate response waiting...");
-            var response = new UserManager().Authenticate(request);
-            if (!response.Success)
+            if (cacheEnabled)
             {
-                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
+                tracer.Trace("Authenticated from cache.");
+
+                var keys = new object[]
+                {
+                    request.AuthenticationContext.UserName,
+                    environmentInfo.ToString(),
+                    request.AuthenticationContext.Channel
+                };
+                var response = FileCacheUtility.TryGet(() => new UserManager().Authenticate(request), keys);
+                if (!response.Success)
+                {
+                    throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
+                }
+
+                tracer.Trace("Authenticate is success.");
+
+                authenticationResponse = response;
+
+                // update client application context
+                {
+                    typeof(ClientApplicationContext).GetMethod("SetApplicationContext", BindingFlags.Static | BindingFlags.NonPublic)?.Invoke(null, new object[] {response.ApplicationContext});
+                    ClientApplicationContext.SetCommunicationContext(new CommunicationContext());
+                    ClientApplicationContext.SetBusinessKey(response.BusinessKey);
+
+                    LogManager.SetThreadContext(ClientApplicationContext.Application);
+                }
+
+                return;
             }
 
-            tracer.Trace("Authenticate is success.");
+            {
+                tracer.Trace("Authenticate response waiting...");
 
-            authenticationResponse = response;
+                var response = new UserManager().Authenticate(request);
+                if (!response.Success)
+                {
+                    throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
+                }
+
+                tracer.Trace("Authenticate is success.");
+
+                authenticationResponse = response;
+            }
         }
 
         /// <summary>
