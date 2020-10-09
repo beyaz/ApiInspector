@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Reflection;
 using System.Security.Authentication;
 using ApiInspector.Tracing;
-using BOA;
 using BOA.Base;
 using BOA.Base.Data;
 using BOA.Business.Kernel.General;
 using BOA.Common.Configuration;
 using BOA.Common.Helpers;
-using BOA.Common.Logger;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card;
-using BOA.Proxy;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -26,10 +22,6 @@ namespace ApiInspector.Invoking.BoaSystem
         ///     The boa configuration file
         /// </summary>
         readonly BoaConfigurationFile boaConfigurationFile;
-
-        readonly bool cacheEnabled = true;
-
-        readonly EnvironmentInfo environmentInfo;
 
         /// <summary>
         ///     The environment variable
@@ -61,12 +53,11 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile, EnvironmentVariable environmentVariable, EnvironmentInfo environmentInfo)
+        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile, EnvironmentVariable environmentVariable)
         {
             this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
             this.environmentVariable  = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
-            this.environmentInfo      = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
         }
         #endregion
 
@@ -121,52 +112,17 @@ namespace ApiInspector.Invoking.BoaSystem
                     UserName = environmentVariable.GetUserName()
                 }
             };
+            tracer.Trace("Authenticate response waiting...");
 
-            if (cacheEnabled)
+            var response = new UserManager().Authenticate(request);
+            if (!response.Success)
             {
-                tracer.Trace("Authenticated from cache.");
-
-                var keys = new object[]
-                {
-                    request.AuthenticationContext.UserName,
-                    environmentInfo.ToString(),
-                    request.AuthenticationContext.Channel
-                };
-                var response = FileCacheUtility.TryGet(() => new UserManager().Authenticate(request), keys);
-                if (!response.Success)
-                {
-                    throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
-                }
-
-                tracer.Trace("Authenticate is success.");
-
-                authenticationResponse = response;
-
-                // update client application context
-                {
-                    typeof(ClientApplicationContext).GetMethod("SetApplicationContext", BindingFlags.Static | BindingFlags.NonPublic)?.Invoke(null, new object[] {response.ApplicationContext});
-                    ClientApplicationContext.SetCommunicationContext(new CommunicationContext());
-                    ClientApplicationContext.SetBusinessKey(response.BusinessKey);
-
-                    LogManager.SetThreadContext(ClientApplicationContext.Application);
-                }
-
-                return;
+                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
             }
 
-            {
-                tracer.Trace("Authenticate response waiting...");
+            tracer.Trace("Authenticate is success.");
 
-                var response = new UserManager().Authenticate(request);
-                if (!response.Success)
-                {
-                    throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
-                }
-
-                tracer.Trace("Authenticate is success.");
-
-                authenticationResponse = response;
-            }
+            authenticationResponse = response;
         }
 
         /// <summary>
