@@ -7,7 +7,7 @@ using BOA.Business.Kernel.General;
 using BOA.Common.Configuration;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
-using BOA.Process.Kernel.Card;
+using BOA.Process.Kernel.Card.Internal;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
