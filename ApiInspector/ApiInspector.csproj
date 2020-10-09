@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -44,29 +44,14 @@
     <Reference Include="BOA.Proxy">
       <HintPath>d:\BOA\Server\bin\BOA.Proxy.dll</HintPath>
     </Reference>
-    <Reference Include="BOA.Card.Core">
-      <HintPath>d:\BOA\Server\bin\BOA.Card.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="BOA.Card.Definitions">
-      <HintPath>..\..\..\BOA\Server\bin\BOA.Card.Definitions.dll</HintPath>
-    </Reference>
-    <Reference Include="BOA.Card.Contracts">
-      <HintPath>d:\BOA\Server\bin\BOA.Card.Contracts.dll</HintPath>
-    </Reference>
     <Reference Include="BOA.Common.TaskScheduler">
       <HintPath>d:\BOA\Client\bin\BOA.Common.TaskScheduler.dll</HintPath>
     </Reference>
     <Reference Include="BOA.EOD.Base">
       <HintPath>d:\BOA\Client\bin\BOA.EOD.Base.dll</HintPath>
     </Reference>
-    <Reference Include="BOA.Proxy.Kernel.Card">
-      <HintPath>d:\BOA\Server\bin\BOA.Proxy.Kernel.Card.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>d:\BOA\Server\bin\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="BOA.Process.Kernel.Card">
-      <HintPath>d:\BOA\Server\bin\BOA.Process.Kernel.Card.dll</HintPath>
     </Reference>
     <Reference Include="BOA.Process.Kernel.Card.Internal">
       <HintPath>d:\BOA\Server\bin\BOA.Process.Kernel.Card.Internal.dll</HintPath>
@@ -81,8 +66,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
