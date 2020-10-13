@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ApiInspector.Serialization
@@ -16,6 +17,32 @@ namespace ApiInspector.Serialization
         {
             var serialized = JsonConvert.SerializeObject(source);
             return JsonConvert.DeserializeObject<T>(serialized);
+        }
+
+        /// <summary>
+        ///     Deserializes the specified json content.
+        /// </summary>
+        public T Deserialize<T>(string jsonContent)
+        {
+            if (jsonContent == null)
+            {
+                throw new ArgumentNullException(nameof(jsonContent));
+            }
+
+            return JsonConvert.DeserializeObject<T>(jsonContent);
+        }
+
+        /// <summary>
+        ///     Deserializes the specified json content.
+        /// </summary>
+        public object Deserialize(string jsonContent, Type targetType)
+        {
+            if (jsonContent == null)
+            {
+                throw new ArgumentNullException(nameof(jsonContent));
+            }
+
+            return JsonConvert.DeserializeObject(jsonContent, targetType);
         }
 
         /// <summary>

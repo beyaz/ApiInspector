@@ -132,6 +132,7 @@
     <Compile Include="Tracing\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="Util\JsonSorter.cs" />
     <Page Include="InvocationInfoEditor\View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
