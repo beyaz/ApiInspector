@@ -81,7 +81,12 @@ namespace ApiInspector.InvocationInfoEditor
                 FontWeight = FontWeights.Bold
             };
 
-            var editor = new TextBox();
+            var editor = new TextBox
+            {
+                TextWrapping                = TextWrapping.Wrap,
+                AcceptsReturn               = true,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+            };
 
             var primitiveTypeNames = new[]
             {
