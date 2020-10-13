@@ -17,7 +17,7 @@ namespace ApiInspector.Util
         /// <summary>
         ///     Sorts the specified json content.
         /// </summary>
-        public static void Sort(string jsonFilePath, string classFullName, Dictionary<string, string> sortOptions)
+        public static void Sort(string jsonFilePath, string classFullName, Dictionary<string, string> sortByPropertyMaps)
         {
             var jsonContent = File.ReadAllText(jsonFilePath);
 
@@ -32,9 +32,9 @@ namespace ApiInspector.Util
             }
 
             var instance = serializer.Deserialize(jsonContent, type);
-            if (sortOptions != null)
+            if (sortByPropertyMaps != null)
             {
-                foreach (var pair in sortOptions)
+                foreach (var pair in sortByPropertyMaps)
                 {
                     OrderListByProperty(instance, pair.Key, pair.Value);
                 }
@@ -47,6 +47,9 @@ namespace ApiInspector.Util
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Gets the property value.
+        /// </summary>
         static object GetPropertyValue(object instance, string propertyName)
         {
             if (instance == null)
@@ -70,11 +73,17 @@ namespace ApiInspector.Util
             return propertyInfo.GetValue(instance);
         }
 
+        /// <summary>
+        ///     Orders the by.
+        /// </summary>
         static List<object> OrderBy(List<object> list, string orderPropertyName)
         {
             return list.OrderBy(item => GetPropertyValue(item, orderPropertyName)).ToList();
         }
 
+        /// <summary>
+        ///     Orders the list by property.
+        /// </summary>
         static void OrderListByProperty(object instance, string enumerablePropertyName, string orderPropertyName)
         {
             if (instance == null)
@@ -109,12 +118,15 @@ namespace ApiInspector.Util
 
                 items.Clear();
 
-                items.AddRange(list);
+                foreach (var item in list)
+                {
+                    items.GetType().GetMethod("Add").Invoke(items, new[] {item});
+                }
 
                 return;
             }
 
-            throw new NotImplementedException();
+            throw new NotImplementedException(propertyInfo.PropertyType.FullName);
         }
         #endregion
     }
