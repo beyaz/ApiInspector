@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
@@ -119,6 +120,8 @@ namespace ApiInspector.Invoking.Invokers
             // INITIALIZE TargetType
             try
             {
+                BoaAssemblyResolver.InvocationSearchDirectory = invocationInfo.AssemblySearchDirectory;
+
                 input.TargetType = GetTargetType(invocationInfo);
             }
             catch (Exception e)
@@ -157,7 +160,7 @@ namespace ApiInspector.Invoking.Invokers
                 input.MethodInfo = methodInfo;
             }
 
-            if (invocationInfo.AssemblyName.StartsWith("BOA."))
+            if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
             {
                 tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
                 try

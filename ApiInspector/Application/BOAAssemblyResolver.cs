@@ -26,6 +26,11 @@ namespace ApiInspector.Application
 
         #region Public Properties
         /// <summary>
+        ///     Gets or sets the invocation search directory.
+        /// </summary>
+        public static string InvocationSearchDirectory { get; set; }
+
+        /// <summary>
         ///     Gets or sets the trace.
         /// </summary>
         public static Action<string> Trace { get; set; } = message => { };
@@ -42,6 +47,39 @@ namespace ApiInspector.Application
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Finds the assembly.
+        /// </summary>
+        internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
+        {
+            Trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
+
+            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
+            {
+                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
+            }
+
+            var directories = new List<string>(AssemblySearchDirectories);
+            if (InvocationSearchDirectory != null)
+            {
+                directories.Add(InvocationSearchDirectory);
+            }
+
+            foreach (var searchDirectory in directories)
+            {
+                var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
+                if (File.Exists(filePath))
+                {
+                    Trace($"Loading assembly: {filePath}");
+                    return Assembly.LoadFile(filePath);
+                }
+            }
+
+            Trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
+
+            return null;
+        }
+
         /// <summary>
         ///     Domains the assembly resolve.
         /// </summary>
@@ -61,33 +99,6 @@ namespace ApiInspector.Application
             }
 
             throw new ArgumentException("AssemblyNotFound:" + args.Name);
-        }
-
-        /// <summary>
-        ///     Finds the assembly.
-        /// </summary>
-        internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
-        {
-            Trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
-
-            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
-            {
-                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
-            }
-
-            foreach (var searchDirectory in AssemblySearchDirectories)
-            {
-                var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
-                if (File.Exists(filePath))
-                {
-                    Trace($"Loading assembly: {filePath}");
-                    return Assembly.LoadFile(filePath);
-                }
-            }
-
-            Trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
-
-            return null;
         }
         #endregion
     }
