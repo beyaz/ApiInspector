@@ -8,21 +8,25 @@ namespace ApiInspector.Util
     public class JsonSorterTest
     {
         #region Public Methods
+        [TestInitialize]
+        public void Initialize()
+        {
+            BoaAssemblyResolver.AttachToCurrentDomain();
+        }
+
         [TestMethod]
         public void SortJson()
         {
-            JsonSorter.Sort(@"D:\temp\mobile\CreditAndDebitCardList\Old.json", "BOA.Integration.Model.MobileBranch.CreditAndDebitCardListResponse", new Dictionary<string, string>
+            var input = new JsonSorterSortInput
             {
-                {"ClosedCardList", "CreditCardNumber"}
-            });
-        }
-        #endregion
-
-        #region Methods
-        [TestInitialize]
-      public  void Initialize()
-        {
-            BoaAssemblyResolver.AttachToCurrentDomain();
+                JsonFilePath  = @"D:\temp\mobile\CreditAndDebitCardList\Old.json",
+                ClassFullName = "BOA.Integration.Model.MobileBranch.CreditAndDebitCardListResponse",
+                SortByPropertyMaps = new Dictionary<string, string>
+                {
+                    {"ClosedCardList", "CreditCardNumber"}
+                }
+            };
+            JsonSorter.Sort(input);
         }
         #endregion
     }

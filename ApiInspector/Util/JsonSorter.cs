@@ -9,6 +9,29 @@ using ApiInspector.Serialization;
 namespace ApiInspector.Util
 {
     /// <summary>
+    ///     The json sorter sort input
+    /// </summary>
+    class JsonSorterSortInput
+    {
+        #region Public Properties
+        /// <summary>
+        ///     Gets or sets the full name of the class.
+        /// </summary>
+        public string ClassFullName { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the json file path.
+        /// </summary>
+        public string JsonFilePath { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the sort by property maps.
+        /// </summary>
+        public Dictionary<string, string> SortByPropertyMaps { get; set; }
+        #endregion
+    }
+
+    /// <summary>
     ///     The json sorter
     /// </summary>
     class JsonSorter
@@ -17,8 +40,12 @@ namespace ApiInspector.Util
         /// <summary>
         ///     Sorts the specified json content.
         /// </summary>
-        public static void Sort(string jsonFilePath, string classFullName, Dictionary<string, string> sortByPropertyMaps)
+        public static void Sort(JsonSorterSortInput input)
         {
+            var jsonFilePath       = input.JsonFilePath;
+            var classFullName      = input.ClassFullName;
+            var sortByPropertyMaps = input.SortByPropertyMaps;
+
             var jsonContent = File.ReadAllText(jsonFilePath);
 
             var serializer = new Serializer();
