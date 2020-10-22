@@ -39,6 +39,20 @@ namespace ApiInspector.Invoking.BoaSystem
         }
         #endregion
 
+        #region Public Properties
+        /// <summary>
+        ///     Gets a value indicating whether [use local proxy].
+        /// </summary>
+        public bool UseLocalProxyForCardServices
+        {
+            get
+            {
+                GetUserName();
+                return ReadModelFromFile().UseLocalProxyForCardServices;
+            }
+        }
+        #endregion
+
         #region Properties
         /// <summary>
         ///     Gets the output file path.
@@ -62,7 +76,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 CreateOutputFile();
             }
 
-            var model = SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(File.ReadAllText(OutputFilePath));
+            var model = ReadModelFromFile();
 
             if (!string.IsNullOrWhiteSpace(model.UserName))
             {
@@ -89,7 +103,8 @@ namespace ApiInspector.Invoking.BoaSystem
         {
             var environmentVariableFileModel = new EnvironmentVariableFileModel
             {
-                UserName = Environment.UserName
+                UserName      = Environment.UserName,
+                UseLocalProxyForCardServices = true
             };
 
             var serializer = new Serializer();
@@ -97,6 +112,14 @@ namespace ApiInspector.Invoking.BoaSystem
             var fileContent = serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
             Utility.WriteAllText(OutputFilePath, fileContent);
+        }
+
+        /// <summary>
+        ///     Reads the model from file.
+        /// </summary>
+        EnvironmentVariableFileModel ReadModelFromFile()
+        {
+            return SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(File.ReadAllText(OutputFilePath));
         }
         #endregion
     }
@@ -108,6 +131,11 @@ namespace ApiInspector.Invoking.BoaSystem
     public class EnvironmentVariableFileModel
     {
         #region Public Properties
+        /// <summary>
+        ///     Gets or sets a value indicating whether [use local proxy].
+        /// </summary>
+        public bool UseLocalProxyForCardServices { get; set; }
+
         /// <summary>
         ///     Gets or sets the name of the user.
         /// </summary>

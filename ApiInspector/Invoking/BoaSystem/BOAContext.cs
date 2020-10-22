@@ -165,7 +165,11 @@ namespace ApiInspector.Invoking.BoaSystem
 
             objectHelper.Context.DBLayer.BeginTransaction();
 
-            CardService.UseLocalProxy = true;
+            if (environmentVariable.UseLocalProxyForCardServices)
+            {
+                CardService.UseLocalProxy = true;    
+            }
+            
 
             return objectHelper;
         }
