@@ -10,6 +10,7 @@ using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
+using static ApiInspector.Utility;
 
 namespace ApiInspector.MainWindow
 {
@@ -164,7 +165,7 @@ namespace ApiInspector.MainWindow
 
             if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
             {
-                Utility.WriteAllText(invocationInfo.ResponseOutputFilePath, invokerOutput.ExecutionResponseAsJson);
+                WriteToFile(invocationInfo.ResponseOutputFilePath, invokerOutput.ExecutionResponseAsJson);
             }
 
             Trace(string.Empty);

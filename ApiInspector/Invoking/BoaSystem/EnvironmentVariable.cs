@@ -106,7 +106,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             var fileContent = serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
-            Utility.WriteAllText(OutputFilePath, fileContent);
+            Utility.WriteToFile(OutputFilePath, fileContent);
         }
 
         /// <summary>

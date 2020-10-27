@@ -34,17 +34,6 @@ namespace ApiInspector
         }
 
         /// <summary>
-        ///     Creates the directory if not exists.
-        /// </summary>
-        public static void CreateDirectoryIfNotExists(string directoryName)
-        {
-            if (!Directory.Exists(directoryName))
-            {
-                Directory.CreateDirectory(directoryName);
-            }
-        }
-
-        /// <summary>
         ///     Determines whether the specified action is success.
         /// </summary>
         public static bool IsSuccess<T>(Func<T> action, ref T target)
@@ -104,21 +93,7 @@ namespace ApiInspector
         /// <summary>
         ///     Writes all text.
         /// </summary>
-        public static void WriteAllText(string filePath, string content)
-        {
-            var directoryName = GetNotNullDirectoryNameFromFilePath(filePath);
-
-            CreateDirectoryIfNotExists(directoryName);
-
-            File.WriteAllText(filePath, content);
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Gets the not null directory name from file path.
-        /// </summary>
-        static string GetNotNullDirectoryNameFromFilePath(string filePath)
+        public static void WriteToFile(string filePath, string content)
         {
             var directoryName = Path.GetDirectoryName(filePath);
             if (directoryName == null)
@@ -126,7 +101,12 @@ namespace ApiInspector
                 throw new ArgumentNullException(nameof(directoryName));
             }
 
-            return directoryName;
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
+            File.WriteAllText(filePath, content);
         }
         #endregion
     }

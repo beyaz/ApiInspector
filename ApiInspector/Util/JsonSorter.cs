@@ -69,7 +69,7 @@ namespace ApiInspector.Util
 
             var sortedJson = serializer.SerializeToJsonDoNotIgnoreDefaultValues(instance);
 
-            Utility.WriteAllText(jsonFilePath + ".Formatted.json", sortedJson);
+            Utility.WriteToFile(jsonFilePath + ".Formatted.json", sortedJson);
         }
         #endregion
 

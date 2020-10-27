@@ -70,7 +70,7 @@ namespace ApiInspector.History
         {
             var filePath = GetFilePath(info);
 
-            Utility.WriteAllText(filePath, serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info));
+            Utility.WriteToFile(filePath, serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info));
         }
         #endregion
 
