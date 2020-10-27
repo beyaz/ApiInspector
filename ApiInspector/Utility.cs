@@ -34,6 +34,17 @@ namespace ApiInspector
         }
 
         /// <summary>
+        ///     Creates the directory if not exists.
+        /// </summary>
+        public static void CreateDirectoryIfNotExists(string directoryName)
+        {
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+        }
+
+        /// <summary>
         ///     Determines whether the specified action is success.
         /// </summary>
         public static bool IsSuccess<T>(Func<T> action, ref T target)
@@ -101,10 +112,7 @@ namespace ApiInspector
                 throw new ArgumentNullException(nameof(directoryName));
             }
 
-            if (!Directory.Exists(directoryName))
-            {
-                Directory.CreateDirectory(directoryName);
-            }
+            CreateDirectoryIfNotExists(directoryName);
 
             File.WriteAllText(filePath, content);
         }
