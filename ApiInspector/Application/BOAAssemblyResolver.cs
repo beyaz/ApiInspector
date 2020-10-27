@@ -52,30 +52,37 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
         {
-            Trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
+            Action<string> trace = Trace;
+
+            IReadOnlyList<string> GetDirectories()
+            {
+                var directories = new List<string>(AssemblySearchDirectories);
+                if (InvocationSearchDirectory != null)
+                {
+                    directories.Add(InvocationSearchDirectory);
+                }
+
+                return directories;
+            }
+
+            trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 
             if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
             {
                 assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
             }
 
-            var directories = new List<string>(AssemblySearchDirectories);
-            if (InvocationSearchDirectory != null)
-            {
-                directories.Add(InvocationSearchDirectory);
-            }
-
-            foreach (var searchDirectory in directories)
+            foreach (var searchDirectory in GetDirectories())
             {
                 var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
                 if (File.Exists(filePath))
                 {
-                    Trace($"Loading assembly: {filePath}");
+                    trace($"Loading assembly: {filePath}");
                     return Assembly.LoadFile(filePath);
                 }
             }
 
-            Trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
+            trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
 
             return null;
         }
