@@ -169,7 +169,6 @@ namespace ApiInspector.Invoking.BoaSystem
             {
                 CardService.UseLocalProxy = true;    
             }
-            
 
             return objectHelper;
         }

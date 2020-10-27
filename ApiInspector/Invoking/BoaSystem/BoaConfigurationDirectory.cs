@@ -3,13 +3,13 @@
     /// <summary>
     ///     The boa configuration directory
     /// </summary>
-    class BoaConfigurationDirectory
+    static class BoaConfigurationDirectory
     {
         #region Public Methods
         /// <summary>
-        ///     Gets the directory path.
+        ///     Gets the configuration directory path.
         /// </summary>
-        public string GetDirectoryPath()
+        public static string GetConfigurationDirectoryPath()
         {
             return @"d:\boa\server\bin\ApiInspectorConfiguration\";
         }

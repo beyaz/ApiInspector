@@ -3,6 +3,7 @@ using System.IO;
 using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Helpers;
+using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
 
 namespace ApiInspector.Invoking.BoaSystem
 {
@@ -12,11 +13,6 @@ namespace ApiInspector.Invoking.BoaSystem
     class EnvironmentVariable
     {
         #region Fields
-        /// <summary>
-        ///     The configuration directory
-        /// </summary>
-        readonly BoaConfigurationDirectory configurationDirectory;
-
         /// <summary>
         ///     The tracer
         /// </summary>
@@ -32,10 +28,9 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="EnvironmentVariable" /> class.
         /// </summary>
-        public EnvironmentVariable(BoaConfigurationDirectory configurationDirectory, TraceQueue tracer)
+        public EnvironmentVariable(TraceQueue tracer)
         {
-            this.configurationDirectory = configurationDirectory ?? throw new ArgumentNullException(nameof(configurationDirectory));
-            this.tracer                 = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -57,7 +52,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Gets the output file path.
         /// </summary>
-        string OutputFilePath => Path.Combine(configurationDirectory.GetDirectoryPath(), "EnvironmentVariables.json");
+        string OutputFilePath => Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
         #endregion
 
         #region Public Methods
@@ -103,7 +98,7 @@ namespace ApiInspector.Invoking.BoaSystem
         {
             var environmentVariableFileModel = new EnvironmentVariableFileModel
             {
-                UserName      = Environment.UserName,
+                UserName                     = Environment.UserName,
                 UseLocalProxyForCardServices = true
             };
 

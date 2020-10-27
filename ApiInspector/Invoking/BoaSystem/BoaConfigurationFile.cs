@@ -1,6 +1,7 @@
 ﻿using System;
 using ApiInspector.Tracing;
 using BOA.Common.Configuration;
+using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
 
 namespace ApiInspector.Invoking.BoaSystem
 {
@@ -10,8 +11,6 @@ namespace ApiInspector.Invoking.BoaSystem
     class BoaConfigurationFile
     {
         #region Fields
-        readonly BoaConfigurationDirectory configurationDirectory;
-
         /// <summary>
         ///     The environment information
         /// </summary>
@@ -32,11 +31,10 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="BoaConfigurationFile" /> class.
         /// </summary>
-        public BoaConfigurationFile(EnvironmentInfo environmentInfo, ITracer tracer, BoaConfigurationDirectory configurationDirectory)
+        public BoaConfigurationFile(EnvironmentInfo environmentInfo, ITracer tracer)
         {
-            this.environmentInfo        = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
-            this.tracer                 = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.configurationDirectory = configurationDirectory ?? throw new ArgumentNullException(nameof(configurationDirectory));
+            this.environmentInfo = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
         }
         #endregion
 
@@ -51,15 +49,25 @@ namespace ApiInspector.Invoking.BoaSystem
                 return;
             }
 
-            var configurationDirectoryPath = configurationDirectory.GetDirectoryPath();
-
-            var configFilePath = $"{configurationDirectoryPath}{environmentInfo}.config";
-
-            tracer.Trace($"Loading configuration. File: {configFilePath}");
-            
-            ConfigurationManager.LoadConfiguration(configFilePath);
+            LoadBOAConfigurationFile(() => environmentInfo.ToString(), tracer.Trace);
 
             isLoaded = true;
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Loads the boa configuration file.
+        /// </summary>
+        static void LoadBOAConfigurationFile(Func<string> environmentInfo, Action<string> trace)
+        {
+            var configurationDirectoryPath = GetConfigurationDirectoryPath();
+
+            var configFilePath = $"{configurationDirectoryPath}{environmentInfo()}.config";
+
+            trace($"Loading configuration. File: {configFilePath}");
+
+            ConfigurationManager.LoadConfiguration(configFilePath);
         }
         #endregion
     }
