@@ -80,7 +80,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Application\BoaUserDataSource.cs" />
-    <Compile Include="Application\ConnectionString.cs" />
+    <Compile Include="Application\ConnectionInfo.cs" />
     <Compile Include="BOA\FileCacheUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Newtonsoft.Json;
+using static  ApiInspector.Application.ConnectionInfo;
 
 namespace ApiInspector.History
 {
@@ -19,11 +17,6 @@ namespace ApiInspector.History
     class BoaDevDataSource
     {
         #region Fields
-        /// <summary>
-        ///     The connection
-        /// </summary>
-        readonly IDbConnection connection;
-
         /// <summary>
         ///     The environment variable
         /// </summary>
@@ -39,14 +32,10 @@ namespace ApiInspector.History
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataSource" /> class.
         /// </summary>
-        public BoaDevDataSource(EnvironmentVariable environmentVariable, Serializer serializer, ConnectionString connectionString)
+        public BoaDevDataSource(EnvironmentVariable environmentVariable, Serializer serializer)
         {
             this.environmentVariable = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
             this.serializer          = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            
-            connectionString    = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-
-            connection = new SqlConnection(connectionString.CurrentConnectionString);
         }
         #endregion
 
@@ -58,7 +47,7 @@ namespace ApiInspector.History
         {
             var userName = environmentVariable.GetUserName();
 
-            var records = connection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
+            var records = GetDbConnection().Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
 
             return records.Select(x => JsonConvert.DeserializeObject<InvocationInfo>(x.Value)).ToList();
         }
@@ -70,7 +59,7 @@ namespace ApiInspector.History
         {
             var model = CreateFrom(info);
 
-            connection.Delete(model);
+            GetDbConnection().Delete(model);
         }
 
         /// <summary>
@@ -82,7 +71,7 @@ namespace ApiInspector.History
 
             Remove(info);
 
-            connection.Insert(model);
+            GetDbConnection().Insert(model);
         }
         #endregion
 

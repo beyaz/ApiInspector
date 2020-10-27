@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using static  ApiInspector.Application.ConnectionInfo;
 
 namespace ApiInspector.Application
 {
@@ -12,32 +10,13 @@ namespace ApiInspector.Application
     /// </summary>
     class BoaUserDataSource
     {
-        #region Fields
-        /// <summary>
-        ///     The connection
-        /// </summary>
-        readonly IDbConnection connection;
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="BoaUserDataSource" /> class.
-        /// </summary>
-        public BoaUserDataSource(ConnectionString connectionString)
-        {
-            connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-
-            connection = new SqlConnection(connectionString.CurrentConnectionString);
-        }
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Gets the users.
         /// </summary>
         public IReadOnlyList<BoaUserModel> GetUsers(string search)
         {
-            return connection.Query<BoaUserModel>($"SELECT [UserCode], [Name]  FROM COR.BoaUser WITH(NOLOCK) WHERE [Name] LIKE '%' + @{nameof(search)} + '%'", new {search}).ToList();
+            return  GetDbConnection().Query<BoaUserModel>($"SELECT [UserCode], [Name]  FROM COR.BoaUser WITH(NOLOCK) WHERE [Name] LIKE '%' + @{nameof(search)} + '%'", new {search}).ToList();
         }
         #endregion
     }
