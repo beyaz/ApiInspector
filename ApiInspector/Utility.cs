@@ -106,15 +106,27 @@ namespace ApiInspector
         /// </summary>
         public static void WriteAllText(string filePath, string content)
         {
+            var directoryName = GetNotNullDirectoryNameFromFilePath(filePath);
+
+            CreateDirectoryIfNotExists(directoryName);
+
+            File.WriteAllText(filePath, content);
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Gets the not null directory name from file path.
+        /// </summary>
+        static string GetNotNullDirectoryNameFromFilePath(string filePath)
+        {
             var directoryName = Path.GetDirectoryName(filePath);
             if (directoryName == null)
             {
                 throw new ArgumentNullException(nameof(directoryName));
             }
 
-            CreateDirectoryIfNotExists(directoryName);
-
-            File.WriteAllText(filePath, content);
+            return directoryName;
         }
         #endregion
     }
