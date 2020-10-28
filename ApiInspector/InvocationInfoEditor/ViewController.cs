@@ -77,7 +77,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             ItemSourceList.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
 
-            if (assemblySearchDirectory == AssemblySearchDirectories.clientBin)
+            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
             {
                 ItemSourceList.AssemblyNameList = ItemSourceList.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
             }
@@ -111,7 +111,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             ItemSourceList.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
 
-            if (assemblySearchDirectory == AssemblySearchDirectories.clientBin)
+            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
             {
                 ItemSourceList.MethodNameList = new List<string> {EndOfDay.MethodAccessText};
             }

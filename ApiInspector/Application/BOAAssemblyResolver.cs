@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using static ApiInspector.Application.App;
 using static ApiInspector.Application.AssemblyFinder;
 using static ApiInspector.Application.CommonApplicationKeys;
 
@@ -11,32 +12,6 @@ namespace ApiInspector.Application
     /// </summary>
     public static class BoaAssemblyResolver
     {
-        #region Static Fields
-        /// <summary>
-        ///     The search directories
-        /// </summary>
-        public static IReadOnlyList<string> AssemblySearchDirectories_2 = new[]
-        {
-            @"D:\BOA\server\bin",
-            @"D:\BOA\client\bin",
-            @"D:\BOA\client\bin\en",
-            @"D:\BOA\HSM\server\bin",
-            @"D:\BOA\BOA.Integration\server\bin"
-        };
-        #endregion
-
-        #region Public Properties
-        /// <summary>
-        ///     Gets or sets the invocation search directory.
-        /// </summary>
-        public static string InvocationSearchDirectory { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the trace.
-        /// </summary>
-        public static Action<string> TraceHandler { get; set; } = message => { };
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Attaches to current domain.
@@ -53,22 +28,10 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
         {
-
-            IReadOnlyList<string> GetDirectories()
-            {
-                var directories = new List<string>(AssemblySearchDirectories_2);
-                if (InvocationSearchDirectory != null)
-                {
-                    directories.Add(InvocationSearchDirectory);
-                }
-
-                return directories;
-            }
-
             var scope = new Scope
             {
-                { AssemblyFinder.AssemblySearchDirectories, GetDirectories()},
-                { Trace, TraceHandler}
+                {AssemblySearchDirectories, GetDirectories()},
+                {Trace, message => { }}
             };
             return TryToFindAssembly(scope, assemblyFileNameWithoutExtension);
         }
@@ -92,6 +55,28 @@ namespace ApiInspector.Application
             }
 
             throw new ArgumentException("AssemblyNotFound:" + args.Name);
+        }
+
+        /// <summary>
+        ///     Gets the directories.
+        /// </summary>
+        static IReadOnlyList<string> GetDirectories()
+        {
+            var directories = new List<string>
+            {
+                @"D:\BOA\server\bin",
+                @"D:\BOA\client\bin",
+                @"D:\BOA\client\bin\en",
+                @"D:\BOA\HSM\server\bin",
+                @"D:\BOA\BOA.Integration\server\bin"
+            };
+            var invocationSearchDirectory = ApplicationScope.TryGet(InvocationSearchDirectory);
+            if (invocationSearchDirectory != null)
+            {
+                directories.Add(invocationSearchDirectory);
+            }
+
+            return directories;
         }
         #endregion
     }

@@ -17,8 +17,8 @@ namespace ApiInspector.InvocationInfoEditor
         {
             AssemblySearchDirectoryList = new List<string>
             {
-                AssemblySearchDirectories.serverBin,
-                AssemblySearchDirectories.clientBin
+                CommonAssemblySearchDirectories.serverBin,
+                CommonAssemblySearchDirectories.clientBin
             };
             EnvironmentNameList = new List<string> {"dev", "test","prep"};
         }

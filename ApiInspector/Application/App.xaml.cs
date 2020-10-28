@@ -8,8 +8,15 @@ namespace ApiInspector.Application
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    partial class App
     {
+        /// <summary>
+        ///     Gets or sets the invocation search directory.
+        /// </summary>
+        internal static DataKey<string> InvocationSearchDirectory = new DataKey<string>(typeof(App), nameof(InvocationSearchDirectory));
+
+        internal static readonly Scope ApplicationScope = new Scope();
+
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="App" /> class.

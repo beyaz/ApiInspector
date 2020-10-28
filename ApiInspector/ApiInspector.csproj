@@ -90,7 +90,7 @@
     </Compile>
     <Compile Include="Application\AppInjector.cs" />
     <Compile Include="Application\BoaAssemblyResolver.cs" />
-    <Compile Include="AssemblySearchDirectories.cs" />
+    <Compile Include="CommonAssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
     <Compile Include="InvocationInfoEditor\TypeFinder.cs" />
     <Compile Include="Invoking\BoaSystem\BoaConfigurationDirectory.cs" />

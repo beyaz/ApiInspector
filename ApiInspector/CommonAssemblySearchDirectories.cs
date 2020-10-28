@@ -3,7 +3,7 @@
     /// <summary>
     ///     The assembly search directories
     /// </summary>
-    static class AssemblySearchDirectories
+    static class CommonAssemblySearchDirectories
     {
         #region Constants
         /// <summary>
