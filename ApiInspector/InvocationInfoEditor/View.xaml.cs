@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ApiInspector.Models;
+using static ApiInspector.Components.ComboBoxEditor;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -26,10 +28,24 @@ namespace ApiInspector.InvocationInfoEditor
         public View()
         {
             InitializeComponent();
+
+            
+
             Loaded += (s, e) => { UpdateSuggestions(); };
             Loaded += (s, e) => { RegisterEvents(); };
         }
         #endregion
+
+        void Initialize()
+        {
+            var scope = new Scope
+            {
+                {Components.EditorProp.ItemsSource, new List<string> {"dev", "test", "prep"}},
+                {Components.EditorProp.DataContext, model.InvocationInfo},
+                {Components.EditorProp.BindingPath,nameof(model.InvocationInfo.Environment)}
+            };
+            InitializeComboBox(scope, environmentComboBox);
+        }
 
         #region Enums
         /// <summary>
