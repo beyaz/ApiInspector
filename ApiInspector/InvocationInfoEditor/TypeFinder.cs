@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using ApiInspector.Application;
+using static ApiInspector.Application.BoaAssemblyResolver;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -55,7 +55,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 var assemblyName = string.Join(".", destination);
 
-                return BoaAssemblyResolver.FindAssembly(assemblyName)?.GetType(fullName);
+                return FindAssembly(assemblyName)?.GetType(fullName);
             }
 
             return null;
