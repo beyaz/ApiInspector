@@ -12,7 +12,7 @@ using static  ApiInspector.Application.ConnectionInfo;
 namespace ApiInspector.History
 {
     /// <summary>
-    ///     The boa dev data source
+    ///     The boa dev data source.
     /// </summary>
     class BoaDevDataSource
     {
