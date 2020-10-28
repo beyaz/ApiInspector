@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
+using static ApiInspector.Application.AssemblyFinder;
+using static ApiInspector.Application.CommonApplicationKeys;
 
 namespace ApiInspector.Application
 {
@@ -14,7 +15,7 @@ namespace ApiInspector.Application
         /// <summary>
         ///     The search directories
         /// </summary>
-        public static IReadOnlyList<string> AssemblySearchDirectories = new[]
+        public static IReadOnlyList<string> AssemblySearchDirectories_2 = new[]
         {
             @"D:\BOA\server\bin",
             @"D:\BOA\client\bin",
@@ -33,7 +34,7 @@ namespace ApiInspector.Application
         /// <summary>
         ///     Gets or sets the trace.
         /// </summary>
-        public static Action<string> Trace { get; set; } = message => { };
+        public static Action<string> TraceHandler { get; set; } = message => { };
         #endregion
 
         #region Public Methods
@@ -52,11 +53,10 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
         {
-            Action<string> trace = Trace;
 
             IReadOnlyList<string> GetDirectories()
             {
-                var directories = new List<string>(AssemblySearchDirectories);
+                var directories = new List<string>(AssemblySearchDirectories_2);
                 if (InvocationSearchDirectory != null)
                 {
                     directories.Add(InvocationSearchDirectory);
@@ -65,26 +65,12 @@ namespace ApiInspector.Application
                 return directories;
             }
 
-            trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
-
-            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
+            var scope = new Scope
             {
-                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
-            }
-
-            foreach (var searchDirectory in GetDirectories())
-            {
-                var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
-                if (File.Exists(filePath))
-                {
-                    trace($"Loading assembly: {filePath}");
-                    return Assembly.LoadFile(filePath);
-                }
-            }
-
-            trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
-
-            return null;
+                { AssemblyFinder.AssemblySearchDirectories, GetDirectories()},
+                { Trace, TraceHandler}
+            };
+            return TryToFindAssembly(scope, assemblyFileNameWithoutExtension);
         }
 
         /// <summary>
