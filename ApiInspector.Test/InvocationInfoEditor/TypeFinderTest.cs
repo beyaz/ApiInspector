@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static ApiInspector.InvocationInfoEditor.TypeFinder;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -10,9 +11,8 @@ namespace ApiInspector.InvocationInfoEditor
         [TestMethod]
         public void Find()
         {
-            var typeFinder = new TypeFinder();
-
-            typeFinder.Find("BOA.Types.InternetBanking.WebCreditCardRequest").Should().NotBeNull();
+            FindType("BOA.Types.InternetBanking.WebCreditCardRequest").Should().NotBeNull();
+            FindType("BOA.Card.Contracts.CreditCard.Limit.ChangeCorporateCardLimitRequest").Should().NotBeNull();
         }
         #endregion
     }

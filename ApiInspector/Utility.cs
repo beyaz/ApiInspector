@@ -51,6 +51,24 @@ namespace ApiInspector
         }
 
         /// <summary>
+        ///     Removes from end.
+        /// </summary>
+        public static string RemoveFromEnd(this string value, string remove)
+        {
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(remove))
+            {
+                return value;
+            }
+
+            if (value.EndsWith(remove, StringComparison.OrdinalIgnoreCase))
+            {
+                return value.Substring(0, value.Length - remove.Length);
+            }
+
+            return value;
+        }
+
+        /// <summary>
         ///     Sets the text.
         /// </summary>
         public static void SetText(this RichTextBox richTextBox, string text)

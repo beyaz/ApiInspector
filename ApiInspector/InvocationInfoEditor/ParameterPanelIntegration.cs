@@ -7,6 +7,7 @@ using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
+using static ApiInspector.InvocationInfoEditor.TypeFinder;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -20,11 +21,7 @@ namespace ApiInspector.InvocationInfoEditor
         ///     The serializer
         /// </summary>
         readonly Serializer serializer = new Serializer();
-
-        /// <summary>
-        ///     The type finder
-        /// </summary>
-        readonly TypeFinder TypeFinder = new TypeFinder();
+        
         #endregion
 
         #region Public Methods
@@ -124,7 +121,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
                 {
-                    var parameterType = TypeFinder.Find(definition.ParameterType.FullName);
+                    var parameterType = FindType(definition.ParameterType.FullName);
                     if (parameterType != null)
                     {
                         parameterInfo.Value = serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));

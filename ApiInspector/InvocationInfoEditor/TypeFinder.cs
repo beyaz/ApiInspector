@@ -5,10 +5,16 @@ using static ApiInspector.Application.BoaAssemblyResolver;
 
 namespace ApiInspector.InvocationInfoEditor
 {
-    class TypeFinder
+    /// <summary>
+    ///     The type finder
+    /// </summary>
+    static class TypeFinder
     {
         #region Public Methods
-        public Type Find(string fullName)
+        /// <summary>
+        ///     Finds the type.
+        /// </summary>
+        public static Type FindType(string fullName)
         {
             var type = Type.GetType(fullName);
             if (type != null)
@@ -16,34 +22,25 @@ namespace ApiInspector.InvocationInfoEditor
                 return type;
             }
 
-            if (fullName.StartsWith("BOA.Card.Contracts.", StringComparison.OrdinalIgnoreCase))
+            var list = new[]
             {
-                type = Assembly.Load(@"BOA.Card.Contracts").GetTypes().FirstOrDefault(t => t.FullName == fullName);
-            }
+                "BOA.Card.Contracts",
+                "BOA.Process.Kernel.Card",
+                "BOA.Integration.Model.MobileBranch"
+            };
 
-            if (type != null)
+            foreach (var prefix in list)
             {
-                return type;
-            }
+                if (!fullName.StartsWith(prefix + ".", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
 
-            if (fullName.StartsWith("BOA.Process.Kernel.Card.", StringComparison.OrdinalIgnoreCase))
-            {
-                type = Assembly.Load(@"BOA.Process.Kernel.Card").GetTypes().FirstOrDefault(t => t.FullName == fullName);
-            }
-
-            if (type != null)
-            {
-                return type;
-            }
-
-            if (fullName.StartsWith("BOA.Integration.Model.MobileBranch.", StringComparison.OrdinalIgnoreCase))
-            {
-                type = Assembly.Load(@"BOA.Integration.Model.MobileBranch").GetTypes().FirstOrDefault(t => t.FullName == fullName);
-            }
-
-            if (type != null)
-            {
-                return type;
+                type = Assembly.Load(prefix).GetTypes().FirstOrDefault(t => t.FullName == fullName);
+                if (type != null)
+                {
+                    return type;
+                }
             }
 
             var names = fullName.Split('.');

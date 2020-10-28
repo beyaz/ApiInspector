@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Serialization;
+using static ApiInspector.InvocationInfoEditor.TypeFinder;
 
 namespace ApiInspector.Util
 {
@@ -50,9 +50,7 @@ namespace ApiInspector.Util
 
             var serializer = new Serializer();
 
-            var typeFinder = new TypeFinder();
-
-            var type = typeFinder.Find(classFullName);
+            var type = FindType(classFullName);
             if (type == null)
             {
                 throw new ArgumentException(nameof(type));
