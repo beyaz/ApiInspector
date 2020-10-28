@@ -85,6 +85,9 @@
     <Compile Include="Application\CommonApplicationKeys.cs" />
     <Compile Include="Application\ConnectionInfo.cs" />
     <Compile Include="BOA\FileCacheUtility.cs" />
+    <Compile Include="Components\ComboBoxEditor.cs" />
+    <Compile Include="Components\EditorProp.cs" />
+    <Compile Include="Components\LabelCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
