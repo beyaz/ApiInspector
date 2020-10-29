@@ -41,21 +41,29 @@ namespace ApiInspector.Components
             Popup.IsOpen = false;
 
 
-            //foreach (var dictionary in System.Windows.Application.Current.Resources.MergedDictionaries)
-            //{
-            //    foreach (var key in dictionary.Keys)
-            //    {
-            //        if (key.ToString() == "TextBoxBorderBrush")
-            //        {
-            //            BorderBrush = (SolidColorBrush)dictionary[key];
-                        
-            //        }
-            //    }
-            //}
+            
             
         }
         #endregion
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            foreach (var dictionary in System.Windows.Application.Current.Resources.MergedDictionaries)
+            {
+                foreach (var key in dictionary.Keys)
+                {
+                    if (key.ToString() == "TextBoxStyle")
+                    {
+                        Editor.Style = (Style)dictionary[key];
+                    }
+                }
+            }
+
+            BorderThickness = new Thickness(0);
+
+        }
         #region Explicit Interface Methods
         /// <summary>
         ///     Gets the suggestions.
