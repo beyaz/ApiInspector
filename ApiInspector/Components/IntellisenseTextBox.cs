@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using System.Windows.Media;
+using ApiInspector.Application;
 using WpfControls;
 
 namespace ApiInspector.Components
@@ -36,6 +39,20 @@ namespace ApiInspector.Components
         {
             Editor.Text  = value;
             Popup.IsOpen = false;
+
+
+            //foreach (var dictionary in System.Windows.Application.Current.Resources.MergedDictionaries)
+            //{
+            //    foreach (var key in dictionary.Keys)
+            //    {
+            //        if (key.ToString() == "TextBoxBorderBrush")
+            //        {
+            //            BorderBrush = (SolidColorBrush)dictionary[key];
+                        
+            //        }
+            //    }
+            //}
+            
         }
         #endregion
 

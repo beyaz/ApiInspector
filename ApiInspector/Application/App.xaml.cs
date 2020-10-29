@@ -33,17 +33,15 @@ namespace ApiInspector.Application
         /// </summary>
         void ApplySkin()
         {
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                return;
-            }
-
             try
             {
                 var xamlPathList = new[]
                 {
                     "Themes/Metro/Light/Metro.MSControls.Core.Implicit.xaml",
-                    "Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml"
+                    "Themes/Metro/Light/Theme.Colors.xaml",
+                    "Themes/Metro/Light/Styles.Shared.xaml",
+                    "Themes/Metro/Light/Styles.WPF.xaml",
+                    // "Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml"
                 };
 
                 foreach (var pathInAssembly in xamlPathList)
