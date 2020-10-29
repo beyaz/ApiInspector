@@ -33,6 +33,11 @@ namespace ApiInspector.Application
         /// </summary>
         void ApplySkin()
         {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                return;
+            }
+
             try
             {
                 var xamlPathList = new[]
