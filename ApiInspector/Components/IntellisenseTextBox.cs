@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
-using ApiInspector.Application;
 using WpfControls;
 
 namespace ApiInspector.Components
@@ -32,20 +30,6 @@ namespace ApiInspector.Components
         #endregion
 
         #region Public Methods
-        /// <summary>
-        ///     Sets the value.
-        /// </summary>
-        public void SetValue(string value)
-        {
-            Editor.Text  = value;
-            Popup.IsOpen = false;
-
-
-            
-            
-        }
-        #endregion
-
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -56,14 +40,24 @@ namespace ApiInspector.Components
                 {
                     if (key.ToString() == "TextBoxStyle")
                     {
-                        Editor.Style = (Style)dictionary[key];
+                        Editor.Style = (Style) dictionary[key];
                     }
                 }
             }
 
             BorderThickness = new Thickness(0);
-
         }
+
+        /// <summary>
+        ///     Sets the value.
+        /// </summary>
+        public void SetValue(string value)
+        {
+            Editor.Text  = value;
+            Popup.IsOpen = false;
+        }
+        #endregion
+
         #region Explicit Interface Methods
         /// <summary>
         ///     Gets the suggestions.
