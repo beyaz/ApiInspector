@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using WpfControls;
 
 namespace ApiInspector.Components
@@ -46,6 +47,13 @@ namespace ApiInspector.Components
             }
 
             BorderThickness = new Thickness(0);
+
+            // Popup boder radius
+            {
+                var border = (Border) Popup.Child;
+
+                border.CornerRadius = new CornerRadius(0);
+            }
         }
 
         /// <summary>
