@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using static ApiInspector.Application.CommonApplicationKeys;
@@ -23,8 +24,8 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly TryToFindAssembly(Scope scope, string assemblyFileNameWithoutExtension)
         {
-            var trace                     = scope.Get(Trace);
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+            Action<string>        trace                     = scope.Get(Trace);
+            IReadOnlyList<string> assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
             trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 
