@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using static ApiInspector.Application.CommonApplicationKeys;
 
@@ -15,7 +13,7 @@ namespace ApiInspector.Application
         /// <summary>
         ///     The assembly search directories
         /// </summary>
-        public static readonly DataKey<IReadOnlyList<string>> AssemblySearchDirectories = new DataKey<IReadOnlyList<string>>(typeof(AssemblyFinder), nameof(AssemblySearchDirectories));
+        public static readonly StringList AssemblySearchDirectories = new StringList(typeof(AssemblyFinder), nameof(AssemblySearchDirectories));
         #endregion
 
         #region Methods
@@ -24,8 +22,8 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly TryToFindAssembly(Scope scope, string assemblyFileNameWithoutExtension)
         {
-            Action<string>        trace                     = scope.Get(Trace);
-            IReadOnlyList<string> assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+            var trace                     = scope.Get(Trace);
+            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
             trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 

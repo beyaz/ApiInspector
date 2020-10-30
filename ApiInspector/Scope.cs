@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BOA.DataFlow;
 
 namespace ApiInspector
@@ -25,4 +26,18 @@ namespace ApiInspector
         #endregion
     }
 
+    /// <summary>
+    ///     The string list
+    /// </summary>
+    class StringList : DataKey<IReadOnlyList<string>>
+    {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="StringList" /> class.
+        /// </summary>
+        public StringList(Type locatedType, string fieldName) : base(locatedType, fieldName)
+        {
+        }
+        #endregion
+    }
 }
