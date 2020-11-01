@@ -42,16 +42,8 @@ namespace ApiInspector.DataAccess
                     resolver.AddSearchDirectory(directory);
                 }
 
-                try
-                {
-                    return AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
-                }
-                catch (Exception e)
-                {
-                    trace($"File not Loaded. File:{assemblyPath}, Error: {e}");
-                }
-
-                return null;
+                return SafeScope(() => AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver}), trace, $"File not Loaded. File:{assemblyPath}");
+                
             };
         }
 
@@ -88,6 +80,20 @@ namespace ApiInspector.DataAccess
                     yield return type;
                 }
             }
+        }
+
+        static T SafeScope<T>(Func<T> action, Action<string> trace, string messagePrefix) where T : class
+        {
+            try
+            {
+                return action();
+            }
+            catch (Exception e)
+            {
+                trace($"{messagePrefix}, Error: {e}");
+            }
+
+            return null;
         }
         #endregion
     }
