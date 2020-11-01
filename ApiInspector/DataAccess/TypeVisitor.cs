@@ -31,12 +31,11 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Methods
-
-        static AssemblyDefinition GetAssemblyDefinition(IReadOnlyList<string> assemblySearchDirectories, string assemblyPath,Action<string> onError)
+        static AssemblyDefinition GetAssemblyDefinition(FuncStringList assemblySearchDirectories, string assemblyPath, Action<string> onError)
         {
             var resolver = new DefaultAssemblyResolver();
 
-            foreach (var directory in assemblySearchDirectories)
+            foreach (var directory in assemblySearchDirectories())
             {
                 resolver.AddSearchDirectory(directory);
             }
@@ -58,46 +57,34 @@ namespace ApiInspector.DataAccess
         /// </summary>
         static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Scope scope, string assemblyPath)
         {
-            var log = scope.Get(Trace);
+            Func<AssemblyDefinition> getAssemblyDefinition = () => GetAssemblyDefinition(() => scope.Get(AssemblySearchDirectories), assemblyPath, scope.Get(Trace));
 
-            IReadOnlyList<string> assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+            return GetTypeDefinitionsInAssembly(getAssemblyDefinition, assemblyPath);
+        }
 
+        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Func<AssemblyDefinition> getAssemblyDefinition, string assemblyPath)
+        {
+            if (File.Exists(assemblyPath) == false)
             {
-                if (File.Exists(assemblyPath) == false)
-                {
-                    yield break;
-                }
+                yield break;
+            }
 
-                var resolver = new DefaultAssemblyResolver();
+            var assemblyDefinition = getAssemblyDefinition();
+            if (assemblyDefinition == null)
+            {
+                yield break;
+            }
 
-                foreach (var directory in assemblySearchDirectories)
+            foreach (var moduleDefinition in assemblyDefinition.Modules)
+            {
+                foreach (var type in moduleDefinition.Types)
                 {
-                    resolver.AddSearchDirectory(directory);
-                }
-
-                AssemblyDefinition assemblyDefinition;
-
-                try
-                {
-                    assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
-                }
-                catch (Exception e)
-                {
-                    log($"File not Loaded. File:{assemblyPath}, Error: {e}");
-                    yield break;
-                }
-
-                foreach (var moduleDefinition in assemblyDefinition.Modules)
-                {
-                    foreach (var type in moduleDefinition.Types)
+                    if (type.Name.Contains("<"))
                     {
-                        if (type.Name.Contains("<"))
-                        {
-                            continue;
-                        }
-
-                        yield return type;
+                        continue;
                     }
+
+                    yield return type;
                 }
             }
         }

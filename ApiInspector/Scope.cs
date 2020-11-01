@@ -41,4 +41,6 @@ namespace ApiInspector
         #endregion
     }
 
+    delegate IReadOnlyList<string> FuncStringList();
+    
 }
