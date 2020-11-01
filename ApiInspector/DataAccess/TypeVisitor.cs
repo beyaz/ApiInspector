@@ -69,7 +69,7 @@ namespace ApiInspector.DataAccess
         /// <summary>
         ///     Visits all types.
         /// </summary>
-        public void VisitAllTypes(string assemblyPath, Action<TypeDefinition> action)
+        void VisitAllTypes(string assemblyPath, Action<TypeDefinition> action)
         {
             if (File.Exists(assemblyPath) == false)
             {
