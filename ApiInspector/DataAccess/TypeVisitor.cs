@@ -31,6 +31,28 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Methods
+
+        static AssemblyDefinition GetAssemblyDefinition(IReadOnlyList<string> assemblySearchDirectories, string assemblyPath,Action<string> onError)
+        {
+            var resolver = new DefaultAssemblyResolver();
+
+            foreach (var directory in assemblySearchDirectories)
+            {
+                resolver.AddSearchDirectory(directory);
+            }
+
+            try
+            {
+                return AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
+            }
+            catch (Exception e)
+            {
+                onError($"File not Loaded. File:{assemblyPath}, Error: {e}");
+            }
+
+            return null;
+        }
+
         /// <summary>
         ///     Gets the type definitions in assembly.
         /// </summary>
@@ -38,7 +60,7 @@ namespace ApiInspector.DataAccess
         {
             var log = scope.Get(Trace);
 
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+            IReadOnlyList<string> assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
             {
                 if (File.Exists(assemblyPath) == false)
