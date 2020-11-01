@@ -1,5 +1,4 @@
 ﻿using System;
-using BOA.DataFlow;
 
 namespace ApiInspector.Application
 {
@@ -9,6 +8,11 @@ namespace ApiInspector.Application
     static class CommonApplicationKeys
     {
         #region Static Fields
+        /// <summary>
+        ///     The assembly search directories
+        /// </summary>
+        public static readonly StringList AssemblySearchDirectories = new StringList(typeof(AssemblyFinder), nameof(AssemblySearchDirectories));
+
         /// <summary>
         ///     The trace
         /// </summary>

@@ -3,114 +3,43 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mono.Cecil;
+using static ApiInspector.Application.CommonApplicationKeys;
 
 namespace ApiInspector.DataAccess
 {
     /// <summary>
     ///     The type visitor
     /// </summary>
-    class TypeVisitor
+    static class TypeVisitor
     {
-        #region Fields
-        /// <summary>
-        ///     The assembly search directories
-        /// </summary>
-        readonly IReadOnlyList<string> assemblySearchDirectories;
-
-        /// <summary>
-        ///     The log
-        /// </summary>
-        readonly Action<string> log;
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="TypeVisitor" /> class.
-        /// </summary>
-        public TypeVisitor(Action<string> log, IReadOnlyList<string> assemblySearchDirectories)
-        {
-            this.log = log ?? throw new ArgumentNullException(nameof(log));
-
-            this.assemblySearchDirectories = assemblySearchDirectories ?? throw new ArgumentNullException(nameof(assemblySearchDirectories));
-        }
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Finds the type.
         /// </summary>
-        public TypeDefinition FindType(string assemblyPath, string typeFullName)
+        public static TypeDefinition FindTypeDefinition(Scope scope, string assemblyPath, string typeFullName)
         {
-            var typeDefinitions = new List<TypeDefinition>();
-
-            VisitAllTypes(assemblyPath, type =>
-            {
-                if (type.FullName == typeFullName)
-                {
-                    typeDefinitions.Add(type);
-                }
-            });
-
-            return typeDefinitions.FirstOrDefault();
+            return GetTypeDefinitionsInAssembly(scope, assemblyPath).FirstOrDefault(type => type.FullName == typeFullName);
         }
 
         /// <summary>
         ///     Ges the type definitions.
         /// </summary>
-        public IReadOnlyList<TypeDefinition> GeTypeDefinitions(string assemblyFilePath)
+        public static IReadOnlyList<TypeDefinition> GeTypeDefinitions(Scope scope, string assemblyPath)
         {
-            var items = new List<TypeDefinition>();
-
-            VisitAllTypes(assemblyFilePath, typeDefinition => { items.Add(typeDefinition); });
-
-            return items;
+            return GetTypeDefinitionsInAssembly(scope, assemblyPath).ToList();
         }
+        #endregion
 
+        #region Methods
         /// <summary>
-        ///     Visits all types.
+        ///     Gets the type definitions in assembly.
         /// </summary>
-        void VisitAllTypes(string assemblyPath, Action<TypeDefinition> action)
+        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Scope scope, string assemblyPath)
         {
-            if (File.Exists(assemblyPath) == false)
-            {
-                return;
-            }
+            var log = scope.Get(Trace);
 
-            var resolver = new DefaultAssemblyResolver();
+            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
-            foreach (var directory in assemblySearchDirectories)
-            {
-                resolver.AddSearchDirectory(directory);
-            }
-
-            AssemblyDefinition assemblyDefinition;
-
-            try
-            {
-                assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
-            }
-            catch (Exception e)
-            {
-                log($"File not Loaded. File:{assemblyPath}, Error: {e}");
-                return;
-            }
-
-            foreach (var moduleDefinition in assemblyDefinition.Modules)
-            {
-                foreach (var type in moduleDefinition.Types)
-                {
-                    if (type.Name.Contains("<"))
-                    {
-                        continue;
-                    }
-
-                    action(type);
-                }
-            }
-        }
-
-        static IEnumerable<TypeDefinition> GetAllTypes(string assemblyPath, IReadOnlyList<string> assemblySearchDirectories, Action<string> log)
-        {
             if (File.Exists(assemblyPath) == false)
             {
                 yield break;
@@ -144,7 +73,7 @@ namespace ApiInspector.DataAccess
                         continue;
                     }
 
-                    yield return  type;
+                    yield return type;
                 }
             }
         }

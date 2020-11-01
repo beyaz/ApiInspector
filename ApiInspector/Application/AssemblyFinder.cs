@@ -9,13 +9,6 @@ namespace ApiInspector.Application
     /// </summary>
     static class AssemblyFinder
     {
-        #region Static Fields
-        /// <summary>
-        ///     The assembly search directories
-        /// </summary>
-        public static readonly StringList AssemblySearchDirectories = new StringList(typeof(AssemblyFinder), nameof(AssemblySearchDirectories));
-        #endregion
-
         #region Methods
         /// <summary>
         ///     Tries to find assembly.
