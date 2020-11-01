@@ -31,14 +31,10 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Methods
-        static Func<AssemblyDefinition> GetAssemblyDefinition(Scope scope, string assemblyPath)
+        static Func<AssemblyDefinition> GetAssemblyDefinition(IReadOnlyList<string> assemblySearchDirectories, Action<string> trace, string assemblyPath)
         {
             return () =>
             {
-                var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
-
-                var trace = scope.Get(Trace);
-
                 var resolver = new DefaultAssemblyResolver();
 
                 foreach (var directory in assemblySearchDirectories)
@@ -64,7 +60,7 @@ namespace ApiInspector.DataAccess
         /// </summary>
         static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Scope scope, string assemblyPath)
         {
-            return GetTypeDefinitionsInAssembly(GetAssemblyDefinition(scope, assemblyPath), assemblyPath);
+            return GetTypeDefinitionsInAssembly(GetAssemblyDefinition(scope.Get(AssemblySearchDirectories), scope.Get(Trace), assemblyPath), assemblyPath);
         }
 
         static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Func<AssemblyDefinition> getAssemblyDefinition, string assemblyPath)
