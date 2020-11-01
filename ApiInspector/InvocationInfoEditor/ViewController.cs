@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using static ApiInspector.Application.CommonApplicationKeys;
+using static ApiInspector.DataAccess.TypeVisitor;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -66,7 +66,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {Trace,model.Trace}
             };
 
-            ItemSourceList.ClassNameList = TypeVisitor.GeTypeDefinitions(scope,assemblyFilePath).Select(x => x.FullName).ToList();
+            ItemSourceList.ClassNameList = GeTypeDefinitions(scope,assemblyFilePath).Select(x => x.FullName).ToList();
         }
 
         /// <summary>
@@ -107,10 +107,10 @@ namespace ApiInspector.InvocationInfoEditor
 
             var scope = new Scope
             {
-                {AssemblySearchDirectories,new List<string> {assemblySearchDirectory}},
-                {Trace,model.Trace}
+                {AssemblySearchDirectories, new List<string> {assemblySearchDirectory}},
+                {Trace, model.Trace}
             };
-            var typeDefinition = model.TypeDefinition = TypeVisitor.FindTypeDefinition(scope,assemblyFilePath, invocationInfo.ClassName);
+            var typeDefinition = model.TypeDefinition = FindTypeDefinition(scope,assemblyFilePath, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
