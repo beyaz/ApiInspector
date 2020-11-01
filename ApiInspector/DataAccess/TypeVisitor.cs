@@ -18,15 +18,15 @@ namespace ApiInspector.DataAccess
         /// </summary>
         public static TypeDefinition FindTypeDefinition(Scope scope, string assemblyPath, string typeFullName)
         {
-            return GetTypeDefinitionsInAssembly(scope, assemblyPath).FirstOrDefault(type => type.FullName == typeFullName);
+            return GeTypeDefinitions(scope, assemblyPath).FirstOrDefault(type => type.FullName == typeFullName);
         }
 
         /// <summary>
         ///     Ges the type definitions.
         /// </summary>
-        public static IReadOnlyList<TypeDefinition> GeTypeDefinitions(Scope scope, string assemblyPath)
+        public static IEnumerable<TypeDefinition> GeTypeDefinitions(Scope scope, string assemblyPath)
         {
-            return GetTypeDefinitionsInAssembly(scope, assemblyPath).ToList();
+            return GetTypeDefinitionsInAssembly(scope, assemblyPath);
         }
         #endregion
 
