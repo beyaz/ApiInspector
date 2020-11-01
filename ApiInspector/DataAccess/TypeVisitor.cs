@@ -108,6 +108,46 @@ namespace ApiInspector.DataAccess
                 }
             }
         }
+
+        static IEnumerable<TypeDefinition> GetAllTypes(string assemblyPath, IReadOnlyList<string> assemblySearchDirectories, Action<string> log)
+        {
+            if (File.Exists(assemblyPath) == false)
+            {
+                yield break;
+            }
+
+            var resolver = new DefaultAssemblyResolver();
+
+            foreach (var directory in assemblySearchDirectories)
+            {
+                resolver.AddSearchDirectory(directory);
+            }
+
+            AssemblyDefinition assemblyDefinition;
+
+            try
+            {
+                assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
+            }
+            catch (Exception e)
+            {
+                log($"File not Loaded. File:{assemblyPath}, Error: {e}");
+                yield break;
+            }
+
+            foreach (var moduleDefinition in assemblyDefinition.Modules)
+            {
+                foreach (var type in moduleDefinition.Types)
+                {
+                    if (type.Name.Contains("<"))
+                    {
+                        continue;
+                    }
+
+                    yield return  type;
+                }
+            }
+        }
         #endregion
     }
 }
