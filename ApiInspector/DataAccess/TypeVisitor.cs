@@ -31,25 +31,32 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Methods
-        static AssemblyDefinition GetAssemblyDefinition(FuncStringList assemblySearchDirectories, string assemblyPath, Action<string> onError)
+        static Func<AssemblyDefinition> GetAssemblyDefinition(Scope scope, string assemblyPath)
         {
-            var resolver = new DefaultAssemblyResolver();
-
-            foreach (var directory in assemblySearchDirectories())
+            return () =>
             {
-                resolver.AddSearchDirectory(directory);
-            }
+                var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
-            try
-            {
-                return AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
-            }
-            catch (Exception e)
-            {
-                onError($"File not Loaded. File:{assemblyPath}, Error: {e}");
-            }
+                var trace = scope.Get(Trace);
 
-            return null;
+                var resolver = new DefaultAssemblyResolver();
+
+                foreach (var directory in assemblySearchDirectories)
+                {
+                    resolver.AddSearchDirectory(directory);
+                }
+
+                try
+                {
+                    return AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
+                }
+                catch (Exception e)
+                {
+                    trace($"File not Loaded. File:{assemblyPath}, Error: {e}");
+                }
+
+                return null;
+            };
         }
 
         /// <summary>
@@ -57,9 +64,7 @@ namespace ApiInspector.DataAccess
         /// </summary>
         static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Scope scope, string assemblyPath)
         {
-            Func<AssemblyDefinition> getAssemblyDefinition = () => GetAssemblyDefinition(() => scope.Get(AssemblySearchDirectories), assemblyPath, scope.Get(Trace));
-
-            return GetTypeDefinitionsInAssembly(getAssemblyDefinition, assemblyPath);
+            return GetTypeDefinitionsInAssembly(GetAssemblyDefinition(scope, assemblyPath), assemblyPath);
         }
 
         static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Func<AssemblyDefinition> getAssemblyDefinition, string assemblyPath)
