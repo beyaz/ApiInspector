@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace ApiInspector.Application
 {
@@ -7,16 +9,31 @@ namespace ApiInspector.Application
     /// </summary>
     static class CommonApplicationKeys
     {
-        #region Static Fields
+        #region Public Properties
         /// <summary>
         ///     The assembly search directories
         /// </summary>
-        public static readonly StringList AssemblySearchDirectories = new StringList(typeof(AssemblyFinder), nameof(AssemblySearchDirectories));
+        public static DataKey<string> AssemblyPath => CreateKey<string>();
+
+        /// <summary>
+        ///     Gets the assembly search directories.
+        /// </summary>
+        public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories => CreateKey<IReadOnlyList<string>>();
 
         /// <summary>
         ///     The trace
         /// </summary>
-        public static readonly DataKey<Action<string>> Trace = new DataKey<Action<string>>(typeof(CommonApplicationKeys), nameof(Trace));
+        public static DataKey<Action<string>> Trace => CreateKey<Action<string>>();
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Creates the key.
+        /// </summary>
+        static DataKey<T> CreateKey<T>([CallerMemberName] string callerMemberName = null)
+        {
+            return new DataKey<T>(typeof(CommonApplicationKeys), callerMemberName);
+        }
         #endregion
     }
 }

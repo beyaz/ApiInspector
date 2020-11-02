@@ -63,10 +63,11 @@ namespace ApiInspector.InvocationInfoEditor
             var scope = new Scope
             {
                 {AssemblySearchDirectories,new List<string> {assemblySearchDirectory}},
-                {Trace,model.Trace}
+                {Trace,model.Trace},
+                {AssemblyPath,assemblyFilePath}
             };
 
-            ItemSourceList.ClassNameList = GeTypeDefinitions(scope,assemblyFilePath).Select(x => x.FullName).ToList();
+            ItemSourceList.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
         }
 
         /// <summary>
@@ -108,9 +109,10 @@ namespace ApiInspector.InvocationInfoEditor
             var scope = new Scope
             {
                 {AssemblySearchDirectories, new List<string> {assemblySearchDirectory}},
-                {Trace, model.Trace}
+                {Trace, model.Trace},
+                {AssemblyPath,assemblyFilePath}
             };
-            var typeDefinition = model.TypeDefinition = FindTypeDefinition(scope,assemblyFilePath, invocationInfo.ClassName);
+            var typeDefinition = model.TypeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");

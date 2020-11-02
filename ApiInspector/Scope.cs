@@ -41,6 +41,16 @@ namespace ApiInspector
         #endregion
     }
 
+    class StringKey : DataKey<string>
+    {
+        #region Constructors
+       
+        public StringKey(Type locatedType, string fieldName) : base(locatedType, fieldName)
+        {
+        }
+        #endregion
+    }
+
     delegate IReadOnlyList<string> FuncStringList();
     
 }

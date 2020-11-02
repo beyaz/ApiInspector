@@ -16,53 +16,53 @@ namespace ApiInspector.DataAccess
         /// <summary>
         ///     Finds the type.
         /// </summary>
-        public static TypeDefinition FindTypeDefinition(Scope scope, string assemblyPath, string typeFullName)
+        public static TypeDefinition FindTypeDefinition(Scope scope, string typeFullName)
         {
-            return GeTypeDefinitions(scope, assemblyPath).FirstOrDefault(type => type.FullName == typeFullName);
+            return GeTypeDefinitions(scope).FirstOrDefault(type => type.FullName == typeFullName);
         }
 
         /// <summary>
         ///     Ges the type definitions.
         /// </summary>
-        public static IEnumerable<TypeDefinition> GeTypeDefinitions(Scope scope, string assemblyPath)
+        public static IEnumerable<TypeDefinition> GeTypeDefinitions(Scope scope)
         {
-            return GetTypeDefinitionsInAssembly(scope, assemblyPath);
+            return GetTypeDefinitionsInAssembly(scope);
         }
         #endregion
 
         #region Methods
-        static Func<AssemblyDefinition> GetAssemblyDefinition(IReadOnlyList<string> assemblySearchDirectories, Action<string> trace, string assemblyPath)
-        {
-            return () =>
-            {
-                var resolver = new DefaultAssemblyResolver();
-
-                foreach (var directory in assemblySearchDirectories)
-                {
-                    resolver.AddSearchDirectory(directory);
-                }
-
-                return SafeScope(() => AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver}), trace, $"File not Loaded. File:{assemblyPath}");
-                
-            };
-        }
-
         /// <summary>
         ///     Gets the type definitions in assembly.
         /// </summary>
-        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Scope scope, string assemblyPath)
+        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Scope scope)
         {
-            return GetTypeDefinitionsInAssembly(GetAssemblyDefinition(scope.Get(AssemblySearchDirectories), scope.Get(Trace), assemblyPath), assemblyPath);
-        }
+            var trace                     = scope.Get(Trace);
+            var assemblyPath              = scope.Get(AssemblyPath);
+            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
-        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Func<AssemblyDefinition> getAssemblyDefinition, string assemblyPath)
-        {
+            var resolver = new DefaultAssemblyResolver();
+
+            foreach (var directory in assemblySearchDirectories)
+            {
+                resolver.AddSearchDirectory(directory);
+            }
+
             if (File.Exists(assemblyPath) == false)
             {
                 yield break;
             }
 
-            var assemblyDefinition = getAssemblyDefinition();
+            AssemblyDefinition assemblyDefinition = null;
+            try
+            {
+                assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyPath, new ReaderParameters {AssemblyResolver = resolver});
+            }
+            catch (Exception e)
+            {
+                trace($"File not Loaded. File:{assemblyPath}, Error: {e}");
+                yield break;
+            }
+
             if (assemblyDefinition == null)
             {
                 yield break;
@@ -80,20 +80,6 @@ namespace ApiInspector.DataAccess
                     yield return type;
                 }
             }
-        }
-
-        static T SafeScope<T>(Func<T> action, Action<string> trace, string messagePrefix) where T : class
-        {
-            try
-            {
-                return action();
-            }
-            catch (Exception e)
-            {
-                trace($"{messagePrefix}, Error: {e}");
-            }
-
-            return null;
         }
         #endregion
     }
