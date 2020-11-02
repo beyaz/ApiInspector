@@ -10,12 +10,9 @@ namespace ApiInspector.Application
     /// </summary>
     partial class App
     {
-        /// <summary>
-        ///     Gets or sets the invocation search directory.
-        /// </summary>
-        internal static DataKey<string> InvocationSearchDirectory = new DataKey<string>(typeof(App), nameof(InvocationSearchDirectory));
-
+        #region Static Fields
         internal static readonly Scope ApplicationScope = new Scope();
+        #endregion
 
         #region Constructors
         /// <summary>
@@ -27,7 +24,7 @@ namespace ApiInspector.Application
         }
         #endregion
 
-        #region Methods        
+        #region Methods
         /// <summary>
         ///     Applies the skin.
         /// </summary>

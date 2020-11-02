@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
@@ -120,7 +121,7 @@ namespace ApiInspector.Invoking.Invokers
             // INITIALIZE TargetType
             try
             {
-                ApplicationScope.Update(InvocationSearchDirectory,invocationInfo.AssemblySearchDirectory);
+                ApplicationScope.Update(CommonApplicationKeys.InvocationSearchDirectory,invocationInfo.AssemblySearchDirectory);
 
                 input.TargetType = GetTargetType(invocationInfo);
             }

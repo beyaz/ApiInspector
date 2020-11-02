@@ -21,6 +21,11 @@ namespace ApiInspector.Application
         public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories => CreateKey<IReadOnlyList<string>>();
 
         /// <summary>
+        ///     Gets or sets the invocation search directory.
+        /// </summary>
+        public static DataKey<string> InvocationSearchDirectory => CreateKey<string>();
+
+        /// <summary>
         ///     The trace
         /// </summary>
         public static DataKey<Action<string>> Trace => CreateKey<Action<string>>();

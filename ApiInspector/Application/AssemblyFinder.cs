@@ -15,8 +15,7 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly TryToFindAssembly(Scope scope, string assemblyFileNameWithoutExtension)
         {
-            var trace                     = scope.Get(Trace);
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+            var trace = scope.Get(Trace);
 
             trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 
@@ -25,7 +24,7 @@ namespace ApiInspector.Application
                 assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
             }
 
-            foreach (var searchDirectory in assemblySearchDirectories)
+            foreach (var searchDirectory in scope.Get(AssemblySearchDirectories))
             {
                 var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
                 if (File.Exists(filePath))
