@@ -52,7 +52,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Gets the output file path.
         /// </summary>
-        string OutputFilePath => Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
+        static string OutputFilePath => Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
         #endregion
 
         #region Public Methods
@@ -94,7 +94,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Creates the output file.
         /// </summary>
-        void CreateOutputFile()
+        static void CreateOutputFile()
         {
             var environmentVariableFileModel = new EnvironmentVariableFileModel
             {
@@ -112,7 +112,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Reads the model from file.
         /// </summary>
-        EnvironmentVariableFileModel ReadModelFromFile()
+        static EnvironmentVariableFileModel ReadModelFromFile()
         {
             return SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(File.ReadAllText(OutputFilePath));
         }
