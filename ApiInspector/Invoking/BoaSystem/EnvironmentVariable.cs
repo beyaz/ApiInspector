@@ -64,25 +64,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public string GetUserName()
         {
-            if (userName != null)
-            {
-                return userName;
-            }
-
-            IfNot(() => Exists(OutputFilePath), CreateOutputFile);
-
-            var model = ReadModelFromFile();
-
-            if (!IsNullOrWhiteSpace(model.UserName))
-            {
-                userName = model.UserName.Trim();
-
-                tracer.Trace($"UserName:{userName}");
-
-                return userName;
-            }
-
-            userName = Environment.UserName;
+            userName = GetUserName(userName);
 
             tracer.Trace($"UserName:{userName}");
 
@@ -107,6 +89,28 @@ namespace ApiInspector.Invoking.BoaSystem
             var fileContent = serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
             WriteToFile(OutputFilePath, fileContent);
+        }
+
+        /// <summary>
+        ///     Gets the name of the user.
+        /// </summary>
+        static string GetUserName(string userName)
+        {
+            if (userName != null)
+            {
+                return userName;
+            }
+
+            IfNot(Exists(OutputFilePath), CreateOutputFile);
+
+            var model = ReadModelFromFile();
+
+            if (!IsNullOrWhiteSpace(model.UserName))
+            {
+                return model.UserName.Trim();
+            }
+
+            return Environment.UserName;
         }
 
         /// <summary>

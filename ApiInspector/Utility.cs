@@ -116,7 +116,13 @@ namespace ApiInspector
                 body();
             }
         }
-
+        public static void IfNot(bool condition, Action body)
+        {
+            if (!condition)
+            {
+                body();
+            }
+        }
         /// <summary>
         ///     Writes all text.
         /// </summary>
