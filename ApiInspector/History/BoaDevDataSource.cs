@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Newtonsoft.Json;
 using static  ApiInspector.Application.ConnectionInfo;
+using static Newtonsoft.Json.JsonConvert;
 
 namespace ApiInspector.History
 {
@@ -43,13 +44,18 @@ namespace ApiInspector.History
         /// <summary>
         ///     Gets the history.
         /// </summary>
-        public IReadOnlyList<InvocationInfo> GetHistory()
+        public Func<IReadOnlyList<InvocationInfo>> GetHistory()
         {
-            var userName = environmentVariable.GetUserName();
+            return ()=>GetHistory(environmentVariable.GetUserName, GetDbConnection);
+        }
 
-            var records = GetDbConnection().Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
+        static IReadOnlyList<InvocationInfo> GetHistory(Func<string> getUserName,Func<IDbConnection> getDbConnection)
+        {
+            var userName = getUserName();
 
-            return records.Select(x => JsonConvert.DeserializeObject<InvocationInfo>(x.Value)).ToList();
+            var records = getDbConnection().Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new {userName});
+
+            return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList();
         }
 
         /// <summary>
