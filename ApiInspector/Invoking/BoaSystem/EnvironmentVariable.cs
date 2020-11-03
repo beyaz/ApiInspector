@@ -3,7 +3,10 @@ using System.IO;
 using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Helpers;
+using static System.IO.File;
+using static System.String;
 using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
+using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking.BoaSystem
 {
@@ -66,14 +69,11 @@ namespace ApiInspector.Invoking.BoaSystem
                 return userName;
             }
 
-            if (!File.Exists(OutputFilePath))
-            {
-                CreateOutputFile();
-            }
+            IfNot(() => Exists(OutputFilePath), CreateOutputFile);
 
             var model = ReadModelFromFile();
 
-            if (!string.IsNullOrWhiteSpace(model.UserName))
+            if (!IsNullOrWhiteSpace(model.UserName))
             {
                 userName = model.UserName.Trim();
 
@@ -106,7 +106,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             var fileContent = serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
-            Utility.WriteToFile(OutputFilePath, fileContent);
+            WriteToFile(OutputFilePath, fileContent);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         static EnvironmentVariableFileModel ReadModelFromFile()
         {
-            return SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(File.ReadAllText(OutputFilePath));
+            return SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(ReadAllText(OutputFilePath));
         }
         #endregion
     }

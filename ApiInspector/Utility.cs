@@ -108,6 +108,15 @@ namespace ApiInspector
             }
         }
 
+        public static void IfNot(Func<bool> funcCondition, Action body)
+        {
+            var condition = funcCondition();
+            if (!condition)
+            {
+                body();
+            }
+        }
+
         /// <summary>
         ///     Writes all text.
         /// </summary>
