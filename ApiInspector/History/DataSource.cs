@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ApiInspector.Models;
+using static ApiInspector.Utility;
 
 namespace ApiInspector.History
 {
@@ -32,7 +33,7 @@ namespace ApiInspector.History
         /// </summary>
         public IReadOnlyList<InvocationInfo> GetHistory()
         {
-            return Utility.TryRun(() => boaDevDataSource.GetHistory()) ?? new InvocationInfo[0];
+            return TryRun(() => boaDevDataSource.GetHistory()) ?? new InvocationInfo[0];
         }
 
         /// <summary>
