@@ -41,11 +41,11 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Gets a value indicating whether [use local proxy].
         /// </summary>
-        public bool UseLocalProxyForCardServices
+        public static bool UseLocalProxyForCardServices
         {
             get
             {
-                GetUserName();
+                EnsureOutputFileExists();
                 return ReadModelFromFile().UseLocalProxyForCardServices;
             }
         }
@@ -101,7 +101,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 return userName;
             }
 
-            IfNot(Exists(OutputFilePath), CreateOutputFile);
+            EnsureOutputFileExists();
 
             var model = ReadModelFromFile();
 
@@ -111,6 +111,11 @@ namespace ApiInspector.Invoking.BoaSystem
             }
 
             return model.UserName.Trim();
+        }
+
+        static void EnsureOutputFileExists()
+        {
+            IfFileNotExistsThen(OutputFilePath, CreateOutputFile);
         }
 
         /// <summary>

@@ -123,6 +123,14 @@ namespace ApiInspector
                 body();
             }
         }
+
+        public static void IfFileNotExistsThen(string filePath, Action body)
+        {
+            if (!File.Exists(filePath))
+            {
+                body();
+            }
+        }
         /// <summary>
         ///     Writes all text.
         /// </summary>

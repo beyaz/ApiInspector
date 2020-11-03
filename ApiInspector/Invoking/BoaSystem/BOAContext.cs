@@ -8,6 +8,7 @@ using BOA.Common.Configuration;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card.Internal;
+using static ApiInspector.Invoking.BoaSystem.EnvironmentVariable;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -165,7 +166,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             objectHelper.Context.DBLayer.BeginTransaction();
 
-            if (environmentVariable.UseLocalProxyForCardServices)
+            if (UseLocalProxyForCardServices)
             {
                 CardService.UseLocalProxy = true;    
             }
