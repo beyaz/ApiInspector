@@ -105,12 +105,12 @@ namespace ApiInspector.Invoking.BoaSystem
 
             var model = ReadModelFromFile();
 
-            if (!IsNullOrWhiteSpace(model.UserName))
+            if (IsNullOrWhiteSpace(model.UserName))
             {
-                return model.UserName.Trim();
+                return Environment.UserName;
             }
 
-            return Environment.UserName;
+            return model.UserName.Trim();
         }
 
         /// <summary>
