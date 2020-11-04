@@ -42,6 +42,8 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<Action<string>> Trace => CreateKey<Action<string>>();
 
+        public static DataKey<Action<string>> UserVisibleTrace => CreateKey<Action<string>>();
+
         /// <summary>
         ///     Gets the name of the user.
         /// </summary>

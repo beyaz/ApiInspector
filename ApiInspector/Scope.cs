@@ -22,8 +22,8 @@ namespace ApiInspector
             SetupGet(DbConnection, context => ConnectionInfo.GetDbConnection());
             SetupGet(UserName, context => EnvironmentVariable.GetUserName(null));
             SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
-            SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => BoaDevDataSource.Remove(this));
-            SubscribeEvent(HistoryEvent.SaveToHistory, () => BoaDevDataSource.SaveToHistory(this));
+            SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => HistoryPanelDatabaseRepository.Remove(this));
+            SubscribeEvent(HistoryEvent.SaveToHistory, () => HistoryPanelDatabaseRepository.SaveToHistory(this));
         }
         #endregion
     }

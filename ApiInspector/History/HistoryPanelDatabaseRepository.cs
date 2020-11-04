@@ -10,14 +10,17 @@ using static Newtonsoft.Json.JsonConvert;
 namespace ApiInspector.History
 {
     /// <summary>
-    ///     The boa dev data source.
+    ///     The history panel database repository
     /// </summary>
-    class BoaDevDataSource
+    class HistoryPanelDatabaseRepository
     {
         #region Public Methods
+        /// <summary>
+        ///     Gets the history.
+        /// </summary>
         public static IReadOnlyList<InvocationInfo> GetHistory(Scope scope)
         {
-            var userName = scope.Get(UserName);
+            var userName     = scope.Get(UserName);
             var dbConnection = scope.Get(DbConnection);
 
             var records = dbConnection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new
@@ -28,18 +31,24 @@ namespace ApiInspector.History
             return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList();
         }
 
+        /// <summary>
+        ///     Removes the specified scope.
+        /// </summary>
         public static void Remove(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var dbConnection = scope.Get(DbConnection);
+            var dbConnection   = scope.Get(DbConnection);
 
             dbConnection.Delete(CreateFrom(invocationInfo));
         }
 
+        /// <summary>
+        ///     Saves to history.
+        /// </summary>
         public static void SaveToHistory(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var dbConnection = scope.Get(DbConnection);
+            var dbConnection   = scope.Get(DbConnection);
 
             var model = CreateFrom(invocationInfo);
 
@@ -47,7 +56,6 @@ namespace ApiInspector.History
 
             dbConnection.Insert(model);
         }
-
         #endregion
 
         #region Methods
@@ -60,7 +68,7 @@ namespace ApiInspector.History
 
             var scope = new Scope();
 
-            var userName = scope.Get(UserName);
+            var userName  = scope.Get(UserName);
             var serialize = scope.Get(SerializeHistoryForDatabaseInsert);
 
             return new RecordModel
