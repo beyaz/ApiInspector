@@ -10,7 +10,7 @@ using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Types;
 using static ApiInspector.Application.App;
-using static ApiInspector.CommonApplicationKeys;
+using static ApiInspector.Keys;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking.Invokers

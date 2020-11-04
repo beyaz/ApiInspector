@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using ApiInspector.Application;
+using ApiInspector.Invoking.BoaSystem;
 using BOA.DataFlow;
+using static ApiInspector.Keys;
 
 namespace ApiInspector
 {
@@ -9,10 +11,16 @@ namespace ApiInspector
     /// </summary>
     class Scope : DataContext
     {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Scope" /> class.
+        /// </summary>
         public Scope()
         {
-            
+            SetupGet(DbConnection, context => ConnectionInfo.GetDbConnection());
+            SetupGet(UserName, context => EnvironmentVariable.GetUserName(null));
         }
+        #endregion
     }
 
     /// <summary>
@@ -29,32 +37,4 @@ namespace ApiInspector
         }
         #endregion
     }
-
-    /// <summary>
-    ///     The string list
-    /// </summary>
-    class StringList : DataKey<IReadOnlyList<string>>
-    {
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="StringList" /> class.
-        /// </summary>
-        public StringList(Type locatedType, string fieldName) : base(locatedType, fieldName)
-        {
-        }
-        #endregion
-    }
-
-    class StringKey : DataKey<string>
-    {
-        #region Constructors
-       
-        public StringKey(Type locatedType, string fieldName) : base(locatedType, fieldName)
-        {
-        }
-        #endregion
-    }
-
-    delegate IReadOnlyList<string> FuncStringList();
-    
 }

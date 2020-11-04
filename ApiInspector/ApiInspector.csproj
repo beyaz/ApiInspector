@@ -82,7 +82,7 @@
     </ApplicationDefinition>
     <Compile Include="Application\AssemblyFinder.cs" />
     <Compile Include="Application\BoaUserDataSource.cs" />
-    <Compile Include="Application\CommonApplicationKeys.cs" />
+    <Compile Include="Keys.cs" />
     <Compile Include="Application\ConnectionInfo.cs" />
     <Compile Include="BOA\FileCacheUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

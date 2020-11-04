@@ -8,7 +8,7 @@ namespace ApiInspector
     /// <summary>
     ///     The common application keys
     /// </summary>
-    static class CommonApplicationKeys
+    static class Keys
     {
         #region Public Properties
         /// <summary>
@@ -49,7 +49,7 @@ namespace ApiInspector
         /// </summary>
         static DataKey<T> CreateKey<T>([CallerMemberName] string callerMemberName = null)
         {
-            return new DataKey<T>(typeof(CommonApplicationKeys), callerMemberName);
+            return new DataKey<T>(typeof(Keys), callerMemberName);
         }
         #endregion
     }

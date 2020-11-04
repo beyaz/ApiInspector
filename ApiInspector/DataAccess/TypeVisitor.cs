@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mono.Cecil;
-using static ApiInspector.CommonApplicationKeys;
+using static ApiInspector.Keys;
 
 namespace ApiInspector.DataAccess
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
-using static ApiInspector.CommonApplicationKeys;
+using static ApiInspector.Keys;
 using static ApiInspector.DataAccess.TypeVisitor;
 
 namespace ApiInspector.InvocationInfoEditor
