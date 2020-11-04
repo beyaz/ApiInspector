@@ -9,6 +9,10 @@ namespace ApiInspector
     /// </summary>
     class Scope : DataContext
     {
+        public Scope()
+        {
+            
+        }
     }
 
     /// <summary>

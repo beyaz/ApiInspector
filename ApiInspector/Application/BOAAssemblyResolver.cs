@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using static ApiInspector.Application.App;
 using static ApiInspector.Application.AssemblyFinder;
-using static ApiInspector.Application.CommonApplicationKeys;
+using static ApiInspector.CommonApplicationKeys;
 
 namespace ApiInspector.Application
 {

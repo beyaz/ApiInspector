@@ -94,7 +94,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Gets the name of the user.
         /// </summary>
-        static string GetUserName(string userName)
+        public static string GetUserName(string userName)
         {
             if (userName != null)
             {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Runtime.CompilerServices;
 
-namespace ApiInspector.Application
+namespace ApiInspector
 {
     /// <summary>
     ///     The common application keys
@@ -29,6 +30,17 @@ namespace ApiInspector.Application
         ///     The trace
         /// </summary>
         public static DataKey<Action<string>> Trace => CreateKey<Action<string>>();
+
+        /// <summary>
+        ///     Gets the name of the user.
+        /// </summary>
+        public static DataKey<string> UserName => CreateKey<string>();
+
+        /// <summary>
+        ///     Gets the database connection.
+        /// </summary>
+        public static DataKey<IDbConnection> DbConnection => CreateKey<IDbConnection>();
+
         #endregion
 
         #region Methods

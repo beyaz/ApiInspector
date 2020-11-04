@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using static ApiInspector.Application.CommonApplicationKeys;
+using static ApiInspector.CommonApplicationKeys;
 
 namespace ApiInspector.Application
 {
