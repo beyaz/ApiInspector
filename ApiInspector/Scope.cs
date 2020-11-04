@@ -1,5 +1,6 @@
 ﻿using System;
 using ApiInspector.Application;
+using ApiInspector.History;
 using ApiInspector.Invoking.BoaSystem;
 using BOA.DataFlow;
 using static ApiInspector.Keys;
@@ -19,8 +20,15 @@ namespace ApiInspector
         {
             SetupGet(DbConnection, context => ConnectionInfo.GetDbConnection());
             SetupGet(UserName, context => EnvironmentVariable.GetUserName(null));
+            SetupGet(SerializeHistoryForDatabaseInsert,context=>new Serialization.Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
+            SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo,()=>BoaDevDataSource.Remove(this));
         }
         #endregion
+    }
+
+    enum HistoryEvent
+    {
+    RemoveSelectedInvocationInfo    
     }
 
     /// <summary>

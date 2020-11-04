@@ -35,15 +35,7 @@ namespace ApiInspector.History
         {
             return TryRun(()=>BoaDevDataSource.GetHistory(new Scope())) ?? new List<InvocationInfo>();
         }
-
-        /// <summary>
-        ///     Removes the specified information.
-        /// </summary>
-        public void Remove(InvocationInfo info)
-        {
-            boaDevDataSource.Remove(info);
-        }
-
+        
         /// <summary>
         ///     Saves to history.
         /// </summary>

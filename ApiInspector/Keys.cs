@@ -46,6 +46,10 @@ namespace ApiInspector
         ///     Gets the name of the user.
         /// </summary>
         public static DataKey<string> UserName => CreateKey<string>();
+
+
+        public static DataKey<Func<object,string>> SerializeHistoryForDatabaseInsert => CreateKey<Func<object,string>>();
+
         #endregion
 
         #region Methods

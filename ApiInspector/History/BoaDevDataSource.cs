@@ -12,6 +12,7 @@ using static Newtonsoft.Json.JsonConvert;
 
 namespace ApiInspector.History
 {
+    
     /// <summary>
     ///     The boa dev data source.
     /// </summary>
@@ -63,6 +64,13 @@ namespace ApiInspector.History
             GetDbConnection().Delete(model);
         }
 
+        public static  void Remove(Scope scope)
+        {
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var dbConnection = scope.Get(DbConnection);
+
+            dbConnection.Delete(CreateFrom(invocationInfo));
+        }
         /// <summary>
         ///     Saves to history.
         /// </summary>
@@ -80,15 +88,20 @@ namespace ApiInspector.History
         /// <summary>
         ///     Creates from.
         /// </summary>
-        RecordModel CreateFrom(InvocationInfo info)
+        static RecordModel CreateFrom(InvocationInfo info)
         {
             var key = info.ToString();
+
+            var scope = new Scope();
+
+            var userName = scope.Get(UserName);
+            var serialize = scope.Get(SerializeHistoryForDatabaseInsert);
 
             return new RecordModel
             {
                 Key               = key,
-                UserName          = environmentVariable.GetUserName(),
-                Value             = serializer.SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(info),
+                UserName          = userName,
+                Value             = serialize(info),
                 LastExecutionTime = DateTime.Now
             };
         }

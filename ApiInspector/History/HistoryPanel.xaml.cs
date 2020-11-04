@@ -76,7 +76,10 @@ namespace ApiInspector.History
         /// </summary>
         void DeleteSelectedItemFromHistory(InvocationInfo info)
         {
-            dataSource.Remove(info);
+            new Scope
+            {
+                {Keys.SelectedInvocationInfo, info}
+            }.PublishEvent(HistoryEvent.RemoveSelectedInvocationInfo);
 
             Refresh();
         }
