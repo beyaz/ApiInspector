@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
+using ApiInspector.Models;
 
 namespace ApiInspector
 {
@@ -22,9 +23,19 @@ namespace ApiInspector
         public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories => CreateKey<IReadOnlyList<string>>();
 
         /// <summary>
+        ///     Gets the database connection.
+        /// </summary>
+        public static DataKey<IDbConnection> DbConnection => CreateKey<IDbConnection>();
+
+        /// <summary>
         ///     Gets or sets the invocation search directory.
         /// </summary>
         public static DataKey<string> InvocationSearchDirectory => CreateKey<string>();
+
+        /// <summary>
+        ///     Gets the selected invocation information.
+        /// </summary>
+        public static DataKey<InvocationInfo> SelectedInvocationInfo => CreateKey<InvocationInfo>();
 
         /// <summary>
         ///     The trace
@@ -35,12 +46,6 @@ namespace ApiInspector
         ///     Gets the name of the user.
         /// </summary>
         public static DataKey<string> UserName => CreateKey<string>();
-
-        /// <summary>
-        ///     Gets the database connection.
-        /// </summary>
-        public static DataKey<IDbConnection> DbConnection => CreateKey<IDbConnection>();
-
         #endregion
 
         #region Methods

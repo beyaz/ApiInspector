@@ -33,7 +33,7 @@ namespace ApiInspector.History
         /// </summary>
         public IReadOnlyList<InvocationInfo> GetHistory()
         {
-            return TryRun(boaDevDataSource.GetHistory()) ?? new List<InvocationInfo>();
+            return TryRun(()=>BoaDevDataSource.GetHistory(new Scope())) ?? new List<InvocationInfo>();
         }
 
         /// <summary>
