@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using ApiInspector.History;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
@@ -35,13 +34,8 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Initializes a new instance of the <see cref="View" /> class.
         /// </summary>
-        public View(TraceQueue traceQueue, ErrorMonitor errorMonitor, DataSource dataSource)
+        public View(TraceQueue traceQueue, ErrorMonitor errorMonitor)
         {
-            if (dataSource == null)
-            {
-                throw new ArgumentNullException(nameof(dataSource));
-            }
-
             this.traceQueue   = traceQueue ?? throw new ArgumentNullException(nameof(traceQueue));
             this.errorMonitor = errorMonitor ?? throw new ArgumentNullException(nameof(errorMonitor));
             
@@ -59,7 +53,7 @@ namespace ApiInspector.MainWindow
 
             Loaded += (s, e) =>
             {
-                historyPanel.Connect(traceQueue,dataSource);
+                historyPanel.Connect(traceQueue);
 
                 historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo);
                 historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;

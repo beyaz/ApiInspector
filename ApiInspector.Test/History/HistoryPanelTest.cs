@@ -26,7 +26,7 @@ namespace ApiInspector.History
             {
                 historyPanel.historyListBox.ItemsSource.Should().BeNullOrEmpty();
 
-                historyPanel.Connect(injector.Get<ITracer>(),injector.Get<DataSource>());
+                historyPanel.Connect(injector.Get<ITracer>());
 
                 historyPanel.historyListBox.ItemsSource.Should().NotBeNullOrEmpty();
             }

@@ -126,7 +126,6 @@
       <DependentUpon>HistoryPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Serialization\DecimalConverter.cs" />
-    <Compile Include="History\DataSource.cs" />
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="Invoking\BoaSystem\BOAContext.cs" />
     <Compile Include="Invoking\Invokers\Invoker.cs" />

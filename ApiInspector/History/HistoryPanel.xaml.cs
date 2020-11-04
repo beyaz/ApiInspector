@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
+using static ApiInspector.History.BoaDevDataSource;
+using static ApiInspector.Utility;
 
 namespace ApiInspector.History
 {
@@ -14,11 +17,7 @@ namespace ApiInspector.History
     partial class HistoryPanel
     {
         #region Fields
-        /// <summary>
-        ///     The dataSource
-        /// </summary>
-        DataSource dataSource;
-
+      
         /// <summary>
         ///     The trace
         /// </summary>
@@ -53,10 +52,9 @@ namespace ApiInspector.History
         /// <summary>
         ///     Connects the specified trace.
         /// </summary>
-        public void Connect(ITracer tracer, DataSource dataSource)
+        public void Connect(ITracer tracer)
         {
             this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.dataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
 
             Refresh();
         }
@@ -137,7 +135,7 @@ namespace ApiInspector.History
         {
             tracer.Trace("History is loading...");
 
-            historyListBox.ItemsSource = dataSource.GetHistory();
+            historyListBox.ItemsSource = TryRun(() => GetHistory(new Scope())) ?? new List<InvocationInfo>();
 
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
 
