@@ -36,13 +36,6 @@ namespace ApiInspector.History
             return TryRun(()=>BoaDevDataSource.GetHistory(new Scope())) ?? new List<InvocationInfo>();
         }
         
-        /// <summary>
-        ///     Saves to history.
-        /// </summary>
-        public void SaveToHistory(InvocationInfo info)
-        {
-            boaDevDataSource.SaveToHistory(info);
-        }
         #endregion
     }
 }

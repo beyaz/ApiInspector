@@ -71,17 +71,19 @@ namespace ApiInspector.History
 
             dbConnection.Delete(CreateFrom(invocationInfo));
         }
-        /// <summary>
-        ///     Saves to history.
-        /// </summary>
-        public void SaveToHistory(InvocationInfo info)
+
+        public static void SaveToHistory(Scope scope)
         {
-            var model = CreateFrom(info);
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var dbConnection = scope.Get(DbConnection);
 
-            Remove(info);
+            var model = CreateFrom(invocationInfo);
 
-            GetDbConnection().Insert(model);
+            Remove(scope);
+
+            dbConnection.Insert(model);
         }
+        
         #endregion
 
         #region Methods

@@ -2,6 +2,7 @@
 using ApiInspector.Application;
 using ApiInspector.History;
 using ApiInspector.Invoking.BoaSystem;
+using ApiInspector.Serialization;
 using BOA.DataFlow;
 using static ApiInspector.Keys;
 
@@ -20,15 +21,27 @@ namespace ApiInspector
         {
             SetupGet(DbConnection, context => ConnectionInfo.GetDbConnection());
             SetupGet(UserName, context => EnvironmentVariable.GetUserName(null));
-            SetupGet(SerializeHistoryForDatabaseInsert,context=>new Serialization.Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
-            SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo,()=>BoaDevDataSource.Remove(this));
+            SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
+            SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => BoaDevDataSource.Remove(this));
+            SubscribeEvent(HistoryEvent.SaveToHistory, () => BoaDevDataSource.SaveToHistory(this));
         }
         #endregion
     }
 
+    /// <summary>
+    ///     The history event
+    /// </summary>
     enum HistoryEvent
     {
-    RemoveSelectedInvocationInfo    
+        /// <summary>
+        ///     The remove selected invocation information
+        /// </summary>
+        RemoveSelectedInvocationInfo,
+
+        /// <summary>
+        ///     The save to history
+        /// </summary>
+        SaveToHistory
     }
 
     /// <summary>

@@ -207,12 +207,12 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void SaveToHistory()
         {
-            using (var injector = CreateNewInjector())
+            var scope = new Scope()
             {
-                var dataSource = injector.Get<DataSource>();
-
-                dataSource.SaveToHistory(InvocationInfo);
-            }
+                {Keys.SelectedInvocationInfo,InvocationInfo}
+            };
+            scope.PublishEvent(HistoryEvent.SaveToHistory);
+            
         }
 
         /// <summary>
