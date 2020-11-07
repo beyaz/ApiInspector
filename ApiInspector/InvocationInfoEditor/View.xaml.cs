@@ -1,8 +1,38 @@
 ﻿using System;
+using System.Diagnostics;
 using ApiInspector.Models;
 
 namespace ApiInspector.InvocationInfoEditor
 {
+
+    enum ViewEvents
+    {
+        /// <summary>
+        ///     The on assembly search directory changed
+        /// </summary>
+        OnAssemblySearchDirectoryChanged,
+
+        /// <summary>
+        ///     The on environment changed
+        /// </summary>
+        OnEnvironmentChanged,
+
+        /// <summary>
+        ///     The on assembly name changed
+        /// </summary>
+        OnAssemblyNameChanged,
+
+        /// <summary>
+        ///     The on class name changed
+        /// </summary>
+        OnClassNameChanged,
+
+        /// <summary>
+        ///     The on method name changed
+        /// </summary>
+        OnMethodNameChanged
+    }
+
     /// <summary>
     ///     Interaction logic for View.xaml
     /// </summary>
@@ -31,38 +61,6 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
         
-        #region Enums
-        /// <summary>
-        ///     The view events
-        /// </summary>
-        enum ViewEvents
-        {
-            /// <summary>
-            ///     The on assembly search directory changed
-            /// </summary>
-            OnAssemblySearchDirectoryChanged,
-
-            /// <summary>
-            ///     The on environment changed
-            /// </summary>
-            OnEnvironmentChanged,
-
-            /// <summary>
-            ///     The on assembly name changed
-            /// </summary>
-            OnAssemblyNameChanged,
-
-            /// <summary>
-            ///     The on class name changed
-            /// </summary>
-            OnClassNameChanged,
-
-            /// <summary>
-            ///     The on method name changed
-            /// </summary>
-            OnMethodNameChanged
-        }
-        #endregion
 
 
         #region Public Methods
@@ -98,8 +96,8 @@ namespace ApiInspector.InvocationInfoEditor
                 return; // TODO: nasıl olabilir
             }
 
-          
-            
+            var itemSources = scope.Get(Keys.ItemsSources);
+            var log         = scope.Get(Keys.Trace);
 
             switch (name)
             {
@@ -107,7 +105,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                    ViewController.OnAssemblySearchDirectoryChanged(scope);
+                    ViewController.HandleEvent(name,invocationInfo,itemSources,log);
 
                     break;
                 }
@@ -123,7 +121,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    ViewController.OnAssemblyNameChanged(scope);
+                    ViewController.HandleEvent(name,invocationInfo,itemSources,log);
 
                     break;
                 }
