@@ -1,6 +1,7 @@
 ﻿using System;
 using ApiInspector.Application;
 using ApiInspector.History;
+using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Serialization;
 using BOA.DataFlow;
@@ -24,6 +25,8 @@ namespace ApiInspector
             SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
             SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => HistoryPanelDatabaseRepository.Remove(this));
             SubscribeEvent(HistoryEvent.SaveToHistory, () => HistoryPanelDatabaseRepository.SaveToHistory(this));
+            this.Add(Keys.ItemsSources, new ItemSourceList());
+            this.Add(Keys.Trace, (m)=>{});
         }
         #endregion
     }

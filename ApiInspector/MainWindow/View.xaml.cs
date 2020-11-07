@@ -47,7 +47,7 @@ namespace ApiInspector.MainWindow
 
             traceMonitor.StartToMonitor();
 
-            currentInvocationInfo.model.Trace = traceQueue.AddMessage;
+           
 
             Loaded += (s, e) =>
             {

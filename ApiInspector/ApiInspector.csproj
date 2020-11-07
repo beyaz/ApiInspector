@@ -109,7 +109,6 @@
     <Compile Include="Components\IntellisenseTextBox.cs" />
     <Compile Include="Tracing\TraceQueue.cs" />
     <Compile Include="History\HistoryPanelDatabaseRepository.cs" />
-    <Compile Include="InvocationInfoEditor\ViewModel.cs" />
     <Compile Include="Invoking\Invokers\CardServiceMethodInvoker.cs" />
     <Compile Include="Invoking\Invokers\EndOfDayInvoker.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorDefault.cs" />

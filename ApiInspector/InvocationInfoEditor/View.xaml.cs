@@ -12,14 +12,7 @@ namespace ApiInspector.InvocationInfoEditor
 
         internal Scope scope;
 
-        /// <summary>
-        ///     The model
-        /// </summary>
-        internal readonly ViewModel model = new ViewModel
-        {
-            ItemSourceList = new ItemSourceList(),
-            InvocationInfo = new InvocationInfo()
-        };
+        
 
         
 
@@ -78,8 +71,6 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public void Connect(InvocationInfo invocationInfo)
         {
-            model.InvocationInfo = invocationInfo;
-
             UpdateSuggestions();
 
             RefreshValues();
@@ -99,16 +90,16 @@ namespace ApiInspector.InvocationInfoEditor
         ///     Fires the event.
         /// </summary>
         void FireEvent(ViewEvents name)
-        { 
-            var invocationInfo = model.InvocationInfo;
+        {
+            var invocationInfo = scope.TryGet(Keys.SelectedInvocationInfo);
 
             if (invocationInfo == null)
             {
                 return; // TODO: nasıl olabilir
             }
 
-            scope.Update(Keys.ItemSourceList,model.ItemSourceList);
-            var viewController = new ViewController(model);
+          
+            
 
             switch (name)
             {
@@ -132,7 +123,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnAssemblyNameChanged();
+                    ViewController.OnAssemblyNameChanged(scope);
 
                     break;
                 }
@@ -141,7 +132,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnClassNameChanged();
+                    ViewController.OnClassNameChanged(scope);
 
                     break;
                 }
@@ -150,11 +141,12 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnMethodNameSelected();
+                    ViewController.OnMethodNameSelected(scope);
 
-                    if (model.MethodDefinition != null)
+                    var methodDefinition = scope.TryGet(Keys.MethodDefinition);
+                    if (methodDefinition != null)
                     {
-                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, model.MethodDefinition);
+                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
                     }
 
                     break;
@@ -171,7 +163,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            var invocationInfo = model.InvocationInfo;
+            var invocationInfo = scope.Get(Keys.SelectedInvocationInfo);
 
             if (invocationInfo == null)
             {
@@ -212,7 +204,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            var source = model.ItemSourceList;
+            var source = scope.Get(Keys.ItemsSources);
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;

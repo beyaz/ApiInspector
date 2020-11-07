@@ -17,6 +17,8 @@ namespace ApiInspector.InvocationInfoEditor
         [TestMethod]
         public void Should_load_data_according_to_component_interaction()
         {
+            var scope = new Scope();
+
             var invocationInfo = new InvocationInfo
             {
                 AssemblySearchDirectory = @"d:\boa\server\bin\"
@@ -24,20 +26,14 @@ namespace ApiInspector.InvocationInfoEditor
 
             var itemSourceList = new ItemSourceList();
 
-            var model = new ViewModel
-            {
-                InvocationInfo = invocationInfo,
-                Trace          = message => { },
-                ItemSourceList = itemSourceList
-            };
-            // TODO: initialize scope
-            var viewController = new ViewController(model);
+          
+           
 
             // On Search Directory Changed
             {
                 itemSourceList.AssemblyNameList.Should().BeNull();
 
-                viewController.OnAssemblySearchDirectoryChanged();
+                ViewController.OnAssemblySearchDirectoryChanged(scope);
 
                 itemSourceList.AssemblyNameList.Count.Should().BeGreaterThan(0);
             }
@@ -48,7 +44,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 invocationInfo.AssemblyName = "BOA.Process.Kernel.Card.dll";
 
-                viewController.OnAssemblyNameChanged();
+                ViewController.OnAssemblyNameChanged(scope);
 
                 itemSourceList.ClassNameList.Count.Should().BeGreaterThan(0);
             }
@@ -59,20 +55,20 @@ namespace ApiInspector.InvocationInfoEditor
 
                 invocationInfo.ClassName = "BOA.Process.Kernel.Card.CallCenter.IVR.CreditCard.GetCardDetail";
 
-                viewController.OnClassNameChanged();
+                ViewController.OnClassNameChanged(scope);
 
                 itemSourceList.MethodNameList.Count.Should().BeGreaterThan(0);
             }
 
             // On Method Name Changed
             {
-                model.MethodDefinition.Should().BeNull();
+                scope.TryGet(Keys.MethodDefinition).Should().BeNull();
 
                 invocationInfo.MethodName = "ExecuteInOldCardSystem";
 
-                viewController.OnMethodNameSelected();
-
-                model.MethodDefinition.Should().NotBeNull();
+                ViewController.OnMethodNameSelected(scope);
+                
+                scope.Get(Keys.MethodDefinition).Should().NotBeNull();
             }
         }
         #endregion
