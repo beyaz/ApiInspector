@@ -19,26 +19,9 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public static void OnAssemblyNameChanged(Scope scope)
         {
-            var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var log            = scope.Get(Trace);
-            var itemSources    = scope.Get(ItemsSources);
+            var itemSources = scope.Get(ItemsSources);
 
-            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                log($"File not exists. File:{assemblyFilePath}");
-                return;
-            }
-
-            scope.OpenNewLayer("Searching assembly");
-
-            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
-            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
-
-            itemSources.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
-
-            scope.CloseCurrentLayer();
+            itemSources.ClassNameList = GetClassNamesOfSelectedAssembly(scope);
         }
 
         /// <summary>
@@ -79,8 +62,6 @@ namespace ApiInspector.InvocationInfoEditor
                 return;
             }
 
-            
-
             scope.OpenNewLayer("Searching type definition");
 
             scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
@@ -90,7 +71,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             scope.CloseCurrentLayer();
 
-            scope.Update(Keys.TypeDefinition, typeDefinition);
+            scope.Update(TypeDefinition, typeDefinition);
             if (typeDefinition == null)
             {
                 log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -99,7 +80,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             itemSources.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
 
-            if ( invocationInfo.AssemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+            if (invocationInfo.AssemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
             {
                 itemSources.MethodNameList = new List<string>
                 {
@@ -114,12 +95,11 @@ namespace ApiInspector.InvocationInfoEditor
         public static void OnMethodNameSelected(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var typeDefinition = scope.Get(Keys.TypeDefinition);
+            var typeDefinition = scope.Get(TypeDefinition);
 
-            scope.Update(Keys.MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+            scope.Update(MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
         }
         #endregion
-
     }
 }
 
@@ -140,6 +120,31 @@ namespace ApiInspector
         public static List<string> GetAssemblySearchDirectories(InvocationInfo invocationInfo)
         {
             return ListOf(invocationInfo.AssemblySearchDirectory);
+        }
+
+        public static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(Scope scope)
+        {
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var log            = scope.Get(Trace);
+
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+
+            if (!File.Exists(assemblyFilePath))
+            {
+                log($"File not exists. File:{assemblyFilePath}");
+                return new List<string>();
+            }
+
+            scope.OpenNewLayer("Searching assembly");
+
+            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
+            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
+
+            var names = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
+
+            scope.CloseCurrentLayer();
+
+            return names;
         }
         #endregion
     }
