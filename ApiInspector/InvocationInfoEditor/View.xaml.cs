@@ -1,5 +1,6 @@
 ﻿using System;
 using ApiInspector.Models;
+using static ApiInspector.Keys;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -81,7 +82,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void FireEvent(ViewEvents name)
         {
-            var invocationInfo = scope.TryGet(Keys.SelectedInvocationInfo);
+            var invocationInfo = scope.TryGet(SelectedInvocationInfo);
 
             if (invocationInfo == null)
             {
@@ -130,7 +131,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                     ViewController.OnMethodNameSelected(scope);
 
-                    var methodDefinition = scope.TryGet(Keys.MethodDefinition);
+                    var methodDefinition = scope.TryGet(MethodDefinition);
                     if (methodDefinition != null)
                     {
                         new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
@@ -150,7 +151,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RefreshValues()
         {
-            var invocationInfo = scope.Get(Keys.SelectedInvocationInfo);
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
 
             if (invocationInfo == null)
             {
@@ -191,7 +192,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            var source = scope.Get(Keys.ItemsSources);
+            var source = scope.Get(ItemsSources);
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;

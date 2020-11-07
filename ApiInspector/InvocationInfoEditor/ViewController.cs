@@ -34,14 +34,13 @@ namespace ApiInspector.InvocationInfoEditor
             var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
 
             scope.OpenNewLayer("Searching assembly");
-            {
-                scope.Add(AssemblySearchDirectories, new List<string> {assemblySearchDirectory});
-                scope.Add(AssemblyPath, assemblyFilePath);
 
-                itemSources.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
+            scope.Add(AssemblySearchDirectories, new List<string> {assemblySearchDirectory});
+            scope.Add(AssemblyPath, assemblyFilePath);
 
-                scope.CloseCurrentLayer();
-            }
+            itemSources.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
+
+            scope.CloseCurrentLayer();
         }
 
         /// <summary>
@@ -84,18 +83,15 @@ namespace ApiInspector.InvocationInfoEditor
 
             var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
 
-            var scope2 = new Scope
-            {
-                {
-                    AssemblySearchDirectories, new List<string>
-                    {
-                        assemblySearchDirectory
-                    }
-                },
+            scope.OpenNewLayer("Searching type definition");
 
-                {AssemblyPath, assemblyFilePath}
-            };
-            var typeDefinition = FindTypeDefinition(scope2, invocationInfo.ClassName);
+            scope.Add(AssemblySearchDirectories, new List<string> {assemblySearchDirectory});
+            scope.Add(AssemblyPath, assemblyFilePath);
+
+            var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
+
+            scope.CloseCurrentLayer();
+
             scope.Update(Keys.TypeDefinition, typeDefinition);
             if (typeDefinition == null)
             {
