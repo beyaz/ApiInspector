@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
+using Mono.Cecil;
 using static ApiInspector.Keys;
 using static ApiInspector.DataAccess.TypeVisitor;
 using static ApiInspector.Utility;
@@ -45,22 +46,10 @@ namespace ApiInspector.InvocationInfoEditor
             var itemSources    = scope.Get(ItemsSources);
 
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-            if (!File.Exists(assemblyFilePath))
-            {
-                log($"File not exists. File:{assemblyFilePath}");
-                return;
-            }
 
-            scope.OpenNewLayer("Searching type definition");
+            var typeDefinition = FindType(scope);
 
-            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
-            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
-
-            var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
-
-            scope.CloseCurrentLayer();
-
-            scope.Update(TypeDefinition, typeDefinition);
+            scope.Update(Keys.TypeDefinition, typeDefinition);
             if (typeDefinition == null)
             {
                 log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -84,9 +73,9 @@ namespace ApiInspector.InvocationInfoEditor
         public static void OnMethodNameSelected(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var typeDefinition = scope.Get(TypeDefinition);
+            var typeDefinition = scope.Get(Keys.TypeDefinition);
 
-            scope.Update(MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+            scope.Update(Keys.MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
         }
         #endregion
 
@@ -154,6 +143,36 @@ namespace ApiInspector
 
             return names;
         }
+
+        public static TypeDefinition FindType(Scope scope)
+        {
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var log            = scope.Get(Trace);
+
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+
+            if (!File.Exists(assemblyFilePath))
+            {
+                log($"File not exists. File:{assemblyFilePath}");
+                return null;
+            }
+
+
+
+            scope.OpenNewLayer("Searching type definition");
+
+            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
+
+            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
+
+            var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
+
+            scope.CloseCurrentLayer();
+
+
+            return typeDefinition;
+        }
+
         #endregion
     }
 }
