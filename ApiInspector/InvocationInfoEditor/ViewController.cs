@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
@@ -15,69 +14,58 @@ namespace ApiInspector.InvocationInfoEditor
     class ViewController
     {
         #region Public Methods
-        public static void HandleEvent(ViewEvents e, InvocationInfo invocationInfo, ItemSourceList itemSources, Action<string> log)
+        /// <summary>
+        ///     Called when [assembly name changed].
+        /// </summary>
+        public static void OnAssemblyNameChanged(Scope scope)
         {
-            void OnAssemblySearchDirectoryChanged()
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var log            = scope.Get(Trace);
+            var itemSources    = scope.Get(ItemsSources);
+
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+
+            if (!File.Exists(assemblyFilePath))
             {
-                var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
-                if (!Directory.Exists(assemblySearchDirectory))
-                {
-                    return;
-                }
-
-                itemSources.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
-
-                if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
-                {
-                    itemSources.AssemblyNameList = itemSources.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
-                }
+                log($"File not exists. File:{assemblyFilePath}");
+                return;
             }
 
-             void OnAssemblyNameChanged( )
+            var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
+
+            scope.OpenNewLayer("Searching assembly");
             {
-                
+                scope.Add(AssemblySearchDirectories,new List<string> {assemblySearchDirectory});
+                scope.Add(AssemblyPath,assemblyFilePath);
+            
+                itemSources.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
 
-                var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-
-                if (!File.Exists(assemblyFilePath))
-                {
-                    log($"File not exists. File:{assemblyFilePath}");
-                    return;
-                }
-
-                var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
-
-                var scope2 = new Scope
-                {
-                    {
-                        AssemblySearchDirectories, new List<string>
-                        {
-                            assemblySearchDirectory
-                        }
-                    },
-
-                    {AssemblyPath, assemblyFilePath}
-                };
-
-                itemSources.ClassNameList = GeTypeDefinitions(scope2).Select(x => x.FullName).ToList();
+                scope.CloseCurrentLayer();
             }
-
-            switch (e)
-            {
-                case ViewEvents.OnAssemblySearchDirectoryChanged:
-                {
-                    OnAssemblySearchDirectoryChanged();
-                    return;
-                }
-                case ViewEvents.OnAssemblyNameChanged:
-                {
-                    OnAssemblyNameChanged();
-                    return;
-                }
-            }
+            
         }
 
-       
+        /// <summary>
+        ///     Called when [assembly search directory changed].
+        /// </summary>
+        public static void OnAssemblySearchDirectoryChanged(Scope scope)
+        {
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var itemSources    = scope.Get(ItemsSources);
+
+            var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
+            if (!Directory.Exists(assemblySearchDirectory))
+            {
+                return;
+            }
+
+            itemSources.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
+
+            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+            {
+                itemSources.AssemblyNameList = itemSources.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
+            }
+        }
 
         /// <summary>
         ///     Called when [class name changed].
@@ -140,6 +128,9 @@ namespace ApiInspector.InvocationInfoEditor
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Finds the matched function.
+        /// </summary>
         static MethodDefinition FindMatchedFunction(InvocationInfo invocationInfo, TypeDefinition typeDefinition)
         {
             return typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);

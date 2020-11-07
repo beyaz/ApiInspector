@@ -1,51 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using ApiInspector.Models;
 
 namespace ApiInspector.InvocationInfoEditor
 {
-
-    enum ViewEvents
-    {
-        /// <summary>
-        ///     The on assembly search directory changed
-        /// </summary>
-        OnAssemblySearchDirectoryChanged,
-
-        /// <summary>
-        ///     The on environment changed
-        /// </summary>
-        OnEnvironmentChanged,
-
-        /// <summary>
-        ///     The on assembly name changed
-        /// </summary>
-        OnAssemblyNameChanged,
-
-        /// <summary>
-        ///     The on class name changed
-        /// </summary>
-        OnClassNameChanged,
-
-        /// <summary>
-        ///     The on method name changed
-        /// </summary>
-        OnMethodNameChanged
-    }
-
     /// <summary>
     ///     Interaction logic for View.xaml
     /// </summary>
     public partial class View
     {
         #region Fields
-
         internal Scope scope;
-
-        
-
-        
-
         #endregion
 
         #region Constructors
@@ -60,8 +24,36 @@ namespace ApiInspector.InvocationInfoEditor
             Loaded += (s, e) => { RegisterEvents(); };
         }
         #endregion
-        
 
+        #region Enums
+        enum ViewEvents
+        {
+            /// <summary>
+            ///     The on assembly search directory changed
+            /// </summary>
+            OnAssemblySearchDirectoryChanged,
+
+            /// <summary>
+            ///     The on environment changed
+            /// </summary>
+            OnEnvironmentChanged,
+
+            /// <summary>
+            ///     The on assembly name changed
+            /// </summary>
+            OnAssemblyNameChanged,
+
+            /// <summary>
+            ///     The on class name changed
+            /// </summary>
+            OnClassNameChanged,
+
+            /// <summary>
+            ///     The on method name changed
+            /// </summary>
+            OnMethodNameChanged
+        }
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -96,16 +88,13 @@ namespace ApiInspector.InvocationInfoEditor
                 return; // TODO: nasıl olabilir
             }
 
-            var itemSources = scope.Get(Keys.ItemsSources);
-            var log         = scope.Get(Keys.Trace);
-
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:
                 {
                     invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                    ViewController.HandleEvent(name,invocationInfo,itemSources,log);
+                    ViewController.OnAssemblySearchDirectoryChanged(scope);
 
                     break;
                 }
@@ -121,7 +110,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    ViewController.HandleEvent(name,invocationInfo,itemSources,log);
+                    ViewController.OnAssemblyNameChanged(scope);
 
                     break;
                 }
@@ -173,7 +162,7 @@ namespace ApiInspector.InvocationInfoEditor
             assemblyIntellisenseTextBox.SetValue(invocationInfo.AssemblyName);
             classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
             methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
-            
+
             // force method name change for update parameter panel
             if (methodNameIntellisenseTextBox.Editor.Text == invocationInfo.MethodName)
             {
