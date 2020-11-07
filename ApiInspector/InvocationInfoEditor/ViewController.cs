@@ -14,6 +14,8 @@ namespace ApiInspector.InvocationInfoEditor
     class ViewController
     {
         #region Fields
+        readonly Scope scope;
+
         /// <summary>
         ///     The model
         /// </summary>
@@ -24,8 +26,9 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Initializes a new instance of the <see cref="ViewController" /> class.
         /// </summary>
-        public ViewController(ViewModel model)
+        public ViewController(Scope scope, ViewModel model)
         {
+            this.scope = scope?? throw new ArgumentNullException(nameof(scope));
             this.model = model ?? throw new ArgumentNullException(nameof(model));
         }
         #endregion
@@ -60,14 +63,14 @@ namespace ApiInspector.InvocationInfoEditor
 
             var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
 
-            var scope = new Scope
+            var scope2 = new Scope
             {
                 {AssemblySearchDirectories,new List<string> {assemblySearchDirectory}},
                 {Trace,model.Trace},
                 {AssemblyPath,assemblyFilePath}
             };
 
-            ItemSourceList.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
+            ItemSourceList.ClassNameList = GeTypeDefinitions(scope2).Select(x => x.FullName).ToList();
         }
 
         /// <summary>

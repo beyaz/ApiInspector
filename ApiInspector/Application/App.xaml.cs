@@ -65,7 +65,9 @@ namespace ApiInspector.Application
 
             var injector = new AppInjector(errorMonitor);
 
-            MainWindow = injector.Get<View>();
+            var mainView = injector.Get<View>();
+            
+            MainWindow = mainView;
 
             MainWindow?.Show();
         }

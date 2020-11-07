@@ -10,6 +10,7 @@ using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
+using static ApiInspector.Keys;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.MainWindow
@@ -17,47 +18,42 @@ namespace ApiInspector.MainWindow
     /// <summary>
     ///     The view
     /// </summary>
-    partial  class View
+    partial class View
     {
         #region Fields
         /// <summary>
-        ///     The error monitor
+        ///     The scope
         /// </summary>
-        readonly ErrorMonitor errorMonitor;
-
-        /// <summary>
-        ///     The trace queue
-        /// </summary>
-        readonly TraceQueue traceQueue;
+        readonly Scope scope;
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="View" /> class.
         /// </summary>
-        public View(TraceQueue traceQueue, ErrorMonitor errorMonitor)
+        public View(Scope scope)
         {
-            App.ApplicationScope.Update(Keys.UserVisibleTrace,traceQueue.AddMessage);
-            
-            this.traceQueue   = traceQueue;
-            this.errorMonitor = errorMonitor ?? throw new ArgumentNullException(nameof(errorMonitor));
-            
+            this.scope = scope;
+
+            App.ApplicationScope.Update(UserVisibleTrace, traceQueue.AddMessage);
 
             InitializeGlobalFontStyle();
 
             InitializeComponent();
 
+            currentInvocationInfo.scope = scope;
+
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
             traceMonitor.StartToMonitor();
-            currentInvocationInfo.model.Trace = traceQueue.AddMessage;
 
-            
+            currentInvocationInfo.model.Trace = traceQueue.AddMessage;
 
             Loaded += (s, e) =>
             {
                 historyPanel.Refresh();
 
+                historyPanel.SelectedInvocationChanged += () => scope.Update(Keys.SelectedInvocationInfo,historyPanel.SelectedInvocationInfo);
                 historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo);
                 historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
                 historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
@@ -67,19 +63,16 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        void UpdateTitle()
-        {
-            using (var injector = new Injector(traceQueue, EnvironmentInfo.Dev))
-            {
-                var userName = injector.Get<EnvironmentVariable>().GetUserName();
-                Title = "ApiInspector - " + userName;
-            }
-        }
         #region Properties
         /// <summary>
         ///     Gets the invocation information.
         /// </summary>
-        InvocationInfo InvocationInfo => currentInvocationInfo.model.InvocationInfo;
+        InvocationInfo InvocationInfo => scope.TryGet(Keys.SelectedInvocationInfo);
+
+        /// <summary>
+        ///     The trace queue
+        /// </summary>
+        TraceQueue traceQueue => scope.Get(Keys.TraceQueue);
         #endregion
 
         #region Methods
@@ -91,6 +84,9 @@ namespace ApiInspector.MainWindow
             return new Injector(traceQueue, EnvironmentInfo.Parse(InvocationInfo.Environment));
         }
 
+        /// <summary>
+        ///     Initializes the global font style.
+        /// </summary>
         void InitializeGlobalFontStyle()
         {
             FontSize = 15;
@@ -105,13 +101,22 @@ namespace ApiInspector.MainWindow
         }
 
         /// <summary>
+        ///     Called when [entered to execution].
+        /// </summary>
+        void OnEnteredToExecution()
+        {
+            UpdateUI(() => executeButton.Content   = "Executing...");
+            UpdateUI(() => executeButton.IsEnabled = false);
+        }
+
+        /// <summary>
         ///     Called when [execute clicked].
         /// </summary>
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
             if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
-                errorMonitor.ShowErrorNotification("MethodName can not be empty.");
+                scope.Get(Keys.ErrorMonitor).ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
 
@@ -119,21 +124,6 @@ namespace ApiInspector.MainWindow
 
             new Thread(OnExecuteClicked).Start();
         }
-
-        void OnEnteredToExecution()
-        {
-            UpdateUI(()=>executeButton.Content   = "Executing...");
-            UpdateUI(()=>executeButton.IsEnabled = false);
-
-           
-        }
-
-        void OnExitToExecution()
-        {
-            UpdateUI(()=>executeButton.Content   = "Execute");
-            UpdateUI(()=>executeButton.IsEnabled = true);
-        }
-
 
         /// <summary>
         ///     Called when [execute clicked].
@@ -145,7 +135,6 @@ namespace ApiInspector.MainWindow
             var invocationInfo = InvocationInfo;
 
             UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
-            
 
             Trace("------------- EXECUTE STARTED -----------------");
 
@@ -169,6 +158,15 @@ namespace ApiInspector.MainWindow
             Trace(string.Empty);
 
             OnExitToExecution();
+        }
+
+        /// <summary>
+        ///     Called when [exit to execution].
+        /// </summary>
+        void OnExitToExecution()
+        {
+            UpdateUI(() => executeButton.Content   = "Execute");
+            UpdateUI(() => executeButton.IsEnabled = true);
         }
 
         /// <summary>
@@ -204,12 +202,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void SaveToHistory()
         {
-            var scope = new Scope()
-            {
-                {Keys.SelectedInvocationInfo,InvocationInfo}
-            };
             scope.PublishEvent(HistoryEvent.SaveToHistory);
-            
         }
 
         /// <summary>
@@ -218,6 +211,18 @@ namespace ApiInspector.MainWindow
         void Trace(string message)
         {
             traceQueue.AddMessage(message);
+        }
+
+        /// <summary>
+        ///     Updates the title.
+        /// </summary>
+        void UpdateTitle()
+        {
+            using (var injector = new Injector(traceQueue, EnvironmentInfo.Dev))
+            {
+                var userName = injector.Get<EnvironmentVariable>().GetUserName();
+                Title = "ApiInspector - " + userName;
+            }
         }
 
         /// <summary>

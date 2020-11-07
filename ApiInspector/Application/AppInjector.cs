@@ -19,6 +19,15 @@ namespace ApiInspector.Application
             Bind<ITracer>().To<TraceQueue>();
             Bind<View>().ToSelf().InSingletonScope();
             Bind<ErrorMonitor>().ToMethod(x => errorMonitor);
+
+
+            var scope = new Scope
+            {
+                {Keys.TraceQueue, Get<TraceQueue>()},
+                {Keys.ErrorMonitor, Get<ErrorMonitor>()}
+            };
+
+            Bind<Scope>().ToMethod(x => scope);
         }
         #endregion
 

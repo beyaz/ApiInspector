@@ -9,6 +9,9 @@ namespace ApiInspector.InvocationInfoEditor
     public partial class View
     {
         #region Fields
+
+        internal Scope scope;
+
         /// <summary>
         ///     The model
         /// </summary>
@@ -17,6 +20,9 @@ namespace ApiInspector.InvocationInfoEditor
             ItemSourceList = new ItemSourceList(),
             InvocationInfo = new InvocationInfo()
         };
+
+        
+
         #endregion
 
         #region Constructors
@@ -26,8 +32,6 @@ namespace ApiInspector.InvocationInfoEditor
         public View()
         {
             InitializeComponent();
-
-            
 
             Loaded += (s, e) => { UpdateSuggestions(); };
             Loaded += (s, e) => { RegisterEvents(); };
@@ -71,7 +75,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     The view controller
         /// </summary>
-        internal ViewController viewController => new ViewController(model);
+        internal ViewController viewController => new ViewController(scope,model);
         #endregion
 
         #region Public Methods

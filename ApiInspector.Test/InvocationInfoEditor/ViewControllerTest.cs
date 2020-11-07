@@ -30,7 +30,8 @@ namespace ApiInspector.InvocationInfoEditor
                 Trace          = message => { },
                 ItemSourceList = itemSourceList
             };
-            var viewController = new ViewController(model);
+            // TODO: initialize scope
+            var viewController = new ViewController(new Scope(),model);
 
             // On Search Directory Changed
             {
