@@ -71,12 +71,6 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
-        #region Properties
-        /// <summary>
-        ///     The view controller
-        /// </summary>
-        internal ViewController viewController => new ViewController(scope,model);
-        #endregion
 
         #region Public Methods
         /// <summary>
@@ -113,13 +107,16 @@ namespace ApiInspector.InvocationInfoEditor
                 return; // TODO: nasıl olabilir
             }
 
+            scope.Update(Keys.ItemSourceList,model.ItemSourceList);
+            var viewController = new ViewController(model);
+
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:
                 {
                     invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                    viewController.OnAssemblySearchDirectoryChanged();
+                    ViewController.OnAssemblySearchDirectoryChanged(scope);
 
                     break;
                 }

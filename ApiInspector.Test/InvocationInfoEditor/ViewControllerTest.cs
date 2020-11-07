@@ -31,7 +31,7 @@ namespace ApiInspector.InvocationInfoEditor
                 ItemSourceList = itemSourceList
             };
             // TODO: initialize scope
-            var viewController = new ViewController(new Scope(),model);
+            var viewController = new ViewController(model);
 
             // On Search Directory Changed
             {

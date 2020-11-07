@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
+using Mono.Cecil;
 using static ApiInspector.Keys;
 using static ApiInspector.DataAccess.TypeVisitor;
 
@@ -14,8 +15,6 @@ namespace ApiInspector.InvocationInfoEditor
     class ViewController
     {
         #region Fields
-        readonly Scope scope;
-
         /// <summary>
         ///     The model
         /// </summary>
@@ -26,9 +25,8 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Initializes a new instance of the <see cref="ViewController" /> class.
         /// </summary>
-        public ViewController(Scope scope, ViewModel model)
+        public ViewController(ViewModel model)
         {
-            this.scope = scope?? throw new ArgumentNullException(nameof(scope));
             this.model = model ?? throw new ArgumentNullException(nameof(model));
         }
         #endregion
@@ -76,19 +74,22 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [assembly search directory changed].
         /// </summary>
-        public void OnAssemblySearchDirectoryChanged()
+        public static void OnAssemblySearchDirectoryChanged(Scope scope)
         {
-            var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
+            var invocationInfo = scope.Get(Keys.SelectedInvocationInfo);
+            var itemSource = scope.Get(Keys.ItemSourceList);
+
+            var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
             if (!Directory.Exists(assemblySearchDirectory))
             {
                 return;
             }
 
-            ItemSourceList.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
+            itemSource.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
 
             if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
             {
-                ItemSourceList.AssemblyNameList = ItemSourceList.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
+                itemSource.AssemblyNameList = itemSource.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
             }
         }
 
@@ -109,13 +110,13 @@ namespace ApiInspector.InvocationInfoEditor
 
             var assemblySearchDirectory = InvocationInfo.AssemblySearchDirectory;
 
-            var scope = new Scope
+            var scope2 = new Scope
             {
                 {AssemblySearchDirectories, new List<string> {assemblySearchDirectory}},
                 {Trace, model.Trace},
                 {AssemblyPath,assemblyFilePath}
             };
-            var typeDefinition = model.TypeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
+            var typeDefinition = model.TypeDefinition = FindTypeDefinition(scope2, invocationInfo.ClassName);
             if (typeDefinition == null)
             {
                 log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -135,9 +136,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public void OnMethodNameSelected()
         {
-            var invocationInfo = InvocationInfo;
-
-            model.MethodDefinition = model.TypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+            model.MethodDefinition = FindMatchedFunction(InvocationInfo,model.TypeDefinition);
+        }
+        
+        static MethodDefinition FindMatchedFunction(InvocationInfo invocationInfo,TypeDefinition typeDefinition)
+        {
+            return typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
         }
         #endregion
 

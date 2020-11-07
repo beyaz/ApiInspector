@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
+using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 
@@ -67,6 +68,8 @@ namespace ApiInspector
         ///     Gets the user visible trace.
         /// </summary>
         public static DataKey<Action<string>> UserVisibleTrace => CreateKey<Action<string>>();
+
+        public static DataKey<ItemSourceList> ItemSourceList=> CreateKey<ItemSourceList>();
         #endregion
 
         #region Methods
