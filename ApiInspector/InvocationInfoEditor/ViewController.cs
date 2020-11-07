@@ -32,18 +32,7 @@ namespace ApiInspector.InvocationInfoEditor
             var invocationInfo = scope.Get(SelectedInvocationInfo);
             var itemSources    = scope.Get(ItemsSources);
 
-            var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
-            if (!Directory.Exists(assemblySearchDirectory))
-            {
-                return;
-            }
-
-            itemSources.AssemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
-
-            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
-            {
-                itemSources.AssemblyNameList = itemSources.AssemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
-            }
+            itemSources.AssemblyNameList = GetAssemblyListInDirectory(invocationInfo.AssemblySearchDirectory);
         }
 
         /// <summary>
@@ -98,6 +87,25 @@ namespace ApiInspector.InvocationInfoEditor
             var typeDefinition = scope.Get(TypeDefinition);
 
             scope.Update(MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+        }
+        #endregion
+
+        #region Methods
+        static IReadOnlyList<string> GetAssemblyListInDirectory(string assemblySearchDirectory)
+        {
+            if (!Directory.Exists(assemblySearchDirectory))
+            {
+                return new string[0];
+            }
+
+            var assemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
+
+            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+            {
+                return assemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
+            }
+
+            return assemblyNameList;
         }
         #endregion
     }
