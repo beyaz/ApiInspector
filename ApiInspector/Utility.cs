@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -10,7 +11,7 @@ namespace ApiInspector
     /// <summary>
     ///     The utility
     /// </summary>
-    static class Utility
+    static partial class Utility
     {
         #region Public Properties
         /// <summary>
@@ -76,6 +77,12 @@ namespace ApiInspector
             richTextBox.Document.Blocks.Clear();
             richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
         }
+
+        public static List<T> ListOf<T>(params T[] arr)
+        {
+            return new List<T>(arr);
+        }
+
 
         /// <summary>
         ///     Tries the run.

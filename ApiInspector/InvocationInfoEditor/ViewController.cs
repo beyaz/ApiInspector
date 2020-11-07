@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
-using Mono.Cecil;
 using static ApiInspector.Keys;
 using static ApiInspector.DataAccess.TypeVisitor;
+using static ApiInspector.Utility;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -31,12 +31,10 @@ namespace ApiInspector.InvocationInfoEditor
                 return;
             }
 
-            var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
-
             scope.OpenNewLayer("Searching assembly");
 
-            scope.Add(AssemblySearchDirectories, new List<string> {assemblySearchDirectory});
-            scope.Add(AssemblyPath, assemblyFilePath);
+            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
+            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
 
             itemSources.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
 
@@ -81,12 +79,12 @@ namespace ApiInspector.InvocationInfoEditor
                 return;
             }
 
-            var assemblySearchDirectory = invocationInfo.AssemblySearchDirectory;
+            
 
             scope.OpenNewLayer("Searching type definition");
 
-            scope.Add(AssemblySearchDirectories, new List<string> {assemblySearchDirectory});
-            scope.Add(AssemblyPath, assemblyFilePath);
+            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
+            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
 
             var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
 
@@ -101,7 +99,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             itemSources.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
 
-            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+            if ( invocationInfo.AssemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
             {
                 itemSources.MethodNameList = new List<string>
                 {
@@ -118,29 +116,30 @@ namespace ApiInspector.InvocationInfoEditor
             var invocationInfo = scope.Get(SelectedInvocationInfo);
             var typeDefinition = scope.Get(Keys.TypeDefinition);
 
-            scope.Update(Keys.MethodDefinition, FindMatchedFunction(invocationInfo, typeDefinition));
+            scope.Update(Keys.MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
         }
         #endregion
 
-        #region Methods
-        /// <summary>
-        ///     Finds the matched function.
-        /// </summary>
-        static MethodDefinition FindMatchedFunction(InvocationInfo invocationInfo, TypeDefinition typeDefinition)
-        {
-            return typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
-        }
+    }
+}
 
-        /// <summary>
-        ///     Gets the assembly file path.
-        /// </summary>
-        static string GetAssemblyFilePath(InvocationInfo invocationInfo)
+namespace ApiInspector
+{
+    partial class Utility
+    {
+        #region Public Methods
+        public static string GetAssemblyFilePath(InvocationInfo invocationInfo)
         {
             var assemblyName      = invocationInfo.AssemblyName;
             var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
             var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
 
             return assemblyPath;
+        }
+
+        public static List<string> GetAssemblySearchDirectories(InvocationInfo invocationInfo)
+        {
+            return ListOf(invocationInfo.AssemblySearchDirectory);
         }
         #endregion
     }
