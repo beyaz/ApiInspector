@@ -35,10 +35,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             scope.OpenNewLayer("Searching assembly");
             {
-                scope.Add(AssemblySearchDirectories, new List<string>
-                {
-                    assemblySearchDirectory
-                });
+                scope.Add(AssemblySearchDirectories, new List<string> {assemblySearchDirectory});
                 scope.Add(AssemblyPath, assemblyFilePath);
 
                 itemSources.ClassNameList = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
