@@ -111,7 +111,11 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    ViewController.OnAssemblyNameChanged(scope);
+                    var itemSources    = scope.Get(ItemsSources);
+                    var trace          = scope.Get(Trace);
+
+                    
+                    ViewController.OnAssemblyNameChanged(invocationInfo,trace,x=>itemSources.ClassNameList = x);
 
                     break;
                 }
