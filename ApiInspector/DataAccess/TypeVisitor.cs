@@ -30,7 +30,7 @@ namespace ApiInspector.DataAccess
             var assemblyPath              = scope.Get(AssemblyPath);
             var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
 
-            return GetTypeDefinitionsInAssembly((trace, assemblyPath, assemblySearchDirectories));
+            return GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories);
         }
         #endregion
 
@@ -38,10 +38,8 @@ namespace ApiInspector.DataAccess
         /// <summary>
         ///     Gets the type definitions in assembly.
         /// </summary>
-        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly((Action<string> trace, string assemblyPath, IReadOnlyList<string> assemblySearchDirectories) scope)
+        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Action<string> trace, string assemblyPath, IEnumerable<string> assemblySearchDirectories)
         {
-            var (trace, assemblyPath, assemblySearchDirectories) = scope;
-
             var resolver = new DefaultAssemblyResolver();
 
             foreach (var directory in assemblySearchDirectories)
