@@ -124,7 +124,11 @@ namespace ApiInspector
 
             scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
 
-            var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
+            var trace                     = scope.Get(Trace);
+            var assemblyPath              = scope.Get(AssemblyPath);
+            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+
+            var typeDefinition = GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
 
             scope.CloseCurrentLayer();
 
@@ -163,7 +167,11 @@ namespace ApiInspector
             scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
             scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
 
-            var names = GeTypeDefinitions(scope).Select(x => x.FullName).ToList();
+            var trace                     = scope.Get(Trace);
+            var assemblyPath              = scope.Get(AssemblyPath);
+            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+
+            var names                     = GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories).Select(x => x.FullName).ToList();
 
             scope.CloseCurrentLayer();
 

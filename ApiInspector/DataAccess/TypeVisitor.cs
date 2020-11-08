@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Mono.Cecil;
-using static ApiInspector.Keys;
 
 namespace ApiInspector.DataAccess
 {
@@ -14,31 +12,9 @@ namespace ApiInspector.DataAccess
     {
         #region Public Methods
         /// <summary>
-        ///     Finds the type.
-        /// </summary>
-        public static TypeDefinition FindTypeDefinition(Scope scope, string typeFullName)
-        {
-            return GeTypeDefinitions(scope).FirstOrDefault(type => type.FullName == typeFullName);
-        }
-
-        /// <summary>
-        ///     Ges the type definitions.
-        /// </summary>
-        public static IEnumerable<TypeDefinition> GeTypeDefinitions(Scope scope)
-        {
-            var trace                     = scope.Get(Trace);
-            var assemblyPath              = scope.Get(AssemblyPath);
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
-
-            return GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories);
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
         ///     Gets the type definitions in assembly.
         /// </summary>
-        static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Action<string> trace, string assemblyPath, IEnumerable<string> assemblySearchDirectories)
+        public static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Action<string> trace, string assemblyPath, IEnumerable<string> assemblySearchDirectories)
         {
             var resolver = new DefaultAssemblyResolver();
 
