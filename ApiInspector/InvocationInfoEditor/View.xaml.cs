@@ -123,7 +123,9 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
                         
-                    ViewController.OnClassNameChanged(invocationInfo,trace,x=>methodNameIntellisenseTextBox.Suggestions=x);
+                    
+
+                    ViewController.OnClassNameChanged(invocationInfo,trace,x=>methodNameIntellisenseTextBox.Suggestions=x,x=>scope.Update(TypeDefinition, x));
 
                     break;
                 }

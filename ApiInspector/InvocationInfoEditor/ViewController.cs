@@ -37,14 +37,14 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public static void OnClassNameChanged(InvocationInfo invocationInfo, ActionString trace,ActionStringList setMethodNames)
+        public static void OnClassNameChanged(InvocationInfo invocationInfo, ActionString trace,ActionStringList setMethodNames,Action<TypeDefinition> updateTypeDefinition)
         {
             
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             var typeDefinition = FindType(invocationInfo, trace);
 
-            scope.Update(Keys.TypeDefinition, typeDefinition);
+            updateTypeDefinition(typeDefinition);
             if (typeDefinition == null)
             {
                 trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
