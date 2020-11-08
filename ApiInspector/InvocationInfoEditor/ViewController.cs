@@ -108,13 +108,12 @@ namespace ApiInspector
         public static TypeDefinition FindType(Scope scope)
         {
             var invocationInfo            = scope.Get(SelectedInvocationInfo);
-            var log                       = scope.Get(Trace);
             var trace                     = scope.Get(Trace);
             var assemblyFilePath          = GetAssemblyFilePath(invocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
-                log($"File not exists. File:{assemblyFilePath}");
+                trace($"File not exists. File:{assemblyFilePath}");
                 return null;
             }
 
