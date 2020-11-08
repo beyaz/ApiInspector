@@ -56,15 +56,7 @@ namespace ApiInspector.InvocationInfoEditor
                 return;
             }
 
-            itemSources.MethodNameList = typeDefinition.Methods.Select(x => x.Name).ToList();
-
-            if (invocationInfo.AssemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
-            {
-                itemSources.MethodNameList = new List<string>
-                {
-                    EndOfDay.MethodAccessText
-                };
-            }
+            itemSources.MethodNameList = GetMethodNameListFromSelectedType(typeDefinition, invocationInfo.AssemblySearchDirectory);
         }
 
         /// <summary>
@@ -96,6 +88,19 @@ namespace ApiInspector.InvocationInfoEditor
 
             return assemblyNameList;
         }
+
+        static List<string> GetMethodNameListFromSelectedType(TypeDefinition typeDefinition, string assemblySearchDirectory)
+        {
+            if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+            {
+                return new List<string>
+                {
+                    EndOfDay.MethodAccessText
+                };
+            }
+
+            return typeDefinition.Methods.Select(x => x.Name).ToList();
+        }
         #endregion
     }
 }
@@ -105,6 +110,32 @@ namespace ApiInspector
     partial class Utility
     {
         #region Public Methods
+        public static TypeDefinition FindType(Scope scope)
+        {
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var log            = scope.Get(Trace);
+
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+
+            if (!File.Exists(assemblyFilePath))
+            {
+                log($"File not exists. File:{assemblyFilePath}");
+                return null;
+            }
+
+            scope.OpenNewLayer("Searching type definition");
+
+            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
+
+            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
+
+            var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
+
+            scope.CloseCurrentLayer();
+
+            return typeDefinition;
+        }
+
         public static string GetAssemblyFilePath(InvocationInfo invocationInfo)
         {
             var assemblyName      = invocationInfo.AssemblyName;
@@ -143,36 +174,6 @@ namespace ApiInspector
 
             return names;
         }
-
-        public static TypeDefinition FindType(Scope scope)
-        {
-            var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var log            = scope.Get(Trace);
-
-            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                log($"File not exists. File:{assemblyFilePath}");
-                return null;
-            }
-
-
-
-            scope.OpenNewLayer("Searching type definition");
-
-            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
-
-            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
-
-            var typeDefinition = FindTypeDefinition(scope, invocationInfo.ClassName);
-
-            scope.CloseCurrentLayer();
-
-
-            return typeDefinition;
-        }
-
         #endregion
     }
 }
