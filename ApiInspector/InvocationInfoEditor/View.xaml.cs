@@ -88,7 +88,7 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 return; // TODO: nasıl olabilir
             }
-
+            var trace = scope.Get(Trace);
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:
@@ -111,7 +111,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    var trace          = scope.Get(Trace);
+                    
 
                     
                     ViewController.OnAssemblyNameChanged(invocationInfo,trace,x=>classNameIntellisenseTextBox.Suggestions = x);
@@ -122,8 +122,8 @@ namespace ApiInspector.InvocationInfoEditor
                 case ViewEvents.OnClassNameChanged:
                 {
                     invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
-
-                    ViewController.OnClassNameChanged(scope,x=>methodNameIntellisenseTextBox.Suggestions=x);
+                        
+                    ViewController.OnClassNameChanged(invocationInfo,trace,x=>methodNameIntellisenseTextBox.Suggestions=x);
 
                     break;
                 }

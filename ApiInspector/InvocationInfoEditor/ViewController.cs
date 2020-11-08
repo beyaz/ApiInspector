@@ -8,6 +8,7 @@ using static ApiInspector.Keys;
 using static ApiInspector.DataAccess.TypeVisitor;
 using static ApiInspector.Utility;
 using ActionStringList = System.Action<System.Collections.Generic.IReadOnlyList<string>>;
+using ActionString = System.Action<string>;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -20,7 +21,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [assembly name changed].
         /// </summary>
-        public static void OnAssemblyNameChanged(InvocationInfo invocationInfo, Action<string> trace,ActionStringList updateClassNames)
+        public static void OnAssemblyNameChanged(InvocationInfo invocationInfo, ActionString trace,ActionStringList updateClassNames)
         {
             updateClassNames(GetClassNamesOfSelectedAssembly(invocationInfo, trace));
         }
@@ -36,10 +37,9 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public static void OnClassNameChanged(Scope scope,ActionStringList setMethodNames)
+        public static void OnClassNameChanged(InvocationInfo invocationInfo, ActionString trace,ActionStringList setMethodNames)
         {
-            var invocationInfo   = scope.Get(SelectedInvocationInfo);
-            var trace            = scope.Get(Trace);
+            
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             var typeDefinition = FindType(invocationInfo, trace);
@@ -117,7 +117,7 @@ namespace ApiInspector
         /// <summary>
         ///     Finds the type.
         /// </summary>
-        public static TypeDefinition FindType(InvocationInfo invocationInfo, Action<string> trace)
+        public static TypeDefinition FindType(InvocationInfo invocationInfo, ActionString trace)
         {
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
@@ -153,7 +153,7 @@ namespace ApiInspector
         /// <summary>
         ///     Gets the class names of selected assembly.
         /// </summary>
-        public static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(InvocationInfo invocationInfo, Action<string> trace)
+        public static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(InvocationInfo invocationInfo, ActionString trace)
         {
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
