@@ -21,7 +21,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [assembly name changed].
         /// </summary>
-        public static void OnAssemblyNameChanged(InvocationInfo invocationInfo, ActionString trace,ActionStringList updateClassNames)
+        public static void OnAssemblyNameChanged(InvocationInfo invocationInfo, ActionString trace, ActionStringList updateClassNames)
         {
             updateClassNames(GetClassNamesOfSelectedAssembly(invocationInfo, trace));
         }
@@ -37,9 +37,8 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public static void OnClassNameChanged(InvocationInfo invocationInfo, ActionString trace,ActionStringList setMethodNames,Action<TypeDefinition> updateTypeDefinition)
+        public static void OnClassNameChanged(InvocationInfo invocationInfo, ActionString trace, ActionStringList setMethodNames, Action<TypeDefinition> updateTypeDefinition)
         {
-            
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             var typeDefinition = FindType(invocationInfo, trace);
