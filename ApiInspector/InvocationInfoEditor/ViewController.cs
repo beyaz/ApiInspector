@@ -107,10 +107,13 @@ namespace ApiInspector
         #region Public Methods
         public static TypeDefinition FindType(Scope scope)
         {
-            var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var log            = scope.Get(Trace);
+            var invocationInfo            = scope.Get(SelectedInvocationInfo);
+            var log                       = scope.Get(Trace);
+            var trace                     = scope.Get(Trace);
+            var assemblyPath              = scope.Get(AssemblyPath);
+            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+            var assemblyFilePath          = GetAssemblyFilePath(invocationInfo);
 
-            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
@@ -124,9 +127,7 @@ namespace ApiInspector
 
             scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
 
-            var trace                     = scope.Get(Trace);
-            var assemblyPath              = scope.Get(AssemblyPath);
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
+          
 
             var typeDefinition = GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
 
