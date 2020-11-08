@@ -21,14 +21,19 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public static void OnAssemblyNameChanged(Scope scope)
         {
-            var itemSources = scope.Get(ItemsSources);
+            var itemSources    = scope.Get(ItemsSources);
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var trace          = scope.Get(Trace);
 
-            itemSources.ClassNameList = GetClassNamesOfSelectedAssembly(scope);
+            itemSources.ClassNameList = GetClassNamesOfSelectedAssembly(invocationInfo, trace);
         }
-        
-        public static void OnAssemblySearchDirectoryChanged(string assemblySearchDirectory,Action<IReadOnlyList<string>> setAssemblyNames)
+
+        /// <summary>
+        ///     Called when [assembly search directory changed].
+        /// </summary>
+        public static void OnAssemblySearchDirectoryChanged(string assemblySearchDirectory, Action<IReadOnlyList<string>> setAssemblyNames)
         {
-            setAssemblyNames( GetAssemblyListInDirectory(assemblySearchDirectory));
+            setAssemblyNames(GetAssemblyListInDirectory(assemblySearchDirectory));
         }
 
         /// <summary>
@@ -40,7 +45,7 @@ namespace ApiInspector.InvocationInfoEditor
             var itemSources      = scope.Get(ItemsSources);
             var trace            = scope.Get(Trace);
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-            
+
             var typeDefinition = FindType(invocationInfo, trace);
 
             scope.Update(Keys.TypeDefinition, typeDefinition);
@@ -66,6 +71,9 @@ namespace ApiInspector.InvocationInfoEditor
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Gets the assembly list in directory.
+        /// </summary>
         static IReadOnlyList<string> GetAssemblyListInDirectory(string assemblySearchDirectory)
         {
             if (!Directory.Exists(assemblySearchDirectory))
@@ -83,6 +91,9 @@ namespace ApiInspector.InvocationInfoEditor
             return assemblyNameList;
         }
 
+        /// <summary>
+        ///     Gets the type of the method name list from selected.
+        /// </summary>
         static List<string> GetMethodNameListFromSelectedType(TypeDefinition typeDefinition, string assemblySearchDirectory)
         {
             if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
@@ -101,13 +112,18 @@ namespace ApiInspector.InvocationInfoEditor
 
 namespace ApiInspector
 {
+    /// <summary>
+    ///     The utility
+    /// </summary>
     partial class Utility
     {
         #region Public Methods
-        public static TypeDefinition FindType( InvocationInfo invocationInfo,Action<string> trace )
+        /// <summary>
+        ///     Finds the type.
+        /// </summary>
+        public static TypeDefinition FindType(InvocationInfo invocationInfo, Action<string> trace)
         {
-          
-            var            assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
@@ -118,6 +134,9 @@ namespace ApiInspector
             return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, GetAssemblySearchDirectories(invocationInfo)).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
         }
 
+        /// <summary>
+        ///     Gets the assembly file path.
+        /// </summary>
         public static string GetAssemblyFilePath(InvocationInfo invocationInfo)
         {
             var assemblyName      = invocationInfo.AssemblyName;
@@ -127,38 +146,30 @@ namespace ApiInspector
             return assemblyPath;
         }
 
+        /// <summary>
+        ///     Gets the assembly search directories.
+        /// </summary>
         public static List<string> GetAssemblySearchDirectories(InvocationInfo invocationInfo)
         {
             return ListOf(invocationInfo.AssemblySearchDirectory);
         }
 
-        public static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(Scope scope)
+        /// <summary>
+        ///     Gets the class names of selected assembly.
+        /// </summary>
+        public static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(InvocationInfo invocationInfo, Action<string> trace)
         {
-            var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var log            = scope.Get(Trace);
-
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
-                log($"File not exists. File:{assemblyFilePath}");
+                trace($"File not exists. File:{assemblyFilePath}");
                 return new List<string>();
             }
 
-            scope.OpenNewLayer("Searching assembly");
+            var assemblySearchDirectories = GetAssemblySearchDirectories(invocationInfo);
 
-            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
-            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
-
-            var trace                     = scope.Get(Trace);
-            var assemblyPath              = scope.Get(AssemblyPath);
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
-
-            var names                     = GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories).Select(x => x.FullName).ToList();
-
-            scope.CloseCurrentLayer();
-
-            return names;
+            return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories).Select(x => x.FullName).ToList();
         }
         #endregion
     }
