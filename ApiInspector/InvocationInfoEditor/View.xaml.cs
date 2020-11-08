@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ApiInspector.Models;
 using static ApiInspector.Keys;
 
@@ -197,10 +198,13 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-            var source = scope.Get(ItemsSources);
 
-            environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
-            assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;
+            environmentIntellisenseTextBox.Suggestions = new List<string> {"dev", "test","prep"};
+            assemblySearchDirectoryIntellisenseTextBox.Suggestions = new List<string>
+            {
+                CommonAssemblySearchDirectories.serverBin,
+                CommonAssemblySearchDirectories.clientBin
+            };
             
         }
         #endregion

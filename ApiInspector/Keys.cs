@@ -70,7 +70,6 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<Action<string>> UserVisibleTrace => CreateKey<Action<string>>();
 
-        public static DataKey<ItemSourceList> ItemsSources=> CreateKey<ItemSourceList>();
 
         public static DataKey<TypeDefinition> TypeDefinition=> CreateKey<TypeDefinition>();
         public static DataKey<MethodDefinition> MethodDefinition=> CreateKey<MethodDefinition>();
