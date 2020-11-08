@@ -36,18 +36,17 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public static void OnClassNameChanged(Scope scope)
         {
-            var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var log            = scope.Get(Trace);
-            var itemSources    = scope.Get(ItemsSources);
-
+            var invocationInfo   = scope.Get(SelectedInvocationInfo);
+            var itemSources      = scope.Get(ItemsSources);
+            var trace            = scope.Get(Trace);
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-
-            var typeDefinition = FindType(scope);
+            
+            var typeDefinition = FindType(invocationInfo, trace);
 
             scope.Update(Keys.TypeDefinition, typeDefinition);
             if (typeDefinition == null)
             {
-                log($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
+                trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
                 return;
             }
 
@@ -105,11 +104,10 @@ namespace ApiInspector
     partial class Utility
     {
         #region Public Methods
-        public static TypeDefinition FindType(Scope scope)
+        public static TypeDefinition FindType( InvocationInfo invocationInfo,Action<string> trace )
         {
-            var invocationInfo            = scope.Get(SelectedInvocationInfo);
-            var trace                     = scope.Get(Trace);
-            var assemblyFilePath          = GetAssemblyFilePath(invocationInfo);
+          
+            var            assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             if (!File.Exists(assemblyFilePath))
             {
