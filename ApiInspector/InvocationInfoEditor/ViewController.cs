@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
@@ -24,16 +25,10 @@ namespace ApiInspector.InvocationInfoEditor
 
             itemSources.ClassNameList = GetClassNamesOfSelectedAssembly(scope);
         }
-
-        /// <summary>
-        ///     Called when [assembly search directory changed].
-        /// </summary>
-        public static void OnAssemblySearchDirectoryChanged(Scope scope)
+        
+        public static void OnAssemblySearchDirectoryChanged(string assemblySearchDirectory,Action<IReadOnlyList<string>> setAssemblyNames)
         {
-            var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var itemSources    = scope.Get(ItemsSources);
-
-            itemSources.AssemblyNameList = GetAssemblyListInDirectory(invocationInfo.AssemblySearchDirectory);
+            setAssemblyNames( GetAssemblyListInDirectory(assemblySearchDirectory));
         }
 
         /// <summary>

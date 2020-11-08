@@ -95,7 +95,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                    ViewController.OnAssemblySearchDirectoryChanged(scope);
+                    ViewController.OnAssemblySearchDirectoryChanged(invocationInfo.AssemblySearchDirectory,x=>scope.Get(ItemsSources).AssemblyNameList = x);
 
                     break;
                 }
