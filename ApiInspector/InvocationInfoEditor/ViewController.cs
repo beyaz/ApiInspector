@@ -110,10 +110,7 @@ namespace ApiInspector
             var invocationInfo            = scope.Get(SelectedInvocationInfo);
             var log                       = scope.Get(Trace);
             var trace                     = scope.Get(Trace);
-            var assemblyPath              = scope.Get(AssemblyPath);
-            var assemblySearchDirectories = scope.Get(AssemblySearchDirectories);
             var assemblyFilePath          = GetAssemblyFilePath(invocationInfo);
-
 
             if (!File.Exists(assemblyFilePath))
             {
@@ -121,19 +118,7 @@ namespace ApiInspector
                 return null;
             }
 
-            scope.OpenNewLayer("Searching type definition");
-
-            scope.Add(AssemblySearchDirectories, GetAssemblySearchDirectories(invocationInfo));
-
-            scope.Add(AssemblyPath, GetAssemblyFilePath(invocationInfo));
-
-          
-
-            var typeDefinition = GetTypeDefinitionsInAssembly(trace, assemblyPath, assemblySearchDirectories).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
-
-            scope.CloseCurrentLayer();
-
-            return typeDefinition;
+            return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, GetAssemblySearchDirectories(invocationInfo)).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
         }
 
         public static string GetAssemblyFilePath(InvocationInfo invocationInfo)
