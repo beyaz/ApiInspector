@@ -95,7 +95,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblySearchDirectory = assemblySearchDirectoryIntellisenseTextBox.Editor.Text;
 
-                    ViewController.OnAssemblySearchDirectoryChanged(invocationInfo.AssemblySearchDirectory,x=>scope.Get(ItemsSources).AssemblyNameList = x);
+                    ViewController.OnAssemblySearchDirectoryChanged(invocationInfo.AssemblySearchDirectory,x=>assemblyIntellisenseTextBox.Suggestions = x);
 
                     break;
                 }
@@ -111,11 +111,10 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
 
-                    var itemSources    = scope.Get(ItemsSources);
                     var trace          = scope.Get(Trace);
 
                     
-                    ViewController.OnAssemblyNameChanged(invocationInfo,trace,x=>itemSources.ClassNameList = x);
+                    ViewController.OnAssemblyNameChanged(invocationInfo,trace,x=>classNameIntellisenseTextBox.Suggestions = x);
 
                     break;
                 }
@@ -124,7 +123,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
 
-                    ViewController.OnClassNameChanged(scope);
+                    ViewController.OnClassNameChanged(scope,x=>methodNameIntellisenseTextBox.Suggestions=x);
 
                     break;
                 }
@@ -200,9 +199,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             environmentIntellisenseTextBox.Suggestions             = source.EnvironmentNameList;
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = source.AssemblySearchDirectoryList;
-            assemblyIntellisenseTextBox.Suggestions                = source.AssemblyNameList;
-            classNameIntellisenseTextBox.Suggestions               = source.ClassNameList;
-            methodNameIntellisenseTextBox.Suggestions              = source.MethodNameList;
+            
         }
         #endregion
     }
