@@ -25,13 +25,17 @@ namespace ApiInspector.InvocationInfoEditor
         {
             updateClassNames(GetClassNamesOfSelectedAssembly(invocationInfo, trace));
         }
-
-        /// <summary>
-        ///     Called when [assembly search directory changed].
-        /// </summary>
-        public static void OnAssemblySearchDirectoryChanged(string assemblySearchDirectory, ActionStringList setAssemblyNames)
+        
+        public static void OnAssemblySearchDirectoryChanged(Scope scope)
         {
-            setAssemblyNames(GetAssemblyListInDirectory(assemblySearchDirectory));
+            var assemblySearchDirectory = scope.Get(GetAssemblySearchDirectory)();
+            var invocationInfo          = scope.Get(SelectedInvocationInfo);
+
+            invocationInfo.AssemblySearchDirectory = assemblySearchDirectory;
+
+            var assemblyListInDirectory = GetAssemblyListInDirectory(assemblySearchDirectory);
+
+            scope.Add(AssemblyNameSuggestions,assemblyListInDirectory);
         }
 
         /// <summary>
