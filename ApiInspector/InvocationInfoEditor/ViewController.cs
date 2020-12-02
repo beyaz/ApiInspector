@@ -58,7 +58,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             var typeDefinition = FindType(invocationInfo, trace);
 
-            scope.Update(Keys.TypeDefinition, typeDefinition);
+            scope.Update(Keys.SelectedTypeDefinition, typeDefinition);
             if (typeDefinition == null)
             {
                 trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -76,9 +76,9 @@ namespace ApiInspector.InvocationInfoEditor
         public static void OnMethodNameSelected(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var typeDefinition = scope.Get(Keys.TypeDefinition);
+            var typeDefinition = scope.Get(Keys.SelectedTypeDefinition);
 
-            scope.Update(Keys.MethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+            scope.Update(Keys.SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
         }
         #endregion
 

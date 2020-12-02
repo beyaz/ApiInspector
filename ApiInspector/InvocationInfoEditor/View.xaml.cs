@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApiInspector.Models;
 using static ApiInspector.Keys;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -57,50 +56,40 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
-        #region Public Methods
-        /// <summary>
-        ///     Connects the specified invocation information.
-        /// </summary>
-        public void Connect(InvocationInfo invocationInfo)
-        {
-            UpdateSuggestions();
-
-            RefreshValues();
-        }
+        #region Methods
         internal void Connect(Scope scope)
         {
             this.scope = scope;
 
-            scope.Update(GetAssemblySearchDirectory,() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
+            scope.Update(GetAssemblySearchDirectory, () => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
             scope.Update(GetAssemblyFileName, () => assemblyIntellisenseTextBox.Editor.Text);
             scope.Update(GetClassName, () => classNameIntellisenseTextBox.Editor.Text);
 
-            scope.OnUpdate(AssemblyNameSuggestions, () =>
-            {
-                assemblyIntellisenseTextBox.Suggestions = scope.Get(AssemblyNameSuggestions);
-            });
+            scope.OnUpdate(AssemblyNameSuggestions, () => { assemblyIntellisenseTextBox.Suggestions = scope.Get(AssemblyNameSuggestions); });
 
-            scope.OnUpdate(ClassNameSuggestions, () =>
-            {
-                classNameIntellisenseTextBox.Suggestions = scope.Get(ClassNameSuggestions);
-            });
+            scope.OnUpdate(ClassNameSuggestions, () => { classNameIntellisenseTextBox.Suggestions = scope.Get(ClassNameSuggestions); });
 
-            scope.OnUpdate(MethodNameSuggestions, () =>
-            {
-                methodNameIntellisenseTextBox.Suggestions = scope.Get(MethodNameSuggestions);
-            });
+            scope.OnUpdate(MethodNameSuggestions, () => { methodNameIntellisenseTextBox.Suggestions = scope.Get(MethodNameSuggestions); });
 
-            scope.OnUpdate(Keys.SelectedInvocationInfo,()=>Connect(scope.Get(SelectedInvocationInfo)));
+            scope.OnUpdate(SelectedInvocationInfo, Connect);
         }
-        #endregion
 
-        #region Methods
         /// <summary>
         ///     Afters the controller call.
         /// </summary>
         void AfterControllerCall()
         {
             UpdateSuggestions();
+        }
+
+        /// <summary>
+        ///     Connects the specified invocation information.
+        /// </summary>
+        void Connect()
+        {
+            UpdateSuggestions();
+
+            RefreshValues();
         }
 
         /// <summary>
@@ -116,7 +105,7 @@ namespace ApiInspector.InvocationInfoEditor
             }
 
             var trace = scope.Get(Trace);
-            
+
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:
@@ -153,7 +142,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                     ViewController.OnMethodNameSelected(scope);
 
-                    var methodDefinition = scope.TryGet(MethodDefinition);
+                    var methodDefinition = scope.TryGet(SelectedMethodDefinition);
                     if (methodDefinition != null)
                     {
                         new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
@@ -214,14 +203,12 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void UpdateSuggestions()
         {
-
-            environmentIntellisenseTextBox.Suggestions = new List<string> {"dev", "test","prep"};
+            environmentIntellisenseTextBox.Suggestions = new List<string> {"dev", "test", "prep"};
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = new List<string>
             {
                 CommonAssemblySearchDirectories.serverBin,
                 CommonAssemblySearchDirectories.clientBin
             };
-            
         }
         #endregion
     }

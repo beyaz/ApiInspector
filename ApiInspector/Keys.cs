@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
-using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 using Mono.Cecil;
@@ -71,8 +70,8 @@ namespace ApiInspector
         public static DataKey<Action<string>> UserVisibleTrace => CreateKey<Action<string>>();
 
 
-        public static DataKey<TypeDefinition> TypeDefinition=> CreateKey<TypeDefinition>();
-        public static DataKey<MethodDefinition> MethodDefinition=> CreateKey<MethodDefinition>();
+        public static DataKey<TypeDefinition> SelectedTypeDefinition=> CreateKey<TypeDefinition>();
+        public static DataKey<MethodDefinition> SelectedMethodDefinition=> CreateKey<MethodDefinition>();
         
         public static DataKey<Func<string>> GetAssemblySearchDirectory=> CreateKey<Func<string>>();
         public static DataKey<IReadOnlyList<string>> AssemblyNameSuggestions => CreateKey<IReadOnlyList<string>>();
