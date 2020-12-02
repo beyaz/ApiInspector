@@ -118,12 +118,18 @@ namespace ApiInspector.InvocationInfoEditor
 
                 case ViewEvents.OnAssemblyNameChanged:
                 {
-                    invocationInfo.AssemblyName = assemblyIntellisenseTextBox.Editor.Text;
+                    var data = new Scope
+                    {
+                        {GetAssemblyFileName, () => assemblyIntellisenseTextBox.Editor.Text},
+                        {SelectedInvocationInfo, invocationInfo},
+                        {Trace,trace}
+                    };
+                    data.OnInsert(ClassNameSuggestions, () =>
+                    {
+                        classNameIntellisenseTextBox.Suggestions = data.Get(ClassNameSuggestions);
+                    });
 
-                    
-
-                    
-                    ViewController.OnAssemblyNameChanged(invocationInfo,trace,x=>classNameIntellisenseTextBox.Suggestions = x);
+                    ViewController.OnAssemblyNameChanged(data);
 
                     break;
                 }

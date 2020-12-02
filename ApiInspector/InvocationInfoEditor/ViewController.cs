@@ -21,9 +21,15 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [assembly name changed].
         /// </summary>
-        public static void OnAssemblyNameChanged(InvocationInfo invocationInfo, ActionString trace, ActionStringList updateClassNames)
+        public static void OnAssemblyNameChanged(Scope scope)
         {
-            updateClassNames(GetClassNamesOfSelectedAssembly(invocationInfo, trace));
+            var trace               = scope.Get(Trace);
+            var invocationInfo      = scope.Get(SelectedInvocationInfo);
+            var getAssemblyFileName = scope.Get(GetAssemblyFileName);
+
+            invocationInfo.AssemblyName = getAssemblyFileName();
+
+            scope.Update(ClassNameSuggestions,GetClassNamesOfSelectedAssembly(invocationInfo, trace));
         }
         
         public static void OnAssemblySearchDirectoryChanged(Scope scope)
