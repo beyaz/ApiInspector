@@ -76,6 +76,7 @@ namespace ApiInspector.InvocationInfoEditor
         public static void OnMethodNameSelected(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
+            
             var typeDefinition = scope.Get(SelectedTypeDefinition);
 
             scope.Update(SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
