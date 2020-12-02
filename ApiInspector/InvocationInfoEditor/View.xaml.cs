@@ -67,6 +67,31 @@ namespace ApiInspector.InvocationInfoEditor
 
             RefreshValues();
         }
+        internal void Connect(Scope scope)
+        {
+            this.scope = scope;
+
+            scope.Update(GetAssemblySearchDirectory,() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
+            scope.Update(GetAssemblyFileName, () => assemblyIntellisenseTextBox.Editor.Text);
+            scope.Update(GetClassName, () => classNameIntellisenseTextBox.Editor.Text);
+
+            scope.OnUpdate(AssemblyNameSuggestions, () =>
+            {
+                assemblyIntellisenseTextBox.Suggestions = scope.Get(AssemblyNameSuggestions);
+            });
+
+            scope.OnUpdate(ClassNameSuggestions, () =>
+            {
+                classNameIntellisenseTextBox.Suggestions = scope.Get(ClassNameSuggestions);
+            });
+
+            scope.OnUpdate(MethodNameSuggestions, () =>
+            {
+                methodNameIntellisenseTextBox.Suggestions = scope.Get(MethodNameSuggestions);
+            });
+
+            scope.OnUpdate(Keys.SelectedInvocationInfo,()=>Connect(scope.Get(SelectedInvocationInfo)));
+        }
         #endregion
 
         #region Methods
@@ -89,21 +114,13 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 return; // TODO: nasıl olabilir
             }
+
             var trace = scope.Get(Trace);
+            
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:
                 {
-                    var data = new Scope
-                    {
-                        {GetAssemblySearchDirectory, () => assemblySearchDirectoryIntellisenseTextBox.Editor.Text},
-                        {SelectedInvocationInfo, invocationInfo}
-                    };
-                    data.OnInsert(AssemblyNameSuggestions, () =>
-                    {
-                        assemblyIntellisenseTextBox.Suggestions = data.Get(AssemblyNameSuggestions);
-                    });
-
                     ViewController.OnAssemblySearchDirectoryChanged(scope);
 
                     break;
@@ -118,44 +135,14 @@ namespace ApiInspector.InvocationInfoEditor
 
                 case ViewEvents.OnAssemblyNameChanged:
                 {
-                    var data = new Scope
-                    {
-                        {GetAssemblyFileName, () => assemblyIntellisenseTextBox.Editor.Text},
-                        {SelectedInvocationInfo, invocationInfo},
-                        {Trace,trace}
-                    };
-                    data.OnInsert(ClassNameSuggestions, () =>
-                    {
-                        classNameIntellisenseTextBox.Suggestions = data.Get(ClassNameSuggestions);
-                    });
-
-                    ViewController.OnAssemblyNameChanged(data);
+                    ViewController.OnAssemblyNameChanged(scope);
 
                     break;
                 }
 
                 case ViewEvents.OnClassNameChanged:
                 {
-
-                    var data = new Scope
-                    {
-                        {GetClassName, () => classNameIntellisenseTextBox.Editor.Text},
-                        {SelectedInvocationInfo, invocationInfo},
-                        {Trace,trace}
-                    };
-                    data.OnInsert(MethodNameSuggestions, () =>
-                    {
-                        methodNameIntellisenseTextBox.Suggestions = data.Get(MethodNameSuggestions);
-                    });
-
-
-
-
-                    invocationInfo.ClassName = classNameIntellisenseTextBox.Editor.Text;
-                        
-                    
-
-                    ViewController.OnClassNameChanged(data,invocationInfo,trace,x=>methodNameIntellisenseTextBox.Suggestions=x,x=>scope.Update(TypeDefinition, x));
+                    ViewController.OnClassNameChanged(scope);
 
                     break;
                 }

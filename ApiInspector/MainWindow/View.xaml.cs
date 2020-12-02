@@ -41,7 +41,6 @@ namespace ApiInspector.MainWindow
 
             InitializeComponent();
 
-            currentInvocationInfo.scope = scope;
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
@@ -51,16 +50,23 @@ namespace ApiInspector.MainWindow
 
             Loaded += (s, e) =>
             {
+                historyPanel.Connect(scope);
+                currentInvocationInfo.Connect(scope);
+
                 historyPanel.Refresh();
 
-                historyPanel.SelectedInvocationChanged += () => scope.Update(Keys.SelectedInvocationInfo,historyPanel.SelectedInvocationInfo);
-                historyPanel.SelectedInvocationChanged += () => currentInvocationInfo.Connect(historyPanel.SelectedInvocationInfo);
-                historyPanel.SelectedInvocationChanged += RefreshResponseOutputFilePath;
-                historyPanel.SelectedInvocationChanged += () => invokingResponseView.SetText(string.Empty);
+                scope.OnUpdate(Keys.SelectedInvocationInfo,RefreshResponseOutputFilePath);
+                scope.OnUpdate(Keys.SelectedInvocationInfo,ClearResponseView);
 
                 UpdateTitle();
             };
         }
+
+        void ClearResponseView()
+        {
+            invokingResponseView.SetText(string.Empty);
+        }
+
         #endregion
 
         #region Properties

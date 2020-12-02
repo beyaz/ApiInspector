@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Models;
@@ -29,9 +28,9 @@ namespace ApiInspector.InvocationInfoEditor
 
             invocationInfo.AssemblyName = getAssemblyFileName();
 
-            scope.Update(ClassNameSuggestions,GetClassNamesOfSelectedAssembly(invocationInfo, trace));
+            scope.Update(ClassNameSuggestions, GetClassNamesOfSelectedAssembly(invocationInfo, trace));
         }
-        
+
         public static void OnAssemblySearchDirectoryChanged(Scope scope)
         {
             var assemblySearchDirectory = scope.Get(GetAssemblySearchDirectory)();
@@ -41,26 +40,34 @@ namespace ApiInspector.InvocationInfoEditor
 
             var assemblyListInDirectory = GetAssemblyListInDirectory(assemblySearchDirectory);
 
-            scope.Add(AssemblyNameSuggestions,assemblyListInDirectory);
+            scope.Update(AssemblyNameSuggestions, assemblyListInDirectory);
         }
 
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public static void OnClassNameChanged(Scope scope, InvocationInfo invocationInfo, ActionString trace, ActionStringList setMethodNames, Action<TypeDefinition> updateTypeDefinition)
+        public static void OnClassNameChanged(Scope scope)
         {
+            var trace          = scope.Get(Trace);
+            var invocationInfo = scope.Get(SelectedInvocationInfo);
+            var getClassName   = scope.Get(GetClassName);
+
+            invocationInfo.ClassName = getClassName();
+
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
             var typeDefinition = FindType(invocationInfo, trace);
 
-            updateTypeDefinition(typeDefinition);
+            scope.Update(Keys.TypeDefinition, typeDefinition);
             if (typeDefinition == null)
             {
                 trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
                 return;
             }
 
-            setMethodNames(GetMethodNameListFromSelectedType(typeDefinition, invocationInfo.AssemblySearchDirectory));
+            var methodNames = GetMethodNameListFromSelectedType(typeDefinition, invocationInfo.AssemblySearchDirectory);
+
+            scope.Update(MethodNameSuggestions, methodNames);
         }
 
         /// <summary>

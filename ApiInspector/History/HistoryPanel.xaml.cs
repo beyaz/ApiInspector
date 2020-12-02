@@ -16,6 +16,13 @@ namespace ApiInspector.History
     /// </summary>
     partial class HistoryPanel
     {
+        #region Fields
+        /// <summary>
+        ///     The scope
+        /// </summary>
+        Scope scope;
+        #endregion
+
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="HistoryPanel" /> class.
@@ -26,22 +33,17 @@ namespace ApiInspector.History
         }
         #endregion
 
-        #region Public Events
-        /// <summary>
-        ///     Occurs when [selected invocation changed].
-        /// </summary>
-        public event Action SelectedInvocationChanged;
-        #endregion
-
-        #region Public Properties
-        /// <summary>
-        ///     Gets the selected invocation information.
-        /// </summary>
-        public InvocationInfo SelectedInvocationInfo { get; private set; }
-        #endregion
-
         #region Public Methods
-        
+        /// <summary>
+        ///     Connects the specified scope.
+        /// </summary>
+        public void Connect(Scope scope)
+        {
+            this.scope = scope;
+
+            scope.OnUpdate(Keys.HistoryItems, OnHistoryItemsUpdated);
+        }
+
         /// <summary>
         ///     Refreshes this instance.
         /// </summary>
@@ -115,8 +117,7 @@ namespace ApiInspector.History
         {
             Trace("History item clicked.");
 
-            SelectedInvocationInfo = (InvocationInfo) historyListBox.SelectedItem;
-            OnSelectedInvocationChanged();
+            scope.Update(Keys.SelectedInvocationInfo, (InvocationInfo) historyListBox.SelectedItem);
         }
 
         /// <summary>
@@ -126,21 +127,21 @@ namespace ApiInspector.History
         {
             Trace("History is loading...");
 
-            historyListBox.ItemsSource = TryRun(() => GetHistory(new Scope())) ?? new List<InvocationInfo>();
-
-            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
-
-            view.Filter = HistoryFilter;
+            scope.Update(Keys.HistoryItems, TryRun(() => GetHistory(new Scope())) ?? new List<InvocationInfo>());
 
             Trace("History is loaded.");
         }
 
         /// <summary>
-        ///     Called when [selected invocation changed].
+        ///     Called when [history items updated].
         /// </summary>
-        void OnSelectedInvocationChanged()
+        void OnHistoryItemsUpdated()
         {
-            SelectedInvocationChanged?.Invoke();
+            historyListBox.ItemsSource = scope.Get(Keys.HistoryItems);
+
+            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
+
+            view.Filter = HistoryFilter;
         }
         #endregion
     }

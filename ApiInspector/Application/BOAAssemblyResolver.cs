@@ -31,7 +31,6 @@ namespace ApiInspector.Application
             var scope = new Scope
             {
                 {AssemblySearchDirectories, GetDirectories()},
-                {Trace, message => { }}
             };
             return TryToFindAssembly(scope, assemblyFileNameWithoutExtension);
         }

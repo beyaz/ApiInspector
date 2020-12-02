@@ -83,6 +83,10 @@ namespace ApiInspector
         public static DataKey<Func<string>> GetAssemblyFileName=> CreateKey<Func<string>>();
         public static DataKey<Func<string>> GetClassName=> CreateKey<Func<string>>();
 
+        public static DataKey<IReadOnlyList<InvocationInfo>> HistoryItems => CreateKey<IReadOnlyList<InvocationInfo>>();
+
+        
+
         #region Methods
         /// <summary>
         ///     Creates the key.
