@@ -77,9 +77,11 @@ namespace ApiInspector
         public static DataKey<Func<string>> GetAssemblySearchDirectory=> CreateKey<Func<string>>();
         public static DataKey<IReadOnlyList<string>> AssemblyNameSuggestions => CreateKey<IReadOnlyList<string>>();
         public static DataKey<IReadOnlyList<string>> ClassNameSuggestions => CreateKey<IReadOnlyList<string>>();
+        public static DataKey<IReadOnlyList<string>> MethodNameSuggestions => CreateKey<IReadOnlyList<string>>();
 
         #endregion
         public static DataKey<Func<string>> GetAssemblyFileName=> CreateKey<Func<string>>();
+        public static DataKey<Func<string>> GetClassName=> CreateKey<Func<string>>();
 
         #region Methods
         /// <summary>

@@ -47,7 +47,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Called when [class name changed].
         /// </summary>
-        public static void OnClassNameChanged(InvocationInfo invocationInfo, ActionString trace, ActionStringList setMethodNames, Action<TypeDefinition> updateTypeDefinition)
+        public static void OnClassNameChanged(Scope scope, InvocationInfo invocationInfo, ActionString trace, ActionStringList setMethodNames, Action<TypeDefinition> updateTypeDefinition)
         {
             var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
 
