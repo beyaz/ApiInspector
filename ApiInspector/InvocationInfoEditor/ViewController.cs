@@ -6,7 +6,6 @@ using Mono.Cecil;
 using static ApiInspector.Keys;
 using static ApiInspector.DataAccess.TypeVisitor;
 using static ApiInspector.Utility;
-using ActionStringList = System.Action<System.Collections.Generic.IReadOnlyList<string>>;
 using ActionString = System.Action<string>;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -119,71 +118,61 @@ namespace ApiInspector.InvocationInfoEditor
 
             return typeDefinition.Methods.Select(x => x.Name).ToList();
         }
-        #endregion
+
+        /// <summary>
+          ///     Finds the type.
+          /// </summary>
+           static TypeDefinition FindType(InvocationInfo invocationInfo, ActionString trace)
+          {
+              var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+
+              if (!File.Exists(assemblyFilePath))
+              {
+                  trace($"File not exists. File:{assemblyFilePath}");
+                  return null;
+              }
+
+              return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, GetAssemblySearchDirectories(invocationInfo)).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
+          }
+
+        /// <summary>
+          ///     Gets the assembly file path.
+          /// </summary>
+           static string GetAssemblyFilePath(InvocationInfo invocationInfo)
+          {
+              var assemblyName      = invocationInfo.AssemblyName;
+              var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
+              var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
+
+              return assemblyPath;
+          }
+
+        /// <summary>
+          ///     Gets the assembly search directories.
+          /// </summary>
+           static List<string> GetAssemblySearchDirectories(InvocationInfo invocationInfo)
+          {
+              return ListOf(invocationInfo.AssemblySearchDirectory);
+          }
+
+        /// <summary>
+          ///     Gets the class names of selected assembly.
+          /// </summary>
+           static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(InvocationInfo invocationInfo, ActionString trace)
+          {
+              var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
+
+              if (!File.Exists(assemblyFilePath))
+              {
+                  trace($"File not exists. File:{assemblyFilePath}");
+                  return new List<string>();
+              }
+
+              var assemblySearchDirectories = GetAssemblySearchDirectories(invocationInfo);
+
+              return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories).Select(x => x.FullName).ToList();
+          }
+          #endregion
     }
 }
 
-namespace ApiInspector
-{
-    /// <summary>
-    ///     The utility
-    /// </summary>
-    partial class Utility
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Finds the type.
-        /// </summary>
-        public static TypeDefinition FindType(InvocationInfo invocationInfo, ActionString trace)
-        {
-            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                trace($"File not exists. File:{assemblyFilePath}");
-                return null;
-            }
-
-            return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, GetAssemblySearchDirectories(invocationInfo)).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
-        }
-
-        /// <summary>
-        ///     Gets the assembly file path.
-        /// </summary>
-        public static string GetAssemblyFilePath(InvocationInfo invocationInfo)
-        {
-            var assemblyName      = invocationInfo.AssemblyName;
-            var assemblyDirectory = invocationInfo.AssemblySearchDirectory;
-            var assemblyPath      = Path.Combine(assemblyDirectory, assemblyName);
-
-            return assemblyPath;
-        }
-
-        /// <summary>
-        ///     Gets the assembly search directories.
-        /// </summary>
-        public static List<string> GetAssemblySearchDirectories(InvocationInfo invocationInfo)
-        {
-            return ListOf(invocationInfo.AssemblySearchDirectory);
-        }
-
-        /// <summary>
-        ///     Gets the class names of selected assembly.
-        /// </summary>
-        public static IReadOnlyList<string> GetClassNamesOfSelectedAssembly(InvocationInfo invocationInfo, ActionString trace)
-        {
-            var assemblyFilePath = GetAssemblyFilePath(invocationInfo);
-
-            if (!File.Exists(assemblyFilePath))
-            {
-                trace($"File not exists. File:{assemblyFilePath}");
-                return new List<string>();
-            }
-
-            var assemblySearchDirectories = GetAssemblySearchDirectories(invocationInfo);
-
-            return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories).Select(x => x.FullName).ToList();
-        }
-        #endregion
-    }
-}

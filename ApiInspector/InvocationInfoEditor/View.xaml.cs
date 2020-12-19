@@ -104,8 +104,6 @@ namespace ApiInspector.InvocationInfoEditor
                 return; // TODO: nasıl olabilir
             }
 
-            var trace = scope.Get(Trace);
-
             switch (name)
             {
                 case ViewEvents.OnAssemblySearchDirectoryChanged:

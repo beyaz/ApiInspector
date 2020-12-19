@@ -11,7 +11,7 @@ namespace ApiInspector
     /// <summary>
     ///     The utility
     /// </summary>
-    static partial class Utility
+    static class Utility
     {
         #region Public Properties
         /// <summary>
