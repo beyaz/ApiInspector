@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using static ApiInspector.Keys;
 
@@ -27,36 +26,6 @@ namespace ApiInspector.InvocationInfoEditor
         }
         #endregion
 
-        #region Enums
-        enum ViewEvents
-        {
-            /// <summary>
-            ///     The on assembly search directory changed
-            /// </summary>
-            OnAssemblySearchDirectoryChanged,
-
-            /// <summary>
-            ///     The on environment changed
-            /// </summary>
-            OnEnvironmentChanged,
-
-            /// <summary>
-            ///     The on assembly name changed
-            /// </summary>
-            OnAssemblyNameChanged,
-
-            /// <summary>
-            ///     The on class name changed
-            /// </summary>
-            OnClassNameChanged,
-
-            /// <summary>
-            ///     The on method name changed
-            /// </summary>
-            OnMethodNameChanged
-        }
-        #endregion
-
         #region Methods
         internal void Connect(Scope scope)
         {
@@ -67,79 +36,17 @@ namespace ApiInspector.InvocationInfoEditor
             scope.Update(GetClassName, () => classNameIntellisenseTextBox.Editor.Text);
 
             scope.OnUpdate(AssemblyNameSuggestions, () => { assemblyIntellisenseTextBox.Suggestions = scope.Get(AssemblyNameSuggestions); });
-
             scope.OnUpdate(ClassNameSuggestions, () => { classNameIntellisenseTextBox.Suggestions = scope.Get(ClassNameSuggestions); });
-
             scope.OnUpdate(MethodNameSuggestions, () => { methodNameIntellisenseTextBox.Suggestions = scope.Get(MethodNameSuggestions); });
-
             scope.OnUpdate(SelectedInvocationInfo, Connect);
         }
-
-        
 
         /// <summary>
         ///     Connects the specified invocation information.
         /// </summary>
         void Connect()
         {
-            
-
             RefreshValues();
-        }
-
-        /// <summary>
-        ///     Fires the event.
-        /// </summary>
-        void FireEvent(ViewEvents name)
-        {
-            var invocationInfo = scope.TryGet(SelectedInvocationInfo);
-
-            if (invocationInfo == null)
-            {
-                return; // TODO: nasıl olabilir
-            }
-
-            switch (name)
-            {
-                case ViewEvents.OnAssemblySearchDirectoryChanged:
-                {
-                    ViewController.OnAssemblySearchDirectoryChanged(scope);
-
-                    break;
-                }
-
-                case ViewEvents.OnEnvironmentChanged:
-                {
-                    invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
-
-                    break;
-                }
-
-                case ViewEvents.OnAssemblyNameChanged:
-                {
-                    ViewController.OnAssemblyNameChanged(scope);
-
-                    break;
-                }
-
-                case ViewEvents.OnClassNameChanged:
-                {
-                    ViewController.OnClassNameChanged(scope);
-
-                    break;
-                }
-
-                case ViewEvents.OnMethodNameChanged:
-                {
-                    OnMethodNameChanged();
-
-                    break;
-                }
-
-                default: throw new NotImplementedException(name.ToString());
-            }
-
-            
         }
 
         void OnMethodNameChanged()
@@ -149,11 +56,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
-            
-            
-
             scope.Update(SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
-
 
             var methodDefinition = scope.TryGet(SelectedMethodDefinition);
             if (methodDefinition == null)
@@ -181,8 +84,6 @@ namespace ApiInspector.InvocationInfoEditor
             assemblyIntellisenseTextBox.SetValue(invocationInfo.AssemblyName);
             classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
             methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
-
-
         }
 
         /// <summary>
@@ -190,15 +91,19 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RegisterEvents()
         {
-            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnAssemblySearchDirectoryChanged); };
+            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) => { ViewController.OnAssemblySearchDirectoryChanged(scope); };
 
-            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnEnvironmentChanged); };
+            environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                var invocationInfo = scope.TryGet(SelectedInvocationInfo);
+                invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
+            };
 
-            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnAssemblyNameChanged); };
+            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) => { ViewController.OnAssemblyNameChanged(scope); };
 
-            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnClassNameChanged); };
+            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { ViewController.OnClassNameChanged(scope); };
 
-            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { FireEvent(ViewEvents.OnMethodNameChanged); };
+            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { OnMethodNameChanged(); };
         }
 
         /// <summary>
