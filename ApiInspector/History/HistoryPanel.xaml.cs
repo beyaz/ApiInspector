@@ -7,6 +7,7 @@ using System.Windows.Input;
 using ApiInspector.Application;
 using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
+using static ApiInspector.Keys;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.History
@@ -41,7 +42,7 @@ namespace ApiInspector.History
         {
             this.scope = scope;
 
-            scope.OnUpdate(Keys.HistoryItems, OnHistoryItemsUpdated);
+            scope.OnUpdate(HistoryItems, OnHistoryItemsUpdated);
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace ApiInspector.History
         /// </summary>
         static void Trace(string message)
         {
-            App.ApplicationScope.Get(Keys.UserVisibleTrace)(message);
+            App.ApplicationScope.Get(UserVisibleTrace)(message);
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace ApiInspector.History
         {
             new Scope
             {
-                {Keys.SelectedInvocationInfo, info}
+                {SelectedInvocationInfo, info}
             }.PublishEvent(HistoryEvent.RemoveSelectedInvocationInfo);
 
             Refresh();
@@ -117,7 +118,7 @@ namespace ApiInspector.History
         {
             Trace("History item clicked.");
 
-            scope.Update(Keys.SelectedInvocationInfo, (InvocationInfo) historyListBox.SelectedItem);
+            scope.Update(SelectedInvocationInfo, (InvocationInfo) historyListBox.SelectedItem);
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace ApiInspector.History
         {
             Trace("History is loading...");
 
-            scope.Update(Keys.HistoryItems, TryRun(() => GetHistory(new Scope())) ?? new List<InvocationInfo>());
+            scope.Update(HistoryItems, TryRun(() => GetHistory(scope)) ?? new List<InvocationInfo>());
 
             Trace("History is loaded.");
         }
@@ -137,8 +138,16 @@ namespace ApiInspector.History
         /// </summary>
         void OnHistoryItemsUpdated()
         {
-            historyListBox.ItemsSource = scope.Get(Keys.HistoryItems);
+            historyListBox.ItemsSource = scope.Get(HistoryItems);
 
+            ReAssignCollectionFilter();
+        }
+
+        /// <summary>
+        ///     Res the assign collection filter.
+        /// </summary>
+        void ReAssignCollectionFilter()
+        {
             var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
 
             view.Filter = HistoryFilter;

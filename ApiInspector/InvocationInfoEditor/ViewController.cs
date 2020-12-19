@@ -107,7 +107,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Gets the type of the method name list from selected.
         /// </summary>
-        static List<string> GetMethodNameListFromSelectedType(TypeDefinition typeDefinition, string assemblySearchDirectory)
+        static IReadOnlyList<string> GetMethodNameListFromSelectedType(TypeDefinition typeDefinition, string assemblySearchDirectory)
         {
             if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
             {
