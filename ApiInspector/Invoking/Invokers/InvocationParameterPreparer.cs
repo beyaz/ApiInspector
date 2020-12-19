@@ -53,7 +53,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Prepares the specified parameters.
         /// </summary>
-        public List<object> Prepare(List<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo)
+        public List<object> Prepare(IReadOnlyList<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo)
         {
             var invocationParameters = new List<object>();
 
