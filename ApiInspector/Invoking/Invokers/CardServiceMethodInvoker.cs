@@ -46,7 +46,7 @@ namespace ApiInspector.Invoking.Invokers
             var targetType           = input.TargetType;
             var methodName           = input.MethodName;
 
-            Trace("Searching service interface...");
+            trace("Searching service interface...");
 
             var serviceInterface = targetType.GetInterfaces().FirstOrDefault(i => i.Name.EndsWith("Service"));
             if (serviceInterface == null)
@@ -54,14 +54,14 @@ namespace ApiInspector.Invoking.Invokers
                 throw new ArgumentNullException(nameof(serviceInterface));
             }
 
-            Trace("Searching method in service...");
+            trace("Searching method in service...");
             var method = targetType.GetMethod(methodName);
             if (method == null)
             {
                 throw new ArgumentNullException(nameof(method));
             }
 
-            Trace("Accessing service method parameter type.");
+            trace("Accessing service method parameter type.");
             var parameterType = method.GetParameters()[0].ParameterType;
 
             var SourceCode = @"
@@ -104,15 +104,15 @@ namespace ApiInspector.Invoking.Dynamic
                 IncludeDebugInformation = false
             };
 
-            Trace("Started to compile...");
+            trace("Started to compile...");
             var results = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(compilerParams, SourceCode);
             if (results.Errors.Count > 0)
             {
-                Trace("Compile fail.");
+                trace("Compile fail.");
                 throw new ArgumentException(ConvertToString(results.Errors));
             }
 
-            Trace("Compile success.");
+            trace("Compile success.");
             var assembly = results.CompiledAssembly;
 
             var methodInfo = assembly.GetType("ApiInspector.Invoking.Dynamic.ServiceWrapper").GetMethod("Wrap");
@@ -121,18 +121,18 @@ namespace ApiInspector.Invoking.Dynamic
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
-            Trace("Creating ObjectHelper...");
+            trace("Creating ObjectHelper...");
             var wrapMethodParameters = new List<object>
             {
                 boaContext.GetObjectHelper()
             };
             wrapMethodParameters.AddRange(invocationParameters);
 
-            Trace("Service invocation is started. Waiting response...");
+            trace("Service invocation is started. Waiting response...");
 
             var response = methodInfo.Invoke(null, wrapMethodParameters.ToArray());
 
-            Trace("Service invocation is success.");
+            trace("Service invocation is success.");
 
             return response;
         }
@@ -156,7 +156,7 @@ namespace ApiInspector.Invoking.Dynamic
         /// <summary>
         ///     Traces the specified message.
         /// </summary>
-        void Trace(string message)
+        void trace(string message)
         {
             tracer.Trace(message);
         }
