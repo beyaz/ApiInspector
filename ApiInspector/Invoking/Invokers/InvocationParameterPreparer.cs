@@ -57,16 +57,7 @@ namespace ApiInspector.Invoking.Invokers
         {
             var invocationParameters = new List<object>();
 
-            var methodParametersInDotNet = methodInfo.GetParameters();
-
-            var parameterAdapterInputs = new List<ParameterAdapterInput>();
-
-            for (var i = 0; i < methodParametersInDotNet.Length; i++)
-            {
-                parameterAdapterInputs.Add(new ParameterAdapterInput(methodParametersInDotNet[i],boaContext,parameters[i].Value));
-            }
-
-            foreach (var parameterAdapterInput in parameterAdapterInputs)
+            foreach (var parameterAdapterInput in methodInfo.GetParameters().ToList((x,i)=>new ParameterAdapterInput(x,boaContext,parameters[i].Value)))
             {
                 var stopwatch = Stopwatch.StartNew();
 

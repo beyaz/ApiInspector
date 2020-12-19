@@ -156,6 +156,22 @@ namespace ApiInspector
 
             File.WriteAllText(filePath, content);
         }
+
+        public static IReadOnlyList<TDestination> ToList<TSource, TDestination>(this IEnumerable<TSource> items, Func<TSource, int, TDestination> converter)
+        {
+            var resultList = new List<TDestination>();
+            
+            var i= 0;
+
+            foreach (var item in items)
+            {
+                resultList.Add(converter(item, i++));
+            }
+
+            return resultList;
+        }
+
+
         #endregion
     }
 }
