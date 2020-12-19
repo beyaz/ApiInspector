@@ -23,7 +23,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     The parameter adapters
         /// </summary>
-        readonly Func<ParameterAdapterInput,ParameterAdapterInput>[] parameterAdapters =
+        static readonly Func<ParameterAdapterInput,ParameterAdapterInput>[] parameterAdapters =
         {
              ParameterAdapterForObjectType.TryAdapt,
              ParameterAdapterForStringType.TryAdapt,
@@ -53,39 +53,30 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Prepares the specified parameters.
         /// </summary>
-        public List<object> Prepare(IReadOnlyList<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo)
+        public IReadOnlyList<object> Prepare(IReadOnlyList<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo)
         {
-            var invocationParameters = new List<object>();
+            return methodInfo.GetParameters().ToList((x, i) => CreateInputValue(new ParameterAdapterInput(x, boaContext, parameters[i].Value), tracer.Trace));
+        }
 
-            foreach (var parameterAdapterInput in methodInfo.GetParameters().ToList((x,i)=>new ParameterAdapterInput(x,boaContext,parameters[i].Value)))
+        static object CreateInputValue(ParameterAdapterInput parameterAdapterInput,Action<string> trace)
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            foreach (var tryAdapt in parameterAdapters)
             {
-                var stopwatch = Stopwatch.StartNew();
-
-                var isAdapted = false;
-                foreach (var tryAdapt in parameterAdapters)
-                {
-                    var input = tryAdapt(parameterAdapterInput);
-                    if (input != null)
-                    {
-                        isAdapted = true;
-
-                        invocationParameters.Add(input.InvocationValue);
-                        break;
-                    }
-                }
-
-                if (isAdapted)
+                var input = tryAdapt(parameterAdapterInput);
+                if (input != null)
                 {
                     stopwatch.Stop();
-                    tracer.Trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
-                    continue;
+                    trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+
+                    return input.InvocationValue;
                 }
-
-                throw new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}");
             }
-
-            return invocationParameters;
+            
+            throw new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}");
         }
+
         #endregion
     }
 }

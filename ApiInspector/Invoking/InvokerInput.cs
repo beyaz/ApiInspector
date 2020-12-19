@@ -29,7 +29,7 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Gets or sets the invocation parameters.
         /// </summary>
-        public List<object> InvocationParameters { get; set; }
+        public IReadOnlyList<object> InvocationParameters { get; set; }
 
         /// <summary>
         ///     Gets or sets the method information.
