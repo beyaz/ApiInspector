@@ -36,12 +36,7 @@ namespace ApiInspector.Invoking.Invokers
         ///     The instance creator
         /// </summary>
         readonly InstanceCreator instanceCreator;
-
-        /// <summary>
-        ///     The invocation parameter preparer
-        /// </summary>
-        readonly InvocationParameterPreparer invocationParameterPreparer;
-
+        
         /// <summary>
         ///     The serializer
         /// </summary>
@@ -61,8 +56,7 @@ namespace ApiInspector.Invoking.Invokers
                        Serializer                  serializer,
                        InstanceCreator             instanceCreator,
                        BOAContext                  boaContext,
-                       CardServiceMethodInvoker    cardServiceMethodInvoker,
-                       InvocationParameterPreparer invocationParameterPreparer
+                       CardServiceMethodInvoker    cardServiceMethodInvoker
         )
         {
             this.tracer                      = tracer ?? throw new ArgumentNullException(nameof(tracer));
@@ -70,7 +64,6 @@ namespace ApiInspector.Invoking.Invokers
             this.instanceCreator             = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             this.boaContext                  = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
             this.cardServiceMethodInvoker    = cardServiceMethodInvoker ?? throw new ArgumentNullException(nameof(cardServiceMethodInvoker));
-            this.invocationParameterPreparer = invocationParameterPreparer ?? throw new ArgumentNullException(nameof(invocationParameterPreparer));
         }
         #endregion
 
@@ -183,7 +176,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 try
                 {
-                    input.InvocationParameters = invocationParameterPreparer.Prepare(parameters, input.MethodInfo);
+                    input.InvocationParameters = InvocationParameterPreparer.Prepare(parameters, input.MethodInfo,boaContext,tracer.Trace);
                 }
                 catch (Exception exception)
                 {

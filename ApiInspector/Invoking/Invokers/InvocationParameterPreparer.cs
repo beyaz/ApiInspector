@@ -5,7 +5,6 @@ using System.Reflection;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
-using ApiInspector.Tracing;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -14,51 +13,29 @@ namespace ApiInspector.Invoking.Invokers
     /// </summary>
     class InvocationParameterPreparer
     {
-        #region Fields
-        /// <summary>
-        ///     The boa context
-        /// </summary>
-        readonly BOAContext boaContext;
-
+        #region Static Fields
         /// <summary>
         ///     The parameter adapters
         /// </summary>
-        static readonly Func<ParameterAdapterInput,ParameterAdapterInput>[] parameterAdapters =
+        static readonly Func<ParameterAdapterInput, ParameterAdapterInput>[] parameterAdapters =
         {
-             ParameterAdapterForObjectType.TryAdapt,
-             ParameterAdapterForStringType.TryAdapt,
-             ParameterAdapterForObjectHelperType.TryAdapt,
-             ParameterAdapterForSerializableTypes.TryAdapt,
-             ParameterAdapterForConvertibleTypes.TryAdapt
+            ParameterAdapterForObjectType.TryAdapt,
+            ParameterAdapterForStringType.TryAdapt,
+            ParameterAdapterForObjectHelperType.TryAdapt,
+            ParameterAdapterForSerializableTypes.TryAdapt,
+            ParameterAdapterForConvertibleTypes.TryAdapt
         };
-
-        /// <summary>
-        ///     The tracer
-        /// </summary>
-        readonly ITracer tracer;
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="InvocationParameterPreparer" /> class.
-        /// </summary>
-        public InvocationParameterPreparer(BOAContext boaContext, ITracer tracer)
-        {
-            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
-            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
-        }
         #endregion
 
         #region Public Methods
-        /// <summary>
-        ///     Prepares the specified parameters.
-        /// </summary>
-        public IReadOnlyList<object> Prepare(IReadOnlyList<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo)
+        public static IReadOnlyList<object> Prepare(IReadOnlyList<InvocationMethodParameterInfo> parameters, MethodInfo methodInfo, BOAContext boaContext, Action<string> trace)
         {
-            return methodInfo.GetParameters().ToList((x, i) => CreateInputValue(new ParameterAdapterInput(x, boaContext, parameters[i].Value), tracer.Trace));
+            return methodInfo.GetParameters().ToList((x, i) => CreateInputValue(new ParameterAdapterInput(x, boaContext, parameters[i].Value), trace));
         }
+        #endregion
 
-        static object CreateInputValue(ParameterAdapterInput parameterAdapterInput,Action<string> trace)
+        #region Methods
+        static object CreateInputValue(ParameterAdapterInput parameterAdapterInput, Action<string> trace)
         {
             var stopwatch = Stopwatch.StartNew();
 
@@ -73,10 +50,9 @@ namespace ApiInspector.Invoking.Invokers
                     return input.InvocationValue;
                 }
             }
-            
+
             throw new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}");
         }
-
         #endregion
     }
 }
