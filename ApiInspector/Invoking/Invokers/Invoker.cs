@@ -27,15 +27,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         readonly BOAContext boaContext;
 
-        /// <summary>
-        ///     The card service method invoker
-        /// </summary>
-        readonly CardServiceMethodInvoker cardServiceMethodInvoker;
 
-        /// <summary>
-        ///     The instance creator
-        /// </summary>
-        readonly InstanceCreator instanceCreator;
         
         /// <summary>
         ///     The serializer
@@ -54,16 +46,12 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public Invoker(ITracer                     tracer,
                        Serializer                  serializer,
-                       InstanceCreator             instanceCreator,
-                       BOAContext                  boaContext,
-                       CardServiceMethodInvoker    cardServiceMethodInvoker
+                       BOAContext                  boaContext
         )
         {
             this.tracer                      = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.serializer                  = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            this.instanceCreator             = instanceCreator ?? throw new ArgumentNullException(nameof(instanceCreator));
             this.boaContext                  = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
-            this.cardServiceMethodInvoker    = cardServiceMethodInvoker ?? throw new ArgumentNullException(nameof(cardServiceMethodInvoker));
         }
         #endregion
 
@@ -291,7 +279,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
-            var response = cardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput);
+            var response = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput,tracer.Trace,boaContext);
 
             return Success(response);
         }
@@ -310,7 +298,7 @@ namespace ApiInspector.Invoking.Invokers
                 return null;
             }
 
-            var instance = instanceCreator.Create(targetType, boaContext);
+            var instance = InstanceCreator.Create(targetType, boaContext);
 
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 

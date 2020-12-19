@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
@@ -60,8 +61,7 @@ namespace ApiInspector.Invoking
 
             using (var injector = new Injector(new TraceQueue(),EnvironmentInfo.Dev))
             {
-                var cardServiceMethodInvoker = injector.Get<CardServiceMethodInvoker>();
-                response = (GenericResponse<GetCardAvailableLimitResponse>) cardServiceMethodInvoker.Invoke(input);
+                response = (GenericResponse<GetCardAvailableLimitResponse>) CardServiceMethodInvoker.Invoke(input,Console.WriteLine,injector.Get<BOAContext>());
             }
 
 

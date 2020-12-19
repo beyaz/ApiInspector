@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ApiInspector.Invoking.BoaSystem;
-using ApiInspector.Tracing;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -13,34 +12,11 @@ namespace ApiInspector.Invoking.Invokers
     /// </summary>
     class CardServiceMethodInvoker
     {
-        #region Fields
-        /// <summary>
-        ///     The boa context
-        /// </summary>
-        readonly BOAContext boaContext;
-
-        /// <summary>
-        ///     The tracer
-        /// </summary>
-        readonly ITracer tracer;
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CardServiceMethodInvoker" /> class.
-        /// </summary>
-        public CardServiceMethodInvoker(ITracer tracer, BOAContext boaContext)
-        {
-            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
-        }
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Invokes the specified context.
         /// </summary>
-        public object Invoke(CardServiceMethodInvokerInput input)
+        public static object Invoke(CardServiceMethodInvokerInput input, Action<string> trace, BOAContext boaContext)
         {
             var invocationParameters = input.InvocationParameters;
             var targetType           = input.TargetType;
@@ -151,14 +127,6 @@ namespace ApiInspector.Invoking.Dynamic
             }
 
             return errorMessage.ToString();
-        }
-
-        /// <summary>
-        ///     Traces the specified message.
-        /// </summary>
-        void trace(string message)
-        {
-            tracer.Trace(message);
         }
         #endregion
     }

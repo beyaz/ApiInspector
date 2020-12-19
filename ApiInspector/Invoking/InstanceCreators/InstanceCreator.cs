@@ -12,7 +12,7 @@ namespace ApiInspector.Invoking.InstanceCreators
         /// <summary>
         ///     Creates the specified target type.
         /// </summary>
-        public object Create(Type targetType, BOAContext boaContext)
+        public static object Create(Type targetType, BOAContext boaContext)
         {
             var instance = InstanceCreatorForObjectHelperDerivedClasses.TryCreate(targetType, boaContext);
             if (instance != null)
