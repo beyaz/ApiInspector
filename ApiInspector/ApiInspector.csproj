@@ -82,6 +82,7 @@
     </ApplicationDefinition>
     <Compile Include="Application\AssemblyFinder.cs" />
     <Compile Include="Application\BoaUserDataSource.cs" />
+    <Compile Include="FunctionalProgramingExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Application\ConnectionInfo.cs" />
     <Compile Include="BOA\FileCacheUtility.cs" />

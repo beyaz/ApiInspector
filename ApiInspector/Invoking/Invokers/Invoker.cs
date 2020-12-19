@@ -94,7 +94,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvokerInput input)
         {
-            Func<Exception, InvokeOutput> fail = Fail;
+            Func<Exception, InvokeOutput> fail  = Fail;
 
             var invocationInfo = input.InvocationInfo;
 
