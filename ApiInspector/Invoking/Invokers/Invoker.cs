@@ -27,8 +27,6 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         readonly BOAContext boaContext;
 
-
-        
         /// <summary>
         ///     The serializer
         /// </summary>
@@ -44,14 +42,14 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Initializes a new instance of the <see cref="Invoker" /> class.
         /// </summary>
-        public Invoker(ITracer                     tracer,
-                       Serializer                  serializer,
-                       BOAContext                  boaContext
+        public Invoker(ITracer tracer,
+                       Serializer serializer,
+                       BOAContext boaContext
         )
         {
-            this.tracer                      = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.serializer                  = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            this.boaContext                  = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
+            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
         }
         #endregion
 
@@ -88,13 +86,51 @@ namespace ApiInspector.Invoking.Invokers
 
             return Invoke(input);
         }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Successes the specified response.
+        /// </summary>
+        static InvokeOutput Success(object response)
+        {
+            return new InvokeOutput(response);
+        }
+
+        /// <summary>
+        ///     Tries the invoke static method.
+        /// </summary>
+        static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
+        {
+            var methodInfo           = input.MethodInfo;
+            var invocationParameters = input.InvocationParameters;
+
+            if (!methodInfo.IsStatic)
+            {
+                return null;
+            }
+
+            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
+
+            return Success(response);
+        }
+
+        /// <summary>
+        ///     Fails the specified exception.
+        /// </summary>
+        InvokeOutput Fail(Exception exception)
+        {
+            boaContext.Dispose();
+
+            return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
+        }
 
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public InvokeOutput Invoke(InvokerInput input)
+        InvokeOutput Invoke(InvokerInput input)
         {
-            Func<Exception, InvokeOutput> fail  = Fail;
+            Func<Exception, InvokeOutput> fail = Fail;
 
             var invocationInfo = input.InvocationInfo;
 
@@ -103,7 +139,7 @@ namespace ApiInspector.Invoking.Invokers
             // INITIALIZE TargetType
             try
             {
-                ApplicationScope.Update(InvocationSearchDirectory,invocationInfo.AssemblySearchDirectory);
+                ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
 
                 input.TargetType = GetTargetType(invocationInfo);
             }
@@ -164,7 +200,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 try
                 {
-                    input.InvocationParameters = InvocationParameterPreparer.Prepare(parameters, input.MethodInfo,boaContext,tracer.Trace);
+                    input.InvocationParameters = InvocationParameterPreparer.Prepare(parameters, input.MethodInfo, boaContext, tracer.Trace);
                 }
                 catch (Exception exception)
                 {
@@ -192,44 +228,6 @@ namespace ApiInspector.Invoking.Invokers
             {
                 return fail(exception);
             }
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Successes the specified response.
-        /// </summary>
-        static InvokeOutput Success(object response)
-        {
-            return new InvokeOutput(response);
-        }
-
-        /// <summary>
-        ///     Tries the invoke static method.
-        /// </summary>
-        static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
-        {
-            var methodInfo           = input.MethodInfo;
-            var invocationParameters = input.InvocationParameters;
-
-            if (!methodInfo.IsStatic)
-            {
-                return null;
-            }
-
-            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
-
-            return Success(response);
-        }
-
-        /// <summary>
-        ///     Fails the specified exception.
-        /// </summary>
-        InvokeOutput Fail(Exception exception)
-        {
-            boaContext.Dispose();
-
-            return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
         }
 
         /// <summary>
@@ -279,7 +277,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
-            var response = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput,tracer.Trace,boaContext);
+            var response = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, boaContext);
 
             return Success(response);
         }
