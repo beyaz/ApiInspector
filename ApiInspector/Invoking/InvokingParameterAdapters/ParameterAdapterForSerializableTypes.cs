@@ -15,9 +15,9 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
-            if (targetParameterType.IsClass && input.InvocationValue is string)
+            if (targetParameterType.IsClass && input.InvocationValue is string invocationValueAsString)
             {
-                input.InvocationValue = JsonConvert.DeserializeObject((string) input.InvocationValue, targetParameterType);
+                input.InvocationValue = JsonConvert.DeserializeObject(invocationValueAsString, targetParameterType);
                 return true;
             }
 
