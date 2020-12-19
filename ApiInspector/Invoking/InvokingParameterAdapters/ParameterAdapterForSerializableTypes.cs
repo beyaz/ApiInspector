@@ -5,13 +5,13 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
     /// <summary>
     ///     The parameter adapter for serializable types
     /// </summary>
-    class ParameterAdapterForSerializableTypes : IParameterAdapter
+    class ParameterAdapterForSerializableTypes 
     {
         #region Public Methods
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
+        public static  bool TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 

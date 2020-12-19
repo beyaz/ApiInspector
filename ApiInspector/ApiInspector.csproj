@@ -114,7 +114,6 @@
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorDefault.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorForObjectHelperDerivedClasses.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
-    <Compile Include="Invoking\InvokingParameterAdapters\IParameterAdapter.cs" />
     <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForConvertibleTypes.cs" />
     <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForObjectHelperType.cs" />
     <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForObjectType.cs" />

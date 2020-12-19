@@ -3,13 +3,13 @@
     /// <summary>
     ///     The parameter adapter for object type
     /// </summary>
-    class ParameterAdapterForObjectType : IParameterAdapter
+    class ParameterAdapterForObjectType 
     {
         #region Public Methods
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
+        public static bool TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 

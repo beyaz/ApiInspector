@@ -5,13 +5,13 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
     /// <summary>
     ///     The parameter adapter for object helper type
     /// </summary>
-    class ParameterAdapterForObjectHelperType : IParameterAdapter
+    class ParameterAdapterForObjectHelperType 
     {
         #region Public Methods
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
+        public static  bool TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 

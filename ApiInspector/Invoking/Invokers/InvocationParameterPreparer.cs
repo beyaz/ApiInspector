@@ -23,13 +23,13 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     The parameter adapters
         /// </summary>
-        readonly IParameterAdapter[] parameterAdapters =
+        readonly Func<ParameterAdapterInput,bool>[] parameterAdapters =
         {
-            new ParameterAdapterForObjectType(),
-            new ParameterAdapterForStringType(),
-            new ParameterAdapterForObjectHelperType(),
-            new ParameterAdapterForSerializableTypes(),
-            new ParameterAdapterForConvertibleTypes()
+             ParameterAdapterForObjectType.TryAdapt,
+             ParameterAdapterForStringType.TryAdapt,
+             ParameterAdapterForObjectHelperType.TryAdapt,
+             ParameterAdapterForSerializableTypes.TryAdapt,
+             ParameterAdapterForConvertibleTypes.TryAdapt
         };
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace ApiInspector.Invoking.Invokers
                 var stopwatch = Stopwatch.StartNew();
 
                 var isAdapted = false;
-                foreach (var parameterAdapter in parameterAdapters)
+                foreach (var tryAdapt in parameterAdapters)
                 {
-                    isAdapted = parameterAdapter.TryAdapt(parameterAdapterInput);
+                    isAdapted = tryAdapt(parameterAdapterInput);
                     if (isAdapted)
                     {
                         invocationParameters.Add(parameterAdapterInput.InvocationValue);

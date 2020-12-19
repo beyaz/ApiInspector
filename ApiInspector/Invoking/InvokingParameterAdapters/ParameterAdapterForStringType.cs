@@ -3,13 +3,13 @@
     /// <summary>
     ///     The parameter adapter for string type
     /// </summary>
-    class ParameterAdapterForStringType : IParameterAdapter
+    class ParameterAdapterForStringType 
     {
         #region Public Methods
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public bool TryAdapt(ParameterAdapterInput input)
+        public static  bool TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
