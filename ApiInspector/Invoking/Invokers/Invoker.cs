@@ -13,6 +13,7 @@ using BOA.Common.Types;
 using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
 using static ApiInspector.Utility;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -133,6 +134,16 @@ namespace ApiInspector.Invoking.Invokers
 
         #region Methods
         /// <summary>
+        ///     Fails the specified exception.
+        /// </summary>
+        static InvokeOutput Fail(InvokerContext scope, Exception exception)
+        {
+            scope.BoaContext.Dispose();
+
+            return new InvokeOutput(exception, exception, scope.Serializer.SerializeToJson(exception));
+        }
+
+        /// <summary>
         ///     Successes the specified response.
         /// </summary>
         static InvokeOutput Success(object response)
@@ -159,21 +170,11 @@ namespace ApiInspector.Invoking.Invokers
         }
 
         /// <summary>
-        ///     Fails the specified exception.
-        /// </summary>
-        InvokeOutput Fail(Exception exception)
-        {
-            boaContext.Dispose();
-
-            return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
-        }
-
-        /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
         InvokeOutput Invoke(InvokerContext context, InvokerInput input)
         {
-            Func<Exception, InvokeOutput> fail = Fail;
+            var fail = fun((Exception e) => Fail(context, e));
 
             var invocationInfo = context.InvocationInfo;
 
@@ -227,7 +228,7 @@ namespace ApiInspector.Invoking.Invokers
                 tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
                 try
                 {
-                    boaContext.Authenticate();
+                    context.BoaContext.Authenticate();
                 }
                 catch (Exception exception)
                 {
@@ -370,7 +371,7 @@ namespace ApiInspector.Invoking.Invokers
             }
             catch (Exception exception)
             {
-                return Fail(exception);
+                return Fail(context, exception);
             }
         }
         #endregion
