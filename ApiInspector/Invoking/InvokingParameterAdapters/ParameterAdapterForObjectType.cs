@@ -9,16 +9,16 @@
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public static bool TryAdapt(ParameterAdapterInput input)
+        public static ParameterAdapterInput TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
             if (targetParameterType == typeof(object))
             {
-                return true;
+                return input;
             }
 
-            return false;
+            return null;
         }
         #endregion
     }

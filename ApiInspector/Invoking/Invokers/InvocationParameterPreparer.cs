@@ -23,7 +23,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     The parameter adapters
         /// </summary>
-        readonly Func<ParameterAdapterInput,bool>[] parameterAdapters =
+        readonly Func<ParameterAdapterInput,ParameterAdapterInput>[] parameterAdapters =
         {
              ParameterAdapterForObjectType.TryAdapt,
              ParameterAdapterForStringType.TryAdapt,
@@ -63,13 +63,7 @@ namespace ApiInspector.Invoking.Invokers
 
             for (var i = 0; i < methodParametersInDotNet.Length; i++)
             {
-                var parameterAdapterInput = new ParameterAdapterInput
-                {
-                    InvocationValue = parameters[i].Value,
-                    ParameterInfo   = methodParametersInDotNet[i],
-                    BoaContext      = boaContext
-                };
-                parameterAdapterInputs.Add(parameterAdapterInput);
+                parameterAdapterInputs.Add(new ParameterAdapterInput(methodParametersInDotNet[i],boaContext,parameters[i].Value));
             }
 
             foreach (var parameterAdapterInput in parameterAdapterInputs)
@@ -79,10 +73,12 @@ namespace ApiInspector.Invoking.Invokers
                 var isAdapted = false;
                 foreach (var tryAdapt in parameterAdapters)
                 {
-                    isAdapted = tryAdapt(parameterAdapterInput);
-                    if (isAdapted)
+                    var input = tryAdapt(parameterAdapterInput);
+                    if (input != null)
                     {
-                        invocationParameters.Add(parameterAdapterInput.InvocationValue);
+                        isAdapted = true;
+
+                        invocationParameters.Add(input.InvocationValue);
                         break;
                     }
                 }

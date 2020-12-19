@@ -11,17 +11,18 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public static  bool TryAdapt(ParameterAdapterInput input)
+        public static  ParameterAdapterInput TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
             if (targetParameterType == typeof(ObjectHelper))
             {
-                input.InvocationValue = new ObjectHelper {Context = input.BoaContext.GetObjectHelper().Context};
-                return true;
+                var invocationValue = new ObjectHelper {Context = input.BoaContext.GetObjectHelper().Context};
+
+                return input.WithInvocationValue(invocationValue);
             }
 
-            return false;
+            return null;
         }
         #endregion
     }

@@ -11,13 +11,14 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public static  bool TryAdapt(ParameterAdapterInput input)
+        public static  ParameterAdapterInput TryAdapt(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
-            input.InvocationValue = Convert.ChangeType(input.InvocationValue, targetParameterType);
+            var invocationValue = Convert.ChangeType(input.InvocationValue, targetParameterType);
 
-            return true;
+            return input.WithInvocationValue(invocationValue);
+
         }
         #endregion
     }
