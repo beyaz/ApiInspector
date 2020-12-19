@@ -17,6 +17,47 @@ using static ApiInspector.Utility;
 namespace ApiInspector.Invoking.Invokers
 {
     /// <summary>
+    ///     The invoker context
+    /// </summary>
+    class InvokerContext
+    {
+        #region Fields
+        /// <summary>
+        ///     The boa context
+        /// </summary>
+        public readonly BOAContext BoaContext;
+
+        /// <summary>
+        ///     The invocation information
+        /// </summary>
+        public readonly InvocationInfo InvocationInfo;
+
+        /// <summary>
+        ///     The serializer
+        /// </summary>
+        public readonly Serializer Serializer;
+
+        /// <summary>
+        ///     The tracer
+        /// </summary>
+        public readonly ITracer Tracer;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="InvokerContext" /> class.
+        /// </summary>
+        public InvokerContext(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
+        {
+            BoaContext     = boaContext;
+            Serializer     = serializer;
+            Tracer         = tracer;
+            InvocationInfo = invocationInfo;
+        }
+        #endregion
+    }
+
+    /// <summary>
     ///     The invoker
     /// </summary>
     class Invoker
@@ -82,9 +123,11 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-            var input = new InvokerInput(invocationInfo);
+            var input = new InvokerInput();
 
-            return Invoke(input);
+            var context = new InvokerContext(boaContext, serializer, tracer, invocationInfo);
+
+            return Invoke(context, input);
         }
         #endregion
 
@@ -128,11 +171,11 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        InvokeOutput Invoke(InvokerInput input)
+        InvokeOutput Invoke(InvokerContext context, InvokerInput input)
         {
             Func<Exception, InvokeOutput> fail = Fail;
 
-            var invocationInfo = input.InvocationInfo;
+            var invocationInfo = context.InvocationInfo;
 
             Trace($"Started to search class: {invocationInfo.ClassName}");
 
@@ -150,7 +193,7 @@ namespace ApiInspector.Invoking.Invokers
 
             // TRY CALL AS EOD
             {
-                var output = TryToInvokeAsEndOfDay(input);
+                var output = TryToInvokeAsEndOfDay(context, input);
                 if (output != null)
                 {
                     return output;
@@ -164,7 +207,7 @@ namespace ApiInspector.Invoking.Invokers
                 MethodInfo methodInfo = null;
                 try
                 {
-                    methodInfo = input.TargetType.GetMethod(input.InvocationInfo.MethodName, AllBindings);
+                    methodInfo = input.TargetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
                 }
                 catch (Exception e)
                 {
@@ -214,7 +257,7 @@ namespace ApiInspector.Invoking.Invokers
             {
                 var stopwatch = Stopwatch.StartNew();
 
-                var response = InvokeMethod(input);
+                var response = InvokeMethod(context, input);
 
                 stopwatch.Stop();
 
@@ -233,12 +276,12 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the method.
         /// </summary>
-        object InvokeMethod(InvokerInput input)
+        object InvokeMethod(InvokerContext invokerContext, InvokerInput input)
         {
             var invokeOutput = TryInvokeStaticMethod(input);
             if (invokeOutput == null)
             {
-                invokeOutput = TryInvokeAsCardServiceMethod(input);
+                invokeOutput = TryInvokeAsCardServiceMethod(invokerContext, input);
                 if (invokeOutput == null)
                 {
                     invokeOutput = TryInvokeNonStaticMethod(input);
@@ -264,11 +307,11 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Tries the invoke as card service method.
         /// </summary>
-        InvokeOutput TryInvokeAsCardServiceMethod(InvokerInput input)
+        InvokeOutput TryInvokeAsCardServiceMethod(InvokerContext context, InvokerInput input)
         {
             var targetType           = input.TargetType;
             var invocationParameters = input.InvocationParameters;
-            var methodName           = input.InvocationInfo.MethodName;
+            var methodName           = context.InvocationInfo.MethodName;
 
             if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
             {
@@ -306,9 +349,9 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Tries to invoke as end of day.
         /// </summary>
-        InvokeOutput TryToInvokeAsEndOfDay(InvokerInput input)
+        InvokeOutput TryToInvokeAsEndOfDay(InvokerContext context, InvokerInput input)
         {
-            var invocationInfo = input.InvocationInfo;
+            var invocationInfo = context.InvocationInfo;
 
             var methodName = invocationInfo.MethodName;
 
@@ -331,5 +374,28 @@ namespace ApiInspector.Invoking.Invokers
             }
         }
         #endregion
+
+        /// <summary>
+        ///     The invoker input
+        /// </summary>
+        class InvokerInput
+        {
+            #region Public Properties
+            /// <summary>
+            ///     Gets or sets the invocation parameters.
+            /// </summary>
+            public IReadOnlyList<object> InvocationParameters { get; set; }
+
+            /// <summary>
+            ///     Gets or sets the method information.
+            /// </summary>
+            public MethodInfo MethodInfo { get; set; }
+
+            /// <summary>
+            ///     Gets or sets the type of the target.
+            /// </summary>
+            public Type TargetType { get; set; }
+            #endregion
+        }
     }
 }

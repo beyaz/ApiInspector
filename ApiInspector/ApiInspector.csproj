@@ -100,7 +100,6 @@
     <Compile Include="Invoking\BoaSystem\EnvironmentInfo.cs" />
     <Compile Include="Invoking\BoaSystem\EnvironmentVariable.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
-    <Compile Include="Invoking\InvokerInput.cs" />
     <Compile Include="Invoking\Invokers\CardServiceMethodInvokerInput.cs" />
     <Compile Include="Invoking\Invokers\EODTestHelper.cs" />
     <Compile Include="Invoking\Invokers\InvocationParameterPreparer.cs" />
