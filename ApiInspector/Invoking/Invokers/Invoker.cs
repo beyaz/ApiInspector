@@ -363,7 +363,7 @@ namespace ApiInspector.Invoking.Invokers
 
             try
             {
-                boaContext.Authenticate(ChannelContract.EOD);
+                context.BoaContext.Authenticate(ChannelContract.EOD);
 
                 new EndOfDayInvoker().Invoke(input.TargetType);
 
