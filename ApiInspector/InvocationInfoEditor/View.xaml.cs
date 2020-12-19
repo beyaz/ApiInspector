@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using static ApiInspector.Keys;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -74,20 +75,14 @@ namespace ApiInspector.InvocationInfoEditor
             scope.OnUpdate(SelectedInvocationInfo, Connect);
         }
 
-        /// <summary>
-        ///     Afters the controller call.
-        /// </summary>
-        void AfterControllerCall()
-        {
-            UpdateSuggestions();
-        }
+        
 
         /// <summary>
         ///     Connects the specified invocation information.
         /// </summary>
         void Connect()
         {
-            UpdateSuggestions();
+            
 
             RefreshValues();
         }
@@ -136,15 +131,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 case ViewEvents.OnMethodNameChanged:
                 {
-                    invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
-
-                    ViewController.OnMethodNameSelected(scope);
-
-                    var methodDefinition = scope.TryGet(SelectedMethodDefinition);
-                    if (methodDefinition != null)
-                    {
-                        new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
-                    }
+                    OnMethodNameChanged();
 
                     break;
                 }
@@ -152,7 +139,29 @@ namespace ApiInspector.InvocationInfoEditor
                 default: throw new NotImplementedException(name.ToString());
             }
 
-            AfterControllerCall();
+            
+        }
+
+        void OnMethodNameChanged()
+        {
+            var invocationInfo = scope.TryGet(SelectedInvocationInfo);
+            var typeDefinition = scope.Get(SelectedTypeDefinition);
+
+            invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
+
+            
+            
+
+            scope.Update(SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+
+
+            var methodDefinition = scope.TryGet(SelectedMethodDefinition);
+            if (methodDefinition == null)
+            {
+                return;
+            }
+
+            new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
         }
 
         /// <summary>
@@ -173,11 +182,11 @@ namespace ApiInspector.InvocationInfoEditor
             classNameIntellisenseTextBox.SetValue(invocationInfo.ClassName);
             methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
 
-            // force method name change for update parameter panel
-            if (methodNameIntellisenseTextBox.Editor.Text == invocationInfo.MethodName)
-            {
-                FireEvent(ViewEvents.OnMethodNameChanged);
-            }
+            //// force method name change for update parameter panel
+            //if (methodNameIntellisenseTextBox.Editor.Text == invocationInfo.MethodName)
+            //{
+            //    FireEvent(ViewEvents.OnMethodNameChanged);
+            //}
         }
 
         /// <summary>
