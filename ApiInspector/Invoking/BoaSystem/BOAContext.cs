@@ -24,12 +24,21 @@ namespace ApiInspector.Invoking.BoaSystem
         #region Public Properties
         public EnvironmentInfo EnvironmentInfo { get; }
         public bool IsBoaConfigurationFileLoaded { get; private set; }
+
+        public AuthenticationResponse authenticationResponse { get; private set; }
         #endregion
 
         #region Public Methods
         public BOAContextData MarkAsConfigurationFileLoaded()
         {
             IsBoaConfigurationFileLoaded = true;
+
+            return this;
+        }
+
+        public BOAContextData WithAuthenticationResponse(AuthenticationResponse authenticationResponse)
+        {
+            this.authenticationResponse = authenticationResponse;
 
             return this;
         }
@@ -42,7 +51,7 @@ namespace ApiInspector.Invoking.BoaSystem
     class BOAContext : IDisposable
     {
         #region Fields
-        readonly EnvironmentInfo environmentInfo;
+       
 
         /// <summary>
         ///     The tracer
@@ -74,8 +83,6 @@ namespace ApiInspector.Invoking.BoaSystem
         public BOAContext(ITracer tracer, EnvironmentInfo environmentInfo)
         {
             this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.environmentInfo = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
-
             data = new BOAContextData(environmentInfo);
         }
         #endregion
