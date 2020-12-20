@@ -75,9 +75,8 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, ITracer tracer, InvocationInfo invocationInfo)
         {
-            
-
             var trace = fun((string message) => { tracer.Trace(message); });
+            
 
             var findTargetType = fun(() =>
             {
@@ -130,7 +129,7 @@ namespace ApiInspector.Invoking.Invokers
             // TRY BOA Authenticate
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
             {
-                tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
+                trace("Authentication is started. Because assembly name starts with BOA prefix.");
 
                 boaContext.Authenticate();
             }
@@ -141,7 +140,7 @@ namespace ApiInspector.Invoking.Invokers
             {
                 var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-                return InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, tracer.Trace);
+                return InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, trace);
             });
 
             var invocationParameters = prepareParameters();
@@ -175,7 +174,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
-                    var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, boaContext);
+                    var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, boaContext);
 
                     return success(responseCardServiceInvoke);
                 });

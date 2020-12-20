@@ -71,8 +71,8 @@ namespace FunctionalPrograming
         public static Action fun(Action f) => f;
         #endregion
 
-
-        
+        [Pure]
+        public static TOut Map<Tin, TOut>(Tin input, Func<Tin, TOut> func) => func(input);
     }
 
     /// <summary>
