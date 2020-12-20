@@ -131,9 +131,6 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Methods
-     
-        
-
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
@@ -203,7 +200,6 @@ namespace ApiInspector.Invoking.Invokers
             // INITIALIZE METHOD INFO
             MethodInfo methodInfo = null;
             {
-                
                 try
                 {
                     methodInfo = targetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
@@ -217,7 +213,6 @@ namespace ApiInspector.Invoking.Invokers
                 {
                     return fail(new Exception("Method not found."));
                 }
-
             }
 
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
@@ -252,76 +247,73 @@ namespace ApiInspector.Invoking.Invokers
 
             trace("Invoke started. Response waiting...");
 
+            var invokeMethod = fun(() =>
+            {
+                var tryInvokeStaticMethod = fun(() =>
+                {
+                    if (!methodInfo.IsStatic)
+                    {
+                        return null;
+                    }
+
+                    var responseStatInvoke = methodInfo.Invoke(null, invocationParameters.ToArray());
+
+                    return Success(responseStatInvoke);
+                });
+
+                var tryInvokeAsCardServiceMethod = fun(() =>
+                {
+                    var methodName = context.InvocationInfo.MethodName;
+
+                    if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
+                    {
+                        return null;
+                    }
+
+                    var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
+
+                    var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, context.BoaContext);
+
+                    return Success(responseCardServiceInvoke);
+                });
+
+                var tryInvokeNonStaticMethod = fun(() =>
+                {
+                    if (methodInfo.IsStatic)
+                    {
+                        return null;
+                    }
+
+                    var instance = InstanceCreator.Create(targetType, context.BoaContext);
+
+                    var responseNonStaticInvoke = methodInfo.Invoke(instance, invocationParameters.ToArray());
+
+                    return Success(responseNonStaticInvoke);
+                });
+
+                var invokeOutput = tryInvokeStaticMethod();
+                if (invokeOutput != null)
+                {
+                    return invokeOutput.ExecutionResponse;
+                }
+
+                invokeOutput = tryInvokeAsCardServiceMethod();
+                if (invokeOutput != null)
+                {
+                    return invokeOutput.ExecutionResponse;
+                }
+
+                invokeOutput = tryInvokeNonStaticMethod();
+                if (invokeOutput != null)
+                {
+                    return invokeOutput.ExecutionResponse;
+                }
+
+                throw new InvalidOperationException("Unknown invocation type.");
+            });
             try
             {
                 var stopwatch = Stopwatch.StartNew();
-
-                var invokeMethod = fun(() =>
-                {
-
-                    var tryInvokeStaticMethod = fun(() =>
-                    {
-
-                        if (!methodInfo.IsStatic)
-                        {
-                            return null;
-                        }
-
-                        var responseStatInvoke = methodInfo.Invoke(null, invocationParameters.ToArray());
-
-                        return Success(responseStatInvoke);
-                    });
-
-                    var tryInvokeAsCardServiceMethod = fun(() =>
-                    {
-                        var methodName           = context.InvocationInfo.MethodName;
-
-                        if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
-                        {
-                            return null;
-                        }
-
-                        var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
-
-                        var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, context.BoaContext);
-
-                        return Success(responseCardServiceInvoke);
-                    });
-
-                    var tryInvokeNonStaticMethod = fun(() =>
-                    {
-
-                        if (methodInfo.IsStatic)
-                        {
-                            return null;
-                        }
-
-                        var instance = InstanceCreator.Create(targetType, context.BoaContext);
-
-                        var responseNonStaticInvoke = methodInfo.Invoke(instance, invocationParameters.ToArray());
-
-                        return Success(responseNonStaticInvoke);
-                    });
-
-                    var invokeOutput = tryInvokeStaticMethod();
-                    if (invokeOutput != null)
-                    {
-                        return invokeOutput.ExecutionResponse;
-                    }
-
-                    invokeOutput = tryInvokeAsCardServiceMethod();
-                    if (invokeOutput != null)
-                    {
-                        return invokeOutput.ExecutionResponse;
-                    }
-
-                    invokeOutput = tryInvokeNonStaticMethod();
-                    if (invokeOutput != null)
-                    {
-                        return invokeOutput.ExecutionResponse;
-                    }
-                    throw new InvalidOperationException("Unknown invocation type.");
-                });
 
                 var response = invokeMethod();
 
@@ -338,10 +330,6 @@ namespace ApiInspector.Invoking.Invokers
                 return fail(exception);
             }
         }
-
-        
         #endregion
-
-       
     }
 }
