@@ -124,11 +124,9 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-            var input = new InvokerInput();
-
             var context = new InvokerContext(boaContext, serializer, tracer, invocationInfo);
 
-            return Invoke(context, input);
+            return Invoke(context);
         }
         #endregion
 
@@ -139,7 +137,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        InvokeOutput Invoke(InvokerContext context, InvokerInput input)
+        InvokeOutput Invoke(InvokerContext context)
         {
             var fail = fun((Exception exception) =>
             {
@@ -157,12 +155,12 @@ namespace ApiInspector.Invoking.Invokers
             trace($"Started to search class: {invocationInfo.ClassName}");
 
             // INITIALIZE TargetType
-            Type TargetType = null;
+            Type targetType = null;
             try
             {
                 ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
 
-                TargetType = GetTargetType(invocationInfo);
+                targetType = GetTargetType(invocationInfo);
             }
             catch (Exception e)
             {
@@ -184,7 +182,7 @@ namespace ApiInspector.Invoking.Invokers
                     {
                         context.BoaContext.Authenticate(ChannelContract.EOD);
 
-                        new EndOfDayInvoker().Invoke(TargetType);
+                        new EndOfDayInvoker().Invoke(targetType);
 
                         return new InvokeOutput(null, null, null);
                     }
@@ -208,7 +206,7 @@ namespace ApiInspector.Invoking.Invokers
                 
                 try
                 {
-                    methodInfo = TargetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
+                    methodInfo = targetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
                 }
                 catch (Exception e)
                 {
@@ -276,7 +274,6 @@ namespace ApiInspector.Invoking.Invokers
 
                     var tryInvokeAsCardServiceMethod = fun(() =>
                     {
-                        var targetType           = TargetType;
                         var methodName           = context.InvocationInfo.MethodName;
 
                         if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
@@ -293,7 +290,6 @@ namespace ApiInspector.Invoking.Invokers
 
                     var tryInvokeNonStaticMethod = fun(() =>
                     {
-                        var targetType           = TargetType;
 
                         if (methodInfo.IsStatic)
                         {
@@ -346,24 +342,6 @@ namespace ApiInspector.Invoking.Invokers
         
         #endregion
 
-        /// <summary>
-        ///     The invoker input
-        /// </summary>
-        class InvokerInput
-        {
-            #region Public Properties
-            /// <summary>
-            ///     Gets or sets the invocation parameters.
-            /// </summary>
-            
-
-           
-
-            /// <summary>
-            ///     Gets or sets the type of the target.
-            /// </summary>
-            
-            #endregion
-        }
+       
     }
 }
