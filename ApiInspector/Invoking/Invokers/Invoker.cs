@@ -58,31 +58,35 @@ namespace ApiInspector.Invoking.Invokers
                 return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
             });
 
+            try
+            {
+                return UnsafeInvoke(boaContext, serializer, tracer, invocationInfo);
+            }
+            catch (Exception exception)
+            {
+                return fail(exception);
+            }
+        }
+        #endregion
 
+        #region Methods
+        /// <summary>
+        ///     Invokes the specified invocation information.
+        /// </summary>
+        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
+        {
             var success = fun((object r) => new InvokeOutput(r));
 
             var trace = fun((string message) => { tracer.Trace(message); });
-            
 
-            
-
-           
             Type targetType = null;
             // INITIALIZE TargetType
             {
                 trace($"Started to search class: {invocationInfo.ClassName}");
 
-                try
-                {
+                ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
 
-                    ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
-
-                    targetType = GetTargetType(invocationInfo);
-                }
-                catch (Exception e)
-                {
-                    return fail(e);
-                }
+                targetType = GetTargetType(invocationInfo);
             }
 
             // TRY CALL AS EOD
@@ -96,18 +100,11 @@ namespace ApiInspector.Invoking.Invokers
                         return null;
                     }
 
-                    try
-                    {
-                        boaContext.Authenticate(ChannelContract.EOD);
+                    boaContext.Authenticate(ChannelContract.EOD);
 
-                        new EndOfDayInvoker().Invoke(targetType);
+                    new EndOfDayInvoker().Invoke(targetType);
 
-                        return new InvokeOutput(null, null, null);
-                    }
-                    catch (Exception exception)
-                    {
-                        return fail(exception);
-                    }
+                    return new InvokeOutput(null, null, null);
                 });
                 var eodOutput = tryToInvokeAsEndOfDay();
                 if (eodOutput != null)
@@ -121,18 +118,11 @@ namespace ApiInspector.Invoking.Invokers
             // INITIALIZE METHOD INFO
             MethodInfo methodInfo = null;
             {
-                try
-                {
-                    methodInfo = targetType.GetMethod(invocationInfo.MethodName, AllBindings);
-                }
-                catch (Exception e)
-                {
-                    return fail(e);
-                }
+                methodInfo = targetType.GetMethod(invocationInfo.MethodName, AllBindings);
 
                 if (methodInfo == null)
                 {
-                    return fail(new Exception("Method not found."));
+                    throw new Exception("Method not found.");
                 }
             }
 
@@ -140,14 +130,8 @@ namespace ApiInspector.Invoking.Invokers
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
             {
                 tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
-                try
-                {
-                    boaContext.Authenticate();
-                }
-                catch (Exception exception)
-                {
-                    return fail(exception);
-                }
+
+                boaContext.Authenticate();
             }
 
             trace("Preparing invocation parameters");
@@ -157,14 +141,7 @@ namespace ApiInspector.Invoking.Invokers
             {
                 var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-                try
-                {
-                    invocationParameters = InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, tracer.Trace);
-                }
-                catch (Exception exception)
-                {
-                    return fail(exception);
-                }
+                invocationParameters = InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, tracer.Trace);
             }
 
             trace("Invoke started. Response waiting...");
@@ -234,24 +211,17 @@ namespace ApiInspector.Invoking.Invokers
                 throw new InvalidOperationException("Unknown invocation type.");
             });
 
-            try
-            {
-                var stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
 
-                var responseInvokeMethod = invokeMethod();
+            var responseInvokeMethod = invokeMethod();
 
-                stopwatch.Stop();
+            stopwatch.Stop();
 
-                trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+            trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
-                boaContext.Dispose();
+            boaContext.Dispose();
 
-                return new InvokeOutput(null, responseInvokeMethod, serializer.SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
-            }
-            catch (Exception exception)
-            {
-                return fail(exception);
-            }
+            return new InvokeOutput(null, responseInvokeMethod, serializer.SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
         }
         #endregion
     }
