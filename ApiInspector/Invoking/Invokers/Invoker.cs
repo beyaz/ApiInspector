@@ -17,46 +17,6 @@ using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.Invokers
 {
-    /// <summary>
-    ///     The invoker context
-    /// </summary>
-    class InvokerContext
-    {
-        #region Fields
-        /// <summary>
-        ///     The boa context
-        /// </summary>
-        public readonly BOAContext BoaContext;
-
-        /// <summary>
-        ///     The invocation information
-        /// </summary>
-        public readonly InvocationInfo InvocationInfo;
-
-        /// <summary>
-        ///     The serializer
-        /// </summary>
-        public readonly Serializer Serializer;
-
-        /// <summary>
-        ///     The tracer
-        /// </summary>
-        public readonly ITracer Tracer;
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="InvokerContext" /> class.
-        /// </summary>
-        public InvokerContext(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
-        {
-            BoaContext     = boaContext;
-            Serializer     = serializer;
-            Tracer         = tracer;
-            InvocationInfo = invocationInfo;
-        }
-        #endregion
-    }
 
     /// <summary>
     ///     The invoker
@@ -124,9 +84,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public InvokeOutput Invoke(InvocationInfo invocationInfo)
         {
-            var context = new InvokerContext(boaContext, serializer, tracer, invocationInfo);
-
-            return Invoke(context);
+            return Invoke(boaContext, serializer, tracer, invocationInfo);
         }
         #endregion
 
@@ -134,20 +92,20 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        InvokeOutput Invoke(InvokerContext context)
+        InvokeOutput Invoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
         {
             var fail = fun((Exception exception) =>
             {
-                context.BoaContext.Dispose();
+                boaContext.Dispose();
 
-                return new InvokeOutput(exception, exception, context.Serializer.SerializeToJson(exception));
+                return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
             });
 
             var Success = fun((object response) => new InvokeOutput(response));
 
-            var trace = fun((string message) => { context.Tracer.Trace(message); });
+            var trace = fun((string message) => { tracer.Trace(message); });
 
-            var invocationInfo = context.InvocationInfo;
+            
 
             trace($"Started to search class: {invocationInfo.ClassName}");
 
@@ -177,7 +135,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     try
                     {
-                        context.BoaContext.Authenticate(ChannelContract.EOD);
+                        boaContext.Authenticate(ChannelContract.EOD);
 
                         new EndOfDayInvoker().Invoke(targetType);
 
@@ -202,7 +160,7 @@ namespace ApiInspector.Invoking.Invokers
             {
                 try
                 {
-                    methodInfo = targetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
+                    methodInfo = targetType.GetMethod(invocationInfo.MethodName, AllBindings);
                 }
                 catch (Exception e)
                 {
@@ -220,7 +178,7 @@ namespace ApiInspector.Invoking.Invokers
                 tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
                 try
                 {
-                    context.BoaContext.Authenticate();
+                    boaContext.Authenticate();
                 }
                 catch (Exception exception)
                 {
@@ -263,7 +221,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 var tryInvokeAsCardServiceMethod = fun(() =>
                 {
-                    var methodName = context.InvocationInfo.MethodName;
+                    var methodName = invocationInfo.MethodName;
 
                     if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
                     {
@@ -272,7 +230,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
-                    var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, context.BoaContext);
+                    var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, boaContext);
 
                     return Success(responseCardServiceInvoke);
                 });
@@ -284,7 +242,7 @@ namespace ApiInspector.Invoking.Invokers
                         return null;
                     }
 
-                    var instance = InstanceCreator.Create(targetType, context.BoaContext);
+                    var instance = InstanceCreator.Create(targetType, boaContext);
 
                     var responseNonStaticInvoke = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
