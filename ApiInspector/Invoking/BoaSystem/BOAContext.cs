@@ -18,12 +18,9 @@ namespace ApiInspector.Invoking.BoaSystem
     class BOAContext : IDisposable
     {
         #region Fields
-        /// <summary>
-        ///     The boa configuration file
-        /// </summary>
-        readonly BoaConfigurationFile boaConfigurationFile;
+      
 
-        
+        readonly EnvironmentInfo environmentInfo;
 
         /// <summary>
         ///     The tracer
@@ -50,12 +47,27 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile)
+        public BOAContext(ITracer tracer,EnvironmentInfo environmentInfo)
         {
             this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
+            this.environmentInfo      = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
         }
+
+
         #endregion
+
+        bool isBoaConfigurationFileLoaded;
+        void LoadBOAConfigurationFile()
+        {
+            if (isBoaConfigurationFileLoaded)
+            {
+                return;
+            }
+
+            BoaConfigurationFile.Load(environmentInfo.ToString,tracer.Trace);
+
+            isBoaConfigurationFileLoaded = true;
+        }
 
         #region Properties
         /// <summary>
@@ -70,7 +82,7 @@ namespace ApiInspector.Invoking.BoaSystem
                     return context;
                 }
 
-                boaConfigurationFile.Load();
+                LoadBOAConfigurationFile();
 
                 context = new ExecutionDataContext
                 {
@@ -98,7 +110,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 return;
             }
 
-            boaConfigurationFile.Load();
+            LoadBOAConfigurationFile();
 
             
             var request = new AuthenticationRequest
@@ -127,7 +139,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Authenticate()
         {
-            boaConfigurationFile.Load();
+            LoadBOAConfigurationFile();
 
             Authenticate(ConfigurationManager.ChannelSection.Channel.DefaultChannel);
         }
