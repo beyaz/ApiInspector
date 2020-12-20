@@ -213,6 +213,37 @@ namespace ApiInspector.Invoking.BoaSystem
             return data.MarkAsConfigurationFileLoaded();
         }
 
+        static BOAContextData Authenticate(BOAContextData data, Action<string> trace,ChannelContract channelContract)
+        {
+            if (data.authenticationResponse != null)
+            {
+                return data;
+            }
+
+            data = LoadBOAConfigurationFile(data, trace);
+
+            var request = new AuthenticationRequest
+            {
+                AuthenticationContext = new AuthenticationContext
+                {
+                    Channel  = channelContract,
+                    UserName = EnvironmentVariables.GetUserName()
+                }
+            };
+            trace("Authenticate response waiting...");
+
+            var response = new UserManager().Authenticate(request);
+            if (!response.Success)
+            {
+                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
+            }
+
+            trace("Authenticate is success.");
+
+
+            return data.WithAuthenticationResponse(response);
+        }
+
         /// <summary>
         ///     Creates the new business key.
         /// </summary>
