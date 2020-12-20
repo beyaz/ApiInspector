@@ -108,7 +108,7 @@ namespace FunctionalPrograming
     ///     The response
     /// </summary>
     [Serializable]
-    public sealed class Response<TValue>
+    public class Response
     {
         #region Fields
         /// <summary>
@@ -127,11 +127,6 @@ namespace FunctionalPrograming
         ///     Gets the results.
         /// </summary>
         public IReadOnlyList<Result> Results => results;
-
-        /// <summary>
-        ///     Gets or sets the value.
-        /// </summary>
-        public TValue Value { get; set; }
         #endregion
 
         #region Public Methods
@@ -150,6 +145,20 @@ namespace FunctionalPrograming
         {
             results.Add(exception);
         }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The response
+    /// </summary>
+    [Serializable]
+    public sealed class Response<TValue> : Response
+    {
+        #region Public Properties
+        /// <summary>
+        ///     Gets or sets the value.
+        /// </summary>
+        public TValue Value { get; set; }
         #endregion
     }
 }

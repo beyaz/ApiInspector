@@ -58,36 +58,31 @@ namespace ApiInspector.Invoking.Invokers
                 return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
             });
 
-            var success = fun((object response) => new InvokeOutput(response));
+
+            var success = fun((object r) => new InvokeOutput(r));
 
             var trace = fun((string message) => { tracer.Trace(message); });
+            
 
-            var isFailed = fun((Action action) =>
+            
+
+           
+            Type targetType = null;
+            // INITIALIZE TargetType
             {
+                trace($"Started to search class: {invocationInfo.ClassName}");
+
                 try
                 {
-                    action();
+
+                    ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
+
+                    targetType = GetTargetType(invocationInfo);
                 }
                 catch (Exception e)
                 {
                     return fail(e);
                 }
-            });
-
-
-            trace($"Started to search class: {invocationInfo.ClassName}");
-
-            // INITIALIZE TargetType
-            Type targetType = null;
-            try
-            {
-                ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
-
-                targetType = GetTargetType(invocationInfo);
-            }
-            catch (Exception e)
-            {
-                return fail(e);
             }
 
             // TRY CALL AS EOD
@@ -114,10 +109,10 @@ namespace ApiInspector.Invoking.Invokers
                         return fail(exception);
                     }
                 });
-                var output = tryToInvokeAsEndOfDay();
-                if (output != null)
+                var eodOutput = tryToInvokeAsEndOfDay();
+                if (eodOutput != null)
                 {
-                    return output;
+                    return eodOutput;
                 }
             }
 
@@ -141,6 +136,7 @@ namespace ApiInspector.Invoking.Invokers
                 }
             }
 
+            // TRY BOA Authenticate
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
             {
                 tracer.Trace("Authentication is started. Because assembly name starts with BOA prefix.");
@@ -237,11 +233,12 @@ namespace ApiInspector.Invoking.Invokers
 
                 throw new InvalidOperationException("Unknown invocation type.");
             });
+
             try
             {
                 var stopwatch = Stopwatch.StartNew();
 
-                var response = invokeMethod();
+                var responseInvokeMethod = invokeMethod();
 
                 stopwatch.Stop();
 
@@ -249,7 +246,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 boaContext.Dispose();
 
-                return new InvokeOutput(null, response, serializer.SerializeToJsonDoNotIgnoreDefaultValues(response));
+                return new InvokeOutput(null, responseInvokeMethod, serializer.SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
             }
             catch (Exception exception)
             {
