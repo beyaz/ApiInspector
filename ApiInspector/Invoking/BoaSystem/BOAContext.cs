@@ -22,10 +22,9 @@ namespace ApiInspector.Invoking.BoaSystem
         #endregion
 
         #region Public Properties
+        public AuthenticationResponse authenticationResponse { get; private set; }
         public EnvironmentInfo EnvironmentInfo { get; }
         public bool IsBoaConfigurationFileLoaded { get; private set; }
-
-        public AuthenticationResponse authenticationResponse { get; private set; }
         #endregion
 
         #region Public Methods
@@ -51,14 +50,10 @@ namespace ApiInspector.Invoking.BoaSystem
     class BOAContext : IDisposable
     {
         #region Fields
-       
-
         /// <summary>
         ///     The tracer
         /// </summary>
         readonly ITracer tracer;
-
-        
 
         /// <summary>
         ///     The context
@@ -79,8 +74,8 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public BOAContext(ITracer tracer, EnvironmentInfo environmentInfo)
         {
-            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            data = new BOAContextData(environmentInfo);
+            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            data        = new BOAContextData(environmentInfo);
         }
         #endregion
 
@@ -173,19 +168,7 @@ namespace ApiInspector.Invoking.BoaSystem
         #endregion
 
         #region Methods
-        static BOAContextData LoadBOAConfigurationFile(BOAContextData data, Action<string> trace)
-        {
-            if (data.IsBoaConfigurationFileLoaded)
-            {
-                return data;
-            }
-
-            BoaConfigurationFile.Load(data.EnvironmentInfo.ToString, trace);
-
-            return data.MarkAsConfigurationFileLoaded();
-        }
-
-        static BOAContextData Authenticate(BOAContextData data, Action<string> trace,ChannelContract channelContract)
+        static BOAContextData Authenticate(BOAContextData data, Action<string> trace, ChannelContract channelContract)
         {
             if (data.authenticationResponse != null)
             {
@@ -212,8 +195,19 @@ namespace ApiInspector.Invoking.BoaSystem
 
             trace("Authenticate is success.");
 
-
             return data.WithAuthenticationResponse(response);
+        }
+
+        static BOAContextData LoadBOAConfigurationFile(BOAContextData data, Action<string> trace)
+        {
+            if (data.IsBoaConfigurationFileLoaded)
+            {
+                return data;
+            }
+
+            BoaConfigurationFile.Load(data.EnvironmentInfo.ToString, trace);
+
+            return data.MarkAsConfigurationFileLoaded();
         }
 
         /// <summary>
