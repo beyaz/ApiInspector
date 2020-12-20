@@ -62,6 +62,19 @@ namespace ApiInspector.Invoking.Invokers
 
             var trace = fun((string message) => { tracer.Trace(message); });
 
+            var isFailed = fun((Action action) =>
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception e)
+                {
+                    return fail(e);
+                }
+            });
+
+
             trace($"Started to search class: {invocationInfo.ClassName}");
 
             // INITIALIZE TargetType

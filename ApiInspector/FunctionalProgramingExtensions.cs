@@ -1,36 +1,155 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace FunctionalPrograming
 {
+    /// <summary>
+    ///     The extensions
+    /// </summary>
     public static class Extensions
     {
+        #region Public Methods
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<R> fun<R>(Func<R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, R> fun<T1, R>(Func<T1, R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, T2, R> fun<T1, T2, R>(Func<T1, T2, R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, T2, T3, R> fun<T1, T2, T3, R>(Func<T1, T2, T3, R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, T2, T3, T4, R> fun<T1, T2, T3, T4, R>(Func<T1, T2, T3, T4, R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, T2, T3, T4, T5, R> fun<T1, T2, T3, T4, T5, R>(Func<T1, T2, T3, T4, T5, R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, T2, T3, T4, T5, T6, R> fun<T1, T2, T3, T4, T5, T6, R>(Func<T1, T2, T3, T4, T5, T6, R> f) => f;
 
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Func<T1, T2, T3, T4, T5, T6, T7, R> fun<T1, T2, T3, T4, T5, T6, T7, R>(Func<T1, T2, T3, T4, T5, T6, T7, R> f) => f;
 
-
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
         [Pure]
         public static Action<T> fun<T>(Action<T> f) => f;
+        #endregion
+    }
+
+    /// <summary>
+    ///     The result
+    /// </summary>
+    [Serializable]
+    public sealed class Result
+    {
+        #region Public Properties
+        /// <summary>
+        ///     Gets the error message.
+        /// </summary>
+        public string ErrorMessage { get; set; }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Performs an implicit conversion from <see cref="Exception" /> to <see cref="Result" />.
+        /// </summary>
+        public static implicit operator Result(Exception exception)
+        {
+            return new Result
+            {
+                ErrorMessage = exception.ToString()
+            };
+        }
+
+        /// <summary>
+        ///     Performs an implicit conversion from <see cref="System.String" /> to <see cref="Result" />.
+        /// </summary>
+        public static implicit operator Result(string errorMessage)
+        {
+            return new Result
+            {
+                ErrorMessage = errorMessage
+            };
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The response
+    /// </summary>
+    [Serializable]
+    public sealed class Response<TValue>
+    {
+        #region Fields
+        /// <summary>
+        ///     The results
+        /// </summary>
+        readonly List<Result> results = new List<Result>();
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        ///     Gets a value indicating whether this instance is fail.
+        /// </summary>
+        public bool IsFail => results.Count > 0;
+
+        /// <summary>
+        ///     Gets the results.
+        /// </summary>
+        public IReadOnlyList<Result> Results => results;
+
+        /// <summary>
+        ///     Gets or sets the value.
+        /// </summary>
+        public TValue Value { get; set; }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Adds the error.
+        /// </summary>
+        public void AddError(string errorMessage)
+        {
+            results.Add(errorMessage);
+        }
+
+        /// <summary>
+        ///     Adds the error.
+        /// </summary>
+        public void AddError(Exception exception)
+        {
+            results.Add(exception);
+        }
+        #endregion
     }
 }
