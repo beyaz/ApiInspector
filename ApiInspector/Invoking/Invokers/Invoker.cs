@@ -133,31 +133,8 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Successes the specified response.
-        /// </summary>
-        static InvokeOutput Success(object response)
-        {
-            return new InvokeOutput(response);
-        }
-
-        /// <summary>
-        ///     Tries the invoke static method.
-        /// </summary>
-        static InvokeOutput TryInvokeStaticMethod(InvokerInput input)
-        {
-            var methodInfo           = input.MethodInfo;
-            var invocationParameters = input.InvocationParameters;
-
-            if (!methodInfo.IsStatic)
-            {
-                return null;
-            }
-
-            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
-
-            return Success(response);
-        }
+     
+        
 
         /// <summary>
         ///     Invokes the specified invocation information.
@@ -170,6 +147,8 @@ namespace ApiInspector.Invoking.Invokers
 
                 return new InvokeOutput(exception, exception, context.Serializer.SerializeToJson(exception));
             });
+
+            var Success = fun((object response) => new InvokeOutput(response));
 
             var trace = fun((string message) => { context.Tracer.Trace(message); });
 
@@ -279,22 +258,78 @@ namespace ApiInspector.Invoking.Invokers
 
                 var invokeMethod = fun(() =>
                 {
-                    var invokeOutput = TryInvokeStaticMethod(input);
-                    if (invokeOutput == null)
+
+                    var tryInvokeStaticMethod = fun(() =>
                     {
-                        invokeOutput = TryInvokeAsCardServiceMethod(context, input);
-                        if (invokeOutput == null)
+                        var methodInfo           = input.MethodInfo;
+                        var invocationParameters = input.InvocationParameters;
+
+                        if (!methodInfo.IsStatic)
                         {
-                            invokeOutput = TryInvokeNonStaticMethod(input);
-                            if (invokeOutput == null)
-                            {
-                                throw new InvalidOperationException("Unknown invocation type.");
-                            }
+                            return null;
                         }
+
+                        var responseStatInvoke = methodInfo.Invoke(null, invocationParameters.ToArray());
+
+                        return Success(responseStatInvoke);
+                    });
+
+                    var tryInvokeAsCardServiceMethod = fun(() =>
+                    {
+                        var targetType           = input.TargetType;
+                        var invocationParameters = input.InvocationParameters;
+                        var methodName           = context.InvocationInfo.MethodName;
+
+                        if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
+                        {
+                            return null;
+                        }
+
+                        var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
+
+                        var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, context.BoaContext);
+
+                        return Success(responseCardServiceInvoke);
+                    });
+
+                    var tryInvokeNonStaticMethod = fun(() =>
+                    {
+                        var targetType           = input.TargetType;
+                        var invocationParameters = input.InvocationParameters;
+                        var methodInfo           = input.MethodInfo;
+
+                        if (methodInfo.IsStatic)
+                        {
+                            return null;
+                        }
+
+                        var instance = InstanceCreator.Create(targetType, context.BoaContext);
+
+                        var responseNonStaticInvoke = methodInfo.Invoke(instance, invocationParameters.ToArray());
+
+                        return Success(responseNonStaticInvoke);
+                    });
+
+                    var invokeOutput = tryInvokeStaticMethod();
+                    if (invokeOutput != null)
+                    {
+                        return invokeOutput.ExecutionResponse;
                     }
 
-                    return invokeOutput.ExecutionResponse;
+                    invokeOutput = tryInvokeAsCardServiceMethod();
+                    if (invokeOutput != null)
+                    {
+                        return invokeOutput.ExecutionResponse;
+                    }
+
+                    invokeOutput = tryInvokeNonStaticMethod();
+                    if (invokeOutput != null)
+                    {
+                        return invokeOutput.ExecutionResponse;
+                    }
+                    throw new InvalidOperationException("Unknown invocation type.");
                 });
+
                 var response = invokeMethod();
 
                 stopwatch.Stop();
@@ -311,47 +346,7 @@ namespace ApiInspector.Invoking.Invokers
             }
         }
 
-        /// <summary>
-        ///     Tries the invoke as card service method.
-        /// </summary>
-        InvokeOutput TryInvokeAsCardServiceMethod(InvokerContext context, InvokerInput input)
-        {
-            var targetType           = input.TargetType;
-            var invocationParameters = input.InvocationParameters;
-            var methodName           = context.InvocationInfo.MethodName;
-
-            if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
-            {
-                return null;
-            }
-
-            var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
-
-            var response = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, boaContext);
-
-            return Success(response);
-        }
-
-        /// <summary>
-        ///     Tries the invoke non static method.
-        /// </summary>
-        InvokeOutput TryInvokeNonStaticMethod(InvokerInput input)
-        {
-            var targetType           = input.TargetType;
-            var invocationParameters = input.InvocationParameters;
-            var methodInfo           = input.MethodInfo;
-
-            if (methodInfo.IsStatic)
-            {
-                return null;
-            }
-
-            var instance = InstanceCreator.Create(targetType, boaContext);
-
-            var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
-
-            return Success(response);
-        }
+        
         #endregion
 
         /// <summary>
