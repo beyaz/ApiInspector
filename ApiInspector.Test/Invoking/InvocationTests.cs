@@ -3,6 +3,7 @@ using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.MainWindow;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using ApiInspector.TestData;
 using ApiInspector.Tracing;
 using FluentAssertions;
@@ -122,8 +123,7 @@ namespace ApiInspector.Invoking
             InvokeOutput output = null;
             using (var injector = new Injector(new TraceQueue(),EnvironmentInfo.Dev))
             {
-                var invoker = injector.Get<Invoker>();
-                output = invoker.Invoke(invocationInfo);
+                output = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<Serializer>(),injector.Get<ITracer>(),invocationInfo);
             }
 
             output.ExecutionResponse.Should().Be(expectedResponse);

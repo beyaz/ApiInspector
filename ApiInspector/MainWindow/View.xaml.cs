@@ -9,6 +9,7 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using static ApiInspector.Keys;
 using static ApiInspector.Utility;
@@ -148,9 +149,7 @@ namespace ApiInspector.MainWindow
 
             using (var injector = CreateNewInjector())
             {
-                var invoker = injector.Get<Invoker>();
-
-                invokerOutput = invoker.Invoke(invocationInfo);
+                invokerOutput = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<Serializer>(),injector.Get<ITracer>(),invocationInfo);
             }
 
             UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });

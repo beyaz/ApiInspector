@@ -17,44 +17,11 @@ using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.Invokers
 {
-
     /// <summary>
     ///     The invoker
     /// </summary>
-    class Invoker
+    static class Invoker
     {
-        #region Fields
-        /// <summary>
-        ///     The boa context
-        /// </summary>
-        readonly BOAContext boaContext;
-
-        /// <summary>
-        ///     The serializer
-        /// </summary>
-        readonly Serializer serializer;
-
-        /// <summary>
-        ///     The tracer
-        /// </summary>
-        readonly ITracer tracer;
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Invoker" /> class.
-        /// </summary>
-        public Invoker(ITracer tracer,
-                       Serializer serializer,
-                       BOAContext boaContext
-        )
-        {
-            this.tracer     = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            this.boaContext = boaContext ?? throw new ArgumentNullException(nameof(boaContext));
-        }
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Gets the type of the target.
@@ -82,17 +49,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public InvokeOutput Invoke(InvocationInfo invocationInfo)
-        {
-            return Invoke(boaContext, serializer, tracer, invocationInfo);
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Invokes the specified invocation information.
-        /// </summary>
-        InvokeOutput Invoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
+        public static InvokeOutput Invoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
         {
             var fail = fun((Exception exception) =>
             {
@@ -101,11 +58,9 @@ namespace ApiInspector.Invoking.Invokers
                 return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
             });
 
-            var Success = fun((object response) => new InvokeOutput(response));
+            var success = fun((object response) => new InvokeOutput(response));
 
             var trace = fun((string message) => { tracer.Trace(message); });
-
-            
 
             trace($"Started to search class: {invocationInfo.ClassName}");
 
@@ -216,7 +171,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var responseStatInvoke = methodInfo.Invoke(null, invocationParameters.ToArray());
 
-                    return Success(responseStatInvoke);
+                    return success(responseStatInvoke);
                 });
 
                 var tryInvokeAsCardServiceMethod = fun(() =>
@@ -232,7 +187,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, tracer.Trace, boaContext);
 
-                    return Success(responseCardServiceInvoke);
+                    return success(responseCardServiceInvoke);
                 });
 
                 var tryInvokeNonStaticMethod = fun(() =>
@@ -246,7 +201,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var responseNonStaticInvoke = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
-                    return Success(responseNonStaticInvoke);
+                    return success(responseNonStaticInvoke);
                 });
 
                 var invokeOutput = tryInvokeStaticMethod();
