@@ -58,10 +58,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         readonly ITracer tracer;
 
-        /// <summary>
-        ///     The authentication response
-        /// </summary>
-        AuthenticationResponse authenticationResponse;
+        
 
         /// <summary>
         ///     The context
@@ -109,7 +106,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
                 Authenticate();
 
-                context.ApplicationContext            = authenticationResponse.ApplicationContext;
+                context.ApplicationContext            = data.authenticationResponse.ApplicationContext;
                 context.EngineContext.MainBusinessKey = CreateNewBusinessKey();
 
                 return context;
@@ -123,32 +120,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Authenticate(ChannelContract channelContract)
         {
-            if (authenticationResponse != null)
-            {
-                return;
-            }
-
-            LoadBOAConfigurationFile();
-
-            var request = new AuthenticationRequest
-            {
-                AuthenticationContext = new AuthenticationContext
-                {
-                    Channel  = channelContract,
-                    UserName = EnvironmentVariables.GetUserName()
-                }
-            };
-            tracer.Trace("Authenticate response waiting...");
-
-            var response = new UserManager().Authenticate(request);
-            if (!response.Success)
-            {
-                throw new AuthenticationException("LoginFailed." + StringHelper.ResultToDetailedString(response.Results));
-            }
-
-            tracer.Trace("Authenticate is success.");
-
-            authenticationResponse = response;
+            data = Authenticate(data, tracer.Trace, channelContract);
         }
 
         /// <summary>
