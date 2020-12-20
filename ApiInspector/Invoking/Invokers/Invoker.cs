@@ -75,56 +75,57 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
         {
-            var success = fun((object r) => new InvokeOutput(r));
+            
 
             var trace = fun((string message) => { tracer.Trace(message); });
 
-            Type targetType = null;
-            // INITIALIZE TargetType
+            var findTargetType = fun(() =>
             {
                 trace($"Started to search class: {invocationInfo.ClassName}");
 
                 ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
 
-                targetType = GetTargetType(invocationInfo);
-            }
+                return GetTargetType(invocationInfo);
+            });
 
-            // TRY CALL AS EOD
+            var targetType = findTargetType();
+
+            var tryToInvokeAsEndOfDay = fun(() =>
             {
-                var tryToInvokeAsEndOfDay = fun(() =>
+                var methodName = invocationInfo.MethodName;
+
+                if (methodName != EndOfDay.MethodAccessText)
                 {
-                    var methodName = invocationInfo.MethodName;
-
-                    if (methodName != EndOfDay.MethodAccessText)
-                    {
-                        return null;
-                    }
-
-                    boaContext.Authenticate(ChannelContract.EOD);
-
-                    new EndOfDayInvoker().Invoke(targetType);
-
-                    return new InvokeOutput(null, null, null);
-                });
-                var eodOutput = tryToInvokeAsEndOfDay();
-                if (eodOutput != null)
-                {
-                    return eodOutput;
+                    return null;
                 }
+
+                boaContext.Authenticate(ChannelContract.EOD);
+
+                new EndOfDayInvoker().Invoke(targetType);
+
+                return new InvokeOutput(null, null, null);
+            });
+            var eodOutput = tryToInvokeAsEndOfDay();
+            if (eodOutput != null)
+            {
+                return eodOutput;
             }
 
             trace($"Started to search method: {invocationInfo.MethodName}");
 
-            // INITIALIZE METHOD INFO
-            MethodInfo methodInfo = null;
+            var findMethod = fun(() =>
             {
-                methodInfo = targetType.GetMethod(invocationInfo.MethodName, AllBindings);
+                var mi = targetType.GetMethod(invocationInfo.MethodName, AllBindings);
 
-                if (methodInfo == null)
+                if (mi == null)
                 {
                     throw new Exception("Method not found.");
                 }
-            }
+
+                return mi;
+            });
+
+            var methodInfo = findMethod();
 
             // TRY BOA Authenticate
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
@@ -136,18 +137,21 @@ namespace ApiInspector.Invoking.Invokers
 
             trace("Preparing invocation parameters");
 
-            // PREPARE PARAMETERS
-            IReadOnlyList<object> invocationParameters = null;
+            var prepareParameters = fun(() =>
             {
                 var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
-                invocationParameters = InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, tracer.Trace);
-            }
+                return InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, tracer.Trace);
+            });
+
+            var invocationParameters = prepareParameters();
 
             trace("Invoke started. Response waiting...");
 
             var invokeMethod = fun(() =>
             {
+                var success = fun((object r) => new InvokeOutput(r));
+
                 var tryInvokeStaticMethod = fun(() =>
                 {
                     if (!methodInfo.IsStatic)
