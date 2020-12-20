@@ -171,10 +171,7 @@ namespace ApiInspector.Invoking.Invokers
                 return new InvokeOutput(exception, exception, context.Serializer.SerializeToJson(exception));
             });
 
-            var trace = fun((string message) =>
-            {
-                context.Tracer.Trace(message);
-            });
+            var trace = fun((string message) => { context.Tracer.Trace(message); });
 
             var invocationInfo = context.InvocationInfo;
 
@@ -194,7 +191,29 @@ namespace ApiInspector.Invoking.Invokers
 
             // TRY CALL AS EOD
             {
-                var output = TryToInvokeAsEndOfDay(context, input,fail);
+                var tryToInvokeAsEndOfDay = fun(() =>
+                {
+                    var methodName = invocationInfo.MethodName;
+
+                    if (methodName != EndOfDay.MethodAccessText)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        context.BoaContext.Authenticate(ChannelContract.EOD);
+
+                        new EndOfDayInvoker().Invoke(input.TargetType);
+
+                        return new InvokeOutput(null, null, null);
+                    }
+                    catch (Exception exception)
+                    {
+                        return fail(exception);
+                    }
+                });
+                var output = tryToInvokeAsEndOfDay();
                 if (output != null)
                 {
                     return output;
@@ -258,7 +277,25 @@ namespace ApiInspector.Invoking.Invokers
             {
                 var stopwatch = Stopwatch.StartNew();
 
-                var response = InvokeMethod(context, input);
+                var invokeMethod = fun(() =>
+                {
+                    var invokeOutput = TryInvokeStaticMethod(input);
+                    if (invokeOutput == null)
+                    {
+                        invokeOutput = TryInvokeAsCardServiceMethod(context, input);
+                        if (invokeOutput == null)
+                        {
+                            invokeOutput = TryInvokeNonStaticMethod(input);
+                            if (invokeOutput == null)
+                            {
+                                throw new InvalidOperationException("Unknown invocation type.");
+                            }
+                        }
+                    }
+
+                    return invokeOutput.ExecutionResponse;
+                });
+                var response = invokeMethod();
 
                 stopwatch.Stop();
 
@@ -273,31 +310,6 @@ namespace ApiInspector.Invoking.Invokers
                 return fail(exception);
             }
         }
-
-        /// <summary>
-        ///     Invokes the method.
-        /// </summary>
-        object InvokeMethod(InvokerContext invokerContext, InvokerInput input)
-        {
-            var invokeOutput = TryInvokeStaticMethod(input);
-            if (invokeOutput == null)
-            {
-                invokeOutput = TryInvokeAsCardServiceMethod(invokerContext, input);
-                if (invokeOutput == null)
-                {
-                    invokeOutput = TryInvokeNonStaticMethod(input);
-                    if (invokeOutput == null)
-                    {
-                        throw new InvalidOperationException("Unknown invocation type.");
-                    }
-                }
-            }
-
-            var response = invokeOutput.ExecutionResponse;
-            return response;
-        }
-
-       
 
         /// <summary>
         ///     Tries the invoke as card service method.
@@ -339,34 +351,6 @@ namespace ApiInspector.Invoking.Invokers
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
             return Success(response);
-        }
-
-        /// <summary>
-        ///     Tries to invoke as end of day.
-        /// </summary>
-        InvokeOutput TryToInvokeAsEndOfDay(InvokerContext context, InvokerInput input,Func<Exception,InvokeOutput> fail)
-        {
-            var invocationInfo = context.InvocationInfo;
-
-            var methodName = invocationInfo.MethodName;
-
-            if (methodName != EndOfDay.MethodAccessText)
-            {
-                return null;
-            }
-
-            try
-            {
-                context.BoaContext.Authenticate(ChannelContract.EOD);
-
-                new EndOfDayInvoker().Invoke(input.TargetType);
-
-                return new InvokeOutput(null, null, null);
-            }
-            catch (Exception exception)
-            {
-                return fail(exception);
-            }
         }
         #endregion
 
