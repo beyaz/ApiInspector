@@ -69,10 +69,9 @@ namespace ApiInspector.Invoking.BoaSystem
     class BOAContext : IDisposable
     {
         #region Fields
-        /// <summary>
-        ///     The tracer
-        /// </summary>
-        readonly ITracer tracer;
+        
+
+        readonly Action<string> trace;
 
         BOAContextData data;
         #endregion
@@ -83,9 +82,18 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public BOAContext(ITracer tracer, EnvironmentInfo environmentInfo)
         {
-            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            data        = new BOAContextData(environmentInfo);
+            trace = tracer.Trace;
+
+            data = new BOAContextData(environmentInfo);
         }
+
+        public BOAContext(EnvironmentInfo environmentInfo,Action<string> trace)
+        {
+            data = new BOAContextData(environmentInfo);
+            
+            this.trace = trace;
+        }
+
         #endregion
 
         #region Properties
@@ -96,7 +104,7 @@ namespace ApiInspector.Invoking.BoaSystem
         {
             get
             {
-                data = GetOrCreateContext(data, tracer.Trace);
+                data = GetOrCreateContext(data, trace);
 
                 return data.context;
             }
@@ -109,7 +117,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Authenticate(ChannelContract channelContract)
         {
-            data = Authenticate(data, tracer.Trace, channelContract);
+            data = Authenticate(data, trace, channelContract);
         }
 
         /// <summary>
@@ -117,7 +125,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Authenticate()
         {
-            data = LoadBOAConfigurationFile(data, tracer.Trace);
+            data = LoadBOAConfigurationFile(data, trace);
 
             Authenticate(ConfigurationManager.ChannelSection.Channel.DefaultChannel);
         }
@@ -140,7 +148,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public ObjectHelper GetObjectHelper()
         {
-            data = GetOrCreateObjectHelper(data, tracer.Trace);
+            data = GetOrCreateObjectHelper(data, trace);
 
             return data.objectHelper;
         }

@@ -46,6 +46,11 @@ namespace ApiInspector.Invoking.Invokers
             return targetType;
         }
 
+        public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
