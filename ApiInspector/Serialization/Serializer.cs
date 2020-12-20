@@ -4,6 +4,31 @@ using Newtonsoft.Json;
 
 namespace ApiInspector.Serialization
 {
+
+    static class SerializeHelper
+    {
+        /// <summary>
+        ///     Serializes to json.
+        /// </summary>
+        public static string SerializeToJson(object value, bool ignoreDefaultValues)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var settings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
+                Formatting           = Formatting.Indented,
+                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
+                Converters           = new List<JsonConverter> {new DecimalConverter()}
+            };
+
+            return JsonConvert.SerializeObject(value, settings);
+        }
+    }
+
     /// <summary>
     ///     The serializer
     /// </summary>
@@ -50,7 +75,7 @@ namespace ApiInspector.Serialization
         /// </summary>
         public string SerializeToJson(object value)
         {
-            return SerializeToJson(value, true);
+            return SerializeHelper.SerializeToJson(value, true);
         }
 
         /// <summary>
@@ -58,7 +83,7 @@ namespace ApiInspector.Serialization
         /// </summary>
         public string SerializeToJsonDoNotIgnoreDefaultValues(object value)
         {
-            return SerializeToJson(value, false);
+            return SerializeHelper.SerializeToJson(value, false);
         }
 
         /// <summary>
@@ -84,26 +109,7 @@ namespace ApiInspector.Serialization
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Serializes to json.
-        /// </summary>
-        static string SerializeToJson(object value, bool ignoreDefaultValues)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
-                Converters           = new List<JsonConverter> {new DecimalConverter()}
-            };
-
-            return JsonConvert.SerializeObject(value, settings);
-        }
+        
         #endregion
     }
 }
