@@ -157,11 +157,12 @@ namespace ApiInspector.Invoking.Invokers
             trace($"Started to search class: {invocationInfo.ClassName}");
 
             // INITIALIZE TargetType
+            Type TargetType = null;
             try
             {
                 ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
 
-                input.TargetType = GetTargetType(invocationInfo);
+                TargetType = GetTargetType(invocationInfo);
             }
             catch (Exception e)
             {
@@ -183,7 +184,7 @@ namespace ApiInspector.Invoking.Invokers
                     {
                         context.BoaContext.Authenticate(ChannelContract.EOD);
 
-                        new EndOfDayInvoker().Invoke(input.TargetType);
+                        new EndOfDayInvoker().Invoke(TargetType);
 
                         return new InvokeOutput(null, null, null);
                     }
@@ -202,11 +203,12 @@ namespace ApiInspector.Invoking.Invokers
             trace($"Started to search method: {invocationInfo.MethodName}");
 
             // INITIALIZE METHOD INFO
+            MethodInfo methodInfo = null;
             {
-                MethodInfo methodInfo = null;
+                
                 try
                 {
-                    methodInfo = input.TargetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
+                    methodInfo = TargetType.GetMethod(context.InvocationInfo.MethodName, AllBindings);
                 }
                 catch (Exception e)
                 {
@@ -218,7 +220,6 @@ namespace ApiInspector.Invoking.Invokers
                     return fail(new Exception("Method not found."));
                 }
 
-                input.MethodInfo = methodInfo;
             }
 
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
@@ -237,12 +238,13 @@ namespace ApiInspector.Invoking.Invokers
             trace("Preparing invocation parameters");
 
             // PREPARE PARAMETERS
+            IReadOnlyList<object> invocationParameters = null;
             {
                 var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
 
                 try
                 {
-                    input.InvocationParameters = InvocationParameterPreparer.Prepare(parameters, input.MethodInfo, boaContext, tracer.Trace);
+                    invocationParameters = InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, tracer.Trace);
                 }
                 catch (Exception exception)
                 {
@@ -261,8 +263,6 @@ namespace ApiInspector.Invoking.Invokers
 
                     var tryInvokeStaticMethod = fun(() =>
                     {
-                        var methodInfo           = input.MethodInfo;
-                        var invocationParameters = input.InvocationParameters;
 
                         if (!methodInfo.IsStatic)
                         {
@@ -276,8 +276,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var tryInvokeAsCardServiceMethod = fun(() =>
                     {
-                        var targetType           = input.TargetType;
-                        var invocationParameters = input.InvocationParameters;
+                        var targetType           = TargetType;
                         var methodName           = context.InvocationInfo.MethodName;
 
                         if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
@@ -294,9 +293,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var tryInvokeNonStaticMethod = fun(() =>
                     {
-                        var targetType           = input.TargetType;
-                        var invocationParameters = input.InvocationParameters;
-                        var methodInfo           = input.MethodInfo;
+                        var targetType           = TargetType;
 
                         if (methodInfo.IsStatic)
                         {
@@ -358,17 +355,14 @@ namespace ApiInspector.Invoking.Invokers
             /// <summary>
             ///     Gets or sets the invocation parameters.
             /// </summary>
-            public IReadOnlyList<object> InvocationParameters { get; set; }
+            
 
-            /// <summary>
-            ///     Gets or sets the method information.
-            /// </summary>
-            public MethodInfo MethodInfo { get; set; }
+           
 
             /// <summary>
             ///     Gets or sets the type of the target.
             /// </summary>
-            public Type TargetType { get; set; }
+            
             #endregion
         }
     }
