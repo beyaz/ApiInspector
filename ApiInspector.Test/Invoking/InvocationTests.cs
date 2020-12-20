@@ -123,7 +123,7 @@ namespace ApiInspector.Invoking
             InvokeOutput output = null;
             using (var injector = new Injector(new TraceQueue(),EnvironmentInfo.Dev))
             {
-                output = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<Serializer>(),injector.Get<ITracer>(),invocationInfo);
+                output = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<ITracer>(),invocationInfo);
             }
 
             output.ExecutionResponse.Should().Be(expectedResponse);

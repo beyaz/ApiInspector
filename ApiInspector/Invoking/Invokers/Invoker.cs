@@ -7,11 +7,11 @@ using System.Reflection;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
-using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Types;
 using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
+using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.Extensions;
 
@@ -49,18 +49,18 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public static InvokeOutput Invoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
+        public static InvokeOutput Invoke(BOAContext boaContext, ITracer tracer, InvocationInfo invocationInfo)
         {
             var fail = fun((Exception exception) =>
             {
                 boaContext.Dispose();
 
-                return new InvokeOutput(exception, exception, serializer.SerializeToJson(exception));
+                return new InvokeOutput(exception, exception, SerializeToJson(exception));
             });
 
             try
             {
-                return UnsafeInvoke(boaContext, serializer, tracer, invocationInfo);
+                return UnsafeInvoke(boaContext, tracer, invocationInfo);
             }
             catch (Exception exception)
             {
@@ -73,7 +73,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Serializer serializer, ITracer tracer, InvocationInfo invocationInfo)
+        static InvokeOutput UnsafeInvoke(BOAContext boaContext, ITracer tracer, InvocationInfo invocationInfo)
         {
             
 
@@ -225,7 +225,7 @@ namespace ApiInspector.Invoking.Invokers
 
             boaContext.Dispose();
 
-            return new InvokeOutput(null, responseInvokeMethod, serializer.SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
+            return new InvokeOutput(null, responseInvokeMethod, SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
         }
         #endregion
     }

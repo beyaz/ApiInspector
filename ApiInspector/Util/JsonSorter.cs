@@ -65,7 +65,7 @@ namespace ApiInspector.Util
                 }
             }
 
-            var sortedJson = serializer.SerializeToJsonDoNotIgnoreDefaultValues(instance);
+            var sortedJson = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(instance);
 
             Utility.WriteToFile(jsonFilePath + ".Formatted.json", sortedJson);
         }

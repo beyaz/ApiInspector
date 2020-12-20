@@ -149,7 +149,7 @@ namespace ApiInspector.MainWindow
 
             using (var injector = CreateNewInjector())
             {
-                invokerOutput = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<Serializer>(),injector.Get<ITracer>(),invocationInfo);
+                invokerOutput = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<ITracer>(),invocationInfo);
             }
 
             UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });

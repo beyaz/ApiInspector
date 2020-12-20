@@ -116,7 +116,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
-                    parameterInfo.Value = serializer.SerializeToJson(parameterInfo.Value);
+                    parameterInfo.Value = Serializer.SerializeToJson(parameterInfo.Value);
                 }
 
                 if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
@@ -124,7 +124,7 @@ namespace ApiInspector.InvocationInfoEditor
                     var parameterType = FindType(definition.ParameterType.FullName);
                     if (parameterType != null)
                     {
-                        parameterInfo.Value = serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
+                        parameterInfo.Value = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
                     }
                 }
 

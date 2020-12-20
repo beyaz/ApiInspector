@@ -4,37 +4,28 @@ using Newtonsoft.Json;
 
 namespace ApiInspector.Serialization
 {
-
-    static class SerializeHelper
-    {
-        /// <summary>
-        ///     Serializes to json.
-        /// </summary>
-        public static string SerializeToJson(object value, bool ignoreDefaultValues)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
-                Converters           = new List<JsonConverter> {new DecimalConverter()}
-            };
-
-            return JsonConvert.SerializeObject(value, settings);
-        }
-    }
-
     /// <summary>
     ///     The serializer
     /// </summary>
     class Serializer
     {
         #region Public Methods
+        /// <summary>
+        ///     Serializes to json.
+        /// </summary>
+        public static string SerializeToJson(object value)
+        {
+            return SerializeToJson(value, true);
+        }
+
+        /// <summary>
+        ///     Serializes to json do not ignore default values.
+        /// </summary>
+        public static string SerializeToJsonDoNotIgnoreDefaultValues(object value)
+        {
+            return SerializeToJson(value, false);
+        }
+
         /// <summary>
         ///     Clones the specified source.
         /// </summary>
@@ -71,22 +62,6 @@ namespace ApiInspector.Serialization
         }
 
         /// <summary>
-        ///     Serializes to json.
-        /// </summary>
-        public string SerializeToJson(object value)
-        {
-            return SerializeHelper.SerializeToJson(value, true);
-        }
-
-        /// <summary>
-        ///     Serializes to json do not ignore default values.
-        /// </summary>
-        public string SerializeToJsonDoNotIgnoreDefaultValues(object value)
-        {
-            return SerializeHelper.SerializeToJson(value, false);
-        }
-
-        /// <summary>
         ///     Serializes to json ignore default values handle object type names.
         /// </summary>
         public string SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(object value)
@@ -109,7 +84,26 @@ namespace ApiInspector.Serialization
         #endregion
 
         #region Methods
-        
+        /// <summary>
+        ///     Serializes to json.
+        /// </summary>
+        static string SerializeToJson(object value, bool ignoreDefaultValues)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var settings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
+                Formatting           = Formatting.Indented,
+                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
+                Converters           = new List<JsonConverter> {new DecimalConverter()}
+            };
+
+            return JsonConvert.SerializeObject(value, settings);
+        }
         #endregion
     }
 }
