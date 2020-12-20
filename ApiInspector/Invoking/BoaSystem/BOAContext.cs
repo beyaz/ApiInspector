@@ -12,14 +12,36 @@ using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
 {
+    class BOAContextData
+    {
+        #region Constructors
+        public BOAContextData(EnvironmentInfo environmentInfo)
+        {
+            EnvironmentInfo = environmentInfo;
+        }
+        #endregion
+
+        #region Public Properties
+        public EnvironmentInfo EnvironmentInfo { get; }
+        public bool IsBoaConfigurationFileLoaded { get; private set; }
+        #endregion
+
+        #region Public Methods
+        public BOAContextData MarkAsConfigurationFileLoaded()
+        {
+            IsBoaConfigurationFileLoaded = true;
+
+            return this;
+        }
+        #endregion
+    }
+
     /// <summary>
     ///     The boa context
     /// </summary>
     class BOAContext : IDisposable
     {
         #region Fields
-      
-
         readonly EnvironmentInfo environmentInfo;
 
         /// <summary>
@@ -37,6 +59,8 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         ExecutionDataContext context;
 
+        BOAContextData data;
+
         /// <summary>
         ///     The object helper
         /// </summary>
@@ -47,27 +71,14 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(ITracer tracer,EnvironmentInfo environmentInfo)
+        public BOAContext(ITracer tracer, EnvironmentInfo environmentInfo)
         {
-            this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
-            this.environmentInfo      = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+            this.tracer          = tracer ?? throw new ArgumentNullException(nameof(tracer));
+            this.environmentInfo = environmentInfo ?? throw new ArgumentNullException(nameof(environmentInfo));
+
+            data = new BOAContextData(environmentInfo);
         }
-
-
         #endregion
-
-        bool isBoaConfigurationFileLoaded;
-        void LoadBOAConfigurationFile()
-        {
-            if (isBoaConfigurationFileLoaded)
-            {
-                return;
-            }
-
-            BoaConfigurationFile.Load(environmentInfo.ToString,tracer.Trace);
-
-            isBoaConfigurationFileLoaded = true;
-        }
 
         #region Properties
         /// <summary>
@@ -112,7 +123,6 @@ namespace ApiInspector.Invoking.BoaSystem
 
             LoadBOAConfigurationFile();
 
-            
             var request = new AuthenticationRequest
             {
                 AuthenticationContext = new AuthenticationContext
@@ -176,7 +186,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             if (EnvironmentVariables.UseLocalProxyForCardServices())
             {
-                CardService.UseLocalProxy = true;    
+                CardService.UseLocalProxy = true;
             }
 
             return objectHelper;
@@ -184,6 +194,18 @@ namespace ApiInspector.Invoking.BoaSystem
         #endregion
 
         #region Methods
+        static BOAContextData LoadBOAConfigurationFile(BOAContextData data, Action<string> trace)
+        {
+            if (data.IsBoaConfigurationFileLoaded)
+            {
+                return data;
+            }
+
+            BoaConfigurationFile.Load(data.EnvironmentInfo.ToString, trace);
+
+            return data.MarkAsConfigurationFileLoaded();
+        }
+
         /// <summary>
         ///     Creates the new business key.
         /// </summary>
@@ -194,6 +216,11 @@ namespace ApiInspector.Invoking.BoaSystem
             return new BusinessKey(Context)
                    .CreateBusinessKey(ResourceCode, Context.ApplicationContext.User.BranchId, DateTime.Now.Date)
                    .Value;
+        }
+
+        void LoadBOAConfigurationFile()
+        {
+            data = LoadBOAConfigurationFile(data, tracer.Trace);
         }
         #endregion
     }
