@@ -1,12 +1,9 @@
 ﻿using System;
 using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
-using ApiInspector.MainWindow;
-using ApiInspector.Tracing;
 using BOA.Common.Types;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ninject;
 
 namespace ApiInspector.Invoking
 {
@@ -27,12 +24,15 @@ namespace ApiInspector.Invoking
         #endregion
 
         #region Methods
+        static BOAContext CreateBOAContext(EnvironmentInfo environmentInfo)
+        {
+            return new BOAContext(environmentInfo, Console.WriteLine);
+        }
+
         void CallDev()
         {
-            using (var injector = new Injector(new TraceQueue(), EnvironmentInfo.Dev))
+            using (var boaContext = CreateBOAContext(EnvironmentInfo.Dev))
             {
-                var boaContext = injector.Get<BOAContext>();
-
                 boaContext.Context.DBLayer.GetDBCommand(Databases.Boa, string.Empty);
 
                 boaContext.Context.DBLayer.ConnectionList[0].Value.ConnectionString.IndexOf(@"srvdev\atlas", StringComparison.OrdinalIgnoreCase).Should().BeGreaterThan(0);
@@ -41,10 +41,8 @@ namespace ApiInspector.Invoking
 
         void CallTest()
         {
-            using (var injector = new Injector(new TraceQueue(), EnvironmentInfo.Test))
+            using (var boaContext = CreateBOAContext(EnvironmentInfo.Test))
             {
-                var boaContext = injector.Get<BOAContext>();
-
                 boaContext.Context.DBLayer.GetDBCommand(Databases.Boa, string.Empty);
 
                 boaContext.Context.DBLayer.ConnectionList[0].Value.ConnectionString.IndexOf(@"srvtest\atlas", StringComparison.OrdinalIgnoreCase).Should().BeGreaterThan(0);

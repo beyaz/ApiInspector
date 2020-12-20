@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Application;
-using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 using static ApiInspector.Keys;
 using static ApiInspector.Utility;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -82,13 +82,7 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Creates the new injector.
-        /// </summary>
-        Injector CreateNewInjector()
-        {
-            return new Injector(traceQueue, EnvironmentInfo.Parse(InvocationInfo.Environment));
-        }
+        
 
         /// <summary>
         ///     Initializes the global font style.
@@ -144,13 +138,12 @@ namespace ApiInspector.MainWindow
 
             Trace("------------- EXECUTE STARTED -----------------");
 
-            InvokeOutput invokerOutput = null;
+            var environmentInfo = EnvironmentInfo.Parse(InvocationInfo.Environment); 
 
-            using (var injector = CreateNewInjector())
-            {
-                invokerOutput = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<ITracer>(),invocationInfo);
-            }
-
+            var trace           = fun((string message) => { traceQueue.Trace(message); });
+            
+            var invokerOutput   = Invoker.Invoke(environmentInfo, trace,invocationInfo);
+            
             UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
 
             if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))

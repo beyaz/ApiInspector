@@ -137,10 +137,12 @@ namespace ApiInspector.Invoking.BoaSystem
         {
             if (data.objectHelper == null)
             {
+                new BoaDirectInvokeDisposer().Dispose();
                 return;
             }
 
             data.objectHelper.Context.DBLayer.CommitTransaction();
+            new BoaDirectInvokeDisposer().Dispose();
         }
 
         /// <summary>

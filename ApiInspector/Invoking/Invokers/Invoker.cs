@@ -7,7 +7,6 @@ using System.Reflection;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
-using ApiInspector.Tracing;
 using BOA.Common.Types;
 using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
@@ -48,13 +47,16 @@ namespace ApiInspector.Invoking.Invokers
 
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo)
         {
-            throw new NotImplementedException();
+            using (var boaContext = new BOAContext(environmentInfo,trace))
+            {
+                return Invoke(boaContext, trace, invocationInfo);
+            }
         }
 
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public static InvokeOutput Invoke(BOAContext boaContext, ITracer tracer, InvocationInfo invocationInfo)
+        public static InvokeOutput Invoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo)
         {
             var fail = fun((Exception exception) =>
             {
@@ -65,7 +67,7 @@ namespace ApiInspector.Invoking.Invokers
 
             try
             {
-                return UnsafeInvoke(boaContext, tracer, invocationInfo);
+                return UnsafeInvoke(boaContext, trace, invocationInfo);
             }
             catch (Exception exception)
             {
@@ -78,9 +80,9 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        static InvokeOutput UnsafeInvoke(BOAContext boaContext, ITracer tracer, InvocationInfo invocationInfo)
+        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo)
         {
-            var trace = fun((string message) => { tracer.Trace(message); });
+            
             
 
             var findTargetType = fun(() =>

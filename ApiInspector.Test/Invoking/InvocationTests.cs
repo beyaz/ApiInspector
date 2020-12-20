@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.MainWindow;
@@ -120,11 +121,7 @@ namespace ApiInspector.Invoking
         {
             invocationInfo.AssemblySearchDirectory = string.Empty;
 
-            InvokeOutput output = null;
-            using (var injector = new Injector(new TraceQueue(),EnvironmentInfo.Dev))
-            {
-                output = Invoker.Invoke(injector.Get<BOAContext>(),injector.Get<ITracer>(),invocationInfo);
-            }
+            var output =  Invoker.Invoke(EnvironmentInfo.Dev,Console.WriteLine,invocationInfo);
 
             output.ExecutionResponse.Should().Be(expectedResponse);
         }

@@ -103,7 +103,6 @@
     <Compile Include="Invoking\Invokers\CardServiceMethodInvokerInput.cs" />
     <Compile Include="Invoking\Invokers\EODTestHelper.cs" />
     <Compile Include="Invoking\Invokers\InvocationParameterPreparer.cs" />
-    <Compile Include="MainWindow\Injector.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="Tracing\ErrorMonitor.cs" />
     <Compile Include="Components\IntellisenseTextBox.cs" />
