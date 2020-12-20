@@ -63,7 +63,16 @@ namespace FunctionalPrograming
         /// </summary>
         [Pure]
         public static Action<T> fun<T>(Action<T> f) => f;
+
+        /// <summary>
+        ///     Funs the specified f.
+        /// </summary>
+        [Pure]
+        public static Action fun(Action f) => f;
         #endregion
+
+
+        
     }
 
     /// <summary>

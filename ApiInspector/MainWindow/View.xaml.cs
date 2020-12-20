@@ -223,11 +223,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void UpdateTitle()
         {
-            using (var injector = new Injector(traceQueue, EnvironmentInfo.Dev))
-            {
-                var userName = injector.Get<EnvironmentVariable>().GetUserName();
-                Title = "ApiInspector - " + userName;
-            }
+            Title = "ApiInspector - " + EnvironmentVariables.GetUserName();
         }
 
         /// <summary>

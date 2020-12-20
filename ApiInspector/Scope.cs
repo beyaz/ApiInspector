@@ -20,7 +20,7 @@ namespace ApiInspector
         public Scope()
         {
             SetupGet(DbConnection, context => ConnectionInfo.GetDbConnection());
-            SetupGet(UserName, context => EnvironmentVariable.GetUserName(null));
+            SetupGet(UserName, context => EnvironmentVariables.GetUserName());
             SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
             SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => HistoryPanelDatabaseRepository.Remove(this));
             SubscribeEvent(HistoryEvent.SaveToHistory, () => HistoryPanelDatabaseRepository.SaveToHistory(this));

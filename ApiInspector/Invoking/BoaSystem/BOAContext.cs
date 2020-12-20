@@ -8,7 +8,6 @@ using BOA.Common.Configuration;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card.Internal;
-using static ApiInspector.Invoking.BoaSystem.EnvironmentVariable;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -24,10 +23,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         readonly BoaConfigurationFile boaConfigurationFile;
 
-        /// <summary>
-        ///     The environment variable
-        /// </summary>
-        readonly EnvironmentVariable environmentVariable;
+        
 
         /// <summary>
         ///     The tracer
@@ -54,11 +50,10 @@ namespace ApiInspector.Invoking.BoaSystem
         /// <summary>
         ///     Initializes a new instance of the <see cref="BOAContext" /> class.
         /// </summary>
-        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile, EnvironmentVariable environmentVariable)
+        public BOAContext(ITracer tracer, BoaConfigurationFile boaConfigurationFile)
         {
             this.tracer               = tracer ?? throw new ArgumentNullException(nameof(tracer));
             this.boaConfigurationFile = boaConfigurationFile ?? throw new ArgumentNullException(nameof(boaConfigurationFile));
-            this.environmentVariable  = environmentVariable ?? throw new ArgumentNullException(nameof(environmentVariable));
         }
         #endregion
 
@@ -105,12 +100,13 @@ namespace ApiInspector.Invoking.BoaSystem
 
             boaConfigurationFile.Load();
 
+            
             var request = new AuthenticationRequest
             {
                 AuthenticationContext = new AuthenticationContext
                 {
                     Channel  = channelContract,
-                    UserName = environmentVariable.GetUserName()
+                    UserName = EnvironmentVariables.GetUserName()
                 }
             };
             tracer.Trace("Authenticate response waiting...");
@@ -166,7 +162,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             objectHelper.Context.DBLayer.BeginTransaction();
 
-            if (UseLocalProxyForCardServices)
+            if (EnvironmentVariables.UseLocalProxyForCardServices())
             {
                 CardService.UseLocalProxy = true;    
             }

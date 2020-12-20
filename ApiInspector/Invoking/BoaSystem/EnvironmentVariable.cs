@@ -1,128 +1,67 @@
 ﻿using System;
 using System.IO;
-using ApiInspector.Tracing;
-using BOA.Common.Helpers;
 using static System.IO.File;
 using static System.String;
 using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
+using static BOA.Common.Helpers.SerializeHelper;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.BoaSystem
 {
-    /// <summary>
-    ///     The environment variable
-    /// </summary>
-    class EnvironmentVariable
+    static class EnvironmentVariables
     {
-        #region Fields
-        /// <summary>
-        ///     The tracer
-        /// </summary>
-        readonly TraceQueue tracer;
-
-        /// <summary>
-        ///     The user name
-        /// </summary>
-        string userName;
+        #region Static Fields
+        public static readonly Func<string> GetUserName;
+        public static readonly Func<bool> UseLocalProxyForCardServices;
         #endregion
 
         #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="EnvironmentVariable" /> class.
-        /// </summary>
-        public EnvironmentVariable(TraceQueue tracer)
+        static EnvironmentVariables()
         {
-            this.tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
-        }
-        #endregion
+            var outputFilePath = Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
 
-        #region Public Properties
-        /// <summary>
-        ///     Gets a value indicating whether [use local proxy].
-        /// </summary>
-        public static bool UseLocalProxyForCardServices
-        {
-            get
+            var createOutputFile = fun(() =>
             {
-                EnsureOutputFileExists();
-                return ReadModelFromFile().UseLocalProxyForCardServices;
-            }
-        }
-        #endregion
+                var environmentVariableFileModel = new EnvironmentVariableFileModel
+                {
+                    UserName                     = Environment.UserName,
+                    UseLocalProxyForCardServices = true
+                };
 
-        #region Properties
-        /// <summary>
-        ///     Gets the output file path.
-        /// </summary>
-        static string OutputFilePath => Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
-        #endregion
+                var fileContent = SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
-        #region Public Methods
-        /// <summary>
-        ///     Gets the name of the user.
-        /// </summary>
-        public string GetUserName()
-        {
-            userName = GetUserName(userName);
+                WriteToFile(outputFilePath, fileContent);
+            });
 
-            tracer.Trace($"UserName:{userName}");
+            var ensureOutputFileExists = fun(() => { IfFileNotExistsThen(outputFilePath, createOutputFile); });
 
-            return userName;
-        }
-        #endregion
+            var readModelFromFile = fun(() => JsonToObject<EnvironmentVariableFileModel>(ReadAllText(outputFilePath)));
 
-        #region Methods
-        /// <summary>
-        ///     Creates the output file.
-        /// </summary>
-        static void CreateOutputFile()
-        {
-            var environmentVariableFileModel = new EnvironmentVariableFileModel
+            var useLocalProxyForCardServices = fun(() =>
             {
-                UserName                     = Environment.UserName,
-                UseLocalProxyForCardServices = true
-            };
+                ensureOutputFileExists();
+                return readModelFromFile().UseLocalProxyForCardServices;
+            });
 
-
-            var fileContent = SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
-
-            WriteToFile(OutputFilePath, fileContent);
-        }
-
-        /// <summary>
-        ///     Gets the name of the user.
-        /// </summary>
-        public static string GetUserName(string userName)
-        {
-            if (userName != null)
+            var getUserName = fun(() =>
             {
-                return userName;
-            }
+                ensureOutputFileExists();
 
-            EnsureOutputFileExists();
+                var model = readModelFromFile();
 
-            var model = ReadModelFromFile();
+                if (IsNullOrWhiteSpace(model.UserName))
+                {
+                    return Environment.UserName;
+                }
 
-            if (IsNullOrWhiteSpace(model.UserName))
-            {
-                return Environment.UserName;
-            }
+                return model.UserName.Trim();
+            });
 
-            return model.UserName.Trim();
-        }
+            GetUserName = getUserName;
 
-        static void EnsureOutputFileExists()
-        {
-            IfFileNotExistsThen(OutputFilePath, CreateOutputFile);
-        }
-
-        /// <summary>
-        ///     Reads the model from file.
-        /// </summary>
-        static EnvironmentVariableFileModel ReadModelFromFile()
-        {
-            return SerializeHelper.JsonToObject<EnvironmentVariableFileModel>(ReadAllText(OutputFilePath));
+            UseLocalProxyForCardServices = useLocalProxyForCardServices;
         }
         #endregion
     }
