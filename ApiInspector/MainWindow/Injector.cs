@@ -15,7 +15,6 @@ namespace ApiInspector.MainWindow
 
             Bind<BOAContext>().ToSelf().InSingletonScope();
 
-            Bind<BoaConfigurationFile>().ToSelf().InSingletonScope();
 
         }
         #endregion

@@ -8,6 +8,7 @@ using BOA.Common.Configuration;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card.Internal;
+using FunctionalPrograming;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -23,8 +24,12 @@ namespace ApiInspector.Invoking.BoaSystem
 
         #region Public Properties
         public AuthenticationResponse authenticationResponse { get; private set; }
+
+        public ExecutionDataContext context { get; private set; }
         public EnvironmentInfo EnvironmentInfo { get; }
         public bool IsBoaConfigurationFileLoaded { get; private set; }
+
+        public ObjectHelper objectHelper { get; private set; }
         #endregion
 
         #region Public Methods
@@ -38,6 +43,20 @@ namespace ApiInspector.Invoking.BoaSystem
         public BOAContextData WithAuthenticationResponse(AuthenticationResponse authenticationResponse)
         {
             this.authenticationResponse = authenticationResponse;
+
+            return this;
+        }
+
+        public BOAContextData WithExecutionDataContext(ExecutionDataContext context)
+        {
+            this.context = context;
+
+            return this;
+        }
+
+        public BOAContextData WithObjectHelper(ObjectHelper objectHelper)
+        {
+            this.objectHelper = objectHelper;
 
             return this;
         }
@@ -55,17 +74,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         readonly ITracer tracer;
 
-        /// <summary>
-        ///     The context
-        /// </summary>
-        ExecutionDataContext context;
-
         BOAContextData data;
-
-        /// <summary>
-        ///     The object helper
-        /// </summary>
-        ObjectHelper objectHelper;
         #endregion
 
         #region Constructors
@@ -87,24 +96,9 @@ namespace ApiInspector.Invoking.BoaSystem
         {
             get
             {
-                if (context != null)
-                {
-                    return context;
-                }
+                data = GetOrCreateContext(data, tracer.Trace);
 
-                LoadBOAConfigurationFile();
-
-                context = new ExecutionDataContext
-                {
-                    EngineContext = new EngineContext()
-                };
-
-                Authenticate();
-
-                context.ApplicationContext            = data.authenticationResponse.ApplicationContext;
-                context.EngineContext.MainBusinessKey = CreateNewBusinessKey();
-
-                return context;
+                return data.context;
             }
         }
         #endregion
@@ -123,7 +117,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Authenticate()
         {
-            LoadBOAConfigurationFile();
+            data = LoadBOAConfigurationFile(data, tracer.Trace);
 
             Authenticate(ConfigurationManager.ChannelSection.Channel.DefaultChannel);
         }
@@ -133,12 +127,12 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Dispose()
         {
-            if (objectHelper == null)
+            if (data.objectHelper == null)
             {
                 return;
             }
 
-            objectHelper.Context.DBLayer.CommitTransaction();
+            data.objectHelper.Context.DBLayer.CommitTransaction();
         }
 
         /// <summary>
@@ -146,24 +140,9 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public ObjectHelper GetObjectHelper()
         {
-            if (objectHelper != null)
-            {
-                return objectHelper;
-            }
+            data = GetOrCreateObjectHelper(data, tracer.Trace);
 
-            objectHelper = new ObjectHelper
-            {
-                Context = Context
-            };
-
-            objectHelper.Context.DBLayer.BeginTransaction();
-
-            if (EnvironmentVariables.UseLocalProxyForCardServices())
-            {
-                CardService.UseLocalProxy = true;
-            }
-
-            return objectHelper;
+            return data.objectHelper;
         }
         #endregion
 
@@ -198,6 +177,62 @@ namespace ApiInspector.Invoking.BoaSystem
             return data.WithAuthenticationResponse(response);
         }
 
+        static BOAContextData GetOrCreateContext(BOAContextData data, Action<string> trace)
+        {
+            if (data.context != null)
+            {
+                return data;
+            }
+
+            data = LoadBOAConfigurationFile(data, trace);
+
+            var context = new ExecutionDataContext
+            {
+                EngineContext = new EngineContext()
+            };
+
+            data = LoadBOAConfigurationFile(data, trace);
+
+            data = Authenticate(data, trace, ConfigurationManager.ChannelSection.Channel.DefaultChannel);
+
+            context.ApplicationContext = data.authenticationResponse.ApplicationContext;
+
+            var createNewBusinessKey = Extensions.fun(() =>
+            {
+                const string ResourceCode = "ODSTATMTCP";
+
+                return new BusinessKey(context).CreateBusinessKey(ResourceCode, context.ApplicationContext.User.BranchId, DateTime.Now.Date).Value;
+            });
+
+            context.EngineContext.MainBusinessKey = createNewBusinessKey();
+
+            return data.WithExecutionDataContext(context);
+        }
+
+        static BOAContextData GetOrCreateObjectHelper(BOAContextData data, Action<string> trace)
+        {
+            if (data.objectHelper != null)
+            {
+                return data;
+            }
+
+            data = GetOrCreateContext(data, trace);
+
+            var objectHelper = new ObjectHelper
+            {
+                Context = data.context
+            };
+
+            objectHelper.Context.DBLayer.BeginTransaction();
+
+            if (EnvironmentVariables.UseLocalProxyForCardServices())
+            {
+                CardService.UseLocalProxy = true;
+            }
+
+            return data.WithObjectHelper(objectHelper);
+        }
+
         static BOAContextData LoadBOAConfigurationFile(BOAContextData data, Action<string> trace)
         {
             if (data.IsBoaConfigurationFileLoaded)
@@ -210,22 +245,7 @@ namespace ApiInspector.Invoking.BoaSystem
             return data.MarkAsConfigurationFileLoaded();
         }
 
-        /// <summary>
-        ///     Creates the new business key.
-        /// </summary>
-        decimal CreateNewBusinessKey()
-        {
-            const string ResourceCode = "ODSTATMTCP";
-
-            return new BusinessKey(Context)
-                   .CreateBusinessKey(ResourceCode, Context.ApplicationContext.User.BranchId, DateTime.Now.Date)
-                   .Value;
-        }
-
-        void LoadBOAConfigurationFile()
-        {
-            data = LoadBOAConfigurationFile(data, tracer.Trace);
-        }
+        
         #endregion
     }
 }
