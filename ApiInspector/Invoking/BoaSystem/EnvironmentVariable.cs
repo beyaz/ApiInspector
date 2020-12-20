@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using ApiInspector.Serialization;
 using ApiInspector.Tracing;
 using BOA.Common.Helpers;
 using static System.IO.File;
 using static System.String;
 using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
+using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -85,7 +85,7 @@ namespace ApiInspector.Invoking.BoaSystem
             };
 
 
-            var fileContent = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
+            var fileContent = SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
             WriteToFile(OutputFilePath, fileContent);
         }
