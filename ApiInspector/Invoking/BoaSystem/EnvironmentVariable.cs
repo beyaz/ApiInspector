@@ -84,7 +84,6 @@ namespace ApiInspector.Invoking.BoaSystem
                 UseLocalProxyForCardServices = true
             };
 
-            var serializer = new Serializer();
 
             var fileContent = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
