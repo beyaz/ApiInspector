@@ -28,5 +28,9 @@ namespace FunctionalPrograming
 
         [Pure]
         public static Func<T1, T2, T3, T4, T5, T6, T7, R> fun<T1, T2, T3, T4, T5, T6, T7, R>(Func<T1, T2, T3, T4, T5, T6, T7, R> f) => f;
+
+
+        [Pure]
+        public static Action<T> fun<T>(Action<T> f) => f;
     }
 }
