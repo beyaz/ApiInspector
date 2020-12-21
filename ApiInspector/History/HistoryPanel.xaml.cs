@@ -51,10 +51,7 @@ namespace ApiInspector.History
 
                 var trySelectFirstItem = fun(() => { historyListBox.SelectedItem = getItems().FirstOrDefault(); });
 
-                var reAssignCollectionFilter = fun(() =>
-                {
-                    ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = HistoryFilter;
-                });
+                var reAssignCollectionFilter = fun(() => { ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = HistoryFilter; });
 
                 initializeItemsSource();
                 trySelectFirstItem();
@@ -68,7 +65,6 @@ namespace ApiInspector.History
         public void Refresh()
         {
             InitializeHistoryPanel();
-            
         }
         #endregion
 
@@ -144,13 +140,13 @@ namespace ApiInspector.History
         /// </summary>
         void InitializeHistoryPanel()
         {
-           Dispatcher.InvokeAsync(() =>
+            Dispatcher.InvokeAsync(() =>
             {
                 Trace("History is loading...");
 
                 var shouldContainsMinimumOneItem = fun((IReadOnlyList<InvocationInfo> items) =>
                 {
-                    if (items.Count>0)
+                    if (items.Count > 0)
                     {
                         return items;
                     }
@@ -168,18 +164,12 @@ namespace ApiInspector.History
 
                     return new List<InvocationInfo>();
                 });
-                scope.Update(HistoryItems, shouldContainsMinimumOneItem(getItems()));
 
+                scope.Update(HistoryItems, shouldContainsMinimumOneItem(getItems()));
 
                 Trace("History is loaded.");
             });
-            
         }
-
-        
-
-       
-        
         #endregion
     }
 }
