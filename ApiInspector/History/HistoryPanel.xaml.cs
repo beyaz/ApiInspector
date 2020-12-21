@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using ApiInspector.Application;
 using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
@@ -51,6 +52,7 @@ namespace ApiInspector.History
         public void Refresh()
         {
             InitializeHistoryPanel();
+            
         }
         #endregion
 
@@ -126,11 +128,15 @@ namespace ApiInspector.History
         /// </summary>
         void InitializeHistoryPanel()
         {
-            Trace("History is loading...");
+           Dispatcher.InvokeAsync(() =>
+            {
+                Trace("History is loading...");
 
-            scope.Update(HistoryItems, TryRun(() => GetHistory(scope)) ?? new List<InvocationInfo>());
+                scope.Update(HistoryItems, TryRun(() => GetHistory(scope)) ?? new List<InvocationInfo>());
 
-            Trace("History is loaded.");
+                Trace("History is loaded.");
+            });
+            
         }
 
         /// <summary>
