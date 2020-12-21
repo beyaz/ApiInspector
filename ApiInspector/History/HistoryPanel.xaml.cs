@@ -5,12 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using ApiInspector.Application;
 using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
-using static ApiInspector.Utility;
 using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.History
@@ -45,7 +43,23 @@ namespace ApiInspector.History
         {
             this.scope = scope;
 
-            scope.OnUpdate(HistoryItems, OnHistoryItemsUpdated);
+            scope.OnUpdate(HistoryItems, fun(() =>
+            {
+                var getItems = fun(() => scope.Get(HistoryItems));
+
+                var initializeItemsSource = fun(() => { historyListBox.ItemsSource = getItems(); });
+
+                var trySelectFirstItem = fun(() => { historyListBox.SelectedItem = getItems().FirstOrDefault(); });
+
+                var reAssignCollectionFilter = fun(() =>
+                {
+                    ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = HistoryFilter;
+                });
+
+                initializeItemsSource();
+                trySelectFirstItem();
+                reAssignCollectionFilter();
+            }));
         }
 
         /// <summary>
@@ -162,27 +176,10 @@ namespace ApiInspector.History
             
         }
 
-        /// <summary>
-        ///     Called when [history items updated].
-        /// </summary>
-        void OnHistoryItemsUpdated()
-        {
-            historyListBox.ItemsSource = scope.Get(HistoryItems);
+        
 
-            historyListBox.SelectedItem = scope.Get(HistoryItems).FirstOrDefault();
-
-            ReAssignCollectionFilter();
-        }
-
-        /// <summary>
-        ///     Res the assign collection filter.
-        /// </summary>
-        void ReAssignCollectionFilter()
-        {
-            var view = (CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource);
-
-            view.Filter = HistoryFilter;
-        }
+       
+        
         #endregion
     }
 }
