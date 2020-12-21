@@ -73,6 +73,23 @@ namespace FunctionalPrograming
 
         [Pure]
         public static TOut Map<Tin, TOut>(Tin input, Func<Tin, TOut> func) => func(input);
+
+        [Pure]
+        public static Response<T> Run<T>(Func<T> action)
+        {
+            var returnObject = new Response<T>();
+
+            try
+            {
+                returnObject.Value = action();
+            }
+            catch (Exception exception)
+            {
+                returnObject.AddError(exception);
+            }
+
+            return returnObject;
+        }
     }
 
     /// <summary>
@@ -131,6 +148,8 @@ namespace FunctionalPrograming
         ///     Gets a value indicating whether this instance is fail.
         /// </summary>
         public bool IsFail => results.Count > 0;
+
+        public bool IsSuccess => results.Count == 0;
 
         /// <summary>
         ///     Gets the results.

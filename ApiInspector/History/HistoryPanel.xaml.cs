@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -10,6 +11,7 @@ using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
 using static ApiInspector.Utility;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.History
 {
@@ -132,7 +134,28 @@ namespace ApiInspector.History
             {
                 Trace("History is loading...");
 
-                scope.Update(HistoryItems, TryRun(() => GetHistory(scope)) ?? new List<InvocationInfo>());
+                var shouldContainsMinimumOneItem = fun((IReadOnlyList<InvocationInfo> items) =>
+                {
+                    if (items.Count>0)
+                    {
+                        return items;
+                    }
+
+                    return new List<InvocationInfo> {new InvocationInfo()};
+                });
+
+                var getItems = fun(() =>
+                {
+                    var response = Run(() => GetHistory(scope));
+                    if (response.IsSuccess)
+                    {
+                        return response.Value;
+                    }
+
+                    return new List<InvocationInfo>();
+                });
+                scope.Update(HistoryItems, shouldContainsMinimumOneItem(getItems()));
+
 
                 Trace("History is loaded.");
             });
@@ -145,6 +168,8 @@ namespace ApiInspector.History
         void OnHistoryItemsUpdated()
         {
             historyListBox.ItemsSource = scope.Get(HistoryItems);
+
+            historyListBox.SelectedItem = scope.Get(HistoryItems).FirstOrDefault();
 
             ReAssignCollectionFilter();
         }

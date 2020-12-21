@@ -84,36 +84,9 @@ namespace ApiInspector
         }
 
 
-        /// <summary>
-        ///     Tries the run.
-        /// </summary>
-        public static Exception TryRun(Action action)
-        {
-            try
-            {
-                action();
-                return null;
-            }
-            catch (Exception e)
-            {
-                return e;
-            }
-        }
+        
 
-        /// <summary>
-        ///     Tries the run.
-        /// </summary>
-        public static T TryRun<T>(Func<T> action)
-        {
-            try
-            {
-                return action();
-            }
-            catch (Exception)
-            {
-                return default(T);
-            }
-        }
+        
 
         public static void IfNot(Func<bool> funcCondition, Action body)
         {
