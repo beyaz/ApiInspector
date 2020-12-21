@@ -8,6 +8,7 @@ using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
 using static ApiInspector.InvocationInfoEditor.TypeFinder;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -68,13 +69,24 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Creates the specified definition.
         /// </summary>
-        StackPanel Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
+        static StackPanel Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
         {
             var sp = new StackPanel();
 
+            var getLabel = fun(() =>
+            {
+                if (definition.ParameterType.FullName == "System.Nullable`1<System.DateTime>")
+                {
+                    return "DateTime?";
+                }
+                
+                
+                return definition.ParameterType.Name;
+
+            });
             var label = new Label
             {
-                Content    = $"{definition.Name} : {definition.ParameterType.Name}",
+                Content    = $"{definition.Name} : {getLabel()}",
                 FontWeight = FontWeights.Bold
             };
 
