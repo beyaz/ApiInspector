@@ -5,6 +5,7 @@ using System.Reflection;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -19,12 +20,12 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         static readonly Func<ParameterAdapterInput, ParameterAdapterInput>[] parameterAdapters =
         {
-            ParameterAdapterForObjectType.TryAdaptForObjectType,
+            ParameterAdapter.TryAdaptForObjectType,
             ParameterAdapter.TryAdaptForStringType,
-            ParameterAdapterForSerializableTypes.TryAdaptForDateTime,
-            ParameterAdapterForObjectHelperType.TryAdaptForObjectHelperType,
-            ParameterAdapterForSerializableTypes.TryAdaptForSerializableTypes,
-            ParameterAdapterForConvertibleTypes.TryAdaptForIConvertibleTypes
+            ParameterAdapter.TryAdaptForDateTime,
+            ParameterAdapter.TryAdaptForObjectHelperType,
+            ParameterAdapter.TryAdaptForSerializableTypes,
+            ParameterAdapter.TryAdaptForIConvertibleTypes
         };
         #endregion
 
@@ -38,21 +39,34 @@ namespace ApiInspector.Invoking.Invokers
         #region Methods
         static object CreateInputValue(ParameterAdapterInput parameterAdapterInput, Action<string> trace)
         {
-            var stopwatch = Stopwatch.StartNew();
-
-            foreach (var tryAdapt in parameterAdapters)
+            var adaptInput = fun(() =>
             {
-                var input = tryAdapt(parameterAdapterInput);
-                if (input != null)
+                foreach (var tryAdapt in parameterAdapters)
                 {
-                    stopwatch.Stop();
-                    trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
-
-                    return input.InvocationValue;
+                    var input = tryAdapt(parameterAdapterInput);
+                    if (input != null)
+                    {
+                        return input.InvocationValue;
+                    }
                 }
-            }
 
-            throw new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}");
+                throw new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}");
+            });
+
+            var run = fun((Func<object> action) =>
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                var result = action();
+
+                stopwatch.Stop();
+
+                trace($"Parameter: {parameterAdapterInput.ParameterInfo.Name} calculated in {stopwatch.Elapsed.Milliseconds} milliseconds.");
+
+                return result;
+            });
+
+            return run(adaptInput);
         }
         #endregion
     }

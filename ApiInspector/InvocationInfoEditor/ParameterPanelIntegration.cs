@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,7 +23,6 @@ namespace ApiInspector.InvocationInfoEditor
         ///     The serializer
         /// </summary>
         readonly Serializer serializer = new Serializer();
-        
         #endregion
 
         #region Public Methods
@@ -71,18 +71,24 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         static StackPanel Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
         {
+            var isNullableDateTime = definition.ParameterType.FullName == "System.Nullable`1<System.DateTime>";
+            var isDateTime         = definition.ParameterType.FullName == "System.DateTime";
+
             var sp = new StackPanel();
 
             var getLabel = fun(() =>
             {
-                if (definition.ParameterType.FullName == "System.Nullable`1<System.DateTime>")
+                if (isNullableDateTime)
                 {
-                    return "DateTime?";
+                    return "DateTime? [Sample: 23/02/2020 19:48:59]";
                 }
-                
-                
-                return definition.ParameterType.Name;
 
+                if (isDateTime)
+                {
+                    return "DateTime [Sample: 23/02/2020 19:48:59]";
+                }
+
+                return definition.ParameterType.Name;
             });
             var label = new Label
             {
@@ -97,13 +103,57 @@ namespace ApiInspector.InvocationInfoEditor
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto
             };
 
-            var primitiveTypeNames = new[]
+            var canPresentSimpleTextBox = fun(() =>
             {
-                typeof(string).FullName,
-                typeof(int).FullName
-            };
-            var index = Array.IndexOf(primitiveTypeNames, definition.ParameterType.FullName);
-            if (index >= 0)
+                var types = new[]
+                {
+                    typeof(string),
+                    typeof(DateTime),
+                    typeof(DateTime?),
+
+                    // numbers
+                    typeof(byte),
+                    typeof(short),
+                    typeof(int),
+                    typeof(long),
+
+                    // nullable numbers
+                    typeof(byte?),
+                    typeof(short?),
+                    typeof(int?),
+                    typeof(long?),
+
+                    // unsigned numbers
+                    typeof(ushort),
+                    typeof(uint),
+                    typeof(ulong),
+
+                    // unsigned nullable numbers
+                    typeof(ushort?),
+                    typeof(uint?),
+                    typeof(ulong?)
+                };
+
+                var getFullName = fun((Type t) =>
+                {
+                    var genericArguments = t.GetGenericArguments();
+                    if (genericArguments.Length == 1)
+                    {
+                        if (t.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        {
+                            var genericArgument = genericArguments[0];
+
+                            return $"{typeof(Nullable<>).FullName}<{genericArgument.FullName}>";
+                        }
+                    }
+
+                    return t.FullName;
+                });
+
+                return types.Any(t => getFullName(t) == definition.ParameterType.FullName);
+            });
+
+            if (canPresentSimpleTextBox())
             {
                 BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
                 {

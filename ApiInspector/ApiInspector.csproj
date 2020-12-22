@@ -113,11 +113,7 @@
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorDefault.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreatorForObjectHelperDerivedClasses.cs" />
     <Compile Include="Invoking\InvokeOutput.cs" />
-    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForConvertibleTypes.cs" />
-    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForObjectHelperType.cs" />
-    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForObjectType.cs" />
-    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForSerializableTypes.cs" />
-    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterForStringType.cs" />
+    <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapter.cs" />
     <Compile Include="Invoking\InvokingParameterAdapters\ParameterAdapterInput.cs" />
     <Compile Include="History\HistoryPanel.xaml.cs">
       <DependentUpon>HistoryPanel.xaml</DependentUpon>

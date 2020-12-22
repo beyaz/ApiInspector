@@ -90,6 +90,30 @@ namespace FunctionalPrograming
 
             return returnObject;
         }
+
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T element in source)
+            {
+                action(element);
+            }
+        }
+
+        
+        public static void Add<T>(List<T> list, params T[] items)
+        {
+            list.AddRange(items);
+        }
     }
 
     /// <summary>

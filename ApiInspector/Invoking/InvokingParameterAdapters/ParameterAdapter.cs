@@ -1,0 +1,118 @@
+﻿using System;
+using BOA.Base;
+using Newtonsoft.Json;
+
+namespace ApiInspector.Invoking.InvokingParameterAdapters
+{
+    /// <summary>
+    ///     The parameter adapter
+    /// </summary>
+    static class ParameterAdapter
+    {
+        #region Public Methods
+        /// <summary>
+        ///     Tries the adapt for date time.
+        /// </summary>
+        public static ParameterAdapterInput TryAdaptForDateTime(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (input.InvocationValue is string invocationValueAsString)
+            {
+                if (targetParameterType == typeof(DateTime?))
+                {
+                    if (string.IsNullOrWhiteSpace(invocationValueAsString))
+                    {
+                        return input.WithInvocationValue(null);
+                    }
+
+                    return input.WithInvocationValue(DateTime.Parse(invocationValueAsString));
+                }
+
+                if (targetParameterType == typeof(DateTime))
+                {
+                    return input.WithInvocationValue(DateTime.Parse(invocationValueAsString));
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Tries the adapt for i convertible types.
+        /// </summary>
+        public static ParameterAdapterInput TryAdaptForIConvertibleTypes(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            var invocationValue = Convert.ChangeType(input.InvocationValue, targetParameterType);
+
+            return input.WithInvocationValue(invocationValue);
+        }
+
+        /// <summary>
+        ///     Tries the type of the adapt for object helper.
+        /// </summary>
+        public static ParameterAdapterInput TryAdaptForObjectHelperType(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType == typeof(ObjectHelper))
+            {
+                var invocationValue = input.BoaContext.GetObjectHelper();
+
+                return input.WithInvocationValue(invocationValue);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Tries the type of the adapt for object.
+        /// </summary>
+        public static ParameterAdapterInput TryAdaptForObjectType(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType == typeof(object))
+            {
+                return input;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public static ParameterAdapterInput TryAdaptForSerializableTypes(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType.IsClass && input.InvocationValue is string invocationValueAsString)
+            {
+                var invocationValue = JsonConvert.DeserializeObject(invocationValueAsString, targetParameterType);
+
+                return input.WithInvocationValue(invocationValue);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Tries the adapt.
+        /// </summary>
+        public static ParameterAdapterInput TryAdaptForStringType(ParameterAdapterInput input)
+        {
+            var targetParameterType = input.ParameterInfo.ParameterType;
+
+            if (targetParameterType == typeof(string) && input.InvocationValue is string)
+            {
+                return input;
+            }
+
+            return null;
+        }
+        #endregion
+    }
+}
