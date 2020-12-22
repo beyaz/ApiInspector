@@ -1,15 +1,13 @@
 ﻿namespace ApiInspector.Invoking.InvokingParameterAdapters
 {
-    /// <summary>
-    ///     The parameter adapter for string type
-    /// </summary>
-    class ParameterAdapterForStringType 
+    
+
+    class ParameterAdapter
     {
-        #region Public Methods
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public static  ParameterAdapterInput TryAdapt(ParameterAdapterInput input)
+        public static  ParameterAdapterInput TryAdaptForStringType(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
@@ -20,6 +18,5 @@
 
             return null;
         }
-        #endregion
     }
 }

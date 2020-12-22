@@ -9,7 +9,7 @@
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public static ParameterAdapterInput TryAdapt(ParameterAdapterInput input)
+        public static ParameterAdapterInput TryAdaptForObjectType(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 

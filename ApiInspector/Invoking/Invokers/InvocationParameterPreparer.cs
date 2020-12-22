@@ -19,12 +19,12 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         static readonly Func<ParameterAdapterInput, ParameterAdapterInput>[] parameterAdapters =
         {
-            ParameterAdapterForObjectType.TryAdapt,
-            ParameterAdapterForStringType.TryAdapt,
+            ParameterAdapterForObjectType.TryAdaptForObjectType,
+            ParameterAdapter.TryAdaptForStringType,
             ParameterAdapterForSerializableTypes.TryAdaptForDateTime,
-            ParameterAdapterForObjectHelperType.TryAdapt,
-            ParameterAdapterForSerializableTypes.TryAdapt,
-            ParameterAdapterForConvertibleTypes.TryAdapt
+            ParameterAdapterForObjectHelperType.TryAdaptForObjectHelperType,
+            ParameterAdapterForSerializableTypes.TryAdaptForSerializableTypes,
+            ParameterAdapterForConvertibleTypes.TryAdaptForIConvertibleTypes
         };
         #endregion
 

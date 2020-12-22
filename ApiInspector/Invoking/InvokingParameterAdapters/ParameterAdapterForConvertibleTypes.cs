@@ -11,7 +11,7 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         /// <summary>
         ///     Tries the adapt.
         /// </summary>
-        public static  ParameterAdapterInput TryAdapt(ParameterAdapterInput input)
+        public static  ParameterAdapterInput TryAdaptForIConvertibleTypes(ParameterAdapterInput input)
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
