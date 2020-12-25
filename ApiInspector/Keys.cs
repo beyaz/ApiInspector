@@ -54,16 +54,7 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<InvocationInfo> SelectedInvocationInfo => CreateKey<InvocationInfo>();
 
-        /// <summary>
-        ///     Gets the selected method definition.
-        /// </summary>
-        public static DataKey<MethodDefinition> SelectedMethodDefinition => CreateKey<MethodDefinition>();
-
-        /// <summary>
-        ///     Gets the selected type definition.
-        /// </summary>
-        public static DataKey<TypeDefinition> SelectedTypeDefinition => CreateKey<TypeDefinition>();
-
+        
         /// <summary>
         ///     Gets the serialize history for database insert.
         /// </summary>

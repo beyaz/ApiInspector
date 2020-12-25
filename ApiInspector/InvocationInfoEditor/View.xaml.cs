@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mono.Cecil;
 using static ApiInspector.Keys;
 using static FunctionalPrograming.Extensions;
 using static ApiInspector.DataAccess.TypeVisitor;
@@ -69,6 +70,9 @@ namespace ApiInspector.InvocationInfoEditor
             var updateAssemblyNameSuggestions = fun((IReadOnlyList<string> items) => assemblyIntellisenseTextBox.Suggestions = items);
             var updateClassNameSuggestions    = fun((IReadOnlyList<string> items) => classNameIntellisenseTextBox.Suggestions = items);
             var updateMethodNameSuggestions   = fun((IReadOnlyList<string> items) => methodNameIntellisenseTextBox.Suggestions = items);
+
+            TypeDefinition   selectedTypeDefinition   = null;
+            MethodDefinition selectedMethodDefinition = null;
 
             var onAssemblySearchDirectoryChanged = fun(() =>
             {
@@ -140,9 +144,8 @@ namespace ApiInspector.InvocationInfoEditor
                     return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, invocationInfo.GetAssemblySearchDirectories()).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
                 });
 
-                var selectedTypeDefinition = findType();
+                selectedTypeDefinition = findType();
 
-                scope.Update(SelectedTypeDefinition, selectedTypeDefinition);
                 if (selectedTypeDefinition == null)
                 {
                     trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
@@ -170,19 +173,16 @@ namespace ApiInspector.InvocationInfoEditor
             var onMethodNameChanged = fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
-                var selectedTypeDefinition = scope.Get(SelectedTypeDefinition);
 
                 invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
-                scope.Update(SelectedMethodDefinition, selectedTypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
-
-                var methodDefinition = scope.TryGet(SelectedMethodDefinition);
-                if (methodDefinition == null)
+                selectedMethodDefinition = selectedTypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+                if (selectedMethodDefinition == null)
                 {
                     return;
                 }
 
-                new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
+                new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, selectedMethodDefinition);
             });
 
             // attach
