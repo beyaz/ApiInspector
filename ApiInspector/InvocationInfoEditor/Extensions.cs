@@ -1,12 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ApiInspector.Models;
-using static ApiInspector.Keys;
-using static ApiInspector.DataAccess.TypeVisitor;
 using static ApiInspector.Utility;
-using static FunctionalPrograming.Extensions;
-
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -16,14 +11,6 @@ namespace ApiInspector.InvocationInfoEditor
     static class Extensions
     {
         #region Public Methods
-
-
-
-
-
-        #region Methods
-
-
         /// <summary>
         ///     Gets the assembly file path.
         /// </summary>
@@ -36,8 +23,6 @@ namespace ApiInspector.InvocationInfoEditor
             return assemblyPath;
         }
 
-
-
         /// <summary>
         ///     Gets the assembly search directories.
         /// </summary>
@@ -45,11 +30,6 @@ namespace ApiInspector.InvocationInfoEditor
         {
             return ListOf(invocationInfo.AssemblySearchDirectory);
         }
-
-       
-
-       
-       
         #endregion
     }
 }

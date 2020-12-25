@@ -5,7 +5,7 @@
         xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:invocationInfoEditor = "clr-namespace:ApiInspector.InvocationInfoEditor"
         xmlns:history = "clr-namespace:ApiInspector.History"
-        xmlns:components="clr-namespace:ApiInspector.Components"
+        xmlns:components = "clr-namespace:ApiInspector.Components"
         mc:Ignorable = "d"
         x:Name = "CodeBehind"
         DataContext = "{Binding ElementName=CodeBehind}"
@@ -36,10 +36,10 @@
             <StackPanel>
                 <Grid>
                     <Button HorizontalAlignment = "Right" x:Name = "executeButton" Click = "OnExecuteClicked" > Execute</Button>
-                    <StackPanel HorizontalAlignment = "Left" Orientation="Horizontal">
-                          <Button  Click = "OnConfigureClicked" > Config</Button>
+                    <StackPanel HorizontalAlignment = "Left" Orientation = "Horizontal" >
+                        <Button Click = "OnConfigureClicked" > Config</Button>
                     </StackPanel>
-                  
+
                 </Grid>
 
 
@@ -51,7 +51,8 @@
 
             </StackPanel>
 
-            <RichTextBox Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView" VerticalScrollBarVisibility="Auto" />
+            <RichTextBox Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView"
+                         VerticalScrollBarVisibility = "Auto" />
 
             <StackPanel Grid.Row = "2" Margin = "0,4,0,0" >
                 <Label FontWeight = "Bold" > Response Output File </Label>

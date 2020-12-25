@@ -1,9 +1,9 @@
-﻿namespace BOA
-{
-    using System;
-    using System.IO;
-    using Newtonsoft.Json;
+﻿using System;
+using System.IO;
+using Newtonsoft.Json;
 
+namespace BOA
+{
     /// <summary>
     ///     The file cache utility
     /// </summary>
@@ -69,7 +69,7 @@
             {
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
+                DateFormatString     = "yyyy.MM.dd hh:mm:ss"
             };
 
             return JsonConvert.SerializeObject(value, settings);

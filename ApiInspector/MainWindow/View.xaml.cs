@@ -41,12 +41,9 @@ namespace ApiInspector.MainWindow
 
             InitializeComponent();
 
-
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
             traceMonitor.StartToMonitor();
-
-           
 
             Loaded += (s, e) =>
             {
@@ -55,25 +52,19 @@ namespace ApiInspector.MainWindow
 
                 historyPanel.Refresh();
 
-                scope.OnUpdate(Keys.SelectedInvocationInfo,RefreshResponseOutputFilePath);
-                scope.OnUpdate(Keys.SelectedInvocationInfo,ClearResponseView);
+                scope.OnUpdate(SelectedInvocationInfo, RefreshResponseOutputFilePath);
+                scope.OnUpdate(SelectedInvocationInfo, ClearResponseView);
 
                 UpdateTitle();
             };
         }
-
-        void ClearResponseView()
-        {
-            invokingResponseView.SetText(string.Empty);
-        }
-
         #endregion
 
         #region Properties
         /// <summary>
         ///     Gets the invocation information.
         /// </summary>
-        InvocationInfo InvocationInfo => scope.TryGet(Keys.SelectedInvocationInfo);
+        InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
 
         /// <summary>
         ///     The trace queue
@@ -82,7 +73,10 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        
+        void ClearResponseView()
+        {
+            invokingResponseView.SetText(string.Empty);
+        }
 
         /// <summary>
         ///     Initializes the global font style.
@@ -138,12 +132,12 @@ namespace ApiInspector.MainWindow
 
             Trace("------------- EXECUTE STARTED -----------------");
 
-            var environmentInfo = EnvironmentInfo.Parse(InvocationInfo.Environment); 
+            var environmentInfo = EnvironmentInfo.Parse(InvocationInfo.Environment);
 
-            var trace           = fun((string message) => { traceQueue.Trace(message); });
-            
-            var invokerOutput   = Invoker.Invoke(environmentInfo, trace,invocationInfo);
-            
+            var trace = fun((string message) => { traceQueue.Trace(message); });
+
+            var invokerOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo);
+
             UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
 
             if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))

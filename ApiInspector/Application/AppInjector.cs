@@ -20,7 +20,6 @@ namespace ApiInspector.Application
             Bind<View>().ToSelf().InSingletonScope();
             Bind<ErrorMonitor>().ToMethod(x => errorMonitor);
 
-
             var scope = new Scope
             {
                 {Keys.TraceQueue, Get<TraceQueue>()},

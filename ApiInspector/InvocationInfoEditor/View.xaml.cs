@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using static ApiInspector.Keys;
 using static FunctionalPrograming.Extensions;
-
 using static ApiInspector.DataAccess.TypeVisitor;
 
 namespace ApiInspector.InvocationInfoEditor
@@ -35,12 +34,8 @@ namespace ApiInspector.InvocationInfoEditor
         {
             this.scope = scope;
 
-            scope.Update(GetAssemblySearchDirectory, () => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
-            scope.Update(GetAssemblyFileName, () => assemblyIntellisenseTextBox.Editor.Text);
-            scope.Update(GetClassName, () => classNameIntellisenseTextBox.Editor.Text);
-
             scope.OnUpdate(AssemblyNameSuggestions, () => { assemblyIntellisenseTextBox.Suggestions = scope.Get(AssemblyNameSuggestions); });
-            scope.OnUpdate(ClassNameSuggestions, () => { classNameIntellisenseTextBox.Suggestions = scope.Get(ClassNameSuggestions); });
+            scope.OnUpdate(ClassNameSuggestions, () => { classNameIntellisenseTextBox.Suggestions   = scope.Get(ClassNameSuggestions); });
             scope.OnUpdate(MethodNameSuggestions, () => { methodNameIntellisenseTextBox.Suggestions = scope.Get(MethodNameSuggestions); });
             scope.OnUpdate(SelectedInvocationInfo, Connect);
         }
@@ -52,8 +47,6 @@ namespace ApiInspector.InvocationInfoEditor
         {
             RefreshValues();
         }
-
-        
 
         /// <summary>
         ///     Refreshes the values.
@@ -79,19 +72,20 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RegisterEvents()
         {
+            var getAssemblySearchDirectory = fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
+            var getSelectedInvocationInfo  = fun(() => scope.Get(SelectedInvocationInfo));
+            var getAssemblyFileName        = fun(() => assemblyIntellisenseTextBox.Editor.Text);
+            var getClassName               = fun(() => classNameIntellisenseTextBox.Editor.Text);
+            var trace                      = scope.Get(Trace);
+
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-
-
-
-
                 var onAssemblySearchDirectoryChanged = fun(() =>
                 {
-                    var assemblySearchDirectory = scope.Get(GetAssemblySearchDirectory)();
-                    var invocationInfo          = scope.Get(SelectedInvocationInfo);
+                    var assemblySearchDirectory = getAssemblySearchDirectory();
+                    var invocationInfo          = getSelectedInvocationInfo();
 
                     invocationInfo.AssemblySearchDirectory = assemblySearchDirectory;
-
 
                     var getAssemblyListInDirectory = fun(() =>
                     {
@@ -126,9 +120,7 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 var onAssemblyNameChanged = fun(() =>
                 {
-                    var trace               = scope.Get(Trace);
-                    var invocationInfo      = scope.Get(SelectedInvocationInfo);
-                    var getAssemblyFileName = scope.Get(GetAssemblyFileName);
+                    var invocationInfo = getSelectedInvocationInfo();
 
                     invocationInfo.AssemblyName = getAssemblyFileName();
 
@@ -154,13 +146,9 @@ namespace ApiInspector.InvocationInfoEditor
 
             classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
-
-
                 var onClassNameChanged = fun(() =>
                 {
-                    var trace          = scope.Get(Trace);
-                    var invocationInfo = scope.Get(SelectedInvocationInfo);
-                    var getClassName   = scope.Get(GetClassName);
+                    var invocationInfo = getSelectedInvocationInfo();
 
                     invocationInfo.ClassName = getClassName();
 
@@ -176,10 +164,6 @@ namespace ApiInspector.InvocationInfoEditor
 
                         return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, invocationInfo.GetAssemblySearchDirectories()).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
                     });
-
-
-
-
 
                     var typeDefinition = findType();
 
@@ -209,7 +193,6 @@ namespace ApiInspector.InvocationInfoEditor
                 });
 
                 onClassNameChanged();
-
             };
 
             methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
@@ -232,7 +215,6 @@ namespace ApiInspector.InvocationInfoEditor
                     new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
                 });
                 onMethodNameChanged();
-
             };
         }
 

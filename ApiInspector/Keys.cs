@@ -44,20 +44,6 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<ErrorMonitor> ErrorMonitor => CreateKey<ErrorMonitor>();
 
-        /// <summary>
-        ///     Gets the name of the get assembly file.
-        /// </summary>
-        public static DataKey<Func<string>> GetAssemblyFileName => CreateKey<Func<string>>();
-
-        /// <summary>
-        ///     Gets the get assembly search directory.
-        /// </summary>
-        public static DataKey<Func<string>> GetAssemblySearchDirectory => CreateKey<Func<string>>();
-
-        /// <summary>
-        ///     Gets the name of the get class.
-        /// </summary>
-        public static DataKey<Func<string>> GetClassName => CreateKey<Func<string>>();
 
         /// <summary>
         ///     Gets the history items.

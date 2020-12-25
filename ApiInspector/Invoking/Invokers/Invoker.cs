@@ -47,7 +47,7 @@ namespace ApiInspector.Invoking.Invokers
 
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo)
         {
-            using (var boaContext = new BOAContext(environmentInfo,trace))
+            using (var boaContext = new BOAContext(environmentInfo, trace))
             {
                 return Invoke(boaContext, trace, invocationInfo);
             }
@@ -82,9 +82,6 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo)
         {
-            
-            
-
             var findTargetType = fun(() =>
             {
                 trace($"Started to search class: {invocationInfo.ClassName}");

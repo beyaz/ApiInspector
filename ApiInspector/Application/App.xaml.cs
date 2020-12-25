@@ -37,7 +37,7 @@ namespace ApiInspector.Application
                     "Themes/Metro/Light/Metro.MSControls.Core.Implicit.xaml",
                     "Themes/Metro/Light/Theme.Colors.xaml",
                     "Themes/Metro/Light/Styles.Shared.xaml",
-                    "Themes/Metro/Light/Styles.WPF.xaml",
+                    "Themes/Metro/Light/Styles.WPF.xaml"
                     // "Themes/Metro/Light/Metro.MSControls.Toolkit.Implicit.xaml"
                 };
 
@@ -66,7 +66,7 @@ namespace ApiInspector.Application
             var injector = new AppInjector(errorMonitor);
 
             var mainView = injector.Get<View>();
-            
+
             MainWindow = mainView;
 
             MainWindow?.Show();

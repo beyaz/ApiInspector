@@ -69,8 +69,6 @@ namespace ApiInspector.Invoking.BoaSystem
     class BOAContext : IDisposable
     {
         #region Fields
-        
-
         readonly Action<string> trace;
 
         BOAContextData data;
@@ -87,13 +85,12 @@ namespace ApiInspector.Invoking.BoaSystem
             data = new BOAContextData(environmentInfo);
         }
 
-        public BOAContext(EnvironmentInfo environmentInfo,Action<string> trace)
+        public BOAContext(EnvironmentInfo environmentInfo, Action<string> trace)
         {
             data = new BOAContextData(environmentInfo);
-            
+
             this.trace = trace;
         }
-
         #endregion
 
         #region Properties
@@ -254,8 +251,6 @@ namespace ApiInspector.Invoking.BoaSystem
 
             return data.MarkAsConfigurationFileLoaded();
         }
-
-        
         #endregion
     }
 }

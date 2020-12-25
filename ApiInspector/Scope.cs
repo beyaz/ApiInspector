@@ -24,7 +24,7 @@ namespace ApiInspector
             SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
             SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => HistoryPanelDatabaseRepository.Remove(this));
             SubscribeEvent(HistoryEvent.SaveToHistory, () => HistoryPanelDatabaseRepository.SaveToHistory(this));
-            this.Add(Keys.Trace, (m)=>{});
+            Add(Trace, m => { });
         }
         #endregion
     }

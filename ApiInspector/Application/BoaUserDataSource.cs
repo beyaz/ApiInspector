@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dapper;
-using static  ApiInspector.Application.ConnectionInfo;
+using static ApiInspector.Application.ConnectionInfo;
 
 namespace ApiInspector.Application
 {
@@ -16,7 +16,7 @@ namespace ApiInspector.Application
         /// </summary>
         public IReadOnlyList<BoaUserModel> GetUsers(string search)
         {
-            return  GetDbConnection().Query<BoaUserModel>($"SELECT [UserCode], [Name]  FROM COR.BoaUser WITH(NOLOCK) WHERE [Name] LIKE '%' + @{nameof(search)} + '%'", new {search}).ToList();
+            return GetDbConnection().Query<BoaUserModel>($"SELECT [UserCode], [Name]  FROM COR.BoaUser WITH(NOLOCK) WHERE [Name] LIKE '%' + @{nameof(search)} + '%'", new {search}).ToList();
         }
         #endregion
     }

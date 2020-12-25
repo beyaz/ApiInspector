@@ -34,6 +34,31 @@ namespace ApiInspector
             return r.Replace(path, string.Empty);
         }
 
+        public static void IfFileNotExistsThen(string filePath, Action body)
+        {
+            if (!File.Exists(filePath))
+            {
+                body();
+            }
+        }
+
+        public static void IfNot(Func<bool> funcCondition, Action body)
+        {
+            var condition = funcCondition();
+            if (!condition)
+            {
+                body();
+            }
+        }
+
+        public static void IfNot(bool condition, Action body)
+        {
+            if (!condition)
+            {
+                body();
+            }
+        }
+
         /// <summary>
         ///     Determines whether the specified action is success.
         /// </summary>
@@ -49,6 +74,11 @@ namespace ApiInspector
             {
                 return false;
             }
+        }
+
+        public static List<T> ListOf<T>(params T[] arr)
+        {
+            return new List<T>(arr);
         }
 
         /// <summary>
@@ -78,39 +108,20 @@ namespace ApiInspector
             richTextBox.Document.Blocks.Add(new Paragraph(new Run(text)));
         }
 
-        public static List<T> ListOf<T>(params T[] arr)
+        public static IReadOnlyList<TDestination> ToList<TSource, TDestination>(this IEnumerable<TSource> items, Func<TSource, int, TDestination> converter)
         {
-            return new List<T>(arr);
-        }
+            var resultList = new List<TDestination>();
 
+            var i = 0;
 
-        
-
-        
-
-        public static void IfNot(Func<bool> funcCondition, Action body)
-        {
-            var condition = funcCondition();
-            if (!condition)
+            foreach (var item in items)
             {
-                body();
+                resultList.Add(converter(item, i++));
             }
-        }
-        public static void IfNot(bool condition, Action body)
-        {
-            if (!condition)
-            {
-                body();
-            }
+
+            return resultList;
         }
 
-        public static void IfFileNotExistsThen(string filePath, Action body)
-        {
-            if (!File.Exists(filePath))
-            {
-                body();
-            }
-        }
         /// <summary>
         ///     Writes all text.
         /// </summary>
@@ -129,22 +140,6 @@ namespace ApiInspector
 
             File.WriteAllText(filePath, content);
         }
-
-        public static IReadOnlyList<TDestination> ToList<TSource, TDestination>(this IEnumerable<TSource> items, Func<TSource, int, TDestination> converter)
-        {
-            var resultList = new List<TDestination>();
-            
-            var i= 0;
-
-            foreach (var item in items)
-            {
-                resultList.Add(converter(item, i++));
-            }
-
-            return resultList;
-        }
-
-
         #endregion
     }
 }
