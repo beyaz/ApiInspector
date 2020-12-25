@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ApiInspector.Components;
 using Mono.Cecil;
 using static ApiInspector.Keys;
 using static FunctionalPrograming.Extensions;
@@ -62,24 +63,27 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RegisterEvents()
         {
-            var getAssemblySearchDirectory    = fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
-            var getSelectedInvocationInfo     = fun(() => scope.Get(SelectedInvocationInfo));
-            var getAssemblyFileName           = fun(() => assemblyIntellisenseTextBox.Editor.Text);
-            var getClassName                  = fun(() => classNameIntellisenseTextBox.Editor.Text);
-            var trace                         = scope.Get(Trace);
-            var updateAssemblyNameSuggestions = fun((IReadOnlyList<string> items) => assemblyIntellisenseTextBox.Suggestions = items);
-            var updateClassNameSuggestions    = fun((IReadOnlyList<string> items) => classNameIntellisenseTextBox.Suggestions = items);
-            var updateMethodNameSuggestions   = fun((IReadOnlyList<string> items) => methodNameIntellisenseTextBox.Suggestions = items);
-            
+            var getAssemblySearchDirectory = fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
+            var getSelectedInvocationInfo  = fun(() => scope.Get(SelectedInvocationInfo));
+            var getAssemblyFileName        = fun(() => assemblyIntellisenseTextBox.Editor.Text);
+            var getClassName               = fun(() => classNameIntellisenseTextBox.Editor.Text);
+            var trace                      = scope.Get(Trace);
+
+            var getUpdateSuggestionsFunc = fun((IntellisenseTextBox textBox) => { return fun((IReadOnlyList<string> suggestions) => textBox.Suggestions = suggestions); });
+
+            var updateAssemblyNameSuggestions = getUpdateSuggestionsFunc(assemblyIntellisenseTextBox);
+            var updateClassNameSuggestions    = getUpdateSuggestionsFunc(classNameIntellisenseTextBox);
+            var updateMethodNameSuggestions   = getUpdateSuggestionsFunc(methodNameIntellisenseTextBox);
+
             TypeDefinition   selectedTypeDefinition   = null;
             MethodDefinition selectedMethodDefinition = null;
 
             var getTypeDefinitionsInAssembly = fun(() =>
             {
-                var invocationInfo   = getSelectedInvocationInfo();
+                var invocationInfo = getSelectedInvocationInfo();
 
                 var assemblyFilePath = invocationInfo.GetAssemblyFilePath();
-                
+
                 var assemblySearchDirectories = invocationInfo.GetAssemblySearchDirectories();
 
                 return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories);
