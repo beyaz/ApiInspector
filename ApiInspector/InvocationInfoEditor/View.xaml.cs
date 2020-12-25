@@ -70,9 +70,20 @@ namespace ApiInspector.InvocationInfoEditor
             var updateAssemblyNameSuggestions = fun((IReadOnlyList<string> items) => assemblyIntellisenseTextBox.Suggestions = items);
             var updateClassNameSuggestions    = fun((IReadOnlyList<string> items) => classNameIntellisenseTextBox.Suggestions = items);
             var updateMethodNameSuggestions   = fun((IReadOnlyList<string> items) => methodNameIntellisenseTextBox.Suggestions = items);
-
+            
             TypeDefinition   selectedTypeDefinition   = null;
             MethodDefinition selectedMethodDefinition = null;
+
+            var getTypeDefinitionsInAssembly = fun(() =>
+            {
+                var invocationInfo   = getSelectedInvocationInfo();
+
+                var assemblyFilePath = invocationInfo.GetAssemblyFilePath();
+                
+                var assemblySearchDirectories = invocationInfo.GetAssemblySearchDirectories();
+
+                return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories);
+            });
 
             var onAssemblySearchDirectoryChanged = fun(() =>
             {
@@ -117,9 +128,7 @@ namespace ApiInspector.InvocationInfoEditor
                         return new List<string>();
                     }
 
-                    var assemblySearchDirectories = invocationInfo.GetAssemblySearchDirectories();
-
-                    return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories).Select(x => x.FullName).ToList();
+                    return getTypeDefinitionsInAssembly().Select(x => x.FullName).ToList();
                 });
 
                 updateClassNameSuggestions(getClassNamesOfSelectedAssembly());
@@ -141,7 +150,7 @@ namespace ApiInspector.InvocationInfoEditor
                         return null;
                     }
 
-                    return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, invocationInfo.GetAssemblySearchDirectories()).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
+                    return getTypeDefinitionsInAssembly().FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
                 });
 
                 selectedTypeDefinition = findType();
