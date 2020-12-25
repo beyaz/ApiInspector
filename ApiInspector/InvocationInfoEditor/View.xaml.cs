@@ -34,9 +34,6 @@ namespace ApiInspector.InvocationInfoEditor
         {
             this.scope = scope;
 
-            scope.OnUpdate(AssemblyNameSuggestions, () => { assemblyIntellisenseTextBox.Suggestions = scope.Get(AssemblyNameSuggestions); });
-            scope.OnUpdate(ClassNameSuggestions, () => { classNameIntellisenseTextBox.Suggestions   = scope.Get(ClassNameSuggestions); });
-            scope.OnUpdate(MethodNameSuggestions, () => { methodNameIntellisenseTextBox.Suggestions = scope.Get(MethodNameSuggestions); });
             scope.OnUpdate(SelectedInvocationInfo, Connect);
         }
 
@@ -72,11 +69,14 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RegisterEvents()
         {
-            var getAssemblySearchDirectory = fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
-            var getSelectedInvocationInfo  = fun(() => scope.Get(SelectedInvocationInfo));
-            var getAssemblyFileName        = fun(() => assemblyIntellisenseTextBox.Editor.Text);
-            var getClassName               = fun(() => classNameIntellisenseTextBox.Editor.Text);
-            var trace                      = scope.Get(Trace);
+            var getAssemblySearchDirectory    = fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
+            var getSelectedInvocationInfo     = fun(() => scope.Get(SelectedInvocationInfo));
+            var getAssemblyFileName           = fun(() => assemblyIntellisenseTextBox.Editor.Text);
+            var getClassName                  = fun(() => classNameIntellisenseTextBox.Editor.Text);
+            var trace                         = scope.Get(Trace);
+            var updateAssemblyNameSuggestions = fun((IReadOnlyList<string> items) => assemblyIntellisenseTextBox.Suggestions = items);
+            var updateClassNameSuggestions    = fun((IReadOnlyList<string> items) => classNameIntellisenseTextBox.Suggestions = items);
+            var updateMethodNameSuggestions   = fun((IReadOnlyList<string> items) => methodNameIntellisenseTextBox.Suggestions = items);
 
             assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
@@ -104,7 +104,7 @@ namespace ApiInspector.InvocationInfoEditor
                         return assemblyNameList;
                     });
 
-                    scope.Update(AssemblyNameSuggestions, getAssemblyListInDirectory());
+                    updateAssemblyNameSuggestions(getAssemblyListInDirectory());
                 });
 
                 onAssemblySearchDirectoryChanged();
@@ -139,7 +139,7 @@ namespace ApiInspector.InvocationInfoEditor
                         return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories).Select(x => x.FullName).ToList();
                     });
 
-                    scope.Update(ClassNameSuggestions, getClassNamesOfSelectedAssembly());
+                    updateClassNameSuggestions(getClassNamesOfSelectedAssembly());
                 });
                 onAssemblyNameChanged();
             };
@@ -189,7 +189,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                     var methodNames = getMethodNameListFromSelectedType();
 
-                    scope.Update(MethodNameSuggestions, methodNames);
+                    updateMethodNameSuggestions(methodNames);
                 });
 
                 onClassNameChanged();

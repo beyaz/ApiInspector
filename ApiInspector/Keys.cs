@@ -14,10 +14,7 @@ namespace ApiInspector
     static class Keys
     {
         #region Public Properties
-        /// <summary>
-        ///     Gets the assembly name suggestions.
-        /// </summary>
-        public static DataKey<IReadOnlyList<string>> AssemblyNameSuggestions => CreateKey<IReadOnlyList<string>>();
+        
 
         /// <summary>
         ///     The assembly search directories
@@ -29,10 +26,6 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories => CreateKey<IReadOnlyList<string>>();
 
-        /// <summary>
-        ///     Gets the class name suggestions.
-        /// </summary>
-        public static DataKey<IReadOnlyList<string>> ClassNameSuggestions => CreateKey<IReadOnlyList<string>>();
 
         /// <summary>
         ///     Gets the database connection.
@@ -55,10 +48,6 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<string> InvocationSearchDirectory => CreateKey<string>();
 
-        /// <summary>
-        ///     Gets the method name suggestions.
-        /// </summary>
-        public static DataKey<IReadOnlyList<string>> MethodNameSuggestions => CreateKey<IReadOnlyList<string>>();
 
         /// <summary>
         ///     Gets the selected invocation information.
