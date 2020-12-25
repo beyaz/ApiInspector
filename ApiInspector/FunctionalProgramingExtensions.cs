@@ -52,6 +52,7 @@ namespace FunctionalPrograming
                 action(element);
             }
         }
+        #region fun
 
         /// <summary>
         ///     Funs the specified f.
@@ -77,29 +78,29 @@ namespace FunctionalPrograming
         [Pure]
         public static Func<T1, T2, T3, R> fun<T1, T2, T3, R>(Func<T1, T2, T3, R> f) => f;
 
-        /// <summary>
-        ///     Funs the specified f.
-        /// </summary>
-        [Pure]
-        public static Func<T1, T2, T3, T4, R> fun<T1, T2, T3, T4, R>(Func<T1, T2, T3, T4, R> f) => f;
+        ///// <summary>
+        /////     Funs the specified f.
+        ///// </summary>
+        //[Pure]
+        //public static Func<T1, T2, T3, T4, R> fun<T1, T2, T3, T4, R>(Func<T1, T2, T3, T4, R> f) => f;
 
-        /// <summary>
-        ///     Funs the specified f.
-        /// </summary>
-        [Pure]
-        public static Func<T1, T2, T3, T4, T5, R> fun<T1, T2, T3, T4, T5, R>(Func<T1, T2, T3, T4, T5, R> f) => f;
+        ///// <summary>
+        /////     Funs the specified f.
+        ///// </summary>
+        //[Pure]
+        //public static Func<T1, T2, T3, T4, T5, R> fun<T1, T2, T3, T4, T5, R>(Func<T1, T2, T3, T4, T5, R> f) => f;
 
-        /// <summary>
-        ///     Funs the specified f.
-        /// </summary>
-        [Pure]
-        public static Func<T1, T2, T3, T4, T5, T6, R> fun<T1, T2, T3, T4, T5, T6, R>(Func<T1, T2, T3, T4, T5, T6, R> f) => f;
+        ///// <summary>
+        /////     Funs the specified f.
+        ///// </summary>
+        //[Pure]
+        //public static Func<T1, T2, T3, T4, T5, T6, R> fun<T1, T2, T3, T4, T5, T6, R>(Func<T1, T2, T3, T4, T5, T6, R> f) => f;
 
-        /// <summary>
-        ///     Funs the specified f.
-        /// </summary>
-        [Pure]
-        public static Func<T1, T2, T3, T4, T5, T6, T7, R> fun<T1, T2, T3, T4, T5, T6, T7, R>(Func<T1, T2, T3, T4, T5, T6, T7, R> f) => f;
+        ///// <summary>
+        /////     Funs the specified f.
+        ///// </summary>
+        //[Pure]
+        //public static Func<T1, T2, T3, T4, T5, T6, T7, R> fun<T1, T2, T3, T4, T5, T6, T7, R>(Func<T1, T2, T3, T4, T5, T6, T7, R> f) => f;
 
         /// <summary>
         ///     Funs the specified f.
@@ -113,6 +114,7 @@ namespace FunctionalPrograming
         [Pure]
         public static Action fun(Action f) => f;
 
+        #endregion
         /// <summary>
         ///     Maps the specified input.
         /// </summary>
