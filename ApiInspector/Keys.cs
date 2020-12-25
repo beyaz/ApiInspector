@@ -16,10 +16,7 @@ namespace ApiInspector
         #region Public Properties
         
 
-        /// <summary>
-        ///     The assembly search directories
-        /// </summary>
-        public static DataKey<string> AssemblyPath => CreateKey<string>();
+
 
         /// <summary>
         ///     Gets the assembly search directories.

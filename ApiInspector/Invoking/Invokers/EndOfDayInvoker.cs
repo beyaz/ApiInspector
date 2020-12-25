@@ -1,5 +1,6 @@
 ﻿using System;
 using BOA.EOD.Base;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -18,10 +19,12 @@ namespace ApiInspector.Invoking.Invokers
 
             EODTestHelper.InitializeContextPropertyOfEOD(eodInstance, DateTime.Today);
 
-            EODTestHelper.InvokeMethod(eodInstance, "InitializeParameters");
-            EODTestHelper.InvokeMethod(eodInstance, "BeforeProcess");
-            EODTestHelper.InvokeMethod(eodInstance, "Process");
-            EODTestHelper.InvokeMethod(eodInstance, "AfterProcess");
+            var invoke = fun((string methodName) => EODTestHelper.InvokeMethod(eodInstance, methodName));
+
+            invoke("InitializeParameters");
+            invoke("BeforeProcess");
+            invoke("Process");
+            invoke("AfterProcess");
         }
         #endregion
     }

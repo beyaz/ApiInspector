@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ApiInspector.Invoking.BoaSystem;
+using static FunctionalPrograming.Extensions;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -85,7 +86,19 @@ namespace ApiInspector.Invoking.Dynamic
             if (results.Errors.Count > 0)
             {
                 trace("Compile fail.");
-                throw new ArgumentException(ConvertToString(results.Errors));
+
+                var convertErrorsToException = fun(() =>
+                {
+                    var errorMessage = new StringBuilder();
+                    foreach (CompilerError compilerError in results.Errors)
+                    {
+                        errorMessage.AppendLine(compilerError.ToString());
+                    }
+
+                    return new ArgumentException(errorMessage.ToString());
+                });
+
+                throw convertErrorsToException();
             }
 
             trace("Compile success.");
@@ -111,22 +124,6 @@ namespace ApiInspector.Invoking.Dynamic
             trace("Service invocation is success.");
 
             return response;
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Converts to string.
-        /// </summary>
-        static string ConvertToString(CompilerErrorCollection errors)
-        {
-            var errorMessage = new StringBuilder();
-            foreach (CompilerError compilerError in errors)
-            {
-                errorMessage.AppendLine(compilerError.ToString());
-            }
-
-            return errorMessage.ToString();
         }
         #endregion
     }
