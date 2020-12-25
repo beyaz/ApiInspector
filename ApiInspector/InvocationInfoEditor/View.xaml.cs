@@ -140,10 +140,10 @@ namespace ApiInspector.InvocationInfoEditor
                     return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, invocationInfo.GetAssemblySearchDirectories()).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
                 });
 
-                var typeDefinition = findType();
+                var selectedTypeDefinition = findType();
 
-                scope.Update(SelectedTypeDefinition, typeDefinition);
-                if (typeDefinition == null)
+                scope.Update(SelectedTypeDefinition, selectedTypeDefinition);
+                if (selectedTypeDefinition == null)
                 {
                     trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
                     return;
@@ -159,7 +159,7 @@ namespace ApiInspector.InvocationInfoEditor
                         };
                     }
 
-                    return typeDefinition.Methods.Select(x => x.Name).ToList();
+                    return selectedTypeDefinition.Methods.Select(x => x.Name).ToList();
                 });
 
                 var methodNames = getMethodNameListFromSelectedType();
@@ -170,11 +170,11 @@ namespace ApiInspector.InvocationInfoEditor
             var onMethodNameChanged = fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
-                var typeDefinition = scope.Get(SelectedTypeDefinition);
+                var selectedTypeDefinition = scope.Get(SelectedTypeDefinition);
 
                 invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
-                scope.Update(SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+                scope.Update(SelectedMethodDefinition, selectedTypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
 
                 var methodDefinition = scope.TryGet(SelectedMethodDefinition);
                 if (methodDefinition == null)
