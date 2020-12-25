@@ -11,6 +11,49 @@ namespace FunctionalPrograming
     {
         #region Public Methods
         /// <summary>
+        ///     Adds the specified list.
+        /// </summary>
+        public static void Add<T>(List<T> list, params T[] items)
+        {
+            list.AddRange(items);
+        }
+
+        /// <summary>
+        ///     Adds the or update.
+        /// </summary>
+        public static void AddOrUpdate<K, V>(this Dictionary<K, V> dictionary, K key, V value)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary[key] = value;
+                return;
+            }
+
+            dictionary.Add(key, value);
+        }
+
+        /// <summary>
+        ///     Fors the each.
+        /// </summary>
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (var element in source)
+            {
+                action(element);
+            }
+        }
+
+        /// <summary>
         ///     Funs the specified f.
         /// </summary>
         [Pure]
@@ -69,11 +112,16 @@ namespace FunctionalPrograming
         /// </summary>
         [Pure]
         public static Action fun(Action f) => f;
-        #endregion
 
+        /// <summary>
+        ///     Maps the specified input.
+        /// </summary>
         [Pure]
         public static TOut Map<Tin, TOut>(Tin input, Func<Tin, TOut> func) => func(input);
 
+        /// <summary>
+        ///     Runs the specified action.
+        /// </summary>
         [Pure]
         public static Response<T> Run<T>(Func<T> action)
         {
@@ -90,30 +138,7 @@ namespace FunctionalPrograming
 
             return returnObject;
         }
-
-        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            foreach (T element in source)
-            {
-                action(element);
-            }
-        }
-
-        
-        public static void Add<T>(List<T> list, params T[] items)
-        {
-            list.AddRange(items);
-        }
+        #endregion
     }
 
     /// <summary>
@@ -173,6 +198,9 @@ namespace FunctionalPrograming
         /// </summary>
         public bool IsFail => results.Count > 0;
 
+        /// <summary>
+        ///     Gets a value indicating whether this instance is success.
+        /// </summary>
         public bool IsSuccess => results.Count == 0;
 
         /// <summary>

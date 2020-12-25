@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static ApiInspector.Keys;
+using static FunctionalPrograming.Extensions;
+
+using static ApiInspector.DataAccess.TypeVisitor;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -49,23 +53,7 @@ namespace ApiInspector.InvocationInfoEditor
             RefreshValues();
         }
 
-        void OnMethodNameChanged()
-        {
-            var invocationInfo = scope.TryGet(SelectedInvocationInfo);
-            var typeDefinition = scope.Get(SelectedTypeDefinition);
-
-            invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
-
-            scope.Update(SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
-
-            var methodDefinition = scope.TryGet(SelectedMethodDefinition);
-            if (methodDefinition == null)
-            {
-                return;
-            }
-
-            new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
-        }
+        
 
         /// <summary>
         ///     Refreshes the values.
@@ -91,7 +79,42 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RegisterEvents()
         {
-            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) => { ViewController.OnAssemblySearchDirectoryChanged(scope); };
+            assemblySearchDirectoryIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+
+
+
+
+                var onAssemblySearchDirectoryChanged = fun(() =>
+                {
+                    var assemblySearchDirectory = scope.Get(GetAssemblySearchDirectory)();
+                    var invocationInfo          = scope.Get(SelectedInvocationInfo);
+
+                    invocationInfo.AssemblySearchDirectory = assemblySearchDirectory;
+
+
+                    var getAssemblyListInDirectory = fun(() =>
+                    {
+                        if (!Directory.Exists(assemblySearchDirectory))
+                        {
+                            return new List<string>();
+                        }
+
+                        var assemblyNameList = Directory.GetFiles(assemblySearchDirectory).Select(Path.GetFileName).ToList();
+
+                        if (assemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+                        {
+                            return assemblyNameList.Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("BOA.EOD.")).ToList();
+                        }
+
+                        return assemblyNameList;
+                    });
+
+                    scope.Update(AssemblyNameSuggestions, getAssemblyListInDirectory());
+                });
+
+                onAssemblySearchDirectoryChanged();
+            };
 
             environmentIntellisenseTextBox.Editor.TextChanged += (s, e) =>
             {
@@ -99,11 +122,118 @@ namespace ApiInspector.InvocationInfoEditor
                 invocationInfo.Environment = environmentIntellisenseTextBox.Editor.Text;
             };
 
-            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) => { ViewController.OnAssemblyNameChanged(scope); };
+            assemblyIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                var onAssemblyNameChanged = fun(() =>
+                {
+                    var trace               = scope.Get(Trace);
+                    var invocationInfo      = scope.Get(SelectedInvocationInfo);
+                    var getAssemblyFileName = scope.Get(GetAssemblyFileName);
 
-            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { ViewController.OnClassNameChanged(scope); };
+                    invocationInfo.AssemblyName = getAssemblyFileName();
 
-            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) => { OnMethodNameChanged(); };
+                    var getClassNamesOfSelectedAssembly = fun(() =>
+                    {
+                        var assemblyFilePath = invocationInfo.GetAssemblyFilePath();
+
+                        if (!File.Exists(assemblyFilePath))
+                        {
+                            trace($"File not exists. File:{assemblyFilePath}");
+                            return new List<string>();
+                        }
+
+                        var assemblySearchDirectories = invocationInfo.GetAssemblySearchDirectories();
+
+                        return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories).Select(x => x.FullName).ToList();
+                    });
+
+                    scope.Update(ClassNameSuggestions, getClassNamesOfSelectedAssembly());
+                });
+                onAssemblyNameChanged();
+            };
+
+            classNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+
+
+                var onClassNameChanged = fun(() =>
+                {
+                    var trace          = scope.Get(Trace);
+                    var invocationInfo = scope.Get(SelectedInvocationInfo);
+                    var getClassName   = scope.Get(GetClassName);
+
+                    invocationInfo.ClassName = getClassName();
+
+                    var assemblyFilePath = invocationInfo.GetAssemblyFilePath();
+
+                    var findType = fun(() =>
+                    {
+                        if (!File.Exists(assemblyFilePath))
+                        {
+                            trace($"File not exists. File:{assemblyFilePath}");
+                            return null;
+                        }
+
+                        return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, invocationInfo.GetAssemblySearchDirectories()).FirstOrDefault(type => type.FullName == invocationInfo.ClassName);
+                    });
+
+
+
+
+
+                    var typeDefinition = findType();
+
+                    scope.Update(SelectedTypeDefinition, typeDefinition);
+                    if (typeDefinition == null)
+                    {
+                        trace($"Type not exists. File:{assemblyFilePath}, fullClassName:{invocationInfo.ClassName}");
+                        return;
+                    }
+
+                    var getMethodNameListFromSelectedType = fun(() =>
+                    {
+                        if (invocationInfo.AssemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
+                        {
+                            return new List<string>
+                            {
+                                EndOfDay.MethodAccessText
+                            };
+                        }
+
+                        return typeDefinition.Methods.Select(x => x.Name).ToList();
+                    });
+
+                    var methodNames = getMethodNameListFromSelectedType();
+
+                    scope.Update(MethodNameSuggestions, methodNames);
+                });
+
+                onClassNameChanged();
+
+            };
+
+            methodNameIntellisenseTextBox.Editor.TextChanged += (s, e) =>
+            {
+                var onMethodNameChanged = fun(() =>
+                {
+                    var invocationInfo = scope.TryGet(SelectedInvocationInfo);
+                    var typeDefinition = scope.Get(SelectedTypeDefinition);
+
+                    invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
+
+                    scope.Update(SelectedMethodDefinition, typeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName));
+
+                    var methodDefinition = scope.TryGet(SelectedMethodDefinition);
+                    if (methodDefinition == null)
+                    {
+                        return;
+                    }
+
+                    new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, methodDefinition);
+                });
+                onMethodNameChanged();
+
+            };
         }
 
         /// <summary>

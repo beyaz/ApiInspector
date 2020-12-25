@@ -122,7 +122,7 @@
     <Compile Include="InvocationInfoEditor\ParameterPanelIntegration.cs" />
     <Compile Include="Invoking\BoaSystem\BOAContext.cs" />
     <Compile Include="Invoking\Invokers\Invoker.cs" />
-    <Compile Include="InvocationInfoEditor\ViewController.cs" />
+    <Compile Include="InvocationInfoEditor\Extensions.cs" />
     <Compile Include="DataAccess\TypeVisitor.cs" />
     <Compile Include="Tracing\TraceMonitor.cs" />
     <Compile Include="Serialization\Serializer.cs" />
