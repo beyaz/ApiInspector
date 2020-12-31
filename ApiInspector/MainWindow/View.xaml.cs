@@ -57,6 +57,11 @@ namespace ApiInspector.MainWindow
 
                 UpdateTitle();
             };
+
+            Closed += (s, e) =>
+            {
+                System.Windows.Application.Current.Shutdown();
+            };
         }
         #endregion
 

@@ -76,6 +76,20 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
 
             if (targetParameterType == typeof(object))
             {
+                if (input.InvocationValue is string invocationValueAsString)
+                {
+                    if (invocationValueAsString.IndexOf("$type",StringComparison.OrdinalIgnoreCase) > 0)
+                    {
+                        var settings = new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.Objects
+                        };
+                        var invocationValue = JsonConvert.DeserializeObject(invocationValueAsString, targetParameterType,settings);
+
+                        return input.WithInvocationValue(invocationValue);
+                    }
+                }
+
                 return input;
             }
 
