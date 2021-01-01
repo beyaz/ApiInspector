@@ -5,7 +5,7 @@ using System.Reflection;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InvokingParameterAdapters;
 using ApiInspector.Models;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Invoking.Invokers
 {

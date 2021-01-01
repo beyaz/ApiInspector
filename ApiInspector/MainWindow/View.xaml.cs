@@ -11,7 +11,7 @@ using ApiInspector.Models;
 using ApiInspector.Tracing;
 using static ApiInspector.Keys;
 using static ApiInspector.Utility;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {

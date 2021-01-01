@@ -9,7 +9,7 @@ using ApiInspector.Application;
 using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.History
 {

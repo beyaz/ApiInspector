@@ -1,6 +1,6 @@
 ﻿using System;
 using BOA.EOD.Base;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Invoking.Invokers
 {

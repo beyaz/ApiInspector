@@ -82,7 +82,14 @@
     </ApplicationDefinition>
     <Compile Include="Application\AssemblyFinder.cs" />
     <Compile Include="Application\BoaUserDataSource.cs" />
-    <Compile Include="FunctionalProgramingExtensions.cs" />
+    <Compile Include="FunctionalPrograming\FPExtensions.cs" />
+    <Compile Include="FunctionalPrograming\FPExtensions.compose.cs" />
+    <Compile Include="FunctionalPrograming\FPExtensions.fun.cs" />
+    <Compile Include="FunctionalPrograming\FPExtensions.pipe.cs" />
+    <Compile Include="FunctionalPrograming\Response.T.cs" />
+    <Compile Include="FunctionalPrograming\Response.cs" />
+    <Compile Include="FunctionalPrograming\Result.cs" />
+    <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Application\ConnectionInfo.cs" />
     <Compile Include="BOA\FileCacheUtility.cs" />
@@ -199,6 +206,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y "$(TargetDir)$(TargetName).*" "d:\boa\server\bin\</PostBuildEvent>

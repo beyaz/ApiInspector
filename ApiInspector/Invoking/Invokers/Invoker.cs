@@ -12,7 +12,7 @@ using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Invoking.Invokers
 {

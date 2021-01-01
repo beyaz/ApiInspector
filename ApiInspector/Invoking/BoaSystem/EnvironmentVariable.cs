@@ -6,7 +6,7 @@ using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static BOA.Common.Helpers.SerializeHelper;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Invoking.BoaSystem
 {

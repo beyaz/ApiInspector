@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
 using static ApiInspector.InvocationInfoEditor.TypeFinder;
-using static FunctionalPrograming.Extensions;
+using static ApiInspector.WPFExtensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.InvocationInfoEditor
 {
@@ -18,10 +18,6 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ParameterPanelIntegration
     {
-        #region Fields
-     
-        #endregion
-
         #region Public Methods
         /// <summary>
         ///     Connects the specified invocation information.
@@ -71,8 +67,6 @@ namespace ApiInspector.InvocationInfoEditor
             var isNullableDateTime = definition.ParameterType.FullName == "System.Nullable`1<System.DateTime>";
             var isDateTime         = definition.ParameterType.FullName == "System.DateTime";
 
-            var sp = new StackPanel();
-
             var getLabel = fun(() =>
             {
                 if (isNullableDateTime)
@@ -87,6 +81,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 return definition.ParameterType.Name;
             });
+
             var label = new Label
             {
                 Content    = $"{definition.Name} : {getLabel()}",
@@ -152,13 +147,7 @@ namespace ApiInspector.InvocationInfoEditor
 
             if (canPresentSimpleTextBox())
             {
-                BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
-                {
-                    Source              = parameterInfo,
-                    Path                = new PropertyPath(nameof(parameterInfo.Value)),
-                    Mode                = BindingMode.TwoWay,
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                });
+                Bind(editor, TextBox.TextProperty, parameterInfo, nameof(parameterInfo.Value));
             }
             else if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
             {
@@ -187,19 +176,10 @@ namespace ApiInspector.InvocationInfoEditor
                     }
                 }
 
-                BindingOperations.SetBinding(editor, TextBox.TextProperty, new Binding
-                {
-                    Source              = parameterInfo,
-                    Path                = new PropertyPath(nameof(parameterInfo.Value)),
-                    Mode                = BindingMode.TwoWay,
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                });
+                Bind(editor, TextBox.TextProperty, parameterInfo, nameof(parameterInfo.Value));
             }
 
-            sp.Children.Add(label);
-            sp.Children.Add(editor);
-
-            return sp;
+            return NewStackPanel(label, editor);
         }
         #endregion
     }

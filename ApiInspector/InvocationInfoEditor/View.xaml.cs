@@ -4,7 +4,7 @@ using System.Linq;
 using ApiInspector.Components;
 using Mono.Cecil;
 using static ApiInspector.Keys;
-using static FunctionalPrograming.Extensions;
+using static FunctionalPrograming.FPExtensions;
 using static ApiInspector.DataAccess.TypeVisitor;
 
 namespace ApiInspector.InvocationInfoEditor
