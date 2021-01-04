@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Invoking.BoaSystem
 {
@@ -18,25 +19,36 @@ namespace ApiInspector.Invoking.BoaSystem
 
             var type = Type.GetType("BOA.Common.Helpers.DirectExecuteHelper+BOADirectExecuteGate+BoaWcfAppDomainHelper,BOA.Common", true);
 
+            var getField = fun((string fieldName) =>
             {
-                var fieldInfo = type.GetField("wcfDomain", allBindings);
+                var fieldInfo = type.GetField(fieldName, allBindings);
                 if (fieldInfo == null)
                 {
                     throw new ArgumentNullException(nameof(fieldInfo));
                 }
 
-                fieldInfo.SetValue(null, null);
-            }
+                return fieldInfo;
+            });
 
+            var clearField = fun((string fieldName) =>
             {
-                var fieldInfo = type.GetField("appDomainExecuter", allBindings);
-                if (fieldInfo == null)
-                {
-                    throw new ArgumentNullException(nameof(fieldInfo));
-                }
+                getField(fieldName).SetValue(null, null);
+            });
 
-                fieldInfo.SetValue(null, null);
-            }
+            var unloadWcfDomain = fun(() =>
+            {
+                var wcfDomain = (AppDomain) getField("wcfDomain").GetValue(null);
+
+                if (wcfDomain != null)
+                {
+                    AppDomain.Unload(wcfDomain);    
+                }
+            });
+
+            unloadWcfDomain();
+            clearField("appDomainExecuter");
+            clearField("wcfDomain");
+
         }
         #endregion
     }
