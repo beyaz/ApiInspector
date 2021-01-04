@@ -29,7 +29,7 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
         {
-            var trace = fun((string message)=>Console.WriteLine(message));
+            var trace = fun((string message) => Console.WriteLine(message));
 
             trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 
