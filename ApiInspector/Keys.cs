@@ -18,10 +18,7 @@ namespace ApiInspector
 
 
 
-        /// <summary>
-        ///     Gets the assembly search directories.
-        /// </summary>
-        public static DataKey<IReadOnlyList<string>> AssemblySearchDirectories => CreateKey<IReadOnlyList<string>>();
+        
 
 
         /// <summary>

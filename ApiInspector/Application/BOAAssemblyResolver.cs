@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using static ApiInspector.Application.App;
-using static ApiInspector.Application.AssemblyFinder;
 using static ApiInspector.Keys;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Application
 {
@@ -28,11 +29,28 @@ namespace ApiInspector.Application
         /// </summary>
         internal static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
         {
-            var scope = new Scope
+            var trace = fun((string message)=>Console.WriteLine(message));
+
+            trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
+
+            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
             {
-                {AssemblySearchDirectories, GetDirectories()}
-            };
-            return TryToFindAssembly(scope, assemblyFileNameWithoutExtension);
+                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
+            }
+
+            foreach (var searchDirectory in GetDirectories())
+            {
+                var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
+                if (File.Exists(filePath))
+                {
+                    trace($"Loading assembly: {filePath}");
+                    return Assembly.LoadFile(filePath);
+                }
+            }
+
+            trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
+
+            return null;
         }
 
         /// <summary>
