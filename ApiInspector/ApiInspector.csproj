@@ -81,6 +81,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Application\BoaUserDataSource.cs" />
+    <Compile Include="FunctionalPrograming\FPExtensions.loop.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.compose.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.fun.cs" />
