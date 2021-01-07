@@ -82,7 +82,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Application\BoaUserDataSource.cs" />
     <Compile Include="Components\JsonTextEditor.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.loop.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="Application\ConnectionInfo.cs" />
-    <Compile Include="BOA\FileCacheUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
