@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 
-namespace ApiInspector.Application
+namespace ApiInspector
 {
     /// <summary>
     ///     The connection information

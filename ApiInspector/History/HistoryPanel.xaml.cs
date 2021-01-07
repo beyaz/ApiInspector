@@ -43,6 +43,9 @@ namespace ApiInspector.History
         {
             this.scope = scope;
 
+            scope.SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => HistoryPanelDatabaseRepository.Remove(scope));
+            scope.SubscribeEvent(HistoryEvent.SaveToHistory, () => HistoryPanelDatabaseRepository.SaveToHistory(scope));
+
             scope.OnUpdate(HistoryItems, fun(() =>
             {
                 var getItems = fun(() => scope.Get(HistoryItems));
