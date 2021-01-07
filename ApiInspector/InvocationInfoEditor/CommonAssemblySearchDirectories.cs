@@ -1,4 +1,4 @@
-﻿namespace ApiInspector
+﻿namespace ApiInspector.InvocationInfoEditor
 {
     /// <summary>
     ///     The assembly search directories

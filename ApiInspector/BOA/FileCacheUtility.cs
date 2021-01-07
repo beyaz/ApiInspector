@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace BOA
+namespace ApiInspector.BOA
 {
     /// <summary>
     ///     The file cache utility
