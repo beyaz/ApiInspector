@@ -51,8 +51,7 @@
 
             </StackPanel>
 
-            <RichTextBox Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView"
-                         VerticalScrollBarVisibility = "Auto" />
+            <components:JsonTextEditor Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView" />
 
             <StackPanel Grid.Row = "2" Margin = "0,4,0,0" >
                 <Label FontWeight = "Bold" > Response Output File </Label>

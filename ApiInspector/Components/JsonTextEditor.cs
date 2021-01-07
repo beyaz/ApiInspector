@@ -25,7 +25,7 @@ namespace ApiInspector.Components
         readonly FastColoredTextBox editor = new FastColoredTextBox
         {
             Language = FastColoredTextBoxNS.Language.JSON,
-            Dock     = DockStyle.Fill
+          //   Dock     = DockStyle.Fill,
         };
         #endregion
 

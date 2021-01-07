@@ -80,8 +80,14 @@ namespace ApiInspector.MainWindow
         #region Methods
         void ClearResponseView()
         {
-            invokingResponseView.SetText(string.Empty);
+            invokingResponseView.Text = string.Empty;
         }
+
+        void UpdateResponseView(string responseAsJson)
+        {
+            invokingResponseView.Text =responseAsJson;
+        }
+
 
         /// <summary>
         ///     Initializes the global font style.
@@ -133,7 +139,7 @@ namespace ApiInspector.MainWindow
 
             var invocationInfo = InvocationInfo;
 
-            UpdateUI(() => { invokingResponseView.SetText(string.Empty); });
+            UpdateUI(ClearResponseView);
 
             Trace("------------- EXECUTE STARTED -----------------");
 
@@ -143,7 +149,7 @@ namespace ApiInspector.MainWindow
 
             var invokerOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo);
 
-            UpdateUI(() => { invokingResponseView.SetText(invokerOutput.ExecutionResponseAsJson); });
+            UpdateUI(() => { UpdateResponseView(invokerOutput.ExecutionResponseAsJson); });
 
             if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
             {
