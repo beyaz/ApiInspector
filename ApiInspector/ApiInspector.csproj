@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -65,6 +65,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Configuration" />
@@ -74,6 +75,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="Application\App.xaml">
@@ -81,6 +83,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Application\BoaUserDataSource.cs" />
+    <Compile Include="Components\JsonTextEditor.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.loop.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.compose.cs" />
@@ -202,6 +205,9 @@
     <PackageReference Include="WpfControls.AutoCompleteTextBox">
       <Version>1.0.0.7</Version>
     </PackageReference>
+    <Reference Include="FastColoredTextBox">
+      <HintPath>$(ProjectDir)\ThirdPartyLibraries\FastColoredTextBox.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

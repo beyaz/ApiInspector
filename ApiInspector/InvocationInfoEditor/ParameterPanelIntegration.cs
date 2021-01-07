@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using ApiInspector.Components;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Base;
@@ -88,13 +89,6 @@ namespace ApiInspector.InvocationInfoEditor
                 FontWeight = FontWeights.Bold
             };
 
-            var editor = new TextBox
-            {
-                TextWrapping                = TextWrapping.Wrap,
-                AcceptsReturn               = true,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
-            };
-
             var canPresentSimpleTextBox = fun(() =>
             {
                 var types = new[]
@@ -145,22 +139,31 @@ namespace ApiInspector.InvocationInfoEditor
                 return types.Any(t => getFullName(t) == definition.ParameterType.FullName);
             });
 
-            if (canPresentSimpleTextBox())
+            var createEditor = fun(() =>
             {
-                Bind(editor, TextBox.TextProperty, parameterInfo, nameof(parameterInfo.Value));
-            }
-            else if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
-            {
-                editor.IsEnabled = false;
-                editor.Text      = "objectHelper";
-            }
-            else
-            {
+                if (canPresentSimpleTextBox())
+                {
+                    var editor = new TextBox
+                    {
+                        TextWrapping                = TextWrapping.Wrap,
+                        AcceptsReturn               = true,
+                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+                    };
+                    Bind(editor, TextBox.TextProperty, parameterInfo, nameof(parameterInfo.Value));
+                    return (UIElement) editor;
+                }
+
+                if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
+                {
+                    var editor = new TextBox
+                    {
+                        IsEnabled = false,
+                        Text      = "objectHelper"
+                    };
+                    return (UIElement) editor;
+                }
+
                 // complex items should be as json input
-                editor.TextWrapping                = TextWrapping.Wrap;
-                editor.MaxLines                    = 10;
-                editor.AcceptsReturn               = true;
-                editor.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
                 if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
@@ -176,10 +179,14 @@ namespace ApiInspector.InvocationInfoEditor
                     }
                 }
 
-                Bind(editor, TextBox.TextProperty, parameterInfo, nameof(parameterInfo.Value));
-            }
+                var jsonTextEditor = new JsonTextEditor();
 
-            return NewStackPanel(label, editor);
+                Bind(jsonTextEditor, JsonTextEditor.TextProperty, parameterInfo, nameof(parameterInfo.Value));
+
+                return (UIElement) jsonTextEditor;
+            });
+
+            return NewStackPanel(label, createEditor());
         }
         #endregion
     }
