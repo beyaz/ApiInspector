@@ -74,8 +74,6 @@ namespace ApiInspector.Invoking.BoaSystem
         #endregion
 
         #region Constructors
-        
-
         public BOAContext(EnvironmentInfo environmentInfo, Action<string> trace)
         {
             data = new BOAContextData(environmentInfo);

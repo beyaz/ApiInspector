@@ -31,7 +31,6 @@ namespace FunctionalPrograming
 
             dictionary.Add(key, value);
         }
-        
 
         /// <summary>
         ///     Maps the specified input.

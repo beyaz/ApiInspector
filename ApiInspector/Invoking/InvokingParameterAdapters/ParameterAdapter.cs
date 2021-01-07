@@ -78,13 +78,13 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
             {
                 if (input.InvocationValue is string invocationValueAsString)
                 {
-                    if (invocationValueAsString.IndexOf("$type",StringComparison.OrdinalIgnoreCase) > 0)
+                    if (invocationValueAsString.IndexOf("$type", StringComparison.OrdinalIgnoreCase) > 0)
                     {
                         var settings = new JsonSerializerSettings
                         {
                             TypeNameHandling = TypeNameHandling.Objects
                         };
-                        var invocationValue = JsonConvert.DeserializeObject(invocationValueAsString, targetParameterType,settings);
+                        var invocationValue = JsonConvert.DeserializeObject(invocationValueAsString, targetParameterType, settings);
 
                         return input.WithInvocationValue(invocationValue);
                     }

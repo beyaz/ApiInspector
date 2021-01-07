@@ -1,8 +1,6 @@
 ﻿using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using FastColoredTextBoxNS;
-using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
 namespace ApiInspector.Components
 {
@@ -24,8 +22,8 @@ namespace ApiInspector.Components
         /// </summary>
         readonly FastColoredTextBox editor = new FastColoredTextBox
         {
-            Language = FastColoredTextBoxNS.Language.JSON,
-          //   Dock     = DockStyle.Fill,
+            Language = FastColoredTextBoxNS.Language.JSON
+            //   Dock     = DockStyle.Fill,
         };
         #endregion
 

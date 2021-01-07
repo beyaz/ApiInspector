@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
 using ApiInspector.Models;
-using ApiInspector.Tracing;
 
 namespace ApiInspector
 {
@@ -13,37 +12,21 @@ namespace ApiInspector
     static class Keys
     {
         #region Public Properties
-        
-
-
-
-        
-
-
         /// <summary>
         ///     Gets the database connection.
         /// </summary>
         public static DataKey<IDbConnection> DbConnection => CreateKey<IDbConnection>();
 
         /// <summary>
-        ///     Gets the error monitor.
-        /// </summary>
-        public static DataKey<ErrorMonitor> ErrorMonitor => CreateKey<ErrorMonitor>();
-
-
-        /// <summary>
         ///     Gets the history items.
         /// </summary>
         public static DataKey<IReadOnlyList<InvocationInfo>> HistoryItems => CreateKey<IReadOnlyList<InvocationInfo>>();
-
-
 
         /// <summary>
         ///     Gets the selected invocation information.
         /// </summary>
         public static DataKey<InvocationInfo> SelectedInvocationInfo => CreateKey<InvocationInfo>();
 
-        
         /// <summary>
         ///     Gets the serialize history for database insert.
         /// </summary>
@@ -55,15 +38,9 @@ namespace ApiInspector
         public static DataKey<Action<string>> Trace => CreateKey<Action<string>>();
 
         /// <summary>
-        ///     Gets the trace queue.
-        /// </summary>
-        public static DataKey<TraceQueue> TraceQueue => CreateKey<TraceQueue>();
-
-        /// <summary>
         ///     Gets the name of the user.
         /// </summary>
         public static DataKey<string> UserName => CreateKey<string>();
-
         #endregion
 
         #region Methods

@@ -12,6 +12,7 @@ namespace ApiInspector.Application
     {
         #region Static Fields
         public static Action<string> UserVisibleTrace = Console.WriteLine;
+        static ErrorMonitor errorMonitor;
         #endregion
 
         #region Constructors
@@ -21,6 +22,7 @@ namespace ApiInspector.Application
         public App()
         {
             BoaAssemblyResolver.AttachToCurrentDomain();
+            errorMonitor = new ErrorMonitor(this);
         }
         #endregion
 
@@ -59,17 +61,14 @@ namespace ApiInspector.Application
         {
             ApplySkin();
 
-            var errorMonitor = new ErrorMonitor(this);
-
             errorMonitor.StartMonitor();
 
-            var injector = new AppInjector(errorMonitor);
+            MainWindow = new View
+            {
+                ShowErrorNotification = errorMonitor.ShowErrorNotification
+            };
 
-            var mainView = injector.Get<View>();
-
-            MainWindow = mainView;
-
-            MainWindow?.Show();
+            MainWindow.Show();
         }
         #endregion
     }

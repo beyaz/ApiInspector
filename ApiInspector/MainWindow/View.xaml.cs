@@ -21,21 +21,26 @@ namespace ApiInspector.MainWindow
     partial class View
     {
         #region Fields
+        public Action<string> ShowErrorNotification;
+
         /// <summary>
         ///     The scope
         /// </summary>
-        readonly Scope scope;
+        readonly Scope scope = new Scope();
+
+        /// <summary>
+        ///     The trace queue
+        /// </summary>
+        readonly TraceQueue traceQueue = new TraceQueue();
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="View" /> class.
         /// </summary>
-        public View(Scope scope)
+        public View()
         {
-            this.scope = scope;
-
-            App.UserVisibleTrace= traceQueue.AddMessage;
+            App.UserVisibleTrace = traceQueue.AddMessage;
 
             InitializeGlobalFontStyle();
 
@@ -58,10 +63,7 @@ namespace ApiInspector.MainWindow
                 UpdateTitle();
             };
 
-            Closed += (s, e) =>
-            {
-                System.Windows.Application.Current.Shutdown();
-            };
+            Closed += (s, e) => { System.Windows.Application.Current.Shutdown(); };
         }
         #endregion
 
@@ -70,11 +72,6 @@ namespace ApiInspector.MainWindow
         ///     Gets the invocation information.
         /// </summary>
         InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
-
-        /// <summary>
-        ///     The trace queue
-        /// </summary>
-        TraceQueue traceQueue => scope.Get(Keys.TraceQueue);
         #endregion
 
         #region Methods
@@ -82,12 +79,6 @@ namespace ApiInspector.MainWindow
         {
             invokingResponseView.Text = string.Empty;
         }
-
-        void UpdateResponseView(string responseAsJson)
-        {
-            invokingResponseView.Text =responseAsJson;
-        }
-
 
         /// <summary>
         ///     Initializes the global font style.
@@ -121,7 +112,7 @@ namespace ApiInspector.MainWindow
         {
             if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
-                scope.Get(Keys.ErrorMonitor).ShowErrorNotification("MethodName can not be empty.");
+                ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
 
@@ -213,6 +204,11 @@ namespace ApiInspector.MainWindow
         void Trace(string message)
         {
             traceQueue.AddMessage(message);
+        }
+
+        void UpdateResponseView(string responseAsJson)
+        {
+            invokingResponseView.Text = responseAsJson;
         }
 
         /// <summary>

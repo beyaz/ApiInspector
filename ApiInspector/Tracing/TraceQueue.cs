@@ -5,7 +5,7 @@ namespace ApiInspector.Tracing
     /// <summary>
     ///     The trace queue
     /// </summary>
-    public class TraceQueue 
+    public class TraceQueue
     {
         #region Fields
         /// <summary>

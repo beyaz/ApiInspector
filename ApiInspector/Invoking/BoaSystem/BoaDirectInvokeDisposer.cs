@@ -30,10 +30,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 return fieldInfo;
             });
 
-            var clearField = fun((string fieldName) =>
-            {
-                getField(fieldName).SetValue(null, null);
-            });
+            var clearField = fun((string fieldName) => { getField(fieldName).SetValue(null, null); });
 
             var unloadWcfDomain = fun(() =>
             {
@@ -41,14 +38,13 @@ namespace ApiInspector.Invoking.BoaSystem
 
                 if (wcfDomain != null)
                 {
-                    AppDomain.Unload(wcfDomain);    
+                    AppDomain.Unload(wcfDomain);
                 }
             });
 
             unloadWcfDomain();
             clearField("appDomainExecuter");
             clearField("wcfDomain");
-
         }
         #endregion
     }
