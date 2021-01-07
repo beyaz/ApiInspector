@@ -40,7 +40,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         public View()
         {
-            App.UserVisibleTrace = traceQueue.AddMessage;
+            
 
             InitializeGlobalFontStyle();
 
@@ -52,6 +52,8 @@ namespace ApiInspector.MainWindow
 
             Loaded += (s, e) =>
             {
+                historyPanel.Trace = traceQueue.AddMessage;
+
                 historyPanel.Connect(scope);
                 currentInvocationInfo.Connect(scope);
 

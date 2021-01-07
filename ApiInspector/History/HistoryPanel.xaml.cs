@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using ApiInspector.Application;
 using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
@@ -72,13 +71,9 @@ namespace ApiInspector.History
         #endregion
 
         #region Methods
-        /// <summary>
-        ///     Traces the specified message.
-        /// </summary>
-        static void Trace(string message)
-        {
-            App.UserVisibleTrace(message);
-        }
+        
+
+        public Action<string> Trace = Console.WriteLine;
 
         /// <summary>
         ///     Deletes the selected item from History.

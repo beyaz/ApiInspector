@@ -11,7 +11,7 @@ namespace ApiInspector.Application
     partial class App
     {
         #region Static Fields
-        public static Action<string> UserVisibleTrace = Console.WriteLine;
+        
         static ErrorMonitor errorMonitor;
         #endregion
 
