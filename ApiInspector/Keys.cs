@@ -4,7 +4,6 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
-using Mono.Cecil;
 
 namespace ApiInspector
 {
@@ -69,10 +68,6 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<string> UserName => CreateKey<string>();
 
-        /// <summary>
-        ///     Gets the user visible trace.
-        /// </summary>
-        public static DataKey<Action<string>> UserVisibleTrace => CreateKey<Action<string>>();
         #endregion
 
         #region Methods

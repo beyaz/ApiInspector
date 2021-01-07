@@ -35,7 +35,7 @@ namespace ApiInspector.MainWindow
         {
             this.scope = scope;
 
-            App.ApplicationScope.Update(UserVisibleTrace, traceQueue.AddMessage);
+            App.UserVisibleTrace= traceQueue.AddMessage;
 
             InitializeGlobalFontStyle();
 

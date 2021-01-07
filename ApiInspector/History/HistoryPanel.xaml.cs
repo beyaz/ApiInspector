@@ -74,7 +74,7 @@ namespace ApiInspector.History
         /// </summary>
         static void Trace(string message)
         {
-            App.ApplicationScope.Get(UserVisibleTrace)(message);
+            App.UserVisibleTrace(message);
         }
 
         /// <summary>

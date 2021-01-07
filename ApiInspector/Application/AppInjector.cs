@@ -16,7 +16,7 @@ namespace ApiInspector.Application
         public AppInjector(ErrorMonitor errorMonitor)
         {
             Bind<TraceQueue>().ToSelf().InSingletonScope();
-            Bind<ITracer>().To<TraceQueue>();
+            
             Bind<View>().ToSelf().InSingletonScope();
             Bind<ErrorMonitor>().ToMethod(x => errorMonitor);
 

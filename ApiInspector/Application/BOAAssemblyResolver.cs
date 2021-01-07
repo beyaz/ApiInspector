@@ -87,7 +87,7 @@ namespace ApiInspector.Application
                 @"D:\BOA\HSM\server\bin",
                 @"D:\BOA\BOA.Integration\server\bin"
             };
-            var invocationSearchDirectory = ApplicationScope.TryGet(InvocationSearchDirectory);
+            var invocationSearchDirectory = ApplicationScope_dirty.TryGet(InvocationSearchDirectory);
             if (invocationSearchDirectory != null)
             {
                 directories.Add(invocationSearchDirectory);

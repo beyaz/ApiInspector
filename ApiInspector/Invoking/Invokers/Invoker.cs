@@ -86,7 +86,7 @@ namespace ApiInspector.Invoking.Invokers
             {
                 trace($"Started to search class: {invocationInfo.ClassName}");
 
-                ApplicationScope.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
+                ApplicationScope_dirty.Update(InvocationSearchDirectory, invocationInfo.AssemblySearchDirectory);
 
                 return GetTargetType(invocationInfo);
             });

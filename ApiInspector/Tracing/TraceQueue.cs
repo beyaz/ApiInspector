@@ -3,22 +3,9 @@
 namespace ApiInspector.Tracing
 {
     /// <summary>
-    ///     The tracer
-    /// </summary>
-    public interface ITracer
-    {
-        #region Public Methods
-        /// <summary>
-        ///     Traces the specified message.
-        /// </summary>
-        void Trace(string message);
-        #endregion
-    }
-
-    /// <summary>
     ///     The trace queue
     /// </summary>
-    public class TraceQueue : ITracer
+    public class TraceQueue 
     {
         #region Fields
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Authentication;
-using ApiInspector.Tracing;
 using BOA.Base;
 using BOA.Base.Data;
 using BOA.Business.Kernel.General;
@@ -75,15 +74,7 @@ namespace ApiInspector.Invoking.BoaSystem
         #endregion
 
         #region Constructors
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="BOAContext" /> class.
-        /// </summary>
-        public BOAContext(ITracer tracer, EnvironmentInfo environmentInfo)
-        {
-            trace = tracer.Trace;
-
-            data = new BOAContextData(environmentInfo);
-        }
+        
 
         public BOAContext(EnvironmentInfo environmentInfo, Action<string> trace)
         {
