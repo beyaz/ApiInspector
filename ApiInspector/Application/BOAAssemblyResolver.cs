@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using static ApiInspector.Application.App;
-using static ApiInspector.Keys;
 using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.Application
@@ -79,7 +77,7 @@ namespace ApiInspector.Application
         /// </summary>
         static IReadOnlyList<string> GetDirectories()
         {
-            var directories = new List<string>
+            return new List<string>
             {
                 @"D:\BOA\server\bin",
                 @"D:\BOA\client\bin",
@@ -87,13 +85,6 @@ namespace ApiInspector.Application
                 @"D:\BOA\HSM\server\bin",
                 @"D:\BOA\BOA.Integration\server\bin"
             };
-            var invocationSearchDirectory = ApplicationScope_dirty.TryGet(InvocationSearchDirectory);
-            if (invocationSearchDirectory != null)
-            {
-                directories.Add(invocationSearchDirectory);
-            }
-
-            return directories;
         }
         #endregion
     }

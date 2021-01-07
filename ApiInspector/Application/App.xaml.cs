@@ -10,10 +10,8 @@ namespace ApiInspector.Application
     /// </summary>
     partial class App
     {
-        public static Action<string> UserVisibleTrace = Console.WriteLine;
-
         #region Static Fields
-        internal static readonly Scope ApplicationScope_dirty = new Scope();
+        public static Action<string> UserVisibleTrace = Console.WriteLine;
         #endregion
 
         #region Constructors

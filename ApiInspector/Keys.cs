@@ -36,10 +36,6 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<IReadOnlyList<InvocationInfo>> HistoryItems => CreateKey<IReadOnlyList<InvocationInfo>>();
 
-        /// <summary>
-        ///     Gets or sets the invocation search directory.
-        /// </summary>
-        public static DataKey<string> InvocationSearchDirectory => CreateKey<string>();
 
 
         /// <summary>
