@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Forms.Integration;
 using FastColoredTextBoxNS;
 
@@ -9,13 +10,6 @@ namespace ApiInspector.Components
     /// </summary>
     class JsonTextEditor : WindowsFormsHost
     {
-        #region Static Fields
-        /// <summary>
-        ///     The text property
-        /// </summary>
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(JsonTextEditor), new PropertyMetadata(default(string), OnTextChanged));
-        #endregion
-
         #region Fields
         /// <summary>
         ///     The editor
@@ -23,7 +17,6 @@ namespace ApiInspector.Components
         readonly FastColoredTextBox editor = new FastColoredTextBox
         {
             Language = FastColoredTextBoxNS.Language.JSON
-            //   Dock     = DockStyle.Fill,
         };
         #endregion
 
@@ -40,26 +33,22 @@ namespace ApiInspector.Components
         }
         #endregion
 
+        #region Public Events
+        public event EventHandler<TextChangedEventArgs> TextChanged
+        {
+            add => editor.TextChanged += value;
+            remove => editor.TextChanged -= value;
+        }
+        #endregion
+
         #region Public Properties
         /// <summary>
         ///     Gets or sets the text.
         /// </summary>
         public string Text
         {
-            get => (string) GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Called when [text changed].
-        /// </summary>
-        static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var jsonTextEditor = (JsonTextEditor) d;
-
-            jsonTextEditor.editor.Text = (string) e.NewValue;
+            get => editor.Text;
+            set => editor.Text = value;
         }
         #endregion
     }

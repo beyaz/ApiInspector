@@ -164,26 +164,34 @@ namespace ApiInspector.InvocationInfoEditor
                 }
 
                 // complex items should be as json input
-
-                if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                 {
-                    parameterInfo.Value = Serializer.SerializeToJson(parameterInfo.Value);
-                }
-
-                if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
-                {
-                    var parameterType = FindType(definition.ParameterType.FullName);
-                    if (parameterType != null)
+                    
+                    if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                     {
-                        parameterInfo.Value = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
+                        parameterInfo.Value = Serializer.SerializeToJson(parameterInfo.Value);
                     }
+
+                    if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
+                    {
+                        var parameterType = FindType(definition.ParameterType.FullName);
+                        if (parameterType != null)
+                        {
+                            parameterInfo.Value = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
+                        }
+                    }
+
+                    var editor = new JsonTextEditor
+                    {
+                        Text = parameterInfo.Value + string.Empty
+                    };
+
+                    editor.TextChanged += (s, e) =>
+                    {
+                        parameterInfo.Value = editor.Text;
+                    };
+
+                    return (UIElement) editor;
                 }
-
-                var jsonTextEditor = new JsonTextEditor();
-
-                Bind(jsonTextEditor, JsonTextEditor.TextProperty, parameterInfo, nameof(parameterInfo.Value));
-
-                return (UIElement) jsonTextEditor;
             });
 
             return NewStackPanel(label, createEditor());
