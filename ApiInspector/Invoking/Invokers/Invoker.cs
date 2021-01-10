@@ -20,29 +20,6 @@ namespace ApiInspector.Invoking.Invokers
     static class Invoker
     {
         #region Public Methods
-        /// <summary>
-        ///     Gets the type of the target.
-        /// </summary>
-        public static Type GetTargetType(InvocationInfo invocationInfo)
-        {
-            var assemblyName = invocationInfo.AssemblyName;
-            var className    = invocationInfo.ClassName;
-
-            Type targetType = null;
-            if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
-            {
-                var assemblyPath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
-                var assembly     = Assembly.LoadFile(assemblyPath);
-
-                if (!IsSuccess(() => assembly.GetType(className, true), ref targetType))
-                {
-                    throw new TypeLoadException(className);
-                }
-            }
-
-            return targetType;
-        }
-
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo)
         {
             using (var boaContext = new BOAContext(environmentInfo, trace))
@@ -75,6 +52,29 @@ namespace ApiInspector.Invoking.Invokers
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Gets the type of the target.
+        /// </summary>
+        static Type GetTargetType(InvocationInfo invocationInfo)
+        {
+            var assemblyName = invocationInfo.AssemblyName;
+            var className    = invocationInfo.ClassName;
+
+            Type targetType = null;
+            if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
+            {
+                var assemblyPath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
+                var assembly     = Assembly.LoadFile(assemblyPath);
+
+                if (!IsSuccess(() => assembly.GetType(className, true), ref targetType))
+                {
+                    throw new TypeLoadException(className);
+                }
+            }
+
+            return targetType;
+        }
+
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
