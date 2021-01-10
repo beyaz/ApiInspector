@@ -1,21 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using ApiInspector.Components;
 using Mono.Cecil;
 using static ApiInspector.Keys;
 using static FunctionalPrograming.FPExtensions;
 using static ApiInspector.DataAccess.TypeVisitor;
+using static ApiInspector.WPFExtensions;
 
 namespace ApiInspector.InvocationInfoEditor
 {
     /// <summary>
     ///     Interaction logic for View.xaml
     /// </summary>
-    public partial class View
+    class View:UserControl
     {
         #region Fields
         internal Scope scope;
+
+        readonly IntellisenseTextBox environmentIntellisenseTextBox = new IntellisenseTextBox(),
+                                     assemblySearchDirectoryIntellisenseTextBox = new IntellisenseTextBox(),
+                                     assemblyIntellisenseTextBox = new IntellisenseTextBox(),
+                                     classNameIntellisenseTextBox = new IntellisenseTextBox(),
+                                     methodNameIntellisenseTextBox = new IntellisenseTextBox();
+
+        readonly StackPanel parametersPanel = new StackPanel();
         #endregion
 
         #region Constructors
@@ -24,10 +36,41 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public View()
         {
-            InitializeComponent();
+            var buildUI = fun(() =>
+            {
+                var fontWeight = FontWeights.Bold;
 
-            Loaded += (s, e) => { UpdateSuggestions(); };
-            Loaded += (s, e) => { RegisterEvents(); };
+                var createInput = fun((string label, IntellisenseTextBox editor) =>
+                {
+                    var lbl = new Label
+                    {
+                        FontWeight = fontWeight,
+                        Content    = label
+                    };
+
+                    return NewStackPanel(lbl, editor);
+                });
+
+                return NewStackPanel(10,
+                                     createInput("Target BOA Environment (Dev,Test)", environmentIntellisenseTextBox),
+                                     createInput("Assembly Search Directory", assemblySearchDirectoryIntellisenseTextBox),
+                                     createInput("Assembly Name", assemblyIntellisenseTextBox),
+                                     createInput("Class Name", classNameIntellisenseTextBox),
+                                     createInput("Method Name", methodNameIntellisenseTextBox),
+                                     NewGroupBox(NewTextBlock("Parameters", fontWeight), parametersPanel)
+                                    );
+            });
+
+            var content = buildUI();
+
+            Content = content;
+
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                Loaded += (s, e) => { UpdateSuggestions(); };
+                Loaded += (s, e) => { RegisterEvents(); };
+            }
+          
         }
         #endregion
 

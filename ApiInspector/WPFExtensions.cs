@@ -39,6 +39,24 @@ namespace ApiInspector
             return sp;
         }
 
+        public static StackPanel NewStackPanel(int indent, params FrameworkElement[] childElements)
+        {
+            var sp = new StackPanel();
+
+            var i = 0;
+            foreach (var element in childElements)
+            {
+                if (i>0)
+                {
+                    element.Margin = new Thickness(0, indent, 0, 0);
+                }
+                sp.Children.Add(element);
+                i++;
+            }
+
+            return sp;
+        }
+
         public static TextBlock NewTextBlock(string text,FontWeight fontWeight)
         {
             return new TextBlock {FontWeight = fontWeight, Text = text};

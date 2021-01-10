@@ -91,6 +91,7 @@
     <Compile Include="FunctionalPrograming\Response.T.cs" />
     <Compile Include="FunctionalPrograming\Response.cs" />
     <Compile Include="FunctionalPrograming\Result.cs" />
+    <Compile Include="InvocationInfoEditor\View.cs" />
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="ConnectionInfo.cs" />
@@ -135,10 +136,6 @@
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Util\JsonSorter.cs" />
-    <Page Include="InvocationInfoEditor\View.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="History\HistoryPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -150,9 +147,6 @@
     <Compile Include="Application\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="InvocationInfoEditor\View.xaml.cs">
-      <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\InvocationInfo.cs" />
     <Compile Include="MainWindow\View.xaml.cs">
