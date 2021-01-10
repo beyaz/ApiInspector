@@ -5,6 +5,7 @@ namespace ApiInspector.Invoking
     /// <summary>
     ///     The invoke output
     /// </summary>
+    [Serializable]
     class InvokeOutput
     {
         #region Constructors

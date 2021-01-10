@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
@@ -11,21 +12,79 @@ using BOA.Common.Types;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
+using Task = System.Threading.Tasks.Task;
 
 namespace ApiInspector.Invoking.Invokers
 {
+    /// <summary>
+    ///     The application domain helper
+    /// </summary>
+    class AppDomainHelper
+    {
+        #region Static Fields
+        /// <summary>
+        ///     The listen messages
+        /// </summary>
+        static bool listenMessages;
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        ///     Calls the in isolated domain.
+        /// </summary>
+        public static TOutput CallInIsolatedDomain<T, TOutput>(Func<T, TOutput> action, Action<string> trace)
+        {
+            var setup = new AppDomainSetup
+            {
+                ShadowCopyFiles = "true",
+                ApplicationBase = Path.GetDirectoryName(typeof(AppDomainHelper).Assembly.Location)
+            };
+
+            var domain = AppDomain.CreateDomain("AppDomainIsolation:" + Guid.NewGuid(), null, setup);
+
+            var type = typeof(T);
+
+            var instance = (T) domain.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName ?? throw new InvalidOperationException());
+
+            listenMessages = true;
+
+            var listen = fun(() =>
+            {
+                while (listenMessages)
+                {
+                    Thread.Sleep(5);
+                    if (domain.GetData("trace") is string message)
+                    {
+                        trace(message);
+                    }
+                }
+            });
+
+            Task.Run(listen);
+
+            var output = action(instance);
+
+            AppDomain.Unload(domain);
+
+            listenMessages = false;
+
+            return output;
+        }
+        #endregion
+    }
+
     /// <summary>
     ///     The invoker
     /// </summary>
     static class Invoker
     {
         #region Public Methods
+        /// <summary>
+        ///     Invokes the specified environment information.
+        /// </summary>
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo)
         {
-            using (var boaContext = new BOAContext(environmentInfo, trace))
-            {
-                return Invoke(boaContext, trace, invocationInfo);
-            }
+            return AppDomainHelper.CallInIsolatedDomain((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo), trace);
         }
 
         /// <summary>
@@ -64,7 +123,7 @@ namespace ApiInspector.Invoking.Invokers
             if (!IsSuccess(() => Type.GetType($"{className},{Path.GetFileNameWithoutExtension(assemblyName)}", true), ref targetType))
             {
                 var assemblyPath = Path.Combine(invocationInfo.AssemblySearchDirectory, invocationInfo.AssemblyName);
-                var assembly     = Assembly.LoadFile(assemblyPath);
+                var assembly     = Assembly.Load(File.ReadAllBytes(assemblyPath));
 
                 if (!IsSuccess(() => assembly.GetType(className, true), ref targetType))
                 {
@@ -227,5 +286,26 @@ namespace ApiInspector.Invoking.Invokers
             return new InvokeOutput(null, responseInvokeMethod, SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
         }
         #endregion
+
+        /// <summary>
+        ///     The invoke external
+        /// </summary>
+        class InvokeExternal : MarshalByRefObject
+        {
+            #region Public Methods
+            /// <summary>
+            ///     Invokes the specified environment information.
+            /// </summary>
+            public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo)
+            {
+                var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
+
+                using (var boaContext = new BOAContext(environmentInfo, trace))
+                {
+                    return Invoker.Invoke(boaContext, trace, invocationInfo);
+                }
+            }
+            #endregion
+        }
     }
 }

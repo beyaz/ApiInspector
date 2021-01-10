@@ -12,6 +12,11 @@ namespace ApiInspector.Tracing
         ///     The trace messages
         /// </summary>
         readonly List<string> traceMessages = new List<string>();
+
+        /// <summary>
+        ///     The last message
+        /// </summary>
+        string lastMessage;
         #endregion
 
         #region Public Methods
@@ -20,7 +25,11 @@ namespace ApiInspector.Tracing
         /// </summary>
         public void AddMessage(string message)
         {
-            traceMessages.Add(message);
+            if (lastMessage != message)
+            {
+                lastMessage = message;
+                traceMessages.Add(message);
+            }
         }
 
         /// <summary>

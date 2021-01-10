@@ -5,6 +5,7 @@ namespace ApiInspector.Invoking.BoaSystem
     /// <summary>
     ///     The environment information
     /// </summary>
+    [Serializable]
     class EnvironmentInfo
     {
         #region Static Fields
