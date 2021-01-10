@@ -165,7 +165,6 @@ namespace ApiInspector.InvocationInfoEditor
 
                 // complex items should be as json input
                 {
-                    
                     if (parameterInfo.Value != null && !(parameterInfo.Value is string))
                     {
                         parameterInfo.Value = Serializer.SerializeToJson(parameterInfo.Value);
@@ -173,11 +172,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                     if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
                     {
-                        var parameterType = FindType(definition.ParameterType.FullName);
-                        if (parameterType != null)
-                        {
-                            parameterInfo.Value = Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
-                        }
+                        parameterInfo.Value = GetDefaultJsonForClass(definition.ParameterType.FullName) ?? string.Empty;
                     }
 
                     var editor = new JsonTextEditor
@@ -185,16 +180,24 @@ namespace ApiInspector.InvocationInfoEditor
                         Text = parameterInfo.Value + string.Empty
                     };
 
-                    editor.TextChanged += (s, e) =>
-                    {
-                        parameterInfo.Value = editor.Text;
-                    };
+                    editor.TextChanged += (s, e) => { parameterInfo.Value = editor.Text; };
 
                     return (UIElement) editor;
                 }
             });
 
             return NewStackPanel(label, createEditor());
+        }
+
+        static string GetDefaultJsonForClass(string classFullName)
+        {
+            var parameterType = FindType(classFullName);
+            if (parameterType != null)
+            {
+                return Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
+            }
+
+            return null;
         }
         #endregion
     }
