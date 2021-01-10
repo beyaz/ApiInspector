@@ -63,7 +63,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Creates the specified definition.
         /// </summary>
-        static StackPanel Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
+        static GroupBox Create(ParameterDefinition definition, InvocationMethodParameterInfo parameterInfo)
         {
             var isNullableDateTime = definition.ParameterType.FullName == "System.Nullable`1<System.DateTime>";
             var isDateTime         = definition.ParameterType.FullName == "System.DateTime";
@@ -82,13 +82,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 return definition.ParameterType.Name;
             });
-
-            var label = new Label
-            {
-                Content    = $"{definition.Name} : {getLabel()}",
-                FontWeight = FontWeights.Bold
-            };
-
+            
             var canPresentSimpleTextBox = fun(() =>
             {
                 var types = new[]
@@ -185,8 +179,8 @@ namespace ApiInspector.InvocationInfoEditor
                     return (UIElement) editor;
                 }
             });
-
-            return NewStackPanel(label, createEditor());
+            
+            return NewGroupBox(NewTextBlock($"{definition.Name} : {getLabel()}", FontWeights.Light), createEditor());
         }
 
         static string GetDefaultJsonForClass(string classFullName)

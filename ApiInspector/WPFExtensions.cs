@@ -38,6 +38,21 @@ namespace ApiInspector
 
             return sp;
         }
+
+        public static TextBlock NewTextBlock(string text,FontWeight fontWeight)
+        {
+            return new TextBlock {FontWeight = fontWeight, Text = text};
+        }
+
+        public static GroupBox NewGroupBox(UIElement header, UIElement content)
+        {
+            return new GroupBox
+            {
+                Header = header,
+                Content = content
+            };
+        }
+
         #endregion
     }
 }
