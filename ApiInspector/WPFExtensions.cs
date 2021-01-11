@@ -71,6 +71,34 @@ namespace ApiInspector
             };
         }
 
+
+        public static Expander NewExpander(string header, int contentMargin, FrameworkElement content)
+        {
+            content.Margin = new Thickness(contentMargin);
+
+            var expander = new Expander
+            {
+                Header     = NewTextBlock(header,FontWeights.Bold),
+                Content    = content,
+                IsExpanded = true
+            };
+
+            return expander;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         #endregion
     }
 }

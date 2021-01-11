@@ -51,19 +51,18 @@ namespace ApiInspector.InvocationInfoEditor
                     return NewStackPanel(lbl, editor);
                 });
 
-                return NewStackPanel(10,
-                                     createInput("Target BOA Environment (Dev,Test)", environmentIntellisenseTextBox),
-                                     createInput("Assembly Search Directory", assemblySearchDirectoryIntellisenseTextBox),
-                                     createInput("Assembly Name", assemblyIntellisenseTextBox),
-                                     createInput("Class Name", classNameIntellisenseTextBox),
-                                     createInput("Method Name", methodNameIntellisenseTextBox),
-                                     NewGroupBox(NewTextBlock("Parameters", fontWeight), parametersPanel)
-                                    );
+                return NewExpander("Method Information", 10,
+                                   NewStackPanel(10,
+                                                 createInput("Target BOA Environment (Dev,Test)", environmentIntellisenseTextBox),
+                                                 createInput("Assembly Search Directory", assemblySearchDirectoryIntellisenseTextBox),
+                                                 createInput("Assembly Name", assemblyIntellisenseTextBox),
+                                                 createInput("Class Name", classNameIntellisenseTextBox),
+                                                 createInput("Method Name", methodNameIntellisenseTextBox),
+                                                 NewGroupBox(NewTextBlock("Parameters", fontWeight), parametersPanel)
+                                                ));
             });
 
-            var content = buildUI();
-
-            Content = content;
+            Content = buildUI();
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {

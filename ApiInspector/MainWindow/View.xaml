@@ -6,6 +6,7 @@
         xmlns:invocationInfoEditor = "clr-namespace:ApiInspector.InvocationInfoEditor"
         xmlns:history = "clr-namespace:ApiInspector.History"
         xmlns:components = "clr-namespace:ApiInspector.Components"
+        xmlns:mainWindow = "clr-namespace:ApiInspector.MainWindow"
         mc:Ignorable = "d"
         x:Name = "CodeBehind"
         DataContext = "{Binding ElementName=CodeBehind}"
@@ -44,14 +45,11 @@
 
 
                 <invocationInfoEditor:View x:Name = "currentInvocationInfo" Margin = "0,10,0,0" />
-
-                <StackPanel Margin = "0,10,0,0" >
-                    <Label FontWeight = "Bold" > Response </Label>
-                </StackPanel>
+             
 
             </StackPanel>
 
-            <components:JsonTextEditor Grid.Row = "1" Height = "Auto" x:Name = "invokingResponseView" />
+            <mainWindow:ResponseEditor Margin = "0,10,0,0"  Grid.Row = "1"  x:Name = "invokingResponseView" />
 
             <StackPanel Grid.Row = "2" Margin = "0,4,0,0" >
                 <Label FontWeight = "Bold" > Response Output File </Label>
