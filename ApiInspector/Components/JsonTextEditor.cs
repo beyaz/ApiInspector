@@ -6,25 +6,22 @@ using FastColoredTextBoxNS;
 namespace ApiInspector.Components
 {
     /// <summary>
-    ///     The json text editor
+    ///     The special text editor
     /// </summary>
-    class JsonTextEditor : WindowsFormsHost
+    class SpecialTextEditor : WindowsFormsHost
     {
         #region Fields
         /// <summary>
         ///     The editor
         /// </summary>
-        readonly FastColoredTextBox editor = new FastColoredTextBox
-        {
-            Language = FastColoredTextBoxNS.Language.JSON
-        };
+        protected readonly FastColoredTextBox editor = new FastColoredTextBox();
         #endregion
 
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonTextEditor" /> class.
         /// </summary>
-        public JsonTextEditor()
+        public SpecialTextEditor()
         {
             Child               = editor;
             HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -34,6 +31,9 @@ namespace ApiInspector.Components
         #endregion
 
         #region Public Events
+        /// <summary>
+        ///     Occurs when [text changed].
+        /// </summary>
         public event EventHandler<TextChangedEventArgs> TextChanged
         {
             add => editor.TextChanged += value;
@@ -49,6 +49,38 @@ namespace ApiInspector.Components
         {
             get => editor.Text;
             set => editor.Text = value;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The json text editor
+    /// </summary>
+    class JsonTextEditor : SpecialTextEditor
+    {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="JsonTextEditor" /> class.
+        /// </summary>
+        public JsonTextEditor()
+        {
+            editor.Language = FastColoredTextBoxNS.Language.JSON;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     The SQL text editor
+    /// </summary>
+    class SQLTextEditor : SpecialTextEditor
+    {
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SQLTextEditor" /> class.
+        /// </summary>
+        public SQLTextEditor()
+        {
+            editor.Language = FastColoredTextBoxNS.Language.SQL;
         }
         #endregion
     }
