@@ -15,10 +15,17 @@ using System.Windows.Shapes;
 
 namespace ApiInspector.MainWindow
 {
+
+    static class Icons
+    {
+        public static readonly Geometry Settings = Geometry.Parse("M344,144h-29.952c-2.512-8.2-5.8-16.12-9.792-23.664l21.16-21.16c4.528-4.528,7.024-10.56,7.024-16.984\r\n\t\t\tc0-6.416-2.496-12.448-7.024-16.976l-22.64-22.64c-9.048-9.048-24.888-9.072-33.952,0l-21.16,21.16\r\n\t\t\tc-7.536-3.992-15.464-7.272-23.664-9.792V24c0-13.232-10.768-24-24-24h-32c-13.232,0-24,10.768-24,24v29.952\r\n\t\t\tc-8.2,2.52-16.12,5.8-23.664,9.792l-21.168-21.16c-9.36-9.36-24.592-9.36-33.952,0l-22.648,22.64\r\n\t\t\tc-9.352,9.36-9.352,24.592,0,33.952l21.16,21.168c-3.992,7.536-7.272,15.464-9.792,23.664H24c-13.232,0-24,10.768-24,24v32\r\n\t\t\tC0,213.232,10.768,224,24,224h29.952c2.52,8.2,5.8,16.12,9.792,23.664l-21.16,21.168c-9.36,9.36-9.36,24.592,0,33.952\r\n\t\t\tl22.64,22.648c9.36,9.352,24.592,9.352,33.952,0l21.168-21.16c7.536,3.992,15.464,7.272,23.664,9.792V344\r\n\t\t\tc0,13.232,10.768,24,24,24h32c13.232,0,24-10.768,24-24v-29.952c8.2-2.52,16.128-5.8,23.664-9.792l21.16,21.168\r\n\t\t\tc9.072,9.064,24.912,9.048,33.952,0l22.64-22.64c4.528-4.528,7.024-10.56,7.024-16.976c0-6.424-2.496-12.448-7.024-16.976\r\n\t\t\tl-21.16-21.168c3.992-7.536,7.272-15.464,9.792-23.664H344c13.232,0,24-10.768,24-24v-32C368,154.768,357.232,144,344,144z\r\n\t\t\t M352,200c0,4.408-3.584,8-8,8h-36c-3.648,0-6.832,2.472-7.744,6c-2.832,10.92-7.144,21.344-12.832,30.976\r\n\t\t\tc-1.848,3.144-1.344,7.144,1.232,9.72l25.44,25.448c1.504,1.504,2.336,3.512,2.336,5.664c0,2.152-0.832,4.16-2.336,5.664\r\n\t\t\tl-22.64,22.64c-3.008,3.008-8.312,3.008-11.328,0l-25.44-25.44c-2.576-2.584-6.576-3.08-9.728-1.232\r\n\t\t\tc-9.616,5.68-20.04,10-30.968,12.824c-3.52,0.904-5.992,4.088-5.992,7.736v36c0,4.408-3.584,8-8,8h-32c-4.408,0-8-3.592-8-8v-36\r\n\t\t\tc0-3.648-2.472-6.832-6-7.744c-10.92-2.824-21.344-7.136-30.976-12.824c-1.264-0.752-2.664-1.112-4.064-1.112\r\n\t\t\tc-2.072,0-4.12,0.8-5.664,2.344l-25.44,25.44c-3.128,3.12-8.2,3.12-11.328,0l-22.64-22.64c-3.128-3.128-3.128-8.208,0-11.328\r\n\t\t\tl25.44-25.44c2.584-2.584,3.088-6.584,1.232-9.72c-5.68-9.632-10-20.048-12.824-30.976c-0.904-3.528-4.088-6-7.736-6H24\r\n\t\t\tc-4.408,0-8-3.592-8-8v-32c0-4.408,3.592-8,8-8h36c3.648,0,6.832-2.472,7.744-6c2.824-10.92,7.136-21.344,12.824-30.976\r\n\t\t\tc1.856-3.144,1.352-7.144-1.232-9.72l-25.44-25.44c-3.12-3.12-3.12-8.2,0-11.328l22.64-22.64c3.128-3.128,8.2-3.12,11.328,0\r\n\t\t\tl25.44,25.44c2.584,2.584,6.576,3.096,9.72,1.232c9.632-5.68,20.048-10,30.976-12.824c3.528-0.912,6-4.096,6-7.744V24\r\n\t\t\tc0-4.408,3.592-8,8-8h32c4.416,0,8,3.592,8,8v36c0,3.648,2.472,6.832,6,7.744c10.928,2.824,21.352,7.144,30.968,12.824\r\n\t\t\tc3.152,1.856,7.152,1.36,9.728-1.232l25.44-25.44c3.016-3.024,8.32-3.016,11.328,0l22.64,22.64\r\n\t\t\tc1.504,1.504,2.336,3.52,2.336,5.664s-0.832,4.16-2.336,5.664l-25.44,25.44c-2.576,2.584-3.088,6.584-1.232,9.72\r\n\t\t\tc5.688,9.632,10,20.048,12.832,30.976c0.904,3.528,4.088,6,7.736,6h36c4.416,0,8,3.592,8,8V200z");
+        public static readonly Geometry Execute = Geometry.Parse("M26.511,12.004L6.233,0.463c-2.151-1.228-4.344,0.115-4.344,2.53v24.093\r\n\t\tc0,2.046,1.332,2.979,2.57,2.979c0.583,0,1.177-0.184,1.767-0.543l20.369-12.468c1.024-0.629,1.599-1.56,1.581-2.555\r\n\t\tC28.159,13.503,27.553,12.593,26.511,12.004z M25.23,14.827L4.862,27.292c-0.137,0.084-0.245,0.126-0.319,0.147\r\n\t\tc-0.02-0.074-0.04-0.188-0.04-0.353V2.994c0-0.248,0.045-0.373,0.045-0.404c0.08,0.005,0.22,0.046,0.396,0.146l20.275,11.541\r\n\t\tc0.25,0.143,0.324,0.267,0.348,0.24C25.554,14.551,25.469,14.678,25.23,14.827z");
+    }
+
     /// <summary>
     /// Interaction logic for ActionButton.xaml
     /// </summary>
-    public partial class ActionButton : UserControl
+    public partial class ActionButton 
     {
 
         public static readonly DependencyProperty IconGeometryProperty = DependencyProperty.Register(
@@ -54,9 +61,9 @@ namespace ApiInspector.MainWindow
         static void OnShowExecuteIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var actionButton = (ActionButton) d;
-            if ((bool)e.NewValue == true)
+            if ((bool)e.NewValue)
             {
-                actionButton.IconGeometry          = Geometry.Parse("M26.511,12.004L6.233,0.463c-2.151-1.228-4.344,0.115-4.344,2.53v24.093\r\n\t\tc0,2.046,1.332,2.979,2.57,2.979c0.583,0,1.177-0.184,1.767-0.543l20.369-12.468c1.024-0.629,1.599-1.56,1.581-2.555\r\n\t\tC28.159,13.503,27.553,12.593,26.511,12.004z M25.23,14.827L4.862,27.292c-0.137,0.084-0.245,0.126-0.319,0.147\r\n\t\tc-0.02-0.074-0.04-0.188-0.04-0.353V2.994c0-0.248,0.045-0.373,0.045-0.404c0.08,0.005,0.22,0.046,0.396,0.146l20.275,11.541\r\n\t\tc0.25,0.143,0.324,0.267,0.348,0.24C25.554,14.551,25.469,14.678,25.23,14.827z");
+                actionButton.IconGeometry           = Icons.Execute;
                 actionButton.iconViewBox.Visibility = Visibility.Visible;
                 
             }
@@ -70,6 +77,36 @@ namespace ApiInspector.MainWindow
         {
             get { return (bool) GetValue(ShowExecuteIconProperty); }
             set { SetValue(ShowExecuteIconProperty, value); }
+        }
+        #endregion
+
+
+
+        #region bool ShowSettingsIcon
+        public static readonly DependencyProperty ShowSettingsIconProperty = DependencyProperty.Register(
+                                                        "ShowSettingsIcon", typeof(bool), typeof(ActionButton), 
+                                                        new PropertyMetadata(default(bool),OnShowSettingsIconChanged));
+
+        static void OnShowSettingsIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            
+            var actionButton = (ActionButton) d;
+            if ((bool)e.NewValue)
+            {
+                actionButton.IconGeometry           = Icons.Settings;
+                actionButton.iconViewBox.Visibility = Visibility.Visible;
+                
+            }
+            else
+            {
+                actionButton.iconViewBox.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public bool ShowSettingsIcon
+        {
+            get { return (bool) GetValue(ShowSettingsIconProperty); }
+            set { SetValue(ShowSettingsIconProperty, value); }
         }
         #endregion
 

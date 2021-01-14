@@ -37,7 +37,7 @@ namespace ApiInspector
         public static DataKey<Scenario> SelectedScenario => CreateKey<Scenario>();
 
         
-        public static DataKey<List<InvokeOutput>> InvokeOutputs => CreateKey<List<InvokeOutput>>();
+        public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>();
 
         /// <summary>
         ///     Gets the serialize history for database insert.

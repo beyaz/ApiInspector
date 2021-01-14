@@ -84,13 +84,13 @@ namespace ApiInspector.MainWindow
         {
             var invokeOutputs = scope.TryGet(InvokeOutputs);
 
-            if (invokeOutputs == null || invokeOutputs.Count == 0)
+            if (invokeOutputs == null || invokeOutputs.Length == 0)
             {
                 return null;
             }
 
             var scenarioIndex = scenarios.IndexOf(scenario);
-            if (scenarioIndex>=0 && invokeOutputs.Count>scenarioIndex)
+            if (scenarioIndex>=0 && invokeOutputs.Length>scenarioIndex)
             {
                 return invokeOutputs[scenarioIndex];    
             }
@@ -218,12 +218,37 @@ namespace ApiInspector.MainWindow
             }
 
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
-            Dispatcher.InvokeAsync(OnExecuteClicked);
+            Dispatcher.InvokeAsync(ExecuteSelectedScenario);
         }
 
 
-         void OnExecuteClicked()
+         void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)
          {
+             if (!scope.Contains(InvokeOutputs))
+             {
+                 scope.Add(InvokeOutputs,new InvokeOutput[scenarios.Count]);
+             }
+
+             scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
+         }
+
+         void ExecuteAllScenarioList()
+         {
+             foreach (var scenario in scenarios)
+             {
+                 scope.Update(SelectedScenario,scenario);
+
+                 ExecuteSelectedScenario();
+             }
+         }
+
+         void ExecuteSelectedScenario()
+         {
+             var scenario      = scope.Get(SelectedScenario);
+
+             var invocationInfo  = InvocationInfo;
+             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
+
              void UpdateUI(Action action)
              {
                  Dispatcher.InvokeAsync(action);
@@ -241,52 +266,39 @@ namespace ApiInspector.MainWindow
                  UpdateUI(() => executeSelectedScenarioButton.IsEnabled = true);
              }
 
-             OnEnteredToExecution();
-
              void trace(string message)
              {
                  scope.Get(Keys.Trace)(message);
              }
 
-             var invocationInfo = InvocationInfo;
-
-             var scenarioCount = invocationInfo.Scenarios.Count;
-
-             trace("------------- EXECUTE STARTED -----------------");
-
-             var invokeOutputs = new List<InvokeOutput>();
-
-             scope.Update(InvokeOutputs,invokeOutputs);
-
-             var environmentInfo = EnvironmentInfo.Parse(InvocationInfo.Environment);
+             OnEnteredToExecution();
             
-             var runScenarioAt = fun((int scenarioIndex) =>
-             {
-                 var scenario = invocationInfo.Scenarios[scenarioIndex];
+             var scenarioIndex = scenarios.IndexOf(scenario);
+            
+             trace($"------------- EXECUTE STARTED For {scenarioIndex} -------------");
 
-                 scope.Update(SelectedScenario,scenario);
 
-                 invokeOutputs.Add(Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex));
+             
+              var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
+
+              UpdateScenarioOutput(scenarioIndex,invokeOutput);
+
+             
                 
-                 if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
-                 {
-                     WriteToFile(invocationInfo.ResponseOutputFilePath, invokeOutputs[scenarioIndex].ExecutionResponseAsJson);
-                 }
-             });
-
-             for (var i = 0; i < scenarioCount; i++)
+             if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
              {
-                 runScenarioAt(i);
+                 WriteToFile(invocationInfo.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
              }
 
              scope.PublishEvent(ScenarioEvent.ExecutionFinished);
             
              trace(string.Empty);
              trace(string.Empty);
-             trace("------------- EXECUTE FINISHED -----------------");
+             trace($"------------- EXECUTE FINISHED {scenarioIndex} -------------");
 
              OnExitToExecution();
          }
+
 
          
          

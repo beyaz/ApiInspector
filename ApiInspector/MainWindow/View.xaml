@@ -35,9 +35,8 @@
 
             <StackPanel>
                 <Grid>
-                    <Button HorizontalAlignment = "Right" x:Name = "executeButton" Click = "OnExecuteClicked" > Execute</Button>
                     <StackPanel HorizontalAlignment = "Left" Orientation = "Horizontal" >
-                        <Button Click = "OnConfigureClicked" > Config</Button>
+                        <mainWindow:ActionButton Click = "OnConfigureClicked" Text="Config" ShowSettingsIcon="True" />
                     </StackPanel>
 
                 </Grid>

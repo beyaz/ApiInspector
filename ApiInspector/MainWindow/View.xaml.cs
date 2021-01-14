@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
-using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
-using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using ApiInspector.Tracing;
 using static ApiInspector.Keys;
-using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
@@ -39,11 +34,14 @@ namespace ApiInspector.MainWindow
         /// </summary>
         public View()
         {
-            
-
             InitializeGlobalFontStyle();
 
             InitializeComponent();
+
+            void UpdateTitle()
+            {
+                Title = "ApiInspector - " + EnvironmentVariables.GetUserName();
+            }
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
@@ -51,7 +49,7 @@ namespace ApiInspector.MainWindow
 
             Loaded += (s, e) =>
             {
-                scope.Update(Keys.Trace,traceQueue.AddMessage);
+                scope.Update(Keys.Trace, traceQueue.AddMessage);
 
                 historyPanel.Trace = traceQueue.AddMessage;
 
@@ -60,19 +58,15 @@ namespace ApiInspector.MainWindow
 
                 historyPanel.Refresh();
 
-
                 scenarioEditor.Connect(scope);
                 scenarioEditor.ShowErrorNotification = ShowErrorNotification;
 
                 scope.Update(AddNewScenario, fun((Scenario scenario) =>
-                 {
-                     InvocationInfo.Scenarios.Add(scenario);
-                     scope.Update(SelectedScenario, scenario);
-                     scope.PublishEvent(ScenarioEvent.NewScenarioAdded);
-                 }));
-
-                
-
+                {
+                    scope.Get(SelectedInvocationInfo).Scenarios.Add(scenario);
+                    scope.Update(SelectedScenario, scenario);
+                    scope.PublishEvent(ScenarioEvent.NewScenarioAdded);
+                }));
 
                 UpdateTitle();
             };
@@ -81,16 +75,7 @@ namespace ApiInspector.MainWindow
         }
         #endregion
 
-        #region Properties
-        /// <summary>
-        ///     Gets the invocation information.
-        /// </summary>
-        InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
-        #endregion
-
         #region Methods
-        
-
         /// <summary>
         ///     Initializes the global font style.
         /// </summary>
@@ -107,129 +92,6 @@ namespace ApiInspector.MainWindow
             Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
         }
 
-      
-
-
-        /// <summary>
-        ///     Called when [entered to execution].
-        /// </summary>
-        void OnEnteredToExecution()
-        {
-            UpdateUI(() => executeButton.Content   = "Executing...");
-            UpdateUI(() => executeButton.IsEnabled = false);
-        }
-
-        /// <summary>
-        ///     Called when [execute clicked].
-        /// </summary>
-        void OnExecuteClicked(object sender, RoutedEventArgs e)
-        {
-            if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
-            {
-                ShowErrorNotification("MethodName can not be empty.");
-                return;
-            }
-
-            Task.Run(() => SaveToHistory());
-
-            Dispatcher.InvokeAsync(OnExecuteClicked);
-        }
-
-        /// <summary>
-        ///     Called when [execute clicked].
-        /// </summary>
-        void OnExecuteClicked()
-        {
-            OnEnteredToExecution();
-
-            var invocationInfo = InvocationInfo;
-
-            var scenarioCount  = invocationInfo.Scenarios.Count;
-
-            Trace("------------- EXECUTE STARTED -----------------");
-
-            var invokeOutputs = new List<InvokeOutput>();
-
-            scope.Update(InvokeOutputs,invokeOutputs);
-
-            var environmentInfo = EnvironmentInfo.Parse(InvocationInfo.Environment);
-
-            var trace = fun((string message) => { traceQueue.Trace(message); });
-            
-            var runScenarioAt = fun((int scenarioIndex) =>
-            {
-                var scenario = invocationInfo.Scenarios[scenarioIndex];
-
-                scope.Update(SelectedScenario,scenario);
-
-                invokeOutputs.Add(Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex));
-                
-                if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
-                {
-                    WriteToFile(invocationInfo.ResponseOutputFilePath, invokeOutputs[scenarioIndex].ExecutionResponseAsJson);
-                }
-            });
-
-            for (var i = 0; i < scenarioCount; i++)
-            {
-                runScenarioAt(i);
-            }
-
-            scope.PublishEvent(ScenarioEvent.ExecutionFinished);
-            
-            Trace(string.Empty);
-            Trace(string.Empty);
-            Trace("------------- EXECUTE FINISHED -----------------");
-
-            OnExitToExecution();
-        }
-
-        /// <summary>
-        ///     Called when [exit to execution].
-        /// </summary>
-        void OnExitToExecution()
-        {
-            UpdateUI(() => executeButton.Content   = "Execute");
-            UpdateUI(() => executeButton.IsEnabled = true);
-        }
-
-        
-
-        
-
-        /// <summary>
-        ///     Saves to history.
-        /// </summary>
-        void SaveToHistory()
-        {
-            scope.PublishEvent(HistoryEvent.SaveToHistory);
-        }
-
-        /// <summary>
-        ///     Traces the specified message.
-        /// </summary>
-        void Trace(string message)
-        {
-            traceQueue.AddMessage(message);
-        }
-
-        
-
-        /// <summary>
-        ///     Updates the title.
-        /// </summary>
-        void UpdateTitle()
-        {
-            Title = "ApiInspector - " + EnvironmentVariables.GetUserName();
-        }
-
-        /// <summary>
-        ///     Updates the UI.
-        /// </summary>
-        void UpdateUI(Action action)
-        {
-            Dispatcher.InvokeAsync(action);
-        }
         #endregion
     }
 }
