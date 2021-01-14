@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
@@ -32,7 +33,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Calls the in isolated domain.
         /// </summary>
-        public static TOutput CallInIsolatedDomain<T, TOutput>(Func<T, TOutput> action, Action<string> trace)
+        public static TOutput CallInIsolatedDomain<T, TOutput>(Func<T, TOutput> action, Action<string> trace, Func<Exception, TOutput> onFail)
         {
             var setup = new AppDomainSetup
             {
@@ -41,6 +42,7 @@ namespace ApiInspector.Invoking.Invokers
             };
 
             var domain = AppDomain.CreateDomain("AppDomainIsolation:" + Guid.NewGuid(), null, setup);
+            domain.AssemblyResolve += BoaAssemblyResolver.DomainAssemblyResolve;
 
             var type = typeof(T);
 
@@ -62,9 +64,17 @@ namespace ApiInspector.Invoking.Invokers
 
             Task.Run(listen);
 
-            var output = action(instance);
+            var output = default(TOutput);
+            try
+            {
+                output = action(instance);
 
-            AppDomain.Unload(domain);
+                AppDomain.Unload(domain);
+            }
+            catch (Exception exception)
+            {
+                output = onFail(exception);
+            }
 
             listenMessages = false;
 
@@ -82,26 +92,31 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified environment information.
         /// </summary>
-        public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo)
+        public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo, int scenarioIndex)
         {
-            return AppDomainHelper.CallInIsolatedDomain((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo), trace);
+            return AppDomainHelper.CallInIsolatedDomain((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo, scenarioIndex), trace,ToOutput);
+        }
+
+        static InvokeOutput ToOutput(Exception exception)
+        {
+            return new InvokeOutput(exception);
         }
 
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public static InvokeOutput Invoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo)
+        public static InvokeOutput Invoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, int scenarioIndex)
         {
             var fail = fun((Exception exception) =>
             {
                 boaContext.Dispose();
 
-                return new InvokeOutput(exception, exception, SerializeToJson(exception));
+                return ToOutput(exception);
             });
 
             try
             {
-                return UnsafeInvoke(boaContext, trace, invocationInfo);
+                return UnsafeInvoke(boaContext, trace, invocationInfo, scenarioIndex);
             }
             catch (Exception exception)
             {
@@ -137,8 +152,11 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo)
+        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, int scenarioIndex)
         {
+
+            var success = fun((object responseOfInvokeMethod) => new InvokeOutput(SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)));
+
             var findTargetType = fun(() =>
             {
                 trace($"Started to search class: {invocationInfo.ClassName}");
@@ -161,7 +179,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 new EndOfDayInvoker().Invoke(targetType);
 
-                return new InvokeOutput(null, null, null);
+                return InvokeOutput.EODSuccess;
             });
             var eodOutput = tryToInvokeAsEndOfDay();
             if (eodOutput != null)
@@ -197,7 +215,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var prepareParameters = fun(() =>
             {
-                var parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
+                var parameters = invocationInfo.Scenarios[scenarioIndex].MethodParameters ?? new List<InvocationMethodParameterInfo>();
 
                 return InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, trace);
             });
@@ -208,18 +226,14 @@ namespace ApiInspector.Invoking.Invokers
 
             var invokeMethod = fun(() =>
             {
-                var success = fun((object r) => new InvokeOutput(r));
-
                 var tryInvokeStaticMethod = fun(() =>
                 {
                     if (!methodInfo.IsStatic)
                     {
-                        return null;
+                        return TryMethodInvokeResponse.NotInvoked;
                     }
 
-                    var responseStatInvoke = methodInfo.Invoke(null, invocationParameters.ToArray());
-
-                    return success(responseStatInvoke);
+                    return  new TryMethodInvokeResponse(methodInfo.Invoke(null, invocationParameters.ToArray()));
                 });
 
                 var tryInvokeAsCardServiceMethod = fun(() =>
@@ -228,46 +242,43 @@ namespace ApiInspector.Invoking.Invokers
 
                     if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
                     {
-                        return null;
+                        return TryMethodInvokeResponse.NotInvoked;
                     }
 
                     var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
-                    var responseCardServiceInvoke = CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, boaContext);
+                    return new TryMethodInvokeResponse(CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, boaContext));
 
-                    return success(responseCardServiceInvoke);
                 });
 
                 var tryInvokeNonStaticMethod = fun(() =>
                 {
                     if (methodInfo.IsStatic)
                     {
-                        return null;
+                        return TryMethodInvokeResponse.NotInvoked;
                     }
 
                     var instance = InstanceCreator.Create(targetType, boaContext);
 
-                    var responseNonStaticInvoke = methodInfo.Invoke(instance, invocationParameters.ToArray());
-
-                    return success(responseNonStaticInvoke);
+                    return new TryMethodInvokeResponse(methodInfo.Invoke(instance, invocationParameters.ToArray()));
                 });
 
-                var invokeOutput = tryInvokeStaticMethod();
-                if (invokeOutput != null)
+                var tryMethodInvokeResponse = tryInvokeStaticMethod();
+                if (tryMethodInvokeResponse != TryMethodInvokeResponse.NotInvoked)
                 {
-                    return invokeOutput.ExecutionResponse;
+                    return tryMethodInvokeResponse.MethodReturnValue;
                 }
 
-                invokeOutput = tryInvokeAsCardServiceMethod();
-                if (invokeOutput != null)
+                tryMethodInvokeResponse = tryInvokeAsCardServiceMethod();
+                if (tryMethodInvokeResponse != TryMethodInvokeResponse.NotInvoked)
                 {
-                    return invokeOutput.ExecutionResponse;
+                    return tryMethodInvokeResponse.MethodReturnValue;
                 }
 
-                invokeOutput = tryInvokeNonStaticMethod();
-                if (invokeOutput != null)
+                tryMethodInvokeResponse = tryInvokeNonStaticMethod();
+                if (tryMethodInvokeResponse != TryMethodInvokeResponse.NotInvoked)
                 {
-                    return invokeOutput.ExecutionResponse;
+                    return tryMethodInvokeResponse.MethodReturnValue;
                 }
 
                 throw new InvalidOperationException("Unknown invocation type.");
@@ -283,8 +294,30 @@ namespace ApiInspector.Invoking.Invokers
 
             boaContext.Dispose();
 
-            return new InvokeOutput(null, responseInvokeMethod, SerializeToJsonDoNotIgnoreDefaultValues(responseInvokeMethod));
+            
+
+            return success(responseInvokeMethod);
         }
+
+        sealed class TryMethodInvokeResponse
+        {
+            public readonly object MethodReturnValue;
+
+            public  TryMethodInvokeResponse(object methodReturnValue)
+            {
+                MethodReturnValue = methodReturnValue;
+            }
+
+            
+            TryMethodInvokeResponse()
+            {
+                
+            }
+
+            public  static readonly TryMethodInvokeResponse NotInvoked = new TryMethodInvokeResponse();
+
+        }
+
         #endregion
 
         /// <summary>
@@ -296,13 +329,13 @@ namespace ApiInspector.Invoking.Invokers
             /// <summary>
             ///     Invokes the specified environment information.
             /// </summary>
-            public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo)
+            public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo, int scenarioIndex)
             {
                 var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
 
                 using (var boaContext = new BOAContext(environmentInfo, trace))
                 {
-                    return Invoker.Invoke(boaContext, trace, invocationInfo);
+                    return Invoker.Invoke(boaContext, trace, invocationInfo, scenarioIndex);
                 }
             }
             #endregion

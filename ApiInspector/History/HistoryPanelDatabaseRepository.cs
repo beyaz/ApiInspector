@@ -28,7 +28,7 @@ namespace ApiInspector.History
                 userName
             });
 
-            return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList();
+            return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList().Select(Fix.FixAsScenarioModel).ToList();
         }
 
         /// <summary>

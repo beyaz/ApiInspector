@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
@@ -51,6 +51,8 @@ namespace ApiInspector.MainWindow
 
             Loaded += (s, e) =>
             {
+                scope.Update(Keys.Trace,traceQueue.AddMessage);
+
                 historyPanel.Trace = traceQueue.AddMessage;
 
                 historyPanel.Connect(scope);
@@ -58,8 +60,19 @@ namespace ApiInspector.MainWindow
 
                 historyPanel.Refresh();
 
-                scope.OnUpdate(SelectedInvocationInfo, RefreshResponseOutputFilePath);
-                scope.OnUpdate(SelectedInvocationInfo, ClearResponseView);
+
+                scenarioEditor.Connect(scope);
+                scenarioEditor.ShowErrorNotification = ShowErrorNotification;
+
+                scope.Update(AddNewScenario, fun((Scenario scenario) =>
+                 {
+                     InvocationInfo.Scenarios.Add(scenario);
+                     scope.Update(SelectedScenario, scenario);
+                     scope.PublishEvent(ScenarioEvent.NewScenarioAdded);
+                 }));
+
+                
+
 
                 UpdateTitle();
             };
@@ -76,10 +89,7 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        void ClearResponseView()
-        {
-            invokingResponseView.Text = string.Empty;
-        }
+        
 
         /// <summary>
         ///     Initializes the global font style.
@@ -96,6 +106,9 @@ namespace ApiInspector.MainWindow
         {
             Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
         }
+
+      
+
 
         /// <summary>
         ///     Called when [entered to execution].
@@ -119,7 +132,7 @@ namespace ApiInspector.MainWindow
 
             Task.Run(() => SaveToHistory());
 
-            new Thread(OnExecuteClicked).Start();
+            Dispatcher.InvokeAsync(OnExecuteClicked);
         }
 
         /// <summary>
@@ -131,25 +144,42 @@ namespace ApiInspector.MainWindow
 
             var invocationInfo = InvocationInfo;
 
-            UpdateUI(ClearResponseView);
+            var scenarioCount  = invocationInfo.Scenarios.Count;
 
             Trace("------------- EXECUTE STARTED -----------------");
+
+            var invokeOutputs = new List<InvokeOutput>();
+
+            scope.Update(InvokeOutputs,invokeOutputs);
 
             var environmentInfo = EnvironmentInfo.Parse(InvocationInfo.Environment);
 
             var trace = fun((string message) => { traceQueue.Trace(message); });
-
-            var invokerOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo);
-
-            UpdateUI(() => { UpdateResponseView(invokerOutput.ExecutionResponseAsJson); });
-
-            if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
+            
+            var runScenarioAt = fun((int scenarioIndex) =>
             {
-                WriteToFile(invocationInfo.ResponseOutputFilePath, invokerOutput.ExecutionResponseAsJson);
+                var scenario = invocationInfo.Scenarios[scenarioIndex];
+
+                scope.Update(SelectedScenario,scenario);
+
+                invokeOutputs.Add(Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex));
+                
+                if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
+                {
+                    WriteToFile(invocationInfo.ResponseOutputFilePath, invokeOutputs[scenarioIndex].ExecutionResponseAsJson);
+                }
+            });
+
+            for (var i = 0; i < scenarioCount; i++)
+            {
+                runScenarioAt(i);
             }
 
+            scope.PublishEvent(ScenarioEvent.ExecutionFinished);
+            
             Trace(string.Empty);
             Trace(string.Empty);
+            Trace("------------- EXECUTE FINISHED -----------------");
 
             OnExitToExecution();
         }
@@ -163,33 +193,9 @@ namespace ApiInspector.MainWindow
             UpdateUI(() => executeButton.IsEnabled = true);
         }
 
-        /// <summary>
-        ///     Refreshes the response output file path.
-        /// </summary>
-        void RefreshResponseOutputFilePath()
-        {
-            var invocationInfo = InvocationInfo;
-            if (invocationInfo == null)
-            {
-                responseOutputFilePath.Text = string.Empty;
-                return;
-            }
+        
 
-            responseOutputFilePath.Text = invocationInfo.ResponseOutputFilePath;
-        }
-
-        /// <summary>
-        ///     Handles the OnTextChanged event of the ResponseOutputFilePath control.
-        /// </summary>
-        void ResponseOutputFilePath_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (InvocationInfo == null)
-            {
-                return;
-            }
-
-            InvocationInfo.ResponseOutputFilePath = responseOutputFilePath.Text;
-        }
+        
 
         /// <summary>
         ///     Saves to history.
@@ -207,10 +213,7 @@ namespace ApiInspector.MainWindow
             traceQueue.AddMessage(message);
         }
 
-        void UpdateResponseView(string responseAsJson)
-        {
-            invokingResponseView.Text = responseAsJson;
-        }
+        
 
         /// <summary>
         ///     Updates the title.

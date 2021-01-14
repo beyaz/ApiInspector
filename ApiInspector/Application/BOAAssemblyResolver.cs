@@ -42,7 +42,7 @@ namespace ApiInspector.Application
                 if (File.Exists(filePath))
                 {
                     trace($"Loading assembly: {filePath}");
-                    return Assembly.LoadFile(filePath);
+                    return Assembly.Load(File.ReadAllBytes(filePath));
                 }
             }
 
@@ -54,7 +54,7 @@ namespace ApiInspector.Application
         /// <summary>
         ///     Domains the assembly resolve.
         /// </summary>
-        static Assembly DomainAssemblyResolve(object sender, ResolveEventArgs args)
+        public static Assembly DomainAssemblyResolve(object sender, ResolveEventArgs args)
         {
             var name  = args.Name;
             var index = name.IndexOf(',');

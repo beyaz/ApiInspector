@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
+using ApiInspector.Invoking;
 using ApiInspector.Models;
+using Mono.Cecil;
 
 namespace ApiInspector
 {
@@ -17,6 +19,8 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<IDbConnection> DbConnection => CreateKey<IDbConnection>();
 
+        public static DataKey<MethodDefinition> SelectedMethodDefinition => CreateKey<MethodDefinition>();
+
         /// <summary>
         ///     Gets the history items.
         /// </summary>
@@ -26,6 +30,14 @@ namespace ApiInspector
         ///     Gets the selected invocation information.
         /// </summary>
         public static DataKey<InvocationInfo> SelectedInvocationInfo => CreateKey<InvocationInfo>();
+
+        public static DataKey<Action<Scenario>> AddNewScenario => CreateKey<Action<Scenario>>();
+        
+
+        public static DataKey<Scenario> SelectedScenario => CreateKey<Scenario>();
+
+        
+        public static DataKey<List<InvokeOutput>> InvokeOutputs => CreateKey<List<InvokeOutput>>();
 
         /// <summary>
         ///     Gets the serialize history for database insert.
@@ -52,5 +64,15 @@ namespace ApiInspector
             return new DataKey<T>(typeof(Keys), callerMemberName);
         }
         #endregion
+    }
+
+    enum ScenarioEvent
+    {
+        
+        NewScenarioAdded,
+
+        
+        RemoveSelectedScenario,
+        ExecutionFinished
     }
 }

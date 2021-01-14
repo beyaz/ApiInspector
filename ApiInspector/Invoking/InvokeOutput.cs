@@ -12,19 +12,14 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Initializes a new instance of the <see cref="InvokeOutput" /> class.
         /// </summary>
-        public InvokeOutput(Exception error, object executionResponse, string executionResponseAsJson)
+        public InvokeOutput(Exception exception)
         {
-            Error                   = error;
-            ExecutionResponse       = executionResponse;
-            ExecutionResponseAsJson = executionResponseAsJson;
+            Error = exception;
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="InvokeOutput" /> class.
-        /// </summary>
-        public InvokeOutput(object response)
+        public InvokeOutput(string responseAsJson)
         {
-            ExecutionResponse = response;
+            ExecutionResponseAsJson = responseAsJson;
         }
         #endregion
 
@@ -35,11 +30,6 @@ namespace ApiInspector.Invoking
         public Exception Error { get; }
 
         /// <summary>
-        ///     Gets the execution response.
-        /// </summary>
-        public object ExecutionResponse { get; }
-
-        /// <summary>
         ///     The execution response as json
         /// </summary>
         public string ExecutionResponseAsJson { get; }
@@ -48,6 +38,14 @@ namespace ApiInspector.Invoking
         ///     Gets a value indicating whether this instance is success.
         /// </summary>
         public bool IsSuccess => Error != null;
+
+        InvokeOutput()
+        {
+            
+        }
+
+        public static readonly InvokeOutput EODSuccess = new InvokeOutput();
+
         #endregion
     }
 }

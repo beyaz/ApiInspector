@@ -92,7 +92,12 @@
     <Compile Include="FunctionalPrograming\Response.cs" />
     <Compile Include="FunctionalPrograming\Result.cs" />
     <Compile Include="InvocationInfoEditor\View.cs" />
-    <Compile Include="MainWindow\ResponseEditor.cs" />
+    <Compile Include="MainWindow\ActionButton.xaml.cs">
+      <DependentUpon>ActionButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow\ScenarioEditor.xaml.cs">
+      <DependentUpon>ScenarioEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="ConnectionInfo.cs" />
@@ -138,6 +143,14 @@
     <Compile Include="Utility.cs" />
     <Compile Include="Util\JsonSorter.cs" />
     <Page Include="History\HistoryPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow\ActionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow\ScenarioEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

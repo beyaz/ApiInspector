@@ -26,7 +26,7 @@ namespace ApiInspector.Components
             Child               = editor;
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment   = VerticalAlignment.Stretch;
-            MinHeight           = 100;
+            MinHeight           = 200;
         }
         #endregion
 

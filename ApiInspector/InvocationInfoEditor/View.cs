@@ -18,7 +18,7 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class View:UserControl
     {
-        #region Fields
+        
         internal Scope scope;
 
         readonly IntellisenseTextBox environmentIntellisenseTextBox = new IntellisenseTextBox(),
@@ -27,8 +27,6 @@ namespace ApiInspector.InvocationInfoEditor
                                      classNameIntellisenseTextBox = new IntellisenseTextBox(),
                                      methodNameIntellisenseTextBox = new IntellisenseTextBox();
 
-        readonly StackPanel parametersPanel = new StackPanel();
-        #endregion
 
         #region Constructors
         /// <summary>
@@ -51,15 +49,17 @@ namespace ApiInspector.InvocationInfoEditor
                     return NewStackPanel(lbl, editor);
                 });
 
-                return NewExpander("Method Information", 10,
+                return NewGroupBox(NewBoldTextBlock("Method Information"), 
                                    NewStackPanel(10,
-                                                 createInput("Target BOA Environment (Dev,Test)", environmentIntellisenseTextBox),
-                                                 createInput("Assembly Search Directory", assemblySearchDirectoryIntellisenseTextBox),
-                                                 createInput("Assembly Name", assemblyIntellisenseTextBox),
-                                                 createInput("Class Name", classNameIntellisenseTextBox),
-                                                 createInput("Method Name", methodNameIntellisenseTextBox),
-                                                 NewGroupBox(NewTextBlock("Parameters", fontWeight), parametersPanel)
-                                                ));
+                                                 NewGridWithColumns(new []{2,3,5},
+                                                                    createInput("Target BOA Environment (Dev,Test)", environmentIntellisenseTextBox),
+                                                                    createInput("Assembly Search Directory", assemblySearchDirectoryIntellisenseTextBox),
+                                                                    createInput("Assembly Name", assemblyIntellisenseTextBox))
+                                                 ,
+                                                 NewGridWithColumns(new []{4,2},
+                                                                    createInput("Class Name", classNameIntellisenseTextBox),
+                                                                    createInput("Method Name", methodNameIntellisenseTextBox)))
+                                                );
             });
 
             Content = buildUI();
@@ -180,6 +180,15 @@ namespace ApiInspector.InvocationInfoEditor
                 updateClassNameSuggestions(getClassNamesOfSelectedAssembly());
             });
 
+            var updateSelectedMethodDefinition = fun(() =>
+            {
+                var invocationInfo = getSelectedInvocationInfo();
+
+                selectedMethodDefinition = selectedTypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+                
+                scope.Update(Keys.SelectedMethodDefinition,selectedMethodDefinition);
+            });
+
             var onClassNameChanged = fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
@@ -223,7 +232,14 @@ namespace ApiInspector.InvocationInfoEditor
                 var methodNames = getMethodNameListFromSelectedType();
 
                 updateMethodNameSuggestions(methodNames);
+
+                if (invocationInfo.MethodName == methodNameIntellisenseTextBox.Editor.Text)
+                {
+                    updateSelectedMethodDefinition();
+                }
             });
+
+           
 
             var onMethodNameChanged = fun(() =>
             {
@@ -231,13 +247,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 invocationInfo.MethodName = methodNameIntellisenseTextBox.Editor.Text;
 
-                selectedMethodDefinition = selectedTypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
-                if (selectedMethodDefinition == null)
-                {
-                    return;
-                }
-
-                new ParameterPanelIntegration().Connect(invocationInfo, parametersPanel, selectedMethodDefinition);
+                updateSelectedMethodDefinition();
             });
 
             // attach

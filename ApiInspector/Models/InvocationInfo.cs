@@ -1,8 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.AccessControl;
+using ApiInspector.Invoking;
+using Newtonsoft.Json;
 
 namespace ApiInspector.Models
 {
+
+    static class Fix
+    {
+        public static InvocationInfo FixAsScenarioModel(InvocationInfo invocationInfo)
+        {
+            if (invocationInfo.Parameters?.Count > 0)
+            {
+                invocationInfo.Scenarios = new List<Scenario>
+                {
+                    new Scenario
+                    {
+                        MethodParameters = invocationInfo.Parameters,
+                        ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath
+                    }
+                };
+            }
+
+            invocationInfo.Parameters             = null;
+            invocationInfo.ResponseOutputFilePath = null;
+
+            return invocationInfo;
+        }
+    }
+
     /// <summary>
     ///     The invocation information
     /// </summary>
@@ -54,6 +81,53 @@ namespace ApiInspector.Models
         {
             return $"{ClassName}:{MethodName}";
         }
+        
+        public List<Scenario> Scenarios { get; set; } = new List<Scenario>();
+
         #endregion
+    }
+
+    [Serializable]
+    public class Scenario
+    {
+        public List<InvocationMethodParameterInfo> MethodParameters { get; set; } = new List<InvocationMethodParameterInfo>();
+
+        public string ResponseOutputFilePath { get; set; }
+
+        public List<Assertion> Assertions { get; set; } = new List<Assertion>();
+
+
+    }
+
+    [Serializable]
+    public class Assertion
+    {
+        public string OperatorName { get; set; }
+
+        public ValueAccessInfo Value { get; set; } = new ValueAccessInfo();
+
+        public ValueAccessInfo Expected { get; set; } = new ValueAccessInfo();
+    }
+
+    [Serializable]
+    public enum ValueAccessType
+    {
+        ConstantValue,
+        
+        FetchFromDatabase,
+
+        EvaluateFromOutput
+    }
+
+    [Serializable]
+    public class ValueAccessInfo
+    {
+        public ValueAccessType Type { get; set; }
+        
+        public string Sql { get; set; }
+
+        public string SqlDatabaseName { get; set; }
+        
+        public string PropertyPathInOutput { get; set; }
     }
 }

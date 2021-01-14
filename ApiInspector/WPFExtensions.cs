@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector
 {
@@ -10,6 +13,14 @@ namespace ApiInspector
     static class WPFExtensions
     {
         #region Public Methods
+
+
+
+        
+
+
+
+
         /// <summary>
         ///     Binds the specified target.
         /// </summary>
@@ -27,9 +38,21 @@ namespace ApiInspector
         /// <summary>
         ///     News the stack panel.
         /// </summary>
-        public static StackPanel NewStackPanel(params UIElement[] childElements)
+        public static StackPanel NewStackPanel(params FrameworkElement[] childElements)
         {
             var sp = new StackPanel();
+
+            foreach (var element in childElements)
+            {
+                sp.Children.Add(element);
+            }
+
+            return sp;
+        }
+
+        public static StackPanel NewHorizontalStackPanel(params FrameworkElement[] childElements)
+        {
+            var sp = new StackPanel{Orientation = Orientation.Horizontal};
 
             foreach (var element in childElements)
             {
@@ -57,9 +80,28 @@ namespace ApiInspector
             return sp;
         }
 
+        public static void HorizontalIndent(StackPanel stackPanel, int indent)
+        {
+
+            var i = 0;
+            foreach (FrameworkElement element in stackPanel.Children)
+            {
+                if (i>0)
+                {
+                    element.Margin = new Thickness(indent, element.Margin.Top, element.Margin.Right, element.Margin.Bottom);
+                }
+                i++;
+            }
+
+        }
+
         public static TextBlock NewTextBlock(string text,FontWeight fontWeight)
         {
             return new TextBlock {FontWeight = fontWeight, Text = text};
+        }
+        public static TextBlock NewBoldTextBlock(string text)
+        {
+            return new TextBlock {FontWeight = FontWeights.Bold, Text = text};
         }
 
         public static GroupBox NewGroupBox(UIElement header, UIElement content)
@@ -87,7 +129,55 @@ namespace ApiInspector
         }
 
 
+        public static Grid NewColumnSplittedGrid(FrameworkElement left,FrameworkElement right)
+        {
+            var grid = new Grid
+            {
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition {Width = new GridLength(1, GridUnitType.Star)},
+                    new ColumnDefinition {Width = new GridLength(5, GridUnitType.Auto)},
+                    new ColumnDefinition {Width = new GridLength(1, GridUnitType.Star)}
+                }
+            };
 
+            var gridSplitter = new GridSplitter{Width = 5, ResizeBehavior = GridResizeBehavior.PreviousAndNext};
+
+            gridSplitter.SetValue(FrameworkElement.VerticalAlignmentProperty,VerticalAlignment.Stretch);
+           
+          
+            left.SetValue(Grid.ColumnProperty,0);
+
+            gridSplitter.SetValue(Grid.ColumnProperty,1);
+            right.SetValue(Grid.ColumnProperty,2);
+            
+            
+
+            grid.Children.Add(left);
+            grid.Children.Add(gridSplitter);
+            grid.Children.Add(right);
+
+            return grid;
+        }
+
+        public static Grid NewGridWithColumns(int[] columnSizes,params FrameworkElement[] childElements)
+        {
+            var grid = new Grid();
+
+            foreach (var size in columnSizes)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition{Width = new GridLength(size,GridUnitType.Star)});
+            }
+
+            int i = 0;
+            foreach (var element in childElements)
+            {
+                element.SetValue(Grid.ColumnProperty, i++);
+                grid.Children.Add(element);
+            }
+            
+            return grid;
+        }
 
 
 

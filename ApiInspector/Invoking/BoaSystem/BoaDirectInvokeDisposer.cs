@@ -42,7 +42,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 }
             });
 
-            unloadWcfDomain();
+            // unloadWcfDomain();
             clearField("appDomainExecuter");
             clearField("wcfDomain");
         }

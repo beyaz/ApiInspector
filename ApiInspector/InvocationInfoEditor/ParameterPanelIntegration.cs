@@ -19,19 +19,15 @@ namespace ApiInspector.InvocationInfoEditor
     /// </summary>
     class ParameterPanelIntegration
     {
-        #region Public Methods
-        /// <summary>
-        ///     Connects the specified invocation information.
-        /// </summary>
-        public void Connect(InvocationInfo invocationInfo, StackPanel panel, MethodDefinition methodDefinition)
+        public static IReadOnlyList<FrameworkElement> Create(List<InvocationMethodParameterInfo> invocationParameters, MethodDefinition methodDefinition)
         {
-            var invocationParameters = invocationInfo.Parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
+            var returnList = new List<FrameworkElement>();
 
-            panel.Children.Clear();
+            invocationParameters = invocationParameters ?? new List<InvocationMethodParameterInfo>();
 
             if (methodDefinition == null)
             {
-                return;
+                return returnList;
             }
 
             var len = methodDefinition.Parameters.Count;
@@ -51,10 +47,28 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 var parameterDefinition = methodDefinition.Parameters[i];
 
-                var parameterInfo = invocationInfo.Parameters[i];
+                var parameterInfo = invocationParameters[i];
                 var item          = Create(parameterDefinition, parameterInfo);
 
-                panel.Children.Add(item);
+                returnList.Add(item);
+            }
+
+            return returnList;
+        }
+
+        #region Public Methods
+        /// <summary>
+        ///     Connects the specified invocation information.
+        /// </summary>
+        public void Connect(InvocationInfo invocationInfo, StackPanel panel, MethodDefinition methodDefinition)
+        {
+            var invocationParameters = invocationInfo.Parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
+
+            panel.Children.Clear();
+
+            foreach (var element in Create(invocationInfo.Parameters,methodDefinition))
+            {
+                panel.Children.Add(element);
             }
         }
         #endregion
