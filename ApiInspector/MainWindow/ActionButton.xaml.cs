@@ -28,6 +28,19 @@ namespace ApiInspector.MainWindow
     public partial class ActionButton 
     {
 
+        #region Visibility IconVisibility
+        public static readonly DependencyProperty IconVisibilityProperty = DependencyProperty.Register(
+                                                        "IconVisibility", typeof(Visibility), typeof(ActionButton), new PropertyMetadata(Visibility.Collapsed));
+
+        public Visibility IconVisibility
+        {
+            get { return (Visibility) GetValue(IconVisibilityProperty); }
+            set { SetValue(IconVisibilityProperty, value); }
+        }
+        #endregion
+
+
+
         public static readonly DependencyProperty IconGeometryProperty = DependencyProperty.Register(
                                                         "IconGeometry", typeof(Geometry), typeof(ActionButton), new PropertyMetadata(default(Geometry)));
 
@@ -64,12 +77,12 @@ namespace ApiInspector.MainWindow
             if ((bool)e.NewValue)
             {
                 actionButton.IconGeometry           = Icons.Execute;
-                actionButton.iconViewBox.Visibility = Visibility.Visible;
+                actionButton.IconVisibility = Visibility.Visible;
                 
             }
             else
             {
-                actionButton.iconViewBox.Visibility = Visibility.Collapsed;
+                actionButton.IconVisibility = Visibility.Collapsed;
             }
         }
 
@@ -93,13 +106,13 @@ namespace ApiInspector.MainWindow
             var actionButton = (ActionButton) d;
             if ((bool)e.NewValue)
             {
-                actionButton.IconGeometry           = Icons.Settings;
-                actionButton.iconViewBox.Visibility = Visibility.Visible;
+                actionButton.IconGeometry   = Icons.Settings;
+                actionButton.IconVisibility = Visibility.Visible;
                 
             }
             else
             {
-                actionButton.iconViewBox.Visibility = Visibility.Collapsed;
+                actionButton.IconVisibility = Visibility.Collapsed;
             }
         }
 
@@ -144,7 +157,7 @@ namespace ApiInspector.MainWindow
             {
                 if (value)
                 {
-                    button.Background = Brushes.LightSkyBlue;
+                    button.Background = Brushes.LightSteelBlue;
                 }
                 else
                 {

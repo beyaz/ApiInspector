@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using ApiInspector.Components;
@@ -285,6 +286,7 @@ namespace ApiInspector.MainWindow
 
              OnEnteredToExecution();
             
+
              var scenarioIndex = scenarios.IndexOf(scenario);
             
              trace($"------------- EXECUTE STARTED For {scenarioIndex} -------------");
