@@ -97,8 +97,32 @@ namespace ApiInspector.InvocationInfoEditor
                 return definition.ParameterType.Name;
             });
             
+            var defaultValueIsZero = fun((TypeReference t) =>
+            {
+                var types = new[]
+                {
+
+
+                    // numbers
+                    typeof(byte),
+                    typeof(short),
+                    typeof(int),
+                    typeof(long),
+
+                    // unsigned numbers
+                    typeof(ushort),
+                    typeof(uint),
+                    typeof(ulong),
+                };
+
+                return types.Any(x=>x.FullName == t.FullName);
+            });
+
             var canPresentSimpleTextBox = fun(() =>
             {
+
+                
+
                 var types = new[]
                 {
                     typeof(string),
@@ -151,6 +175,11 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 if (canPresentSimpleTextBox())
                 {
+                    if (defaultValueIsZero(definition.ParameterType) && string.IsNullOrWhiteSpace(parameterInfo.Value+string.Empty))
+                    {
+                        parameterInfo.Value = 0;
+                    }
+
                     var editor = new TextBox
                     {
                         TextWrapping                = TextWrapping.Wrap,

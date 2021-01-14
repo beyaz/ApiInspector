@@ -37,7 +37,7 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Gets a value indicating whether this instance is success.
         /// </summary>
-        public bool IsSuccess => Error != null;
+        public bool IsSuccess => Error == null;
 
         InvokeOutput()
         {

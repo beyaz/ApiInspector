@@ -108,7 +108,19 @@ namespace ApiInspector.MainWindow
             
             var updateResponseOutputText = fun(() =>
             {
-                responseTextView.Text = FindOutput(scenario)?.ExecutionResponseAsJson;
+                var output = FindOutput(scenario);
+                if (output == null)
+                {
+                    responseTextView.Text = null;
+                    return;
+                }
+
+                if (!output.IsSuccess)
+                {
+                    responseTextView.Text = "ERROR: "+ output.Error.ToString();  
+                    return;
+                }
+                responseTextView.Text = output.ExecutionResponseAsJson;
             });
 
             scope.UnSubscribeEvent(ScenarioEvent.ExecutionFinished, updateResponseOutputText);
