@@ -158,14 +158,19 @@ namespace ApiInspector
                 ColumnDefinitions =
                 {
                     new ColumnDefinition {Width = new GridLength(1, GridUnitType.Star)},
-                    new ColumnDefinition {Width = new GridLength(5, GridUnitType.Auto)},
+                    new ColumnDefinition {Width = new GridLength(0, GridUnitType.Auto)},
                     new ColumnDefinition {Width = new GridLength(1, GridUnitType.Star)}
                 }
             };
 
-            var gridSplitter = new GridSplitter{Width = 5, ResizeBehavior = GridResizeBehavior.PreviousAndNext};
+            var gridSplitter = new GridSplitter
+            {
+                Width = 7, 
+                Height = 90,
+                ResizeBehavior = GridResizeBehavior.PreviousAndNext
+            };
 
-            gridSplitter.SetValue(FrameworkElement.VerticalAlignmentProperty,VerticalAlignment.Stretch);
+            gridSplitter.SetValue(FrameworkElement.VerticalAlignmentProperty,VerticalAlignment.Center);
            
           
             left.SetValue(Grid.ColumnProperty,0);
