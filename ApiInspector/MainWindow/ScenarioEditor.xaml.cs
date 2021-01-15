@@ -330,7 +330,7 @@ namespace ApiInspector.MainWindow
 
              var scenarioIndex = scenarios.IndexOf(scenario);
             
-             trace($"------------- EXECUTE STARTED For {scenarioIndex} -------------");
+             trace($"------------- EXECUTE STARTED For {scenarioIndex+1} -------------");
 
 
              
@@ -349,7 +349,7 @@ namespace ApiInspector.MainWindow
             
              trace(string.Empty);
              trace(string.Empty);
-             trace($"------------- EXECUTE FINISHED {scenarioIndex} -------------");
+             trace($"------------- EXECUTE FINISHED {scenarioIndex+1} -------------");
 
              OnExitToExecution();
          }
