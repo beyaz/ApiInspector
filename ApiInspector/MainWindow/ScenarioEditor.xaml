@@ -13,7 +13,7 @@
         </GroupBox.Header>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -26,28 +26,32 @@
                 <local:ActionButton  Text="-" Margin="5" x:Name="removeScenarioButton" Click="OnRemoveSelectedScenarioClicked" />
             </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" >
-                <local:ActionButton   Text="Input - Outputs" Margin="5" x:Name="buttonActivateInputOutputPanel"  Click="OnButtonActivateInputOutputPanelClicked" />
-                <local:ActionButton   Text="Assertions" Margin="5" x:Name="buttonAssertions" Click="OnAssertionsClicked" />
-                <local:ActionButton   Text="Export Result" Margin="5" x:Name="buttonActivateExportPanel" Click="ActivateExportPanel" />
-            </StackPanel>
-
-
-
             <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal"  x:Name="scenarioNumbersContainer" Grid.Column="0">
-                    <local:ActionButton   Text="1"    />
-                    <local:ActionButton   Text="2"    />
+
+
+                <StackPanel Orientation="Horizontal" Grid.Column="0"  >
+                    <local:ActionButton   Text="Input - Outputs" Margin="5" x:Name="buttonActivateInputOutputPanel"  Click="OnButtonActivateInputOutputPanelClicked" />
+                    <local:ActionButton   Text="Assertions" Margin="5" x:Name="buttonAssertions" Click="OnAssertionsClicked" />
+                    <local:ActionButton   Text="Export Result" Margin="5" x:Name="buttonActivateExportPanel" Click="ActivateExportPanel" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"  Grid.Column="1">
                     <local:ActionButton ShowExecuteIcon="True" Text="Execute" x:Name="executeSelectedScenarioButton" Click="OnExecuteClicked"   />
                 </StackPanel>
             </Grid>
+
+
+
+            <StackPanel   Grid.Row="1" Grid.Column="0"  >
+                <StackPanel Margin="20"  x:Name="scenarioNumbersContainer">
+                 <local:ActionButton   Text="1"    />
+                 <local:ActionButton   Text="2"    />
+                </StackPanel>
+            </StackPanel>
 
             <Grid Grid.Row="1" Grid.Column="1" x:Name="contentContainer"></Grid>
         </Grid>

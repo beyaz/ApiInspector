@@ -95,6 +95,21 @@ namespace ApiInspector
 
         }
 
+        public static void VerticalIndent(StackPanel stackPanel, int indent)
+        {
+
+            var i = 0;
+            foreach (FrameworkElement element in stackPanel.Children)
+            {
+                if (i>0)
+                {
+                    element.Margin = new Thickness(element.Margin.Left, indent, element.Margin.Right, element.Margin.Bottom);
+                }
+                i++;
+            }
+
+        }
+
         public static TextBlock NewTextBlock(string text,FontWeight fontWeight)
         {
             return new TextBlock {FontWeight = fontWeight, Text = text};

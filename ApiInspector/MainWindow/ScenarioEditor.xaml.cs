@@ -280,7 +280,7 @@ namespace ApiInspector.MainWindow
                 i++;
             }
 
-            HorizontalIndent(scenarioNumbersContainer,10);
+            VerticalIndent(scenarioNumbersContainer,10);
         }
 
         InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
