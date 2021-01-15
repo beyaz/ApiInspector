@@ -28,7 +28,7 @@
 
             <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" >
                 <local:ActionButton   Text="Input - Outputs" Margin="5" x:Name="buttonActivateInputOutputPanel"  Click="OnButtonActivateInputOutputPanelClicked" />
-                <local:ActionButton   Text="Assertions" Margin="5" x:Name="buttonAssertions" />
+                <local:ActionButton   Text="Assertions" Margin="5" x:Name="buttonAssertions" Click="OnAssertionsClicked" />
                 <local:ActionButton   Text="Export Result" Margin="5" x:Name="buttonActivateExportPanel" Click="ActivateExportPanel" />
             </StackPanel>
 

@@ -103,12 +103,34 @@ namespace ApiInspector.MainWindow
         void EnableAllLeftButtons()
         {
             buttonActivateInputOutputPanel.IsPressed = false;
-            buttonActivateInputOutputPanel.IsPressed = false;
+            buttonActivateExportPanel.IsPressed = false;
             buttonAssertions.IsPressed               = false;
         }
 
+        void OnAssertionsClicked(object sender, RoutedEventArgs e)
+        {
+            EnableAllLeftButtons();
+            buttonAssertions.IsPressed = true;
+
+            ActivateAssertions();
+
+        }
+
+        void ActivateAssertions()
+        {
+            var scenario = scope.Get(SelectedScenario);
 
 
+            var editor = new TextBox();
+
+            Bind(editor,TextBox.TextProperty,scenario,nameof(scenario.ResponseOutputFilePath));
+
+            var actualEditor   = NewStackPanel(NewBoldTextBlock("Actual"), editor);
+            var expectedEditor = NewStackPanel(NewBoldTextBlock("Expected"), new TextBox());
+            var operatorEditor = NewStackPanel(NewBoldTextBlock("Operator"), new TextBox());
+            
+            CurrentContent = NewGroupBox(NewBoldTextBlock("Assertions"),NewGridWithColumns(new int[]{5,2,5},actualEditor,operatorEditor, expectedEditor)).UpdatePadding(10);
+        }
 
         void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
         {
@@ -354,8 +376,6 @@ namespace ApiInspector.MainWindow
              OnExitToExecution();
          }
 
-
-         
          
     }
 }
