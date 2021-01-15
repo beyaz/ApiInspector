@@ -231,7 +231,7 @@ namespace ApiInspector.MainWindow
             }
 
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
-            Dispatcher.InvokeAsync(ExecuteSelectedScenario);
+            Task.Run(()=>ExecuteSelectedScenario());
         }
 
 
@@ -304,7 +304,7 @@ namespace ApiInspector.MainWindow
                  WriteToFile(invocationInfo.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
              }
 
-             scope.PublishEvent(ScenarioEvent.ExecutionFinished);
+             UpdateUI(()=>scope.PublishEvent(ScenarioEvent.ExecutionFinished));
             
              trace(string.Empty);
              trace(string.Empty);
