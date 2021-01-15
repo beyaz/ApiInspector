@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using ApiInspector.Components;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Invoking;
@@ -97,6 +98,46 @@ namespace ApiInspector.MainWindow
             }
 
             return null;
+        }
+
+        void EnableAllLeftButtons()
+        {
+            buttonActivateInputOutputPanel.IsPressed = false;
+            buttonActivateInputOutputPanel.IsPressed = false;
+            buttonAssertions.IsPressed               = false;
+        }
+
+
+
+
+        void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
+        {
+            EnableAllLeftButtons();
+            buttonActivateInputOutputPanel.IsPressed = true;
+
+            ActivateInputOutputPanel();
+            
+        }
+
+        void ActivateExportPanel(object sender, RoutedEventArgs e)
+        {
+            EnableAllLeftButtons();
+            buttonActivateExportPanel.IsPressed = true;
+
+            ActivateExportPanel();
+        }
+
+        void ActivateExportPanel()
+        {
+            var scenario = scope.Get(SelectedScenario);
+
+
+            var editor = new TextBox();
+
+            Bind(editor,TextBox.TextProperty,scenario,nameof(scenario.ResponseOutputFilePath));
+
+            
+            CurrentContent = NewGroupBox(NewBoldTextBlock("Export"),NewStackPanel(NewBoldTextBlock("Export Result To Path"), editor)).UpdatePadding(10);
         }
 
         void ActivateInputOutputPanel()
@@ -299,9 +340,9 @@ namespace ApiInspector.MainWindow
 
              
                 
-             if (!string.IsNullOrWhiteSpace(invocationInfo.ResponseOutputFilePath))
+             if (!string.IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
              {
-                 WriteToFile(invocationInfo.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
+                 WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
              }
 
              UpdateUI(()=>scope.PublishEvent(ScenarioEvent.ExecutionFinished));

@@ -113,6 +113,13 @@ namespace ApiInspector
             };
         }
 
+        public static T UpdatePadding<T>(this T element,int padding)where  T:Control
+        {
+            element.Padding = new Thickness(padding);
+
+            return element;
+        }
+
 
         public static Expander NewExpander(string header, int contentMargin, FrameworkElement content)
         {
