@@ -28,8 +28,7 @@ namespace ApiInspector.MainWindow
         public Action<string> ShowErrorNotification;
 
 
-        public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register(
-                                                        "ScenarioData", typeof(Scenario), typeof(ScenarioEditor), new PropertyMetadata(default(Scenario)));
+        public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(Scenario), typeof(ScenarioEditor), new PropertyMetadata(default(Scenario)));
 
        
 
@@ -119,41 +118,11 @@ namespace ApiInspector.MainWindow
 
         void ActivateAssertions()
         {
-            var scenario = scope.Get(SelectedScenario);
+            var assertionsEditor = new AssertionsEditor();
 
+            assertionsEditor.Loaded +=(s,e)=>assertionsEditor.Connect(scope);
 
-            var editor = new TextBox();
-
-            Bind(editor,TextBox.TextProperty,scenario,nameof(scenario.ResponseOutputFilePath));
-
-
-            if (scenario.Assertions.Count==0)
-            {
-                scenario.Assertions.Add(new Assertion
-                {
-                    Value = new ValueAccessInfo()
-                });
-            }
-
-            var assertion = scenario.Assertions[0];
-
-
-            var actualEditor   = NewStackPanel(NewBoldTextBlock("Actual"), editor);
-
-
-            var valueAccessTypeEditor = new IntellisenseTextBox
-            {
-                Suggestions = Enum.GetNames(typeof(ValueAccessType))
-            };
-            Bind(valueAccessTypeEditor,AutoCompleteTextBox.TextProperty,assertion.Value,nameof(assertion.Value.Type));
-
-            var expectedEditor = NewStackPanel(NewBoldTextBlock("Expected"), valueAccessTypeEditor);
-
-            var sqlTextEditor  = new SQLTextEditor();
-            sqlTextEditor.SetAutoComplete(new List<string>{"$Input.UserName}","$Output.UserName2}"});
-            var operatorEditor = NewStackPanel(NewBoldTextBlock("Operator"), sqlTextEditor);
-            
-            CurrentContent = NewGroupBox(NewBoldTextBlock("Assertions"),NewGridWithColumns(new int[]{5,2,5},actualEditor,operatorEditor, expectedEditor)).UpdatePadding(10);
+            CurrentContent = assertionsEditor;
         }
 
         void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)

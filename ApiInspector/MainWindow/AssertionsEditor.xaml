@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="ApiInspector.MainWindow.AssertionsEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ApiInspector.MainWindow"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+   <GroupBox Padding="5">
+       <Grid>
+           <Grid.ColumnDefinitions>
+               <ColumnDefinition Width="100"/>
+               <ColumnDefinition Width="*"/>
+           </Grid.ColumnDefinitions>
+           <Grid.RowDefinitions>
+               <RowDefinition Height="Auto"/>
+               <RowDefinition Height="*"/>
+           </Grid.RowDefinitions>
+
+           <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
+               <local:ActionButton  Text="+" Margin="5"  Click="OnAddNewAssertionClicked" />
+               <local:ActionButton  Text="-" Margin="5" x:Name="removeScenarioButton" Click="OnRemoveSelectedAssertionClicked" />
+           </StackPanel>
+           <StackPanel   Grid.Row="1" Grid.Column="0"  >
+               <StackPanel Margin="20"  x:Name="assertionNumbersContainer">
+                   <local:ActionButton   Text="1"    />
+                   <local:ActionButton   Text="2"    />
+               </StackPanel>
+           </StackPanel>
+
+           <Grid Grid.Row="1" Grid.Column="1" x:Name="contentContainer"></Grid>
+       </Grid>
+    </GroupBox>
+</UserControl>

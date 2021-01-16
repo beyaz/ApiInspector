@@ -102,6 +102,7 @@ namespace ApiInspector.Models
     [Serializable]
     public class Assertion
     {
+        public string Description { get; set; }
         public string OperatorName { get; set; }
 
         public ValueAccessInfo Value { get; set; } = new ValueAccessInfo();

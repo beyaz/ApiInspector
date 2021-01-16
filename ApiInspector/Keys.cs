@@ -36,6 +36,8 @@ namespace ApiInspector
 
         public static DataKey<Scenario> SelectedScenario => CreateKey<Scenario>();
 
+        public static DataKey<Assertion> SelectedAssertion => CreateKey<Assertion>();
+
         
         public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>();
 
@@ -75,4 +77,11 @@ namespace ApiInspector
         RemoveSelectedScenario,
         ExecutionFinished
     }
+
+    enum AssertionEvent
+    {
+        NewAssertionAdded,
+        RemoveSelectedAssertion
+    }
+    
 }
