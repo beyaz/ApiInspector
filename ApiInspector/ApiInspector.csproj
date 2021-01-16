@@ -99,6 +99,7 @@
     <Compile Include="MainWindow\AssertionsEditor.xaml.cs">
       <DependentUpon>AssertionsEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainWindow\Execution.cs" />
     <Compile Include="MainWindow\ScenarioEditor.xaml.cs">
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
     </Compile>
