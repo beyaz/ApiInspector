@@ -130,7 +130,6 @@ namespace ApiInspector.MainWindow
             InitializeComponent();
             
             IsPressed =  false;
-
         }
 
         static LinearGradientBrush DefaultBackground
@@ -152,13 +151,22 @@ namespace ApiInspector.MainWindow
             }
         }
 
+        static SolidColorBrush PressedBackground
+        {
+            get
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                return new SolidColorBrush((Color) ColorConverter.ConvertFromString("#bee6fd"));
+            }
+        }
+
         public bool IsPressed
         {
             set
             {
                 if (value)
                 {
-                    button.Background = SearchInMergedDictionaries<Brush>("ButtonHoverBackgroundBrush");
+                    button.Background = PressedBackground;
                 }
                 else
                 {
