@@ -52,7 +52,7 @@ namespace ApiInspector.Components
             {
                 var border = (Border) Popup.Child;
 
-                border.CornerRadius = new CornerRadius(0);
+                border.CornerRadius = new CornerRadius(1);
             }
         }
 

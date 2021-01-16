@@ -11,6 +11,7 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
+using WpfControls;
 using static ApiInspector.Keys;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
@@ -125,8 +126,30 @@ namespace ApiInspector.MainWindow
 
             Bind(editor,TextBox.TextProperty,scenario,nameof(scenario.ResponseOutputFilePath));
 
+
+            if (scenario.Assertions.Count==0)
+            {
+                scenario.Assertions.Add(new Assertion
+                {
+                    Value = new ValueAccessInfo()
+                });
+            }
+
+            var assertion = scenario.Assertions[0];
+
+
             var actualEditor   = NewStackPanel(NewBoldTextBlock("Actual"), editor);
-            var expectedEditor = NewStackPanel(NewBoldTextBlock("Expected"), new TextBox());
+
+
+            var valueAccessTypeEditor = new IntellisenseTextBox
+            {
+                Suggestions = Enum.GetNames(typeof(ValueAccessType))
+            };
+            Bind(valueAccessTypeEditor,AutoCompleteTextBox.TextProperty,assertion.Value,nameof(assertion.Value.Type));
+
+            var expectedEditor = NewStackPanel(NewBoldTextBlock("Expected"), valueAccessTypeEditor);
+
+            
             var operatorEditor = NewStackPanel(NewBoldTextBlock("Operator"), new TextBox());
             
             CurrentContent = NewGroupBox(NewBoldTextBlock("Assertions"),NewGridWithColumns(new int[]{5,2,5},actualEditor,operatorEditor, expectedEditor)).UpdatePadding(10);

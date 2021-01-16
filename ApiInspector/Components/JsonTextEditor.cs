@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms.Integration;
 using FastColoredTextBoxNS;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
 namespace ApiInspector.Components
 {
@@ -51,6 +53,30 @@ namespace ApiInspector.Components
             set => editor.Text = value;
         }
         #endregion
+
+
+        
+        public void SetAutoComplete(ICollection<string> suggestions)
+        {
+            var popupMenu = new AutocompleteMenu(this.editor)
+            {
+                MinFragmentLength = 2
+            };
+            popupMenu.Items.SetAutocompleteItems(suggestions);
+            popupMenu.Items.MaximumSize = new System.Drawing.Size(200, 300);
+            popupMenu.Items.Width       = 200;
+
+            editor.KeyDown += (s, e) =>
+            {
+                var flag = e.KeyData == ( System.Windows.Forms.Keys)131147;
+                if (flag)
+                {
+                    popupMenu.Show(true);
+                    e.Handled = true;
+                }
+            };
+        }
+
     }
 
     /// <summary>
