@@ -147,11 +147,11 @@ namespace ApiInspector.MainWindow
             {
                 Actual = new ValueAccessInfo
                 {
-                    SqlDatabaseName = Databases.Boa.ToString()
+                    DatabaseName = Databases.Boa.ToString()
                 },
                 Expected = new ValueAccessInfo
                 {
-                    SqlDatabaseName = Databases.Boa.ToString()
+                    DatabaseName = Databases.Boa.ToString()
                 }
             };
 
@@ -243,7 +243,7 @@ namespace ApiInspector.MainWindow
                 {
                     Suggestions = Enum.GetNames(typeof(Databases))
                 };
-                Bind(databaseNameEditor,AutoCompleteTextBox.TextProperty,data,nameof(data.SqlDatabaseName));
+                Bind(databaseNameEditor,AutoCompleteTextBox.TextProperty,data,nameof(data.DatabaseName));
 
                 var calculateFromDatabase = new CheckBox
                 {
@@ -252,13 +252,13 @@ namespace ApiInspector.MainWindow
 
                 calculateFromDatabase.Checked += (s, e) =>
                 {
-                    data.ValueAccessType          = ValueAccessType.FetchFromDatabase;
+                    data.FetchFromDatabase        = true;
                     databaseNameEditor.Visibility = Visibility.Visible;
                 };
 
                 calculateFromDatabase.Unchecked += (s, e) =>
                 {
-                    data.ValueAccessType          = ValueAccessType.ConstantValue;
+                    data.FetchFromDatabase        = false;
                     databaseNameEditor.Visibility = Visibility.Collapsed;
                 };
 
@@ -270,11 +270,14 @@ namespace ApiInspector.MainWindow
 
             var sqlEditor = fun(() =>
             {
-                var editor = new SQLTextEditor();
+                var editor = new SQLTextEditor
+                {
+                    Text = data.Text
+                };
 
-                editor.SetAutoComplete(new List<string>{"$Input.UserName}","$Output.UserName2}"});
+                editor.SetAutoComplete(new List<string>{"Input.UserName}","Output.UserName2}"});
 
-                editor.TextChanged += (s, e) => { data.Sql = editor.Text; };
+                editor.TextChanged += (s, e) => { data.Text = editor.Text; };
 
                 return editor;
             });

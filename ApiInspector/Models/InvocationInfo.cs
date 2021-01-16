@@ -124,25 +124,15 @@ namespace ApiInspector.Models
     }
 
 
-    [Serializable]
-    public enum ValueAccessType
-    {
-        ConstantValue,
-        
-        FetchFromDatabase,
-
-        EvaluateFromOutput
-    }
 
     [Serializable]
     public class ValueAccessInfo
     {
-        public ValueAccessType ValueAccessType { get; set; }
-        
-        public string Sql { get; set; }
 
-        public string SqlDatabaseName { get; set; }
-        
-        public string PropertyPathInOutput { get; set; }
+        public bool FetchFromDatabase { get; set; }
+        public string DatabaseName { get; set; }
+
+        public string Text { get; set; }
+
     }
 }
