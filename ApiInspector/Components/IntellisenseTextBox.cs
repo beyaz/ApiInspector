@@ -46,7 +46,14 @@ namespace ApiInspector.Components
 
                 border.CornerRadius = new CornerRadius(1);
             }
+
+            if (IsTextAlignmentCenter)
+            {
+                Editor.TextAlignment = TextAlignment.Center;
+            }
         }
+
+        public bool IsTextAlignmentCenter { get; set; }
 
         /// <summary>
         ///     Sets the value.

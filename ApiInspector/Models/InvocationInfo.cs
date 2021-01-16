@@ -124,8 +124,16 @@ namespace ApiInspector.Models
         {
             return new[]
             {
-                "==",
-                ">"
+                "=",
+                "!=",
+                ">",
+                ">=",
+                "<",
+                "<=",
+                "Contains",
+                "StartsWith",
+                "EndsWith"
+
             };
         }
     }

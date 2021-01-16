@@ -241,7 +241,8 @@ namespace ApiInspector.MainWindow
             {
                 var editor = new IntellisenseTextBox
                 {
-                    Suggestions = AssertionOperatorNames.GetDescriptions()
+                    Suggestions = AssertionOperatorNames.GetDescriptions(),
+                    IsTextAlignmentCenter = true
                 };
 
                 Bind(editor,AutoCompleteTextBox.TextProperty,assertion.OperatorName,nameof(assertion.OperatorName));
