@@ -1,149 +1,135 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Components;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Invoking;
-using ApiInspector.Invoking.BoaSystem;
-using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
-using static System.String;
 using static ApiInspector.Keys;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
-using static ApiInspector.Utility;
 
 namespace ApiInspector.MainWindow
 {
     /// <summary>
-    /// Interaction logic for ScenarioEditor.xaml
+    ///     Interaction logic for ScenarioEditor.xaml
     /// </summary>
     public partial class ScenarioEditor
     {
+        #region Static Fields
+        /// <summary>
+        ///     The scenario data property
+        /// </summary>
         public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(Scenario), typeof(ScenarioEditor), new PropertyMetadata(default(Scenario)));
+        #endregion
 
+        #region Fields
+        /// <summary>
+        ///     The scope
+        /// </summary>
         Scope scope;
+        #endregion
 
-        public Action<string> ShowErrorNotification;
+        #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ScenarioEditor"/> class.
+        /// </summary>
+        public ScenarioEditor()
+        {
+            InitializeComponent();
+        }
+        #endregion
 
-        InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
+        #region Properties
+        /// <summary>
+        ///     Sets the content of the current.
+        /// </summary>
+        FrameworkElement CurrentContent
+        {
+            set
+            {
+                contentContainer.Children.Clear();
+                contentContainer.Children.Add(value);
+            }
+        }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance has invocation information.
+        /// </summary>
         bool HasInvocationInfo => scope.Contains(SelectedInvocationInfo);
-        
+
+        /// <summary>
+        ///     Gets the invocation information.
+        /// </summary>
+        InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
+
+        /// <summary>
+        ///     Gets the scenarios.
+        /// </summary>
+        List<Scenario> scenarios => scope.Get(SelectedInvocationInfo).Scenarios;
+        /// <summary>
+        ///     Gets the selected scenario.
+        /// </summary>
+        Scenario selectedScenario => scope.Get(SelectedScenario);
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Connects the specified scope.
+        /// </summary>
         internal void Connect(Scope scope)
         {
             this.scope = scope;
             AttachEvents();
         }
 
-        void AttachEvents()
-        {
-            scope.OnUpdate(SelectedScenario, UpdateNumbers);
-            scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
-            scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
-            scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
-            scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
-
-            scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
-
-            scope.SubscribeEvent(ScenarioEvent.RemoveSelectedScenario, () =>
-            {
-                scenarios.Remove(selectedScenario);
-                BuildScenarioList();
-
-            });
-        }
-
-        void BuildScenarioList()
-        {
-            var scenarioList = new List<Scenario>(scenarios);
-
-            scenarios.Clear();
-
-            foreach (var scenario in scenarioList)
-            {
-                scope.Get(AddNewScenario)(scenario);
-            }
-        }
-
-        void ArrangeRemoveScenarioButtonVisibility()
-        {
-            if (scope.Contains(SelectedScenario) && scenarios.Count > 1)
-            {
-                removeScenarioButton.Visibility = Visibility.Visible;
-                return;
-            }
-
-            removeScenarioButton.Visibility = Visibility.Hidden;
-        }
-
-
-        
-
-        void EnableAllLeftButtons()
-        {
-            buttonActivateInputOutputPanel.IsPressed = false;
-            buttonActivateExportPanel.IsPressed = false;
-            buttonAssertions.IsPressed               = false;
-        }
-
-        void OnAssertionsClicked(object sender, RoutedEventArgs e)
-        {
-            EnableAllLeftButtons();
-            buttonAssertions.IsPressed = true;
-
-            ActivateAssertions();
-
-        }
-
+        /// <summary>
+        ///     Activates the assertions.
+        /// </summary>
         void ActivateAssertions()
         {
             var assertionsEditor = new AssertionsEditor();
 
-            assertionsEditor.Loaded +=(s,e)=>assertionsEditor.Connect(scope);
+            assertionsEditor.Loaded += (s, e) => assertionsEditor.Connect(scope);
 
             CurrentContent = assertionsEditor;
         }
 
-        void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
-        {
-            EnableAllLeftButtons();
-
-            buttonActivateInputOutputPanel.IsPressed = true;
-
-            ActivateInputOutputPanel();
-            
-        }
-
+        /// <summary>
+        ///     Activates the export panel.
+        /// </summary>
         void ActivateExportPanel(object sender, RoutedEventArgs e)
         {
-            EnableAllLeftButtons();
+            EnableAllTopButtons();
             buttonActivateExportPanel.IsPressed = true;
 
             ActivateExportPanel();
         }
 
+        /// <summary>
+        ///     Activates the export panel.
+        /// </summary>
         void ActivateExportPanel()
         {
             var scenario = scope.Get(SelectedScenario);
 
-
             var editor = new TextBox();
 
-            Bind(editor,TextBox.TextProperty,scenario,nameof(scenario.ResponseOutputFilePath));
+            Bind(editor, TextBox.TextProperty, scenario, nameof(scenario.ResponseOutputFilePath));
 
-            
-            CurrentContent = NewGroupBox(NewBoldTextBlock("Export"),NewStackPanel(NewBoldTextBlock("Export Result To Path"), editor)).UpdatePadding(10);
+            CurrentContent = NewGroupBox(NewBoldTextBlock("Export"), NewStackPanel(NewBoldTextBlock("Export Result To Path"), editor)).UpdatePadding(10);
         }
 
+        /// <summary>
+        ///     Activates the input output panel.
+        /// </summary>
         void ActivateInputOutputPanel()
         {
             var scenario         = scope.Get(SelectedScenario);
             var methodDefinition = scope.Get(SelectedMethodDefinition);
-            
-            InvokeOutput FindOutput( )
+
+            InvokeOutput FindOutput()
             {
                 var invokeOutputs = scope.TryGet(InvokeOutputs);
 
@@ -153,9 +139,9 @@ namespace ApiInspector.MainWindow
                 }
 
                 var scenarioIndex = scenarios.IndexOf(scenario);
-                if (scenarioIndex>=0 && invokeOutputs.Length>scenarioIndex)
+                if (scenarioIndex >= 0 && invokeOutputs.Length > scenarioIndex)
                 {
-                    return invokeOutputs[scenarioIndex];    
+                    return invokeOutputs[scenarioIndex];
                 }
 
                 return null;
@@ -173,68 +159,89 @@ namespace ApiInspector.MainWindow
 
                 if (!output.IsSuccess)
                 {
-                    responseTextView.Text = "ERROR: "+ output.Error;  
+                    responseTextView.Text = "ERROR: " + output.Error;
                     return;
                 }
+
                 responseTextView.Text = output.ExecutionResponseAsJson;
             });
 
             scope.UnSubscribeEvent(ScenarioEvent.ExecutionFinished, updateResponseOutputText);
             scope.SubscribeEvent(ScenarioEvent.ExecutionFinished, updateResponseOutputText);
-            
+
             var inputEditors = ParameterPanelIntegration.Create(scenario.MethodParameters, methodDefinition).ToArray();
-            
-            
 
-
-            CurrentContent = NewColumnSplittedGrid(NewGroupBox(NewBoldTextBlock("Method Parameters"), NewStackPanel(inputEditors)), 
+            CurrentContent = NewColumnSplittedGrid(NewGroupBox(NewBoldTextBlock("Method Parameters"), NewStackPanel(inputEditors)),
                                                    NewGroupBox(NewBoldTextBlock("Response"), responseTextView));
 
             updateResponseOutputText();
         }
 
-        FrameworkElement CurrentContent
+        /// <summary>
+        ///     Arranges the remove scenario button visibility.
+        /// </summary>
+        void ArrangeRemoveScenarioButtonVisibility()
         {
-            set
+            if (scope.Contains(SelectedScenario) && scenarios.Count > 1)
             {
-                contentContainer.Children.Clear();
-                contentContainer.Children.Add(value);
+                removeScenarioButton.Visibility = Visibility.Visible;
+                return;
+            }
+
+            removeScenarioButton.Visibility = Visibility.Hidden;
+        }
+
+        /// <summary>
+        ///     Attaches the events.
+        /// </summary>
+        void AttachEvents()
+        {
+            scope.OnUpdate(SelectedScenario, UpdateNumbers);
+            scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
+            scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
+            scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
+            scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
+
+            scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
+
+            scope.SubscribeEvent(ScenarioEvent.RemoveSelectedScenario, () =>
+            {
+                scenarios.Remove(selectedScenario);
+                BuildScenarioList();
+            });
+        }
+
+        /// <summary>
+        ///     Builds the scenario list.
+        /// </summary>
+        void BuildScenarioList()
+        {
+            var scenarioList = new List<Scenario>(scenarios);
+
+            scenarios.Clear();
+
+            foreach (var scenario in scenarioList)
+            {
+                scope.Get(AddNewScenario)(scenario);
             }
         }
 
-        List<Scenario> scenarios =>scope.Get(SelectedInvocationInfo).Scenarios;
-        Scenario selectedScenario => scope.Get(SelectedScenario);
-
-        public ScenarioEditor()
+        
+        void EnableAllTopButtons()
         {
-            InitializeComponent();
+            buttonActivateInputOutputPanel.IsPressed = false;
+            buttonActivateExportPanel.IsPressed      = false;
+            buttonAssertions.IsPressed               = false;
         }
 
-        void OnAddNewScenarioClicked(object sender, RoutedEventArgs e)
-        {
-            scope.Get(AddNewScenario)(new Scenario());
-        }
-
-        void OnRemoveSelectedScenarioClicked(object sender, RoutedEventArgs e)
-        {
-            scope.PublishEvent(ScenarioEvent.RemoveSelectedScenario);
-        }
-
-        void MakePressedSelectedScenario()
-        {
-            var actionButton = FindSelectedActionButton();
-
-            if (actionButton != null)
-            {
-                actionButton.IsPressed = true;
-            }
-        }
-
+        /// <summary>
+        ///     Finds the selected action button.
+        /// </summary>
         ActionButton FindSelectedActionButton()
         {
             foreach (ActionButton child in scenarioNumbersContainer.Children)
             {
-                var scenario = (Scenario)child.GetValue(ScenarioDataProperty);
+                var scenario = (Scenario) child.GetValue(ScenarioDataProperty);
 
                 if (scenario == scope.Get(SelectedScenario))
                 {
@@ -245,6 +252,61 @@ namespace ApiInspector.MainWindow
             return null;
         }
 
+        /// <summary>
+        ///     Makes the pressed selected scenario.
+        /// </summary>
+        void MakePressedSelectedScenario()
+        {
+            var actionButton = FindSelectedActionButton();
+
+            if (actionButton != null)
+            {
+                actionButton.IsPressed = true;
+            }
+        }
+
+        /// <summary>
+        ///     Called when [add new scenario clicked].
+        /// </summary>
+        void OnAddNewScenarioClicked(object sender, RoutedEventArgs e)
+        {
+            scope.Get(AddNewScenario)(new Scenario());
+        }
+
+        /// <summary>
+        ///     Called when [assertions clicked].
+        /// </summary>
+        void OnAssertionsClicked(object sender, RoutedEventArgs e)
+        {
+            EnableAllTopButtons();
+            buttonAssertions.IsPressed = true;
+
+            ActivateAssertions();
+        }
+
+        /// <summary>
+        ///     Called when [button activate input output panel clicked].
+        /// </summary>
+        void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
+        {
+            EnableAllTopButtons();
+
+            buttonActivateInputOutputPanel.IsPressed = true;
+
+            ActivateInputOutputPanel();
+        }
+
+        /// <summary>
+        ///     Called when [remove selected scenario clicked].
+        /// </summary>
+        void OnRemoveSelectedScenarioClicked(object sender, RoutedEventArgs e)
+        {
+            scope.PublishEvent(ScenarioEvent.RemoveSelectedScenario);
+        }
+
+        /// <summary>
+        ///     Updates the numbers.
+        /// </summary>
         void UpdateNumbers()
         {
             scenarioNumbersContainer.Children.Clear();
@@ -255,118 +317,20 @@ namespace ApiInspector.MainWindow
             {
                 var actionButton = new ActionButton
                 {
-                    Text = i.ToString(),
-                   
+                    Text = i.ToString()
                 };
 
-                actionButton.SetValue(ScenarioDataProperty,scenario);
+                actionButton.SetValue(ScenarioDataProperty, scenario);
 
-                actionButton.Click += (s, e) =>
-                {
-                    scope.Update(SelectedScenario,scenario);
-                };
+                actionButton.Click += (s, e) => { scope.Update(SelectedScenario, scenario); };
 
                 scenarioNumbersContainer.Children.Add(actionButton);
-                
+
                 i++;
             }
 
-            VerticalIndent(scenarioNumbersContainer,10);
+            VerticalIndent(scenarioNumbersContainer, 10);
         }
-
-        
-        
-        void OnExecuteClicked(object sender, RoutedEventArgs e)
-        {
-            if (!HasInvocationInfo || IsNullOrWhiteSpace(InvocationInfo.MethodName))
-            {
-                ShowErrorNotification("MethodName can not be empty.");
-                return;
-            }
-
-            Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
-            Task.Run(()=>ExecuteSelectedScenario());
-        }
-
-
-         void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)
-         {
-             if (!scope.Contains(InvokeOutputs))
-             {
-                 scope.Add(InvokeOutputs,new InvokeOutput[scenarios.Count]);
-             }
-
-             scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
-         }
-
-         public void ExecuteAllScenarioList()
-         {
-             foreach (var scenario in scenarios)
-             {
-                 scope.Update(SelectedScenario,scenario);
-
-                 ExecuteSelectedScenario();
-             }
-         }
-
-         void ExecuteSelectedScenario()
-         {
-             var scenario      = scope.Get(SelectedScenario);
-
-             var invocationInfo  = InvocationInfo;
-             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
-
-             void UpdateUI(Action action)
-             {
-                 Dispatcher.InvokeAsync(action);
-             }
-
-             void OnEnteredToExecution()
-             {
-                 UpdateUI(() => executeSelectedScenarioButton.Text      = "Executing...");
-                 UpdateUI(() => executeSelectedScenarioButton.IsEnabled = false);
-             }
-
-             void OnExitToExecution()
-             {
-                 UpdateUI(() => executeSelectedScenarioButton.Text   = "Execute");
-                 UpdateUI(() => executeSelectedScenarioButton.IsEnabled = true);
-             }
-
-             void trace(string message)
-             {
-                 scope.Get(Keys.Trace)(message);
-             }
-
-             OnEnteredToExecution();
-            
-
-             var scenarioIndex = scenarios.IndexOf(scenario);
-            
-             trace($"------------- EXECUTE STARTED For {scenarioIndex+1} -------------");
-
-
-             
-              var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
-
-              UpdateScenarioOutput(scenarioIndex,invokeOutput);
-
-             
-                
-             if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
-             {
-                 WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
-             }
-
-             UpdateUI(()=>scope.PublishEvent(ScenarioEvent.ExecutionFinished));
-            
-             trace(Empty);
-             trace(Empty);
-             trace($"------------- EXECUTE FINISHED {scenarioIndex+1} -------------");
-
-             OnExitToExecution();
-         }
-
-         
+        #endregion
     }
 }
