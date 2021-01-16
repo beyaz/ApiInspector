@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +10,7 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
-using WpfControls;
+using static System.String;
 using static ApiInspector.Keys;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
@@ -24,16 +23,15 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class ScenarioEditor
     {
-
-        public Action<string> ShowErrorNotification;
-
-
         public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(Scenario), typeof(ScenarioEditor), new PropertyMetadata(default(Scenario)));
-
-       
 
         Scope scope;
 
+        public Action<string> ShowErrorNotification;
+
+        InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
+        bool HasInvocationInfo => scope.Contains(SelectedInvocationInfo);
+        
         internal void Connect(Scope scope)
         {
             this.scope = scope;
@@ -42,7 +40,7 @@ namespace ApiInspector.MainWindow
 
         void AttachEvents()
         {
-            scope.OnUpdate(SelectedScenario, UpdateTabHeaders);
+            scope.OnUpdate(SelectedScenario, UpdateNumbers);
             scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
             scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
@@ -82,23 +80,7 @@ namespace ApiInspector.MainWindow
         }
 
 
-        InvokeOutput FindOutput(Scenario scenario)
-        {
-            var invokeOutputs = scope.TryGet(InvokeOutputs);
-
-            if (invokeOutputs == null || invokeOutputs.Length == 0)
-            {
-                return null;
-            }
-
-            var scenarioIndex = scenarios.IndexOf(scenario);
-            if (scenarioIndex>=0 && invokeOutputs.Length>scenarioIndex)
-            {
-                return invokeOutputs[scenarioIndex];    
-            }
-
-            return null;
-        }
+        
 
         void EnableAllLeftButtons()
         {
@@ -128,6 +110,7 @@ namespace ApiInspector.MainWindow
         void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
         {
             EnableAllLeftButtons();
+
             buttonActivateInputOutputPanel.IsPressed = true;
 
             ActivateInputOutputPanel();
@@ -157,15 +140,31 @@ namespace ApiInspector.MainWindow
 
         void ActivateInputOutputPanel()
         {
-
             var scenario         = scope.Get(SelectedScenario);
             var methodDefinition = scope.Get(SelectedMethodDefinition);
             
+            InvokeOutput FindOutput( )
+            {
+                var invokeOutputs = scope.TryGet(InvokeOutputs);
+
+                if (invokeOutputs == null || invokeOutputs.Length == 0)
+                {
+                    return null;
+                }
+
+                var scenarioIndex = scenarios.IndexOf(scenario);
+                if (scenarioIndex>=0 && invokeOutputs.Length>scenarioIndex)
+                {
+                    return invokeOutputs[scenarioIndex];    
+                }
+
+                return null;
+            }
+
             var responseTextView = new JsonTextEditor();
-            
             var updateResponseOutputText = fun(() =>
             {
-                var output = FindOutput(scenario);
+                var output = FindOutput();
                 if (output == null)
                 {
                     responseTextView.Text = null;
@@ -174,7 +173,7 @@ namespace ApiInspector.MainWindow
 
                 if (!output.IsSuccess)
                 {
-                    responseTextView.Text = "ERROR: "+ output.Error.ToString();  
+                    responseTextView.Text = "ERROR: "+ output.Error;  
                     return;
                 }
                 responseTextView.Text = output.ExecutionResponseAsJson;
@@ -246,9 +245,8 @@ namespace ApiInspector.MainWindow
             return null;
         }
 
-        void UpdateTabHeaders()
+        void UpdateNumbers()
         {
-
             scenarioNumbersContainer.Children.Clear();
 
             var i = 1;
@@ -276,11 +274,11 @@ namespace ApiInspector.MainWindow
             VerticalIndent(scenarioNumbersContainer,10);
         }
 
-        InvocationInfo InvocationInfo => scope.TryGet(SelectedInvocationInfo);
         
-         void OnExecuteClicked(object sender, RoutedEventArgs e)
+        
+        void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
-            if (InvocationInfo == null || string.IsNullOrWhiteSpace(InvocationInfo.MethodName))
+            if (!HasInvocationInfo || IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
                 ShowErrorNotification("MethodName can not be empty.");
                 return;
@@ -301,7 +299,7 @@ namespace ApiInspector.MainWindow
              scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
          }
 
-         void ExecuteAllScenarioList()
+         public void ExecuteAllScenarioList()
          {
              foreach (var scenario in scenarios)
              {
@@ -355,15 +353,15 @@ namespace ApiInspector.MainWindow
 
              
                 
-             if (!string.IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
+             if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
              {
                  WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
              }
 
              UpdateUI(()=>scope.PublishEvent(ScenarioEvent.ExecutionFinished));
             
-             trace(string.Empty);
-             trace(string.Empty);
+             trace(Empty);
+             trace(Empty);
              trace($"------------- EXECUTE FINISHED {scenarioIndex+1} -------------");
 
              OnExitToExecution();
