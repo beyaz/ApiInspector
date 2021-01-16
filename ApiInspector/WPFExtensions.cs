@@ -135,6 +135,26 @@ namespace ApiInspector
             return element;
         }
 
+        public static T WithMargin<T>(this T element,Thickness thickness)where  T:FrameworkElement
+        {
+            element.Margin = thickness;
+
+            return element;
+        }
+
+        public static T WithMarginLeft<T>(this T element,int left)where  T:FrameworkElement
+        {
+            element.Margin = new Thickness(left,element.Margin.Top,element.Margin.Right,element.Margin.Bottom);
+
+            return element;
+        }
+
+        public static T WithVerticalAlignmentCenter<T>(this T element)where  T:FrameworkElement
+        {
+            element.VerticalAlignment = VerticalAlignment.Center;
+
+            return element;
+        }
 
         public static Expander NewExpander(string header, int contentMargin, FrameworkElement content)
         {
@@ -205,7 +225,42 @@ namespace ApiInspector
             
             return grid;
         }
+        public static Grid NewGridWithColumns(string[] columnSizes,params FrameworkElement[] childElements)
+        {
+            var grid = new Grid();
 
+            foreach (var size in columnSizes)
+            {
+                var getLength = fun(() =>
+                {
+                    if (size == "Auto")
+                    {
+                        return new GridLength(0, GridUnitType.Auto);
+
+                    }
+
+                    if (size == "*")
+                    {
+                        return new GridLength(1, GridUnitType.Star);
+
+                    }
+
+                    return new GridLength(int.Parse(size), GridUnitType.Star);
+                });
+
+
+                grid.ColumnDefinitions.Add(new ColumnDefinition{Width = getLength()});
+            }
+
+            int i = 0;
+            foreach (var element in childElements)
+            {
+                element.SetValue(Grid.ColumnProperty, i++);
+                grid.Children.Add(element);
+            }
+            
+            return grid;
+        }
 
 
 

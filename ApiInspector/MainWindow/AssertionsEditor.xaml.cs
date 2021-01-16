@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ApiInspector.Components;
 using ApiInspector.Models;
+using BOA.Common.Types;
 using WpfControls;
 using static ApiInspector.Keys;
 using static ApiInspector.WPFExtensions;
@@ -49,15 +50,15 @@ namespace ApiInspector.MainWindow
             AttachEvents();
 
             BuildAssertionList();
+            UpdateNumbers();
         }
 
         void AttachEvents()
         {
             scope.OnUpdate(SelectedAssertion, UpdateNumbers);
             scope.OnUpdate(SelectedAssertion, ShowSelectedAssertion);
-            scope.OnUpdate(SelectedScenario, ArrangeRemoveAssertionButtonVisibility);
-            scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
-            scope.OnUpdate(SelectedMethodDefinition, BuildAssertionList);
+            scope.OnUpdate(SelectedAssertion, ArrangeRemoveAssertionButtonVisibility);
+            scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);
 
             scope.OnUpdate(SelectedScenario, BuildAssertionList);
 
@@ -87,7 +88,7 @@ namespace ApiInspector.MainWindow
             }
         }
 
-        void MakePressedSelectedScenario()
+        void MakePressedSelectedAssertion()
         {
             var actionButton = FindSelectedActionButton();
 
@@ -142,7 +143,19 @@ namespace ApiInspector.MainWindow
 
         void OnAddNewAssertionClicked(object sender, RoutedEventArgs e)
         {
-            AddNewAssertion(scope,new Assertion{  Value  = new ValueAccessInfo(),Expected = new ValueAccessInfo()});
+            var assertion = new Assertion
+            {
+                Actual = new ValueAccessInfo
+                {
+                    SqlDatabaseName = Databases.Boa.ToString()
+                },
+                Expected = new ValueAccessInfo
+                {
+                    SqlDatabaseName = Databases.Boa.ToString()
+                }
+            };
+
+            AddNewAssertion(scope,assertion);
         }
 
         void OnRemoveSelectedAssertionClicked(object sender, RoutedEventArgs e)
@@ -189,7 +202,7 @@ namespace ApiInspector.MainWindow
 
             var createLeft = fun(() =>
             {
-                var editor = CreateEditor(assertion.Value);
+                var editor = CreateEditor(assertion.Actual);
 
                 return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
             });
@@ -203,17 +216,20 @@ namespace ApiInspector.MainWindow
 
             var createOperatorEditor = fun(() =>
             {
-                var operatorEditor = new IntellisenseTextBox
+                var editor = new IntellisenseTextBox
                 {
                     Suggestions = AssertionOperatorNames.GetDescriptions()
                 };
-                Bind(operatorEditor,AutoCompleteTextBox.TextProperty,assertion.OperatorName,nameof(assertion.OperatorName));
 
-                return operatorEditor;
+                Bind(editor,AutoCompleteTextBox.TextProperty,assertion.OperatorName,nameof(assertion.OperatorName));
+
+                return NewStackPanel(NewBoldTextBlock("Operator"), editor)
+                       .WithMargin(new Thickness(10, 0, 10, 0))
+                       .WithVerticalAlignmentCenter();
             });
 
 
-            var secondRow = NewGridWithColumns(new[] {10, 2, 10}, createLeft() , createOperatorEditor(), createExpected());
+            var secondRow = NewGridWithColumns(new[] {10, 4, 10}, createLeft() , createOperatorEditor(), createExpected());
 
             return NewStackPanel(firstRow, secondRow);
 
@@ -221,31 +237,53 @@ namespace ApiInspector.MainWindow
 
         static FrameworkElement CreateEditor(ValueAccessInfo data)
         {
-
-
-
-            var valueAccessTypeEditor = new IntellisenseTextBox
+            var firstRow = fun(() =>
             {
-                Suggestions = Enum.GetNames(typeof(ValueAccessType))
-            };
-            Bind(valueAccessTypeEditor,AutoCompleteTextBox.TextProperty,data.SqlDatabaseName,nameof(data.SqlDatabaseName));
+                var databaseNameEditor = new IntellisenseTextBox
+                {
+                    Suggestions = Enum.GetNames(typeof(Databases))
+                };
+                Bind(databaseNameEditor,AutoCompleteTextBox.TextProperty,data,nameof(data.SqlDatabaseName));
 
+                var calculateFromDatabase = new CheckBox
+                {
+                    Content = "From Database"
+                };
 
-            var editor = new SQLTextEditor();
+                calculateFromDatabase.Checked += (s, e) =>
+                {
+                    data.ValueAccessType          = ValueAccessType.FetchFromDatabase;
+                    databaseNameEditor.Visibility = Visibility.Visible;
+                    
+                    
+                };
 
-            editor.SetAutoComplete(new List<string>{"$Input.UserName}","$Output.UserName2}"});
+                calculateFromDatabase.Unchecked += (s, e) =>
+                {
+                    data.ValueAccessType          = ValueAccessType.ConstantValue;
+                    databaseNameEditor.Visibility = Visibility.Collapsed;
+                    
+                    
+                };
 
-            editor.TextChanged += (s, e) => { data.Sql = editor.Text; };
+                databaseNameEditor.Visibility = Visibility.Collapsed;
 
-            var calculateFromDatabase = new CheckBox()
+                return NewGridWithColumns(new[]{"Auto","*"},calculateFromDatabase, databaseNameEditor.WithMarginLeft(5));
+            });
+            
+
+            var sqlEditor = fun(() =>
             {
-                Content = "From Database"
-            };
+                var editor = new SQLTextEditor();
 
-            var firstRow = NewHorizontalStackPanel(calculateFromDatabase, new TextBox());
+                editor.SetAutoComplete(new List<string>{"$Input.UserName}","$Output.UserName2}"});
 
+                editor.TextChanged += (s, e) => { data.Sql = editor.Text; };
 
-            return NewStackPanel(firstRow, editor);
+                return editor;
+            });
+
+            return NewStackPanel(firstRow(), sqlEditor());
         }
     }
 

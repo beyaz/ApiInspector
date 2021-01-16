@@ -103,9 +103,10 @@ namespace ApiInspector.Models
     public class Assertion
     {
         public string Description { get; set; }
+
         public string OperatorName { get; set; }
 
-        public ValueAccessInfo Value { get; set; } = new ValueAccessInfo();
+        public ValueAccessInfo Actual { get; set; } = new ValueAccessInfo();
 
         public ValueAccessInfo Expected { get; set; } = new ValueAccessInfo();
     }
@@ -116,8 +117,8 @@ namespace ApiInspector.Models
         {
             return new[]
             {
-                "Equals (=)",
-                "Bigger Than (>)"
+                "==",
+                ">"
             };
         }
     }
@@ -136,7 +137,7 @@ namespace ApiInspector.Models
     [Serializable]
     public class ValueAccessInfo
     {
-        public ValueAccessType Type { get; set; }
+        public ValueAccessType ValueAccessType { get; set; }
         
         public string Sql { get; set; }
 
