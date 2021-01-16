@@ -149,8 +149,9 @@ namespace ApiInspector.MainWindow
 
             var expectedEditor = NewStackPanel(NewBoldTextBlock("Expected"), valueAccessTypeEditor);
 
-            
-            var operatorEditor = NewStackPanel(NewBoldTextBlock("Operator"), new TextBox());
+            var sqlTextEditor  = new SQLTextEditor();
+            sqlTextEditor.SetAutoComplete(new List<string>{"$Input.UserName}","$Output.UserName2}"});
+            var operatorEditor = NewStackPanel(NewBoldTextBlock("Operator"), sqlTextEditor);
             
             CurrentContent = NewGroupBox(NewBoldTextBlock("Assertions"),NewGridWithColumns(new int[]{5,2,5},actualEditor,operatorEditor, expectedEditor)).UpdatePadding(10);
         }

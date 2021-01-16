@@ -60,16 +60,17 @@ namespace ApiInspector.Components
         {
             var popupMenu = new AutocompleteMenu(this.editor)
             {
-                MinFragmentLength = 2
+                MinFragmentLength = 2,
+                AppearInterval = 5000
             };
             popupMenu.Items.SetAutocompleteItems(suggestions);
             popupMenu.Items.MaximumSize = new System.Drawing.Size(200, 300);
             popupMenu.Items.Width       = 200;
 
-            editor.KeyDown += (s, e) =>
+            editor.KeyPressed += (s, e) =>
             {
-                var flag = e.KeyData == ( System.Windows.Forms.Keys)131147;
-                if (flag)
+                var isSpaceKey = e.KeyChar == '{';
+                if (isSpaceKey)
                 {
                     popupMenu.Show(true);
                     e.Handled = true;
