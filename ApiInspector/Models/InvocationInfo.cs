@@ -110,6 +110,19 @@ namespace ApiInspector.Models
         public ValueAccessInfo Expected { get; set; } = new ValueAccessInfo();
     }
 
+    class AssertionOperatorNames
+    {
+        public static IReadOnlyList<string> GetDescriptions()
+        {
+            return new[]
+            {
+                "Equals (=)",
+                "Bigger Than (>)"
+            };
+        }
+    }
+
+
     [Serializable]
     public enum ValueAccessType
     {

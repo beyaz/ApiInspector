@@ -17,6 +17,7 @@ using ApiInspector.Models;
 using WpfControls;
 using static ApiInspector.Keys;
 using static ApiInspector.WPFExtensions;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -44,12 +45,17 @@ namespace ApiInspector.MainWindow
         internal void Connect(Scope scope)
         {
             this.scope = scope;
+            
             AttachEvents();
+
+            BuildAssertionList();
         }
+
         void AttachEvents()
         {
             scope.OnUpdate(SelectedAssertion, UpdateNumbers);
-            scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
+            scope.OnUpdate(SelectedAssertion, ShowSelectedAssertion);
+            scope.OnUpdate(SelectedScenario, ArrangeRemoveAssertionButtonVisibility);
             scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
             scope.OnUpdate(SelectedMethodDefinition, BuildAssertionList);
 
@@ -61,8 +67,24 @@ namespace ApiInspector.MainWindow
                 BuildAssertionList();
 
             });
+        }
 
-            BuildAssertionList();
+        void ShowSelectedAssertion()
+        {
+            CurrentContent = CreateEditor(selectedAssertion);
+        }
+
+
+        /// <summary>
+        ///     Sets the content of the current.
+        /// </summary>
+        FrameworkElement CurrentContent
+        {
+            set
+            {
+                contentContainer.Children.Clear();
+                contentContainer.Children.Add(value);
+            }
         }
 
         void MakePressedSelectedScenario()
@@ -90,7 +112,7 @@ namespace ApiInspector.MainWindow
             return null;
         }
 
-        void ArrangeRemoveScenarioButtonVisibility()
+        void ArrangeRemoveAssertionButtonVisibility()
         {
             if (scope.Contains(SelectedAssertion) && Assertions.Count > 1)
             {
@@ -165,7 +187,35 @@ namespace ApiInspector.MainWindow
 
             var firstRow = NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
 
-            return NewGridWithColumns(new[] {10, 2, 10}, CreateEditor(assertion.Value), NewBoldTextBlock("="), CreateEditor(assertion.Expected));
+            var createLeft = fun(() =>
+            {
+                var editor = CreateEditor(assertion.Value);
+
+                return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
+            });
+
+            var createExpected = fun(() =>
+            {
+                var editor = CreateEditor(assertion.Expected);
+
+                return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
+            });
+
+            var createOperatorEditor = fun(() =>
+            {
+                var operatorEditor = new IntellisenseTextBox
+                {
+                    Suggestions = AssertionOperatorNames.GetDescriptions()
+                };
+                Bind(operatorEditor,AutoCompleteTextBox.TextProperty,assertion.OperatorName,nameof(assertion.OperatorName));
+
+                return operatorEditor;
+            });
+
+
+            var secondRow = NewGridWithColumns(new[] {10, 2, 10}, createLeft() , createOperatorEditor(), createExpected());
+
+            return NewStackPanel(firstRow, secondRow);
 
         }
 
