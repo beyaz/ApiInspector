@@ -78,10 +78,6 @@ namespace ApiInspector
         ExecutionFinished
     }
 
-    enum AssertionEvent
-    {
-        NewAssertionAdded,
-        RemoveSelectedAssertion
-    }
+    
     
 }

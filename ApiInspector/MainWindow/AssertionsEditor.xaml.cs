@@ -29,11 +29,12 @@ namespace ApiInspector.MainWindow
     {
         public static readonly DependencyProperty AssertionDataProperty = DependencyProperty.Register("AssertionData", typeof(Assertion), typeof(AssertionsEditor), new PropertyMetadata(default(Assertion)));
 
+        bool HasSelectedAssertion => scope.Contains(SelectedAssertion) && scope.Get(SelectedAssertion) != null;
+
         static void AddNewAssertion(Scope scope,Assertion assertion)
         {
             scope.Get(SelectedScenario).Assertions.Add(assertion);
             scope.Update(SelectedAssertion, assertion);
-            scope.PublishEvent(AssertionEvent.NewAssertionAdded);
         }
       
 
@@ -51,6 +52,7 @@ namespace ApiInspector.MainWindow
 
             BuildAssertionList();
             UpdateNumbers();
+            ArrangeRemoveAssertionButtonVisibility();
         }
 
         void AttachEvents()
@@ -60,19 +62,21 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedAssertion, ArrangeRemoveAssertionButtonVisibility);
             scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);
 
-            scope.OnUpdate(SelectedScenario, BuildAssertionList);
+            
 
-            scope.SubscribeEvent(AssertionEvent.RemoveSelectedAssertion, () =>
-            {
-                Assertions.Remove(selectedAssertion);
-                BuildAssertionList();
-
-            });
         }
 
         void ShowSelectedAssertion()
         {
-            CurrentContent = CreateEditor(selectedAssertion);
+            if (HasSelectedAssertion)
+            {
+                CurrentContent = CreateEditor(selectedAssertion);    
+            }
+            else
+            {
+                CurrentContent = null;
+            }
+            
         }
 
 
@@ -84,38 +88,50 @@ namespace ApiInspector.MainWindow
             set
             {
                 contentContainer.Children.Clear();
-                contentContainer.Children.Add(value);
+                if (value != null)
+                {
+                    contentContainer.Children.Add(value);    
+                }
+                
             }
         }
 
         void MakePressedSelectedAssertion()
         {
-            var actionButton = FindSelectedActionButton();
+            if (!HasSelectedAssertion)
+            {
+                return;
+            }
 
+            ActionButton FindSelectedActionButton()
+            {
+                foreach (ActionButton child in assertionNumbersContainer.Children)
+                {
+                    var assertion = (Assertion)child.GetValue(AssertionDataProperty);
+
+                    if (assertion == selectedAssertion)
+                    {
+                        return child;
+                    }
+                }
+
+                return null;
+            }
+
+            var actionButton = FindSelectedActionButton();
             if (actionButton != null)
             {
                 actionButton.IsPressed = true;
             }
         }
 
-        ActionButton FindSelectedActionButton()
-        {
-            foreach (ActionButton child in assertionNumbersContainer.Children)
-            {
-                var assertion = (Assertion)child.GetValue(AssertionDataProperty);
+        
 
-                if (assertion == selectedAssertion)
-                {
-                    return child;
-                }
-            }
-
-            return null;
-        }
+        
 
         void ArrangeRemoveAssertionButtonVisibility()
         {
-            if (scope.Contains(SelectedAssertion) && Assertions.Count > 1)
+            if (HasSelectedAssertion)
             {
                 removeScenarioButton.Visibility = Visibility.Visible;
                 return;
@@ -130,10 +146,19 @@ namespace ApiInspector.MainWindow
 
             Assertions.Clear();
 
-            foreach (var assertion in assertions)
+            if (assertions.Count >0)
             {
-               AddNewAssertion(scope,assertion);
+                foreach (var assertion in assertions)
+                {
+                    AddNewAssertion(scope,assertion);
+                }
             }
+            else
+            {
+                scope.Update(SelectedAssertion,null);
+            }
+
+            
         }
 
         public AssertionsEditor()
@@ -160,7 +185,8 @@ namespace ApiInspector.MainWindow
 
         void OnRemoveSelectedAssertionClicked(object sender, RoutedEventArgs e)
         {
-            scope.PublishEvent(AssertionEvent.RemoveSelectedAssertion);
+            Assertions.Remove(selectedAssertion);
+            BuildAssertionList();
         }
 
         void UpdateNumbers()
