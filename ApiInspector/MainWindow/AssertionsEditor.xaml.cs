@@ -254,16 +254,12 @@ namespace ApiInspector.MainWindow
                 {
                     data.ValueAccessType          = ValueAccessType.FetchFromDatabase;
                     databaseNameEditor.Visibility = Visibility.Visible;
-                    
-                    
                 };
 
                 calculateFromDatabase.Unchecked += (s, e) =>
                 {
                     data.ValueAccessType          = ValueAccessType.ConstantValue;
                     databaseNameEditor.Visibility = Visibility.Collapsed;
-                    
-                    
                 };
 
                 databaseNameEditor.Visibility = Visibility.Collapsed;
@@ -283,7 +279,7 @@ namespace ApiInspector.MainWindow
                 return editor;
             });
 
-            return NewStackPanel(firstRow(), sqlEditor());
+            return NewStackPanel(firstRow(), sqlEditor()).WithIndent(5);
         }
     }
 

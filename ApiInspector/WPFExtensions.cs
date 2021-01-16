@@ -267,7 +267,38 @@ namespace ApiInspector
 
 
 
+        public static StackPanel WithIndent(this StackPanel stackPanel, int indent)
+        {
 
+            var i = 0;
+            if (stackPanel.Orientation == Orientation.Vertical)
+            {
+                foreach (FrameworkElement element in stackPanel.Children)
+                {
+                    if (i > 0)
+                    {
+                        element.Margin = new Thickness(element.Margin.Left, indent, element.Margin.Right, element.Margin.Bottom);
+                    }
+
+                    i++;
+                }
+            }
+            else
+            {
+                foreach (FrameworkElement element in stackPanel.Children)
+                {
+                    if (i > 0)
+                    {
+                        element.Margin = new Thickness(indent,element.Margin.Top, element.Margin.Right, element.Margin.Bottom);
+                    }
+
+                    i++;
+                }
+            }
+
+            return stackPanel;
+
+        }
 
 
 

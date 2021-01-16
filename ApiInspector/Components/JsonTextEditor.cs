@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using FastColoredTextBoxNS;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using TextChangedEventArgs = FastColoredTextBoxNS.TextChangedEventArgs;
 
 namespace ApiInspector.Components
 {
     /// <summary>
     ///     The special text editor
     /// </summary>
-    class SpecialTextEditor : WindowsFormsHost
+    class SpecialTextEditor : Border
     {
         #region Fields
         /// <summary>
@@ -25,7 +28,19 @@ namespace ApiInspector.Components
         /// </summary>
         public SpecialTextEditor()
         {
-            Child               = editor;
+
+
+            BorderThickness = new Thickness(1);
+            BorderBrush     = System.Windows.Media.Brushes.Aqua;
+
+            Loaded += (s, e) =>
+            {
+                Child = new WindowsFormsHost
+                {
+                    Child = editor
+                };
+            };
+
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment   = VerticalAlignment.Stretch;
             MinHeight           = 200;
