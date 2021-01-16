@@ -1,17 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ApiInspector.Components;
 using ApiInspector.Models;
 using BOA.Common.Types;
@@ -31,10 +21,10 @@ namespace ApiInspector.MainWindow
 
         bool HasSelectedAssertion => scope.Contains(SelectedAssertion) && scope.Get(SelectedAssertion) != null;
 
-        static void AddNewAssertion(Scope scope,Assertion assertion)
+        void AddNewAssertion(Assertion assertion)
         {
-            scope.Get(SelectedScenario).Assertions.Add(assertion);
-            scope.Update(SelectedAssertion, assertion);
+            Assertions.Add(assertion);
+            selectedAssertion = assertion;
         }
       
 
@@ -42,17 +32,24 @@ namespace ApiInspector.MainWindow
         Scope scope;
 
         List<Assertion> Assertions => scope.Get(SelectedScenario).Assertions;
-        Assertion selectedAssertion => scope.Get(SelectedAssertion);
+
+        Assertion selectedAssertion
+        {
+            get => scope.Get(SelectedAssertion);
+            set=>scope.Update(SelectedAssertion,value);
+        }
+            
 
         internal void Connect(Scope scope)
         {
-            this.scope = scope;
-            
+            this.scope = new Scope
+            {
+                {SelectedScenario, scope.Get(SelectedScenario)}
+            };
+
             AttachEvents();
 
             BuildAssertionList();
-            UpdateNumbers();
-            ArrangeRemoveAssertionButtonVisibility();
         }
 
         void AttachEvents()
@@ -60,10 +57,8 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedAssertion, UpdateNumbers);
             scope.OnUpdate(SelectedAssertion, ShowSelectedAssertion);
             scope.OnUpdate(SelectedAssertion, ArrangeRemoveAssertionButtonVisibility);
-            scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);
-
+            scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);   
             
-
         }
 
         void ShowSelectedAssertion()
@@ -150,16 +145,18 @@ namespace ApiInspector.MainWindow
             {
                 foreach (var assertion in assertions)
                 {
-                    AddNewAssertion(scope,assertion);
+                    AddNewAssertion(assertion);
                 }
             }
             else
             {
-                scope.Update(SelectedAssertion,null);
+                selectedAssertion = null;
             }
 
-            
+        
         }
+
+
 
         public AssertionsEditor()
         {
@@ -180,7 +177,7 @@ namespace ApiInspector.MainWindow
                 }
             };
 
-            AddNewAssertion(scope,assertion);
+            AddNewAssertion(assertion);
         }
 
         void OnRemoveSelectedAssertionClicked(object sender, RoutedEventArgs e)
@@ -206,7 +203,7 @@ namespace ApiInspector.MainWindow
 
                 actionButton.Click += (s, e) =>
                 {
-                    scope.Update(SelectedAssertion,assertion);
+                    selectedAssertion = assertion;
                 };
 
                 assertionNumbersContainer.Children.Add(actionButton);
@@ -267,30 +264,49 @@ namespace ApiInspector.MainWindow
             {
                 var databaseNameEditor = new IntellisenseTextBox
                 {
-                    Suggestions = Enum.GetNames(typeof(Databases))
+                    Suggestions = Enum.GetNames(typeof(Databases)),
+                    Text = data.DatabaseName
                 };
                 Bind(databaseNameEditor,AutoCompleteTextBox.TextProperty,data,nameof(data.DatabaseName));
 
-                var calculateFromDatabase = new CheckBox
+                var arrangeDatabaseNameEditorVisibility = fun(() =>
                 {
-                    Content = "From Database"
-                };
-
-                calculateFromDatabase.Checked += (s, e) =>
-                {
-                    data.FetchFromDatabase        = true;
-                    databaseNameEditor.Visibility = Visibility.Visible;
-                };
-
-                calculateFromDatabase.Unchecked += (s, e) =>
-                {
-                    data.FetchFromDatabase        = false;
+                    if (data.FetchFromDatabase)
+                    {
+                        databaseNameEditor.Visibility = Visibility.Visible;
+                        return;
+                    }
                     databaseNameEditor.Visibility = Visibility.Collapsed;
-                };
+                });
 
-                databaseNameEditor.Visibility = Visibility.Collapsed;
+                var createFetchFromDatabaseEditor = fun(() =>
+                {
+                    var checkBox = new CheckBox
+                    {
+                        Content   = "From Database",
+                        IsChecked = data.FetchFromDatabase
+                    };
 
-                return NewGridWithColumns(new[]{"Auto","*"},calculateFromDatabase, databaseNameEditor.WithMarginLeft(5));
+                    checkBox.Checked += (s, e) =>
+                    {
+                        data.FetchFromDatabase = true;
+                        arrangeDatabaseNameEditorVisibility();
+                    };
+
+                    checkBox.Unchecked += (s, e) =>
+                    {
+                        data.FetchFromDatabase = false;
+                        arrangeDatabaseNameEditorVisibility();
+                    };
+
+                    return checkBox;
+
+                });
+               
+
+                arrangeDatabaseNameEditorVisibility();
+
+                return NewGridWithColumns(new[]{"Auto","*"},createFetchFromDatabaseEditor(), databaseNameEditor.WithMarginLeft(5));
             });
             
 
