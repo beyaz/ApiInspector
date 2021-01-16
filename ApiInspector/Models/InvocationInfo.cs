@@ -18,13 +18,16 @@ namespace ApiInspector.Models
                     new Scenario
                     {
                         MethodParameters = invocationInfo.Parameters,
-                        ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath
+                        ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
+                        Assertions = new List<Assertion>()
                     }
                 };
             }
 
             invocationInfo.Parameters             = null;
             invocationInfo.ResponseOutputFilePath = null;
+
+            
 
             return invocationInfo;
         }
@@ -94,8 +97,12 @@ namespace ApiInspector.Models
 
         public string ResponseOutputFilePath { get; set; }
 
-        public List<Assertion> Assertions { get; set; } = new List<Assertion>();
+        public List<Assertion> Assertions { get; set; }
 
+        public Scenario()
+        {
+            
+        }
 
     }
 

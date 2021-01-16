@@ -16,8 +16,22 @@ namespace ApiInspector
 
 
 
-        
 
+        public static T SearchInMergedDictionaries<T>(string key)
+        {
+            foreach (var dictionary in System.Windows.Application.Current.Resources.MergedDictionaries)
+            {
+                foreach (var item in dictionary.Keys)
+                {
+                    if (item.ToString() == key)
+                    {
+                        return (T)dictionary[item];
+                    }
+                }
+            }
+
+            return default(T);
+        }
 
 
 

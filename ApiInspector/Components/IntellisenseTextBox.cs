@@ -35,16 +35,8 @@ namespace ApiInspector.Components
         {
             base.OnApplyTemplate();
 
-            foreach (var dictionary in System.Windows.Application.Current.Resources.MergedDictionaries)
-            {
-                foreach (var key in dictionary.Keys)
-                {
-                    if (key.ToString() == "TextBoxStyle")
-                    {
-                        Editor.Style = (Style) dictionary[key];
-                    }
-                }
-            }
+            
+            Editor.Style = WPFExtensions.SearchInMergedDictionaries<Style>("TextBoxStyle");
 
             BorderThickness = new Thickness(0);
 

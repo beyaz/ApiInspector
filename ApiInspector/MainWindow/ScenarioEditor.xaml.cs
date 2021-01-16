@@ -171,6 +171,10 @@ namespace ApiInspector.MainWindow
 
             var inputEditors = ParameterPanelIntegration.Create(scenario.MethodParameters, methodDefinition).ToArray();
 
+            EnableAllTopButtons();
+            buttonActivateInputOutputPanel.IsPressed = true;
+
+
             CurrentContent = NewColumnSplittedGrid(NewGroupBox(NewBoldTextBlock("Method Parameters"), NewStackPanel(inputEditors)),
                                                    NewGroupBox(NewBoldTextBlock("Response"), responseTextView));
 
@@ -270,7 +274,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAddNewScenarioClicked(object sender, RoutedEventArgs e)
         {
-            scope.Get(AddNewScenario)(new Scenario());
+            scope.Get(AddNewScenario)(new Scenario{ Assertions = new List<Assertion>(),MethodParameters = new List<InvocationMethodParameterInfo>()});
         }
 
         /// <summary>

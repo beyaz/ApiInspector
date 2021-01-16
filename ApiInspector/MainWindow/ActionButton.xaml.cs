@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static ApiInspector.WPFExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -157,7 +158,7 @@ namespace ApiInspector.MainWindow
             {
                 if (value)
                 {
-                    button.Background = Brushes.LightSteelBlue;
+                    button.Background = SearchInMergedDictionaries<Brush>("ButtonHoverBackgroundBrush");
                 }
                 else
                 {
