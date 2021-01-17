@@ -88,13 +88,15 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Activates the assertions.
         /// </summary>
-        void ActivateAssertions()
+        AssertionsEditor ActivateAssertions()
         {
             var assertionsEditor = new AssertionsEditor();
 
             assertionsEditor.Loaded += (s, e) => assertionsEditor.Connect(scope);
 
             CurrentContent = assertionsEditor;
+
+            return assertionsEditor;
         }
 
         /// <summary>

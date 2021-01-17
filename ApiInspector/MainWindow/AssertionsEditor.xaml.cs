@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using ApiInspector.Components;
 using ApiInspector.DataAccess;
 using ApiInspector.Models;
@@ -34,11 +35,11 @@ namespace ApiInspector.MainWindow
       
 
 
-        Scope scope;
+        internal Scope scope;
 
         List<AssertionInfo> Assertions => scope.Get(SelectedScenario).Assertions;
 
-        AssertionInfo selectedAssertion
+        public AssertionInfo selectedAssertion
         {
             get => scope.Get(SelectedAssertion);
             set=>scope.Update(SelectedAssertion,value);
@@ -261,9 +262,60 @@ namespace ApiInspector.MainWindow
 
             var secondRow = NewGridWithColumns(new[] {10, 4, 10}, createLeft() , createOperatorEditor(), createExpected());
 
-            return NewStackPanel(firstRow, secondRow);
+            var thirdRow = fun(() =>
+            {
+
+
+                var getErrorText = fun(() =>
+                {
+                    if (!scope.Contains(AssertionErrorMap))
+                    {
+                        return null;
+                    }
+
+                    var map = scope.Get(AssertionErrorMap);
+                    if (map.Key == assertionInfo)
+                    {
+                        return map.Value;
+                    }
+
+                    return null;
+
+                });
+
+                var foreground = Brushes.Crimson;
+
+                var resultIndicator = new TextBox
+                {
+                    Height                      = 200,
+                    TextWrapping                = TextWrapping.Wrap,
+                    AcceptsReturn               = true,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    Text                        = getErrorText(),
+                    Foreground                  = foreground,
+                    BorderBrush                 = foreground,
+                };
+
+                var label = new TextBlock
+                {
+                    FontWeight = FontWeights.Bold,
+                    Text       = "Result",
+                    Foreground                  = foreground,
+                };
+
+                var panel = NewStackPanel(label, resultIndicator);
+
+                panel.Visibility = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
+
+                return panel;
+            });
+
+            return NewStackPanel(firstRow, secondRow,thirdRow());
 
         }
+
+
+
 
         FrameworkElement CreateEditor(ValueAccessInfo data)
         {

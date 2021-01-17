@@ -13,6 +13,9 @@ namespace ApiInspector
     /// </summary>
     static class Keys
     {
+
+
+
         #region Public Properties
         /// <summary>
         ///     Gets the database connection.
@@ -38,7 +41,8 @@ namespace ApiInspector
 
         public static DataKey<AssertionInfo> SelectedAssertion => CreateKey<AssertionInfo>();
 
-        
+        public static DataKey<KeyValuePair<AssertionInfo,string>> AssertionErrorMap => CreateKey<KeyValuePair<AssertionInfo,string>>();
+
         public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>();
 
         /// <summary>

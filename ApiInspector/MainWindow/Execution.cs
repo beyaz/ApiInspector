@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using ApiInspector.Invoking;
@@ -75,7 +76,7 @@ namespace ApiInspector.MainWindow
 
             UpdateUI(() => { UpdateOutput?.Invoke(); });
 
-           
+            
 
             var runAssertions = fun(() =>
             {
@@ -89,14 +90,32 @@ namespace ApiInspector.MainWindow
                     var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
                     if (errorMessage != null)
                     {
-                        MessageBox.Show(errorMessage);    
+
+                        UpdateUI(() =>
+                        {
+                            var assertionsEditor = ActivateAssertions();
+
+                            assertionsEditor.Loaded += (s, e) =>
+                            {
+                                assertionsEditor.scope.Update(AssertionErrorMap, new KeyValuePair<AssertionInfo, string>(assertionInfo, errorMessage));
+                                assertionsEditor.selectedAssertion = assertionInfo;
+                            };
+
+                        });
+
+                        return false;
                     }
-                    
+
+                    return true;
                 });
 
                 foreach (var assertion in scenario.Assertions)
                 {
-                    runAssertion(assertion);
+                    var isSuccess = runAssertion(assertion);
+                    if (!isSuccess)
+                    {
+                        return;
+                    }
                 }
             });
 
