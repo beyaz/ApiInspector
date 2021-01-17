@@ -293,7 +293,6 @@ namespace ApiInspector.MainWindow
 
                 var resultIndicator = new TextBox
                 {
-                    Height                      = 200,
                     TextWrapping                = TextWrapping.Wrap,
                     AcceptsReturn               = true,
                     VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
@@ -391,7 +390,7 @@ namespace ApiInspector.MainWindow
                 return editor;
             });
 
-            return NewStackPanel(firstRow(), sqlEditor()).WithIndent(5);
+            return NewGridWithRows(new[] {"Auto", "*"}, firstRow(), sqlEditor());
         }
 
       
