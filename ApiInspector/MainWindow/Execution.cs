@@ -71,7 +71,7 @@ namespace ApiInspector.MainWindow
                 WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
             }
 
-            UpdateUI(() => scope.PublishEvent(ScenarioEvent.ExecutionFinished));
+            UpdateUI(() => { UpdateOutput?.Invoke(); });
 
             trace(Empty);
             trace(Empty);

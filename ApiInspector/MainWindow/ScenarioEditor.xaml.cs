@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -166,8 +167,6 @@ namespace ApiInspector.MainWindow
                 responseTextView.Text = output.ExecutionResponseAsJson;
             });
 
-            scope.UnSubscribeEvent(ScenarioEvent.ExecutionFinished, updateResponseOutputText);
-            scope.SubscribeEvent(ScenarioEvent.ExecutionFinished, updateResponseOutputText);
 
             var inputEditors = ParameterPanelIntegration.Create(scenario.MethodParameters, methodDefinition).ToArray();
 
@@ -179,7 +178,11 @@ namespace ApiInspector.MainWindow
                                                    NewGroupBox(NewBoldTextBlock("Response"), responseTextView));
 
             updateResponseOutputText();
+
+            UpdateOutput = updateResponseOutputText;
         }
+
+        Action UpdateOutput;
 
         /// <summary>
         ///     Arranges the remove scenario button visibility.

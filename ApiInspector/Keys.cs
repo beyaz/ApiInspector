@@ -74,8 +74,7 @@ namespace ApiInspector
         NewScenarioAdded,
 
         
-        RemoveSelectedScenario,
-        ExecutionFinished
+        RemoveSelectedScenario
     }
 
     

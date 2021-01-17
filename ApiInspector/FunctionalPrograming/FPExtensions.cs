@@ -38,6 +38,8 @@ namespace FunctionalPrograming
         [Pure]
         public static TOut Map<Tin, TOut>(Tin input, Func<Tin, TOut> func) => func(input);
 
+        
+
         /// <summary>
         ///     Runs the specified action.
         /// </summary>
