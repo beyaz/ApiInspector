@@ -17,15 +17,18 @@ namespace ApiInspector.Models
 
             if (invocationInfo.Parameters==null || invocationInfo.Parameters.Count == 0)
             {
-                invocationInfo.Scenarios = new List<ScenarioInfo>
+                if (invocationInfo.Scenarios == null)
                 {
-                    new ScenarioInfo
+                    invocationInfo.Scenarios = new List<ScenarioInfo>
                     {
-                        MethodParameters       = new List<InvocationMethodParameterInfo>(),
-                        ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
-                        Assertions             = new List<AssertionInfo>()
-                    }
-                };
+                        new ScenarioInfo
+                        {
+                            MethodParameters       = new List<InvocationMethodParameterInfo>(),
+                            ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
+                            Assertions             = new List<AssertionInfo>()
+                        }
+                    };
+                }
             }
             else
             {
