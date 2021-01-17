@@ -223,49 +223,55 @@ namespace ApiInspector.MainWindow
 
 
          FrameworkElement CreateEditor(AssertionInfo assertionInfo)
-        {
-            var descriptionEditor = new TextBox();
+         {
 
-            Bind(descriptionEditor,TextBox.TextProperty,assertionInfo,nameof(assertionInfo.Description));
+             var firstRow = fun(() =>
+             {
+                 var descriptionEditor = new TextBox();
 
-            var firstRow = NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
+                 Bind(descriptionEditor,TextBox.TextProperty,assertionInfo,nameof(assertionInfo.Description));
 
-            var createLeft = fun(() =>
-            {
-                var editor = CreateEditor(assertionInfo.Actual);
+                 return NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
+             });
 
-                return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
-            });
+             var secondRow = fun(() =>
+             {
+                 var createLeft = fun(() =>
+                 {
+                     var editor = CreateEditor(assertionInfo.Actual);
 
-            var createExpected = fun(() =>
-            {
-                var editor = CreateEditor(assertionInfo.Expected);
+                     return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
+                 });
 
-                return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
-            });
+                 var createExpected = fun(() =>
+                 {
+                     var editor = CreateEditor(assertionInfo.Expected);
 
-            var createOperatorEditor = fun(() =>
-            {
-                var editor = new IntellisenseTextBox
-                {
-                    Suggestions = AssertionOperatorNames.GetDescriptions(),
-                    IsTextAlignmentCenter = true
-                };
+                     return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
+                 });
 
-                Bind(editor,AutoCompleteTextBox.TextProperty,assertionInfo,nameof(assertionInfo.OperatorName));
+                 var createOperatorEditor = fun(() =>
+                 {
+                     var editor = new IntellisenseTextBox
+                     {
+                         Suggestions           = AssertionOperatorNames.GetDescriptions(),
+                         IsTextAlignmentCenter = true
+                     };
 
-                return NewStackPanel(NewBoldTextBlock("Operator"), editor)
-                       .WithMargin(new Thickness(10, 0, 10, 0))
-                       .WithVerticalAlignmentCenter();
-            });
+                     Bind(editor,AutoCompleteTextBox.TextProperty,assertionInfo,nameof(assertionInfo.OperatorName));
+
+                     return NewStackPanel(NewBoldTextBlock("Operator"), editor)
+                            .WithMargin(new Thickness(10, 0, 10, 0))
+                            .WithVerticalAlignmentCenter();
+                 });
 
 
-            var secondRow = NewGridWithColumns(new[] {10, 4, 10}, createLeft() , createOperatorEditor(), createExpected());
+                 return NewGridWithColumns(new[] {10, 4, 10}, createLeft() , createOperatorEditor(), createExpected());
+
+             });
 
             var thirdRow = fun(() =>
             {
-
-
                 var getErrorText = fun(() =>
                 {
                     if (!scope.Contains(AssertionErrorMap))
@@ -300,17 +306,17 @@ namespace ApiInspector.MainWindow
                 {
                     FontWeight = FontWeights.Bold,
                     Text       = "Result",
-                    Foreground                  = foreground,
+                    Foreground = foreground,
                 };
 
-                var panel = NewStackPanel(label, resultIndicator);
+                var panel = NewGroupBox(label, resultIndicator);
 
                 panel.Visibility = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
 
                 return panel;
             });
 
-            return NewStackPanel(firstRow, secondRow,thirdRow());
+            return NewGridWithRows(new []{"Auto","70","30"},firstRow(), secondRow(),thirdRow());
 
         }
 

@@ -239,6 +239,44 @@ namespace ApiInspector
             
             return grid;
         }
+
+        
+        public static Grid NewGridWithRows(string[] rowDefinitions,params FrameworkElement[] childElements)
+        {
+            var grid = new Grid();
+
+            foreach (var size in rowDefinitions)
+            {
+                var getLength = fun(() =>
+                {
+                    if (size == "Auto")
+                    {
+                        return new GridLength(0, GridUnitType.Auto);
+
+                    }
+
+                    if (size == "*")
+                    {
+                        return new GridLength(1, GridUnitType.Star);
+
+                    }
+
+                    return new GridLength(int.Parse(size), GridUnitType.Star);
+                });
+
+                grid.RowDefinitions.Add(new RowDefinition{Height = getLength()});
+            }
+
+            int i = 0;
+            foreach (var element in childElements)
+            {
+                element.SetValue(Grid.RowProperty, i++);
+                grid.Children.Add(element);
+            }
+            
+            return grid;
+        }
+
         public static Grid NewGridWithColumns(string[] columnSizes,params FrameworkElement[] childElements)
         {
             var grid = new Grid();
