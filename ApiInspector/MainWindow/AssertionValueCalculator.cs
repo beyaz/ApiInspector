@@ -69,9 +69,11 @@ namespace ApiInspector.MainWindow
                 {
                     return $"Actual value: {actualJson} is not equals to expected value: {expectedJson}";
                 }
+
+                return null;
             }
 
-            throw new NotImplementedException(operatorName);
+            return "NotImplemented operator: " + operatorName;
         }
     }
 }

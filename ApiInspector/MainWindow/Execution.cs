@@ -87,7 +87,11 @@ namespace ApiInspector.MainWindow
                     var expected = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected,methodDefinition,invokeOutput);
 
                     var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
-                    MessageBox.Show(errorMessage);
+                    if (errorMessage != null)
+                    {
+                        MessageBox.Show(errorMessage);    
+                    }
+                    
                 });
 
                 foreach (var assertion in scenario.Assertions)
