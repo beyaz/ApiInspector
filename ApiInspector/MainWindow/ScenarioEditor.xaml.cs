@@ -205,6 +205,8 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
             scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
+            scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
+            
 
             scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
 
@@ -336,5 +338,24 @@ namespace ApiInspector.MainWindow
             VerticalIndent(scenarioNumbersContainer, 10);
         }
         #endregion
+
+        void ArrangeVisibilityOnEodMethod()
+        {
+            var isEodMethod = InvocationInfo?.MethodName == EndOfDay.MethodAccessText;
+            if (isEodMethod)
+            {
+                tabHeadersContainerPanel.Visibility = Visibility.Collapsed;
+                addRemovePanel.Visibility           = Visibility.Collapsed;
+                scenarioNumbersContainer.Visibility = Visibility.Collapsed;
+                contentContainer.Visibility         = Visibility.Collapsed;
+            }
+            else
+            {
+                tabHeadersContainerPanel.Visibility = Visibility.Visible;
+                addRemovePanel.Visibility           = Visibility.Visible;
+                scenarioNumbersContainer.Visibility = Visibility.Visible;
+                contentContainer.Visibility         = Visibility.Visible;
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" x:Name="addRemovePanel">
                 <local:ActionButton  Text="+" Margin="5"  Click="OnAddNewScenarioClicked" />
                 <local:ActionButton  Text="-" Margin="5" x:Name="removeScenarioButton" Click="OnRemoveSelectedScenarioClicked" />
             </StackPanel>
@@ -33,7 +33,7 @@
                 </Grid.ColumnDefinitions>
 
 
-                <StackPanel Orientation="Horizontal" Grid.Column="0"  >
+                <StackPanel Orientation="Horizontal" Grid.Column="0" x:Name="tabHeadersContainerPanel" >
                     <local:ActionButton   Text="Input - Output" Margin="5" x:Name="buttonActivateInputOutputPanel"  Click="OnButtonActivateInputOutputPanelClicked" />
                     <local:ActionButton   Text="Assertions" Margin="5" x:Name="buttonAssertions" Click="OnAssertionsClicked" />
                     <local:ActionButton   Text="Export Result" Margin="5" x:Name="buttonActivateExportPanel" Click="ActivateExportPanel" />
