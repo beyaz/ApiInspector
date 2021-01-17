@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using ApiInspector.Components;
 using ApiInspector.Models;
 using BOA.Common.Types;
+using Mono.Cecil;
 using WpfControls;
 using static ApiInspector.Keys;
 using static ApiInspector.WPFExtensions;
@@ -215,7 +216,7 @@ namespace ApiInspector.MainWindow
         }
 
 
-        static FrameworkElement CreateEditor(Assertion assertion)
+         FrameworkElement CreateEditor(Assertion assertion)
         {
             var descriptionEditor = new TextBox();
 
@@ -245,7 +246,7 @@ namespace ApiInspector.MainWindow
                     IsTextAlignmentCenter = true
                 };
 
-                Bind(editor,AutoCompleteTextBox.TextProperty,assertion.OperatorName,nameof(assertion.OperatorName));
+                Bind(editor,AutoCompleteTextBox.TextProperty,assertion,nameof(assertion.OperatorName));
 
                 return NewStackPanel(NewBoldTextBlock("Operator"), editor)
                        .WithMargin(new Thickness(10, 0, 10, 0))
@@ -259,7 +260,7 @@ namespace ApiInspector.MainWindow
 
         }
 
-        static FrameworkElement CreateEditor(ValueAccessInfo data)
+        FrameworkElement CreateEditor(ValueAccessInfo data)
         {
             var firstRow = fun(() =>
             {
@@ -318,6 +319,9 @@ namespace ApiInspector.MainWindow
                     Text = data.Text
                 };
 
+                
+
+
                 editor.SetAutoComplete(new List<string>{"Input.UserName}","Output.UserName2}"});
 
                 editor.TextChanged += (s, e) => { data.Text = editor.Text; };
@@ -327,9 +331,7 @@ namespace ApiInspector.MainWindow
 
             return NewStackPanel(firstRow(), sqlEditor()).WithIndent(5);
         }
+
+        MethodDefinition methodDefinition => scope.Get(SelectedMethodDefinition);
     }
-
-
-    
-
 }
