@@ -1,11 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
     public class CecilHelper
     {
-        public static void CollectPropertiesThatCanBeSQLParameter(TypeDefinition typeDefinition, string parentPath,  List<string> items)
+        #region Static Fields
+        static readonly List<string> PrimitiveTypes = new List<string>
+        {
+            typeof(string).FullName,
+
+            typeof(sbyte).FullName,
+            typeof(byte).FullName,
+            typeof(short).FullName,
+            typeof(int).FullName,
+            typeof(long).FullName,
+            typeof(decimal).FullName,
+            typeof(DateTime).FullName,
+            typeof(bool).FullName,
+            typeof(TimeSpan).FullName,
+
+            FullNameOfNullableSbyte,
+            FullNameOfNullableByte,
+            FullNameOfNullableShort,
+            FullNameOfNullableInt,
+            FullNameOfNullableLong,
+            FullNameOfNullableDecimal,
+            FullNameOfNullableDateTime,
+            FullNameOfNullableBoolean,
+            FullNameOfNullableTimeSpan
+        };
+        #endregion
+
+        #region Properties
+        static string FullNameOfNullableBoolean => "System.Nullable`1<" + typeof(bool).FullName + ">";
+        static string FullNameOfNullableByte => "System.Nullable`1<" + typeof(byte).FullName + ">";
+        static string FullNameOfNullableDateTime => "System.Nullable`1<" + typeof(DateTime).FullName + ">";
+
+        static string FullNameOfNullableDecimal => "System.Nullable`1<" + typeof(decimal).FullName + ">";
+        static string FullNameOfNullableInt => "System.Nullable`1<" + typeof(int).FullName + ">";
+        static string FullNameOfNullableLong => "System.Nullable`1<" + typeof(long).FullName + ">";
+        static string FullNameOfNullableSbyte => "System.Nullable`1<" + typeof(sbyte).FullName + ">";
+        static string FullNameOfNullableShort => "System.Nullable`1<" + typeof(short).FullName + ">";
+        static string FullNameOfNullableTimeSpan => "System.Nullable`1<" + typeof(TimeSpan).FullName + ">";
+        #endregion
+
+        #region Public Methods
+        public static void CollectPropertiesThatCanBeSQLParameter(TypeDefinition typeDefinition, string parentPath, List<string> items)
         {
             if (typeDefinition == null)
             {
@@ -14,17 +56,27 @@ namespace ApiInspector.DataAccess
 
             foreach (var propertyDefinition in typeDefinition.Properties)
             {
-                var isStringType = propertyDefinition.PropertyType.FullName == typeof(string).FullName;
-
-                if (propertyDefinition.PropertyType.IsPrimitive || isStringType)
+                if (propertyDefinition.GetMethod == null || propertyDefinition.SetMethod == null)
                 {
-                    items.Add( parentPath+ propertyDefinition.Name);
                     continue;
                 }
 
-                if (!propertyDefinition.PropertyType.IsValueType)
+                var propertyType = propertyDefinition.PropertyType;
+
+                if (IsCollection(propertyType))
                 {
-                    CollectPropertiesThatCanBeSQLParameter(propertyDefinition.PropertyType.Resolve(),parentPath +  propertyDefinition.Name+".",items);
+                    continue;
+                }
+
+                if (PrimitiveTypes.Contains(propertyDefinition.PropertyType.FullName))
+                {
+                    items.Add(parentPath + propertyDefinition.Name);
+                    continue;
+                }
+
+                if (!propertyType.IsValueType)
+                {
+                    CollectPropertiesThatCanBeSQLParameter(propertyType.Resolve(), parentPath + propertyDefinition.Name + ".", items);
                 }
             }
         }
@@ -33,33 +85,63 @@ namespace ApiInspector.DataAccess
         {
             var items = new List<string>();
 
-            TypeDefinition typeDefinition = null;
-            foreach (var moduleDefinition in AssemblyDefinition.ReadAssembly(instance.GetType().Assembly.Location).Modules)
-            {
-                foreach (var type in moduleDefinition.Types)
-                {
-                    if (type.FullName ==instance.GetType().FullName)
-                    {
-                        typeDefinition = type;
-                        break;
-                    }
-                }
-            }
-
-            CollectPropertiesThatCanBeSQLParameter(typeDefinition, "", items);
+            CollectPropertiesThatCanBeSQLParameter(GeTypeDefinitionFromType(instance.GetType()), string.Empty, items);
 
             return items;
         }
 
-        //public static IReadOnlyList<string> GetSuggestionsFromMethod(MethodDefinition methodDefinition,List<string> names)
-        //{
+        public static bool IsCollection(TypeReference typeReference)
+        {
+            if (typeReference == null)
+            {
+                return false;
+            }
 
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.List`1<"))
+            {
+                return true;
+            }
 
-        //    var typeDefinition = methodDefinition.ReturnType.Resolve();
-        //    foreach (var propertyDefinition in typeDefinition.Properties)
-        //    {
-        //        propertyDefinition.Name
-        //    }
-        //}
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.IReadOnlyList`1<"))
+            {
+                return true;
+            }
+
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.ICollection`1<"))
+            {
+                return true;
+            }
+
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.IReadOnlyCollection`1<"))
+            {
+                return true;
+            }
+
+            if (typeReference.FullName.StartsWith("System.Array"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region Methods
+        static TypeDefinition GeTypeDefinitionFromType(Type type)
+        {
+            foreach (var moduleDefinition in AssemblyDefinition.ReadAssembly(type.Assembly.Location).Modules)
+            {
+                foreach (var item in moduleDefinition.Types)
+                {
+                    if (item.FullName == type.FullName)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
+        }
+        #endregion
     }
 }
