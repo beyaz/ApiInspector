@@ -4,9 +4,11 @@ using System.Windows;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
+using ApiInspector.Models;
 using static System.String;
 using static ApiInspector.Keys;
 using static ApiInspector.Utility;
+using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -72,6 +74,24 @@ namespace ApiInspector.MainWindow
             }
 
             UpdateUI(() => { UpdateOutput?.Invoke(); });
+
+           
+
+            var runAssertions = fun(() =>
+            {
+                var runAssertion = fun((AssertionInfo assertionInfo) =>
+                {
+                
+
+                });
+
+                foreach (var assertion in scenario.Assertions)
+                {
+                    runAssertion(assertion);
+                }
+            });
+
+            runAssertions();
 
             trace(Empty);
             trace(Empty);
