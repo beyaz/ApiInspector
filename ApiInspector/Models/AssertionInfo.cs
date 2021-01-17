@@ -40,6 +40,10 @@ namespace ApiInspector.Models
     /// </summary>
     class AssertionOperatorNames
     {
+
+
+        public  const string IsEquals = "=";
+
         #region Public Methods
         /// <summary>
         ///     Gets the descriptions.
@@ -48,7 +52,7 @@ namespace ApiInspector.Models
         {
             return new[]
             {
-                "=",
+                IsEquals,
                 "!=",
                 ">",
                 ">=",

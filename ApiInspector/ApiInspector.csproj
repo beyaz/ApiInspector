@@ -84,6 +84,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\JsonTextEditor.cs" />
+    <Compile Include="DataAccess\ReflectionUtil.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.loop.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.compose.cs" />
@@ -100,6 +101,7 @@
       <DependentUpon>AssertionsEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataAccess\CecilHelper.cs" />
+    <Compile Include="MainWindow\AssertionValueCalculator.cs" />
     <Compile Include="MainWindow\Execution.cs">
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
     </Compile>

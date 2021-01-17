@@ -324,10 +324,9 @@ namespace ApiInspector.MainWindow
                     Text = data.Text
                 };
 
-                
-                
+                var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
 
-                editor.SetAutoComplete(CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition).ToList());
+                editor.SetAutoComplete(suggestions.ToList());
 
                 editor.TextChanged += (s, e) => { data.Text = editor.Text; };
 
