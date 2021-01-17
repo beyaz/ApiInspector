@@ -106,6 +106,7 @@
     <Compile Include="MainWindow\ScenarioEditor.xaml.cs">
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Fix.cs" />
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="ConnectionInfo.cs" />

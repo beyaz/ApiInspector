@@ -6,33 +6,6 @@ using Newtonsoft.Json;
 
 namespace ApiInspector.Models
 {
-
-    static class Fix
-    {
-        public static InvocationInfo FixAsScenarioModel(InvocationInfo invocationInfo)
-        {
-            if (invocationInfo.Parameters?.Count > 0)
-            {
-                invocationInfo.Scenarios = new List<Scenario>
-                {
-                    new Scenario
-                    {
-                        MethodParameters = invocationInfo.Parameters,
-                        ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
-                        Assertions = new List<Assertion>()
-                    }
-                };
-            }
-
-            invocationInfo.Parameters             = null;
-            invocationInfo.ResponseOutputFilePath = null;
-
-            
-
-            return invocationInfo;
-        }
-    }
-
     /// <summary>
     ///     The invocation information
     /// </summary>
