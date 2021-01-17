@@ -222,6 +222,8 @@ namespace ApiInspector.Invoking.Invokers
 
             var invocationParameters = prepareParameters();
 
+
+
             trace("Invoke started. Response waiting...");
 
             var invokeMethod = fun(() =>
@@ -288,6 +290,8 @@ namespace ApiInspector.Invoking.Invokers
 
             var responseInvokeMethod = invokeMethod();
 
+            
+
             stopwatch.Stop();
 
             trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
@@ -296,7 +300,12 @@ namespace ApiInspector.Invoking.Invokers
 
             
 
-            return success(responseInvokeMethod);
+            var output = success(responseInvokeMethod);
+
+            output.InvocationParameters = invocationParameters.Select(SerializeToJson).ToList();
+
+            return output;
+
         }
 
         sealed class TryMethodInvokeResponse

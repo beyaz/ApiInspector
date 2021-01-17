@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ApiInspector.Invoking
 {
@@ -38,6 +39,8 @@ namespace ApiInspector.Invoking
         ///     Gets a value indicating whether this instance is success.
         /// </summary>
         public bool IsSuccess => Error == null;
+
+        public IReadOnlyList<string> InvocationParameters { get; set; }
 
         InvokeOutput()
         {

@@ -56,7 +56,7 @@ namespace ApiInspector.Util
                 throw new ArgumentException(nameof(type));
             }
 
-            var instance = serializer.Deserialize(jsonContent, type);
+            var instance = Serializer.Deserialize(jsonContent, type);
             if (sortByPropertyMaps != null)
             {
                 foreach (var pair in sortByPropertyMaps)

@@ -51,7 +51,7 @@ namespace ApiInspector.Serialization
         /// <summary>
         ///     Deserializes the specified json content.
         /// </summary>
-        public object Deserialize(string jsonContent, Type targetType)
+        public static object Deserialize(string jsonContent, Type targetType)
         {
             if (jsonContent == null)
             {
