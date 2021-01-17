@@ -99,7 +99,7 @@ namespace ApiInspector.DataAccess
 
             if (methodDefinition.ReturnType.FullName !="System.Void")
             {
-                CollectPropertiesThatCanBeSQLParameter(methodDefinition.ReturnType.Resolve(), "@output.", items);    
+                CollectPropertiesThatCanBeSQLParameter(methodDefinition.ReturnType.Resolve(), OutputPrefix+".", items);    
             }
 
             foreach (var parameterDefinition in methodDefinition.Parameters)
@@ -109,13 +109,16 @@ namespace ApiInspector.DataAccess
                     continue;
                 }
 
-                CollectPropertiesThatCanBeSQLParameter(parameterDefinition.ParameterType.Resolve(), "@"+parameterDefinition.Name+".", items);
+                CollectPropertiesThatCanBeSQLParameter(parameterDefinition.ParameterType.Resolve(), PrefixCharacter+parameterDefinition.Name+".", items);
             }
 
             
 
             return items;
         }
+
+        public const string PrefixCharacter = "@";
+        public const string OutputPrefix= PrefixCharacter+ "output";
 
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameter(object instance)
         {

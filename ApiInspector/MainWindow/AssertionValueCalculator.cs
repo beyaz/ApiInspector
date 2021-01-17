@@ -9,7 +9,7 @@ namespace ApiInspector.MainWindow
 {
     class AssertionValueCalculator
     {
-        internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition,object invocationOutput)
+        internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition, object[] invocationParameters, object invocationOutput)
         {
             var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
 
@@ -19,10 +19,19 @@ namespace ApiInspector.MainWindow
                 {
                     if (valueAccessInfo.Text.StartsWith("@output"))
                     {
-                        var propertyPath = valueAccessInfo.Text.RemoveIfStartsWith("@output");
-                        propertyPath = valueAccessInfo.Text.RemoveIfStartsWith("@output.");
+                        var propertyPath = valueAccessInfo.Text.RemoveIfStartsWith(CecilHelper.OutputPrefix+".");
+
+                        propertyPath = valueAccessInfo.Text.RemoveIfStartsWith(CecilHelper.OutputPrefix);
 
                         return ReflectionUtil.ReadPropertyPath(invocationOutput, propertyPath);
+                    }
+
+                    foreach (var parameterDefinition in methodDefinition.Parameters)
+                    {
+                        if (CecilHelper.PrefixCharacter+parameterDefinition.Name == valueAccessInfo.Text)
+                        {
+                            return ReflectionUtil.ReadPropertyPath(invocationParameters[parameterDefinition.Index], CecilHelper.PrefixCharacter+parameterDefinition.Name);
+                        }
                     }
                 }
             }
