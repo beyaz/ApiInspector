@@ -84,7 +84,7 @@ namespace ApiInspector.Components
 
             editor.KeyDown += (s, e) =>
             {
-                if (e.KeyData.HasFlag(System.Windows.Forms.Keys.Space) && e.KeyData.HasFlag(System.Windows.Forms.Keys.Control))
+                if (e.KeyData == (System.Windows.Forms.Keys.Space | System.Windows.Forms.Keys.Control))
                 {
                     popupMenu.Show(true);
                     e.Handled = true;
