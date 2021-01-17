@@ -75,6 +75,12 @@ namespace ApiInspector.DataAccess
 
             if (IsCollection( typeDefinition))
             {
+                if (parentPath == OutputPrefix+".")
+                {
+                    items.Add(OutputPrefix);
+                    return;
+                }
+
                 return;
             }
 
@@ -154,22 +160,22 @@ namespace ApiInspector.DataAccess
                 return false;
             }
 
-            if (typeReference.FullName.StartsWith("System.Collections.Generic.List`1<"))
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.List`1"))
             {
                 return true;
             }
 
-            if (typeReference.FullName.StartsWith("System.Collections.Generic.IReadOnlyList`1<"))
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.IReadOnlyList`1"))
             {
                 return true;
             }
 
-            if (typeReference.FullName.StartsWith("System.Collections.Generic.ICollection`1<"))
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.ICollection`1"))
             {
                 return true;
             }
 
-            if (typeReference.FullName.StartsWith("System.Collections.Generic.IReadOnlyCollection`1<"))
+            if (typeReference.FullName.StartsWith("System.Collections.Generic.IReadOnlyCollection`1"))
             {
                 return true;
             }

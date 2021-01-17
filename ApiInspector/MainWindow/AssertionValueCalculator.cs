@@ -35,7 +35,9 @@ namespace ApiInspector.MainWindow
 
                         propertyPath = text.RemoveIfStartsWith(CecilHelper.OutputPrefix);
 
-                        return ReflectionUtil.ReadPropertyPath(invocationOutput, propertyPath);
+                        var methodReturnValue = Serialization.Serializer.Deserialize(invocationOutput.ExecutionResponseAsJson, methodDefinition.ReturnType.GetDotNetType());
+                        
+                        return ReflectionUtil.ReadPropertyPath(methodReturnValue, propertyPath);
                     }
 
                     foreach (var parameterDefinition in methodDefinition.Parameters)
@@ -63,6 +65,10 @@ namespace ApiInspector.MainWindow
         {
             if (operatorName == AssertionOperatorNames.IsEquals)
             {
+                if (expected is string && actual != null && actual.GetType() != typeof(string))
+                {
+                    expected= Serialization.Serializer.Deserialize((string) expected, actual.GetType());
+                }
                 var actualJson = Serialization.Serializer.SerializeToJson(actual);
                 var expectedJson = Serialization.Serializer.SerializeToJson(expected);
                 if (actualJson != expectedJson)

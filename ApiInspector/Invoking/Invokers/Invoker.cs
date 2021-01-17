@@ -9,6 +9,7 @@ using ApiInspector.Application;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
+using BOA.Base;
 using BOA.Common.Types;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
@@ -302,7 +303,17 @@ namespace ApiInspector.Invoking.Invokers
 
             var output = success(responseInvokeMethod);
 
-            output.InvocationParameters = invocationParameters.Select(SerializeToJson).ToList();
+            var serializeParameter = fun((object instance) =>
+            {
+                if (instance == null || instance is ObjectHelper)
+                {
+                    return null;
+                }
+
+                return SerializeToJson(instance);
+            });
+
+            output.InvocationParameters = invocationParameters.Select(serializeParameter).ToList();
 
             return output;
 
