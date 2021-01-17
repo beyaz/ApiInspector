@@ -31,12 +31,12 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<InvocationInfo> SelectedInvocationInfo => CreateKey<InvocationInfo>();
 
-        public static DataKey<Action<Scenario>> AddNewScenario => CreateKey<Action<Scenario>>();
+        public static DataKey<Action<ScenarioInfo>> AddNewScenario => CreateKey<Action<ScenarioInfo>>();
         
 
-        public static DataKey<Scenario> SelectedScenario => CreateKey<Scenario>();
+        public static DataKey<ScenarioInfo> SelectedScenario => CreateKey<ScenarioInfo>();
 
-        public static DataKey<Assertion> SelectedAssertion => CreateKey<Assertion>();
+        public static DataKey<AssertionInfo> SelectedAssertion => CreateKey<AssertionInfo>();
 
         
         public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>();

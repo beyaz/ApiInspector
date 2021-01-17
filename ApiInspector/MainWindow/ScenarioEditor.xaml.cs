@@ -21,7 +21,7 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     The scenario data property
         /// </summary>
-        public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(Scenario), typeof(ScenarioEditor), new PropertyMetadata(default(Scenario)));
+        public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(ScenarioInfo), typeof(ScenarioEditor), new PropertyMetadata(default(ScenarioInfo)));
         #endregion
 
         #region Fields
@@ -67,11 +67,11 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Gets the scenarios.
         /// </summary>
-        List<Scenario> scenarios => scope.Get(SelectedInvocationInfo).Scenarios;
+        List<ScenarioInfo> scenarios => scope.Get(SelectedInvocationInfo).Scenarios;
         /// <summary>
         ///     Gets the selected scenario.
         /// </summary>
-        Scenario selectedScenario => scope.Get(SelectedScenario);
+        ScenarioInfo selectedScenario => scope.Get(SelectedScenario);
         #endregion
 
         #region Methods
@@ -222,7 +222,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void BuildScenarioList()
         {
-            var scenarioList = new List<Scenario>(scenarios);
+            var scenarioList = new List<ScenarioInfo>(scenarios);
 
             scenarios.Clear();
 
@@ -247,7 +247,7 @@ namespace ApiInspector.MainWindow
         {
             foreach (ActionButton child in scenarioNumbersContainer.Children)
             {
-                var scenario = (Scenario) child.GetValue(ScenarioDataProperty);
+                var scenario = (ScenarioInfo) child.GetValue(ScenarioDataProperty);
 
                 if (scenario == scope.Get(SelectedScenario))
                 {
@@ -276,7 +276,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAddNewScenarioClicked(object sender, RoutedEventArgs e)
         {
-            scope.Get(AddNewScenario)(new Scenario{ Assertions = new List<Assertion>(),MethodParameters = new List<InvocationMethodParameterInfo>()});
+            scope.Get(AddNewScenario)(new ScenarioInfo{ Assertions = new List<AssertionInfo>(),MethodParameters = new List<InvocationMethodParameterInfo>()});
         }
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace ApiInspector.MainWindow
                 scenarioEditor.Connect(scope);
                 scenarioEditor.ShowErrorNotification = ShowErrorNotification;
 
-                scope.Update(AddNewScenario, fun((Scenario scenario) =>
+                scope.Update(AddNewScenario, fun((ScenarioInfo scenario) =>
                 {
                     scope.Get(SelectedInvocationInfo).Scenarios.Add(scenario);
                     scope.Update(SelectedScenario, scenario);

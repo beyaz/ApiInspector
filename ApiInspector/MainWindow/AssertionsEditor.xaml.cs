@@ -20,14 +20,14 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class AssertionsEditor
     {
-        public static readonly DependencyProperty AssertionDataProperty = DependencyProperty.Register("AssertionData", typeof(Assertion), typeof(AssertionsEditor), new PropertyMetadata(default(Assertion)));
+        public static readonly DependencyProperty AssertionDataProperty = DependencyProperty.Register("AssertionData", typeof(AssertionInfo), typeof(AssertionsEditor), new PropertyMetadata(default(AssertionInfo)));
 
         bool HasSelectedAssertion => scope.Contains(SelectedAssertion) && scope.Get(SelectedAssertion) != null;
 
-        void AddNewAssertion(Assertion assertion)
+        void AddNewAssertion(AssertionInfo assertionInfo)
         {
-            Assertions.Add(assertion);
-            selectedAssertion = assertion;
+            Assertions.Add(assertionInfo);
+            selectedAssertion = assertionInfo;
         }
 
         MethodDefinition methodDefinition => scope.Get(SelectedMethodDefinition);
@@ -36,9 +36,9 @@ namespace ApiInspector.MainWindow
 
         Scope scope;
 
-        List<Assertion> Assertions => scope.Get(SelectedScenario).Assertions;
+        List<AssertionInfo> Assertions => scope.Get(SelectedScenario).Assertions;
 
-        Assertion selectedAssertion
+        AssertionInfo selectedAssertion
         {
             get => scope.Get(SelectedAssertion);
             set=>scope.Update(SelectedAssertion,value);
@@ -108,7 +108,7 @@ namespace ApiInspector.MainWindow
             {
                 foreach (ActionButton child in assertionNumbersContainer.Children)
                 {
-                    var assertion = (Assertion)child.GetValue(AssertionDataProperty);
+                    var assertion = (AssertionInfo)child.GetValue(AssertionDataProperty);
 
                     if (assertion == selectedAssertion)
                     {
@@ -143,7 +143,7 @@ namespace ApiInspector.MainWindow
 
         void BuildAssertionList()
         {
-            var assertions = new List<Assertion>(Assertions);
+            var assertions = new List<AssertionInfo>(Assertions);
 
             Assertions.Clear();
 
@@ -171,7 +171,7 @@ namespace ApiInspector.MainWindow
 
         void OnAddNewAssertionClicked(object sender, RoutedEventArgs e)
         {
-            var assertion = new Assertion
+            var assertion = new AssertionInfo
             {
                 Actual = new ValueAccessInfo
                 {
@@ -221,24 +221,24 @@ namespace ApiInspector.MainWindow
         }
 
 
-         FrameworkElement CreateEditor(Assertion assertion)
+         FrameworkElement CreateEditor(AssertionInfo assertionInfo)
         {
             var descriptionEditor = new TextBox();
 
-            Bind(descriptionEditor,TextBox.TextProperty,assertion,nameof(assertion.Description));
+            Bind(descriptionEditor,TextBox.TextProperty,assertionInfo,nameof(assertionInfo.Description));
 
             var firstRow = NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
 
             var createLeft = fun(() =>
             {
-                var editor = CreateEditor(assertion.Actual);
+                var editor = CreateEditor(assertionInfo.Actual);
 
                 return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
             });
 
             var createExpected = fun(() =>
             {
-                var editor = CreateEditor(assertion.Expected);
+                var editor = CreateEditor(assertionInfo.Expected);
 
                 return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
             });
@@ -251,7 +251,7 @@ namespace ApiInspector.MainWindow
                     IsTextAlignmentCenter = true
                 };
 
-                Bind(editor,AutoCompleteTextBox.TextProperty,assertion,nameof(assertion.OperatorName));
+                Bind(editor,AutoCompleteTextBox.TextProperty,assertionInfo,nameof(assertionInfo.OperatorName));
 
                 return NewStackPanel(NewBoldTextBlock("Operator"), editor)
                        .WithMargin(new Thickness(10, 0, 10, 0))

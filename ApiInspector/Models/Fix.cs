@@ -10,32 +10,32 @@ namespace ApiInspector.Models
             {
                 invocationInfo.Parameters             = null;
                 invocationInfo.ResponseOutputFilePath = null;
-                invocationInfo.Scenarios              = new List<Scenario>();
+                invocationInfo.Scenarios              = new List<ScenarioInfo>();
 
                 return invocationInfo;
             }
 
             if (invocationInfo.Parameters==null || invocationInfo.Parameters.Count == 0)
             {
-                invocationInfo.Scenarios = new List<Scenario>
+                invocationInfo.Scenarios = new List<ScenarioInfo>
                 {
-                    new Scenario
+                    new ScenarioInfo
                     {
                         MethodParameters       = new List<InvocationMethodParameterInfo>(),
                         ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
-                        Assertions             = new List<Assertion>()
+                        Assertions             = new List<AssertionInfo>()
                     }
                 };
             }
             else
             {
-                invocationInfo.Scenarios = new List<Scenario>
+                invocationInfo.Scenarios = new List<ScenarioInfo>
                 {
-                    new Scenario
+                    new ScenarioInfo
                     {
                         MethodParameters       = invocationInfo.Parameters,
                         ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
-                        Assertions             = new List<Assertion>()
+                        Assertions             = new List<AssertionInfo>()
                     }
                 };
             }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.AccessControl;
-using ApiInspector.Invoking;
-using Newtonsoft.Json;
 
 namespace ApiInspector.Models
 {
@@ -47,6 +44,11 @@ namespace ApiInspector.Models
         ///     Gets or sets the response output file path.
         /// </summary>
         public string ResponseOutputFilePath { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the scenarios.
+        /// </summary>
+        public List<ScenarioInfo> Scenarios { get; set; }
         #endregion
 
         #region Public Methods
@@ -57,71 +59,6 @@ namespace ApiInspector.Models
         {
             return $"{ClassName}:{MethodName}";
         }
-        
-        public List<Scenario> Scenarios { get; set; } = new List<Scenario>();
-
         #endregion
-    }
-
-    [Serializable]
-    public class Scenario
-    {
-        public List<InvocationMethodParameterInfo> MethodParameters { get; set; } = new List<InvocationMethodParameterInfo>();
-
-        public string ResponseOutputFilePath { get; set; }
-
-        public List<Assertion> Assertions { get; set; }
-
-        public Scenario()
-        {
-            
-        }
-
-    }
-
-    [Serializable]
-    public class Assertion
-    {
-        public string Description { get; set; }
-
-        public string OperatorName { get; set; }
-
-        public ValueAccessInfo Actual { get; set; } = new ValueAccessInfo();
-
-        public ValueAccessInfo Expected { get; set; } = new ValueAccessInfo();
-    }
-
-    class AssertionOperatorNames
-    {
-        public static IReadOnlyList<string> GetDescriptions()
-        {
-            return new[]
-            {
-                "=",
-                "!=",
-                ">",
-                ">=",
-                "<",
-                "<=",
-                "Contains",
-                "StartsWith",
-                "EndsWith"
-
-            };
-        }
-    }
-
-
-
-    [Serializable]
-    public class ValueAccessInfo
-    {
-
-        public bool FetchFromDatabase { get; set; }
-        public string DatabaseName { get; set; }
-
-        public string Text { get; set; }
-
-
     }
 }
