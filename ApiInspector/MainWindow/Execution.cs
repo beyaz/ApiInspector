@@ -79,10 +79,15 @@ namespace ApiInspector.MainWindow
 
             var runAssertions = fun(() =>
             {
+                var methodDefinition = scope.Get(SelectedMethodDefinition);
+
                 var runAssertion = fun((AssertionInfo assertionInfo) =>
                 {
-                
+                    var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual,methodDefinition,invokeOutput);
+                    var expected = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected,methodDefinition,invokeOutput);
 
+                    var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
+                    MessageBox.Show(errorMessage);
                 });
 
                 foreach (var assertion in scenario.Assertions)
