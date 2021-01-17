@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Components;
+using ApiInspector.DataAccess;
 using ApiInspector.Models;
 using BOA.Common.Types;
 using Mono.Cecil;
@@ -27,6 +29,8 @@ namespace ApiInspector.MainWindow
             Assertions.Add(assertion);
             selectedAssertion = assertion;
         }
+
+        MethodDefinition methodDefinition => scope.Get(SelectedMethodDefinition);
       
 
 
@@ -45,7 +49,8 @@ namespace ApiInspector.MainWindow
         {
             this.scope = new Scope
             {
-                {SelectedScenario, scope.Get(SelectedScenario)}
+                {SelectedScenario, scope.Get(SelectedScenario)},
+                {SelectedMethodDefinition, scope.Get(SelectedMethodDefinition)}
             };
 
             AttachEvents();
@@ -320,9 +325,9 @@ namespace ApiInspector.MainWindow
                 };
 
                 
+                
 
-
-                editor.SetAutoComplete(new List<string>{"Input.UserName}","Output.UserName2}"});
+                editor.SetAutoComplete(CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition).ToList());
 
                 editor.TextChanged += (s, e) => { data.Text = editor.Text; };
 
@@ -332,6 +337,6 @@ namespace ApiInspector.MainWindow
             return NewStackPanel(firstRow(), sqlEditor()).WithIndent(5);
         }
 
-        MethodDefinition methodDefinition => scope.Get(SelectedMethodDefinition);
+      
     }
 }

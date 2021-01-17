@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BOA.Base;
 using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
@@ -54,6 +55,17 @@ namespace ApiInspector.DataAccess
                 return;
             }
 
+            if (IsCollection( typeDefinition))
+            {
+                return;
+            }
+
+            if (PrimitiveTypes.Contains(typeDefinition.FullName))
+            {
+                items.Add(parentPath.RemoveFromEnd("."));
+                return;
+            }
+
             foreach (var propertyDefinition in typeDefinition.Properties)
             {
                 if (propertyDefinition.GetMethod == null || propertyDefinition.SetMethod == null)
@@ -79,6 +91,30 @@ namespace ApiInspector.DataAccess
                     CollectPropertiesThatCanBeSQLParameter(propertyType.Resolve(), parentPath + propertyDefinition.Name + ".", items);
                 }
             }
+        }
+
+        public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(MethodDefinition methodDefinition)
+        {
+            var items = new List<string>();
+
+            if (methodDefinition.ReturnType.FullName !="System.Void")
+            {
+                CollectPropertiesThatCanBeSQLParameter(methodDefinition.ReturnType.Resolve(), "@output.", items);    
+            }
+
+            foreach (var parameterDefinition in methodDefinition.Parameters)
+            {
+                if (parameterDefinition.ParameterType.FullName == typeof(ObjectHelper).FullName)
+                {
+                    continue;
+                }
+
+                CollectPropertiesThatCanBeSQLParameter(parameterDefinition.ParameterType.Resolve(), "@"+parameterDefinition.Name+".", items);
+            }
+
+            
+
+            return items;
         }
 
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameter(object instance)

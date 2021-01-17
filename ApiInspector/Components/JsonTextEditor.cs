@@ -84,7 +84,8 @@ namespace ApiInspector.Components
 
             editor.KeyPressed += (s, e) =>
             {
-                var isSpaceKey = e.KeyChar == '{';
+                
+                var isSpaceKey = e.KeyChar == '@';
                 if (isSpaceKey)
                 {
                     popupMenu.Show(true);
