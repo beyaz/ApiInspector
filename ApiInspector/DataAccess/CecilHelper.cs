@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ApiInspector.InvocationInfoEditor;
 using BOA.Base;
 using Mono.Cecil;
 
@@ -12,7 +13,7 @@ namespace ApiInspector.DataAccess
 
         public static Type GetDotNetType(this TypeReference type)
         {
-            return Type.GetType(type.GetReflectionName(), true);
+            return TypeFinder.FindType(type.GetReflectionName());
         }
 
         static string GetReflectionName(this TypeReference type)

@@ -34,6 +34,8 @@ namespace ApiInspector.MainWindow
         {
             var scenario = scope.Get(SelectedScenario);
 
+            scope.TryRemove(InvokeOutputs);
+
             var invocationInfo  = InvocationInfo;
             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
 
@@ -84,9 +86,11 @@ namespace ApiInspector.MainWindow
 
                 var runAssertion = fun((AssertionInfo assertionInfo) =>
                 {
-                    var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual,methodDefinition,invokeOutput);
-                    var expected = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected,methodDefinition,invokeOutput);
 
+                    var env      = EnvironmentInfo.Parse(invocationInfo.Environment);
+
+                    var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual,methodDefinition,invokeOutput,env);
+                    var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected,methodDefinition,invokeOutput,env);
                     var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
                     
                     UpdateUI(() =>
@@ -140,7 +144,17 @@ namespace ApiInspector.MainWindow
             }
 
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
-            Task.Run(() => ExecuteSelectedScenario());
+            Task.Run(() =>
+            {
+                try
+                {
+                    ExecuteSelectedScenario();
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Hata: " + exception);
+                }
+            });
         }
 
         void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)
