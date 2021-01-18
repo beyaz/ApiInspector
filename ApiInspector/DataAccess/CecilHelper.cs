@@ -6,13 +6,37 @@ using ApiInspector.InvocationInfoEditor;
 using BOA.Base;
 using BOA.Common.Extensions;
 using Mono.Cecil;
+using Newtonsoft.Json;
 
 namespace ApiInspector.DataAccess
 {
+
+    
+    class CecilMethodDefinitionSerializationInfo
+    {
+        public string AssemblyPath { get; set; }
+        public string ClassName { get; set; }
+        public string MethodNameWithSignature { get; set; }
+    }
+
     static class CecilHelper
     {
-        
 
+        internal static MethodDefinition GetMethodDefinition(CecilMethodDefinitionSerializationInfo data)
+        {
+            foreach (var moduleDefinition in AssemblyDefinition.ReadAssembly(data.AssemblyPath).Modules)
+            {
+                foreach (var item in moduleDefinition.Types)
+                {
+                    if (item.FullName == data.ClassName)
+                    {
+                        return item.Methods.FirstOrDefault(m => GetMethodIdInClass(m) == data.MethodNameWithSignature);
+                    }
+                }
+            }
+
+            throw new Exception(data.MethodNameWithSignature);
+        }
 
 
         public static string GetMethodIdInClass(this MethodDefinition methodDefinition)
@@ -78,12 +102,18 @@ namespace ApiInspector.DataAccess
         #endregion
 
         #region Public Methods
-        public static void CollectPropertiesThatCanBeSQLParameter(TypeDefinition typeDefinition, string parentPath, List<string> items)
+        public static void CollectPropertiesThatCanBeSQLParameter(TypeDefinition typeDefinition, string parentPath, List<string> items,List<TypeDefinition> history)
         {
             if (typeDefinition == null)
             {
                 return;
             }
+
+            if (history.Contains(typeDefinition))
+            {
+                return;
+            }
+            history.Add(typeDefinition);
 
             if (IsCollection( typeDefinition))
             {
@@ -124,18 +154,23 @@ namespace ApiInspector.DataAccess
 
                 if (!propertyType.IsValueType)
                 {
-                    CollectPropertiesThatCanBeSQLParameter(propertyType.Resolve(), parentPath + propertyDefinition.Name + ".", items);
+                    CollectPropertiesThatCanBeSQLParameter(propertyType.Resolve(), parentPath + propertyDefinition.Name + ".", items,history);
                 }
             }
         }
 
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(MethodDefinition methodDefinition)
         {
+
+            
+
             var items = new List<string>();
+
+            var history = new List<TypeDefinition>();
 
             if (methodDefinition.ReturnType.FullName !="System.Void")
             {
-                CollectPropertiesThatCanBeSQLParameter(methodDefinition.ReturnType.Resolve(), OutputPrefix+".", items);    
+                CollectPropertiesThatCanBeSQLParameter(methodDefinition.ReturnType.Resolve(), OutputPrefix+".", items,history);    
             }
 
             foreach (var parameterDefinition in methodDefinition.Parameters)
@@ -145,7 +180,7 @@ namespace ApiInspector.DataAccess
                     continue;
                 }
 
-                CollectPropertiesThatCanBeSQLParameter(parameterDefinition.ParameterType.Resolve(), PrefixCharacter+parameterDefinition.Name+".", items);
+                CollectPropertiesThatCanBeSQLParameter(parameterDefinition.ParameterType.Resolve(), PrefixCharacter+parameterDefinition.Name+".", items,history);
             }
 
             
@@ -158,9 +193,11 @@ namespace ApiInspector.DataAccess
 
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameter(object instance)
         {
-            var items = new List<string>();
+            var items   = new List<string>();
 
-            CollectPropertiesThatCanBeSQLParameter(GeTypeDefinitionFromType(instance.GetType()), string.Empty, items);
+            var history = new List<TypeDefinition>();
+
+            CollectPropertiesThatCanBeSQLParameter(GeTypeDefinitionFromType(instance.GetType()), string.Empty, items,history);
 
             return items;
         }

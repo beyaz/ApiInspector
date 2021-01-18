@@ -65,6 +65,10 @@ namespace ApiInspector.Test
         {
             return "Called: string Method0(string p0)";
         }
+        public string Method0(string p0,string p1)
+        {
+            return "Called: string Method0(string p0,string p1)";
+        }
         public string Method0(string p0,int p1)
         {
             return "Called: string Method0(string p0,int p1)";

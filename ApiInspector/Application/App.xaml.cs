@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using ApiInspector.Components;
+using ApiInspector.DataAccess;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
 
@@ -23,6 +25,8 @@ namespace ApiInspector.Application
         {
             BoaAssemblyResolver.AttachToCurrentDomain();
             errorMonitor = new ErrorMonitor(this);
+
+
         }
         #endregion
 

@@ -192,7 +192,8 @@ namespace ApiInspector.Invoking.Invokers
 
             var findMethod = fun(() =>
             {
-                var mi = targetType.GetMethod(invocationInfo.MethodName, AllBindings);
+
+                var mi = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.ToString().Split(' ')[1] == invocationInfo.MethodName);
 
                 if (mi == null)
                 {

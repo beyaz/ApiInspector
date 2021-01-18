@@ -73,10 +73,11 @@ namespace ApiInspector.Serialization
 
             var settings = new JsonSerializerSettings
             {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
-                TypeNameHandling     = TypeNameHandling.Objects
+                DefaultValueHandling  = DefaultValueHandling.Ignore,
+                Formatting            = Formatting.Indented,
+                DateFormatString      = "yyyy.MM.dd hh:mm:ss",
+                TypeNameHandling      = TypeNameHandling.Objects,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             };
 
             return JsonConvert.SerializeObject(value, settings);
@@ -96,10 +97,12 @@ namespace ApiInspector.Serialization
 
             var settings = new JsonSerializerSettings
             {
-                DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented,
-                DateFormatString     = "yyyy.MM.dd hh:mm:ss",
-                Converters           = new List<JsonConverter> {new DecimalConverter()}
+                DefaultValueHandling  = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
+                Formatting            = Formatting.Indented,
+                DateFormatString      = "yyyy.MM.dd hh:mm:ss",
+                Converters            = new List<JsonConverter> {new DecimalConverter()},
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                PreserveReferencesHandling =PreserveReferencesHandling.None
             };
 
             return JsonConvert.SerializeObject(value, settings);
