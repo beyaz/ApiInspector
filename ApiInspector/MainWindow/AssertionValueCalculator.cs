@@ -21,19 +21,45 @@ namespace ApiInspector.MainWindow
     class CompileSQLOperationInput
     {
         public string SQL { get; set; }
-        public MethodDefinition MethodDefinition { get; set; }
+
+        public IReadOnlyList<string> MethodParametersInJson { get; set; }
+
+        public string MethodReturnValueInJson { get; set; }
     }
+
     class CompileSQLOperationOutput
     {
-        
+        public string SQL { get; set; }
+
+        public IReadOnlyList<DbParameterInfo> SqlParameters { get; set; }
+    }
+
+    class DbParameterInfo
+    {
+        public string Name { get; set; }
+        public SqlDbType SqlDbType { get; set; }
+        public object Value{ get; set; }
     }
 
     class AssertionValueCalculator
     {
 
-        static void CompileSQLOperation()
+        static CompileSQLOperationOutput CompileSQLOperation(MethodDefinition methodDefinition ,CompileSQLOperationInput  input)
         {
 
+            return new CompileSQLOperationOutput()
+            {
+                SQL = input.SQL,
+                SqlParameters = new List<DbParameterInfo>()
+                {
+                    new DbParameterInfo
+                    {
+                        Name = "A",
+                        SqlDbType = SqlDbType.Char,
+                        Value = "Aloha"
+                    }
+                }
+            };
         }
 
 

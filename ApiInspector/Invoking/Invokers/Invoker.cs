@@ -12,6 +12,7 @@ using ApiInspector.Models;
 using ApiInspector.Plugins;
 using BOA.Base;
 using BOA.Common.Types;
+using Mono.Cecil;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
@@ -201,8 +202,16 @@ namespace ApiInspector.Invoking.Invokers
 
             var findMethod = fun(() =>
             {
+                bool isMatch(MethodInfo m)
+                {
+                    var fullMethodName   = m.ToString().Replace(", ",",");
 
-                var mi = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.ToString().Split(' ')[1] == invocationInfo.MethodName);
+                    var name = fullMethodName.Split(' ')[1];
+
+                    return name == invocationInfo.MethodName;
+                }
+
+                var mi = targetType.GetMethods(AllBindings).FirstOrDefault(isMatch);
 
                 if (mi == null)
                 {
