@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ApiInspector.InvocationInfoEditor;
+using ApiInspector.Plugins;
 using BOA.Base;
 using BOA.Common.Extensions;
 using Mono.Cecil;
@@ -12,34 +13,15 @@ namespace ApiInspector.DataAccess
 {
 
     
-    class CecilMethodDefinitionSerializationInfo
-    {
-        public string AssemblyPath { get; set; }
-        public string ClassName { get; set; }
-        public string MethodNameWithSignature { get; set; }
-    }
+    
 
     static class CecilHelper
     {
 
-        static MethodDefinition GetMethodDefinition(CecilMethodDefinitionSerializationInfo data)
-        {
-            foreach (var moduleDefinition in AssemblyDefinition.ReadAssembly(data.AssemblyPath).Modules)
-            {
-                foreach (var item in moduleDefinition.Types)
-                {
-                    if (item.FullName == data.ClassName)
-                    {
-                        return item.Methods.FirstOrDefault(m => GetMethodIdInClass(m) == data.MethodNameWithSignature);
-                    }
-                }
-            }
-
-            throw new Exception(data.MethodNameWithSignature);
-        }
+       
 
 
-        public static string GetMethodIdInClass(this MethodDefinition methodDefinition)
+        public static string GetMethodNameWithSignature(this MethodDefinition methodDefinition)
         {
             var sb = new StringBuilder(methodDefinition.Name);
             Type.GetType("Mono.Cecil.Mixin,Mono.Cecil", true).GetMethod("MethodSignatureFullName")?.Invoke(null,new object[]{methodDefinition, sb});
@@ -161,10 +143,7 @@ namespace ApiInspector.DataAccess
             }
         }
 
-        public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(CecilMethodDefinitionSerializationInfo data)
-        {
-            return GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(GetMethodDefinition(data));
-        }
+       
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(MethodDefinition methodDefinition)
         {
 

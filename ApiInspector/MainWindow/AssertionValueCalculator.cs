@@ -16,8 +16,27 @@ using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
+
+
+    class CompileSQLOperationInput
+    {
+        public string SQL { get; set; }
+        public MethodDefinition MethodDefinition { get; set; }
+    }
+    class CompileSQLOperationOutput
+    {
+        
+    }
+
     class AssertionValueCalculator
     {
+
+        static void CompileSQLOperation()
+        {
+
+        }
+
+
         internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition, InvokeOutput invocationOutput, EnvironmentInfo environmentInfo)
         {
             var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);

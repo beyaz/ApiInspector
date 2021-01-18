@@ -196,7 +196,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 bool searchMethod(MethodDefinition md)
                 {
-                    if (md.GetMethodIdInClass() == invocationInfo.MethodName)
+                    if (md.GetMethodNameWithSignature() == invocationInfo.MethodName)
                     {
                         return true;
                     }
@@ -208,9 +208,9 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (selectedMethodDefinition!= null)
                 {
-                    if (invocationInfo.MethodName != CecilHelper.GetMethodIdInClass(selectedMethodDefinition))
+                    if (invocationInfo.MethodName != CecilHelper.GetMethodNameWithSignature(selectedMethodDefinition))
                     {
-                        invocationInfo.MethodName = CecilHelper.GetMethodIdInClass(selectedMethodDefinition);
+                        invocationInfo.MethodName = CecilHelper.GetMethodNameWithSignature(selectedMethodDefinition);
                         methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
 
                     }
@@ -268,7 +268,7 @@ namespace ApiInspector.InvocationInfoEditor
                         return true;
                     });
 
-                    return selectedTypeDefinition.Methods.Where(filter).Select(CecilHelper.GetMethodIdInClass).ToList();
+                    return selectedTypeDefinition.Methods.Where(filter).Select(CecilHelper.GetMethodNameWithSignature).ToList();
                 });
 
                 var methodNames = getMethodNameListFromSelectedType();
