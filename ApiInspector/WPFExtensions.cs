@@ -185,7 +185,7 @@ namespace ApiInspector
         }
 
 
-        public static Grid NewColumnSplittedGrid(FrameworkElement left,FrameworkElement right)
+        public static Grid NewColumnSplittedGrid(FrameworkElement left,FrameworkElement right,Action<GridSplitter> afterGridSplitterInitialized =null)
         {
             var grid = new Grid
             {
@@ -199,13 +199,14 @@ namespace ApiInspector
 
             var gridSplitter = new GridSplitter
             {
-                Width = 7, 
-                Height = 90,
+                Width          = 7, 
+                Height         = 90,
                 ResizeBehavior = GridResizeBehavior.PreviousAndNext
             };
 
             gridSplitter.SetValue(FrameworkElement.VerticalAlignmentProperty,VerticalAlignment.Center);
            
+            afterGridSplitterInitialized?.Invoke(gridSplitter);
           
             left.SetValue(Grid.ColumnProperty,0);
 

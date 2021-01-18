@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ApiInspector.Test
+{
+    [Serializable]
+    public class ClassA
+    {
+        public ClassA InnerA { get; set; }
+    }
+
+
+    [Serializable]
+    public class ClassB
+    {
+        public ClassB InnerB { get; set; }
+        public ClassA InnerA { get; set; }
+
+        public string StringProp0 { get; set; }
+        public string StringProp1 { get; set; }
+        public string StringProp2 { get; set; }
+
+        public int IntProp0 { get; set; }
+        public int IntProp1 { get; set; }
+        public int IntProp2 { get; set; }
+
+        public int? NullableIntProp0 { get; set; }
+        public int? NullableIntProp1 { get; set; }
+        public int? NullableIntProp2 { get; set; }
+
+        public short  ShortProp0 { get; set; }
+        public short  ShortProp1 { get; set; }
+        public short  ShortProp2 { get; set; }
+
+        public short? NullableShortProp0 { get; set; }
+        public short? NullableShortProp1 { get; set; }
+        public short? NullableShortProp2 { get; set; }
+
+
+        public bool  BooleanProp0 { get; set; }
+        public bool  BooleanProp1 { get; set; }
+        public bool  BooleanProp2 { get; set; }
+
+        public bool? NullableBooleanProp0 { get; set; }
+        public bool? NullableBooleanProp1 { get; set; }
+        public bool? NullableBooleanProp2 { get; set; }
+
+        public DateTime  DateTimeProp0 { get; set; }
+        public DateTime  DateTimeProp1 { get; set; }
+        public DateTime  DateTimeProp2 { get; set; }
+
+        public DateTime? NullableDateTimeProp0 { get; set; }
+        public DateTime? NullableDateTimeProp1 { get; set; }
+        public DateTime? NullableDateTimeProp2 { get; set; }
+
+        public string Method0()
+        {
+            return "Called: string Method0()";
+        }
+
+        public string Method0(string p0)
+        {
+            return "Called: string Method0(string p0)";
+        }
+        public string Method0(string p0,int p1)
+        {
+            return "Called: string Method0(string p0,int p1)";
+        }
+    }
+}

@@ -112,6 +112,7 @@
     <Compile Include="Models\Fix.cs" />
     <Compile Include="Models\ScenarioInfo.cs" />
     <Compile Include="Models\ValueAccessInfo.cs" />
+    <Compile Include="Test\ClassA.cs" />
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="ConnectionInfo.cs" />

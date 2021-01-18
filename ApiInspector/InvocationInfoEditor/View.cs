@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Components;
+using ApiInspector.DataAccess;
 using Mono.Cecil;
 using static ApiInspector.Keys;
 using static FunctionalPrograming.FPExtensions;
@@ -49,6 +50,16 @@ namespace ApiInspector.InvocationInfoEditor
                     return NewStackPanel(lbl, editor);
                 });
 
+                var labelSeparatedGridSplitter = fun((GridSplitter gridSplitter) =>
+                {
+                    methodNameIntellisenseTextBox.Loaded += (s, e) =>
+                    {
+                        gridSplitter.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Bottom);
+                        gridSplitter.Height = methodNameIntellisenseTextBox.ActualHeight;
+                    };
+
+                });
+
                 return NewGroupBox(NewBoldTextBlock("Method Information"), 
                                    NewStackPanel(10,
                                                  NewGridWithColumns(new []{2,3,5},
@@ -56,9 +67,8 @@ namespace ApiInspector.InvocationInfoEditor
                                                                     createInput("Assembly Search Directory", assemblySearchDirectoryIntellisenseTextBox),
                                                                     createInput("Assembly Name", assemblyIntellisenseTextBox))
                                                  ,
-                                                 NewGridWithColumns(new []{4,2},
-                                                                    createInput("Class Name", classNameIntellisenseTextBox),
-                                                                    createInput("Method Name", methodNameIntellisenseTextBox)))
+                                                 NewColumnSplittedGrid(createInput("Class Name", classNameIntellisenseTextBox),
+                                                                       createInput("Method Name", methodNameIntellisenseTextBox),labelSeparatedGridSplitter))
                                                 );
             });
 
@@ -184,7 +194,28 @@ namespace ApiInspector.InvocationInfoEditor
             {
                 var invocationInfo = getSelectedInvocationInfo();
 
-                selectedMethodDefinition = selectedTypeDefinition?.Methods.FirstOrDefault(x => x.Name == invocationInfo.MethodName);
+                bool searchMethod(MethodDefinition md)
+                {
+                    if (md.GetMethodIdInClass() == invocationInfo.MethodName)
+                    {
+                        return true;
+                    }
+
+                    return md.Name == invocationInfo.MethodName;
+                }
+
+                selectedMethodDefinition = selectedTypeDefinition?.Methods.FirstOrDefault(searchMethod);
+
+                if (selectedMethodDefinition!= null)
+                {
+                    if (invocationInfo.MethodName != CecilHelper.GetMethodIdInClass(selectedMethodDefinition))
+                    {
+                        invocationInfo.MethodName = CecilHelper.GetMethodIdInClass(selectedMethodDefinition);
+                        methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
+
+                    }
+                }
+               
                 
                 scope.Update(Keys.SelectedMethodDefinition,selectedMethodDefinition);
             });
@@ -226,7 +257,18 @@ namespace ApiInspector.InvocationInfoEditor
                         };
                     }
 
-                    return selectedTypeDefinition.Methods.Select(x => x.Name).ToList();
+                    var filter = fun((MethodDefinition methodDefinition) =>
+                    {
+                        if (methodDefinition.IsGetter || methodDefinition.IsSetter || methodDefinition.IsConstructor )
+                        {
+                            return false;
+                        }
+
+
+                        return true;
+                    });
+
+                    return selectedTypeDefinition.Methods.Where(filter).Select(CecilHelper.GetMethodIdInClass).ToList();
                 });
 
                 var methodNames = getMethodNameListFromSelectedType();

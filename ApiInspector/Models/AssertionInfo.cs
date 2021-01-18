@@ -13,6 +13,10 @@ namespace ApiInspector.Models
         #endregion
 
         #region Public Properties
+        public AssertionInfo()
+        {
+            
+        }
         /// <summary>
         ///     Gets or sets the actual.
         /// </summary>

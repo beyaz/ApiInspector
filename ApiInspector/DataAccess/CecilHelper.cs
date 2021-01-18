@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ApiInspector.InvocationInfoEditor;
 using BOA.Base;
+using BOA.Common.Extensions;
 using Mono.Cecil;
 
 namespace ApiInspector.DataAccess
 {
     static class CecilHelper
     {
+        
 
+
+
+        public static string GetMethodIdInClass(this MethodDefinition methodDefinition)
+        {
+            var sb = new StringBuilder(methodDefinition.Name);
+            Type.GetType("Mono.Cecil.Mixin,Mono.Cecil", true).GetMethod("MethodSignatureFullName")?.Invoke(null,new object[]{methodDefinition, sb});
+            return sb.ToString();
+        }
 
         public static Type GetDotNetType(this TypeReference type)
         {

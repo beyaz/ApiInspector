@@ -100,6 +100,32 @@ namespace ApiInspector
         }
 
         /// <summary>
+        ///     Removes value from start of str
+        /// </summary>
+        public static string RemoveFromStart(this string data, string value)
+        {
+            return RemoveFromStart(data, value, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        ///     Removes value from start of str
+        /// </summary>
+        public static string RemoveFromStart(this string data, string value, StringComparison comparison)
+        {
+            if (data == null)
+            {
+                return null;
+            }
+
+            if (data.StartsWith(value, comparison))
+            {
+                return data.Substring(value.Length, data.Length - value.Length);
+            }
+
+            return data;
+        }
+
+        /// <summary>
         ///     Sets the text.
         /// </summary>
         public static void SetText(this RichTextBox richTextBox, string text)

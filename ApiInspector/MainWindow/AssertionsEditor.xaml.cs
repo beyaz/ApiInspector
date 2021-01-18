@@ -181,7 +181,8 @@ namespace ApiInspector.MainWindow
                 Expected = new ValueAccessInfo
                 {
                     DatabaseName = Databases.Boa.ToString()
-                }
+                },
+                OperatorName = AssertionOperatorNames.IsEquals
             };
 
             AddNewAssertion(assertion);
