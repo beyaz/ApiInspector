@@ -22,7 +22,7 @@ namespace ApiInspector.DataAccess
     static class CecilHelper
     {
 
-        internal static MethodDefinition GetMethodDefinition(CecilMethodDefinitionSerializationInfo data)
+        static MethodDefinition GetMethodDefinition(CecilMethodDefinitionSerializationInfo data)
         {
             foreach (var moduleDefinition in AssemblyDefinition.ReadAssembly(data.AssemblyPath).Modules)
             {
@@ -109,6 +109,12 @@ namespace ApiInspector.DataAccess
                 return;
             }
 
+            if (PrimitiveTypes.Contains(typeDefinition.FullName))
+            {
+                items.Add(parentPath.RemoveFromEnd("."));
+                return;
+            }
+
             if (history.Contains(typeDefinition))
             {
                 return;
@@ -126,11 +132,7 @@ namespace ApiInspector.DataAccess
                 return;
             }
 
-            if (PrimitiveTypes.Contains(typeDefinition.FullName))
-            {
-                items.Add(parentPath.RemoveFromEnd("."));
-                return;
-            }
+          
 
             foreach (var propertyDefinition in typeDefinition.Properties)
             {
@@ -159,6 +161,10 @@ namespace ApiInspector.DataAccess
             }
         }
 
+        public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(CecilMethodDefinitionSerializationInfo data)
+        {
+            return GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(GetMethodDefinition(data));
+        }
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(MethodDefinition methodDefinition)
         {
 
