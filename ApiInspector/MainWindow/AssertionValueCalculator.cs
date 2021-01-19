@@ -8,7 +8,6 @@ using ApiInspector.DataAccess;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
-using BOA.Common.Configuration.Sections;
 using BOA.Common.Extensions;
 using BOA.Common.Types;
 using Mono.Cecil;
@@ -82,46 +81,27 @@ namespace ApiInspector.MainWindow
                 return "Hata: DatabaseName is not recognized";
             }
 
-            var sqlToDataTable = fun(() =>
+           DataTable sqlToDataTable()
             {
                 var boaContext = new BOAContext(environmentInfo, Console.Write);
-
-                Dictionary<string, object> sqlParameters = new Dictionary<string, object>();
-
-                foreach (var suggestion in suggestions)
+                
+                var input = new CompileSQLOperationInput
                 {
-                    if (text.Contains(suggestion))
-                    {
-                        foreach (var parameterDefinition in methodDefinition.Parameters)
-                        {
-                            var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name+".";
+                    MethodDefinition = methodDefinition,
+                    MethodParametersInJson = invocationOutput.InvocationParameters,
+                    MethodReturnValueInJson = invocationOutput.ExecutionResponseAsJson,
+                    SQL = text
+                };
+                var sqlOperationOutput = CompileSQLOperation(input);
 
-                            if (text.Contains(prefix))
-                            {
-                                var propertyPath = suggestion.RemoveIfStartsWith(prefix);
 
-                                var key = suggestion.Replace(".", "_");
-
-                                text = text.Replace(suggestion, key);
-                                
-                                var value = ReflectionUtil.ReadPropertyPath(deserializeParameterAt(parameterDefinition.Index), propertyPath);
-
-                                sqlParameters.Add( key, value);
-                            }
-                        }
-                    }
+                var command = boaContext.Context.DBLayer.GetDBCommand(database, sqlOperationOutput.SQL, new SqlParameter[0], CommandType.Text);
+                foreach (var item in sqlOperationOutput.SqlParameters)
+                {
+                    boaContext.Context.DBLayer.AddInParameter(command,item.Name,item.SqlDbType,item.Value);
                 }
 
-               
-
-
-                var command    = boaContext.Context.DBLayer.GetDBCommand(database, text, new SqlParameter[0], CommandType.Text);
-                foreach (var pair in sqlParameters)
-                {
-                    boaContext.Context.DBLayer.AddInParameter(command,pair.Key,SqlDbType.Char,pair.Value);
-                }
-
-                var reader     = command.ExecuteReader();
+                var reader = command.ExecuteReader();
                 var dt  = new DataTable();
                 dt.Load(reader);
                 reader.Close();
@@ -129,7 +109,7 @@ namespace ApiInspector.MainWindow
                 boaContext.Dispose();
 
                 return dt;
-            });
+            }
 
             var dataTable = sqlToDataTable();
 
