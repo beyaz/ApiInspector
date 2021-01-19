@@ -3,16 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using ApiInspector.DataAccess;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
 using ApiInspector.Serialization;
-using BOA.Common.Extensions;
 using BOA.Common.Types;
 using Mono.Cecil;
-using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -20,46 +16,24 @@ namespace ApiInspector.MainWindow
     {
         internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition, InvokeOutput invocationOutput, EnvironmentInfo environmentInfo)
         {
-            var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
 
-            var deserializeParameterAt = fun((int index) =>
+            var input = new CompileSQLOperationInput
             {
-                var json = invocationOutput.InvocationParameters[index];
-
-                return Serializer.Deserialize(json, methodDefinition.Parameters[index].ParameterType.GetDotNetType());
-            });
-
-            var text = valueAccessInfo.Text.Trim();
+                MethodDefinition        = methodDefinition,
+                MethodParametersInJson  = invocationOutput.InvocationParameters,
+                MethodReturnValueInJson = invocationOutput.ExecutionResponseAsJson,
+                SQL                     = valueAccessInfo.Text.Trim()
+            };
+            var sqlOperationOutput = CompileSQLOperation(input);
 
             if (valueAccessInfo.FetchFromDatabase == false)
             {
-                if (suggestions.Contains(text))
+                if (sqlOperationOutput.SqlParameters.Count==1)
                 {
-                    if (text.StartsWith(CecilHelper.OutputPrefix))
-                    {
-                        var propertyPath = text.RemoveIfStartsWith(CecilHelper.OutputPrefix + ".");
-
-                        propertyPath = text.RemoveIfStartsWith(CecilHelper.OutputPrefix);
-
-                        var methodReturnValue = Serializer.Deserialize(invocationOutput.ExecutionResponseAsJson, methodDefinition.ReturnType.GetDotNetType());
-
-                        return ReflectionUtil.ReadPropertyPath(methodReturnValue, propertyPath);
-                    }
-
-                    foreach (var parameterDefinition in methodDefinition.Parameters)
-                    {
-                        var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name;
-                        if (text.StartsWith(prefix))
-                        {
-                            text = text.RemoveIfStartsWith(prefix);
-                            text = text.RemoveIfStartsWith(".");
-
-                            return ReflectionUtil.ReadPropertyPath(deserializeParameterAt(parameterDefinition.Index), text);
-                        }
-                    }
+                    return sqlOperationOutput.SqlParameters[0].Value;
                 }
 
-                return text;
+                return valueAccessInfo.Text;
             }
 
             if (string.IsNullOrWhiteSpace(valueAccessInfo.DatabaseName))
@@ -77,15 +51,6 @@ namespace ApiInspector.MainWindow
             DataTable sqlToDataTable()
             {
                 var boaContext = new BOAContext(environmentInfo, Console.Write);
-
-                var input = new CompileSQLOperationInput
-                {
-                    MethodDefinition        = methodDefinition,
-                    MethodParametersInJson  = invocationOutput.InvocationParameters,
-                    MethodReturnValueInJson = invocationOutput.ExecutionResponseAsJson,
-                    SQL                     = text
-                };
-                var sqlOperationOutput = CompileSQLOperation(input);
 
                 var command = boaContext.Context.DBLayer.GetDBCommand(database, sqlOperationOutput.SQL, new SqlParameter[0], CommandType.Text);
                 foreach (var item in sqlOperationOutput.SqlParameters)
