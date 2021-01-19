@@ -6,7 +6,6 @@ using ApiInspector.DataAccess;
 using ApiInspector.Serialization;
 using BOA.Common.Extensions;
 using Mono.Cecil;
-using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -18,7 +17,7 @@ namespace ApiInspector.MainWindow
 
         public string MethodReturnValueInJson { get; set; }
 
-        public MethodDefinition MethodDefinition{ get; set; }
+        public MethodDefinition MethodDefinition { get; set; }
     }
 
     class CompileSQLOperationOutput
@@ -41,112 +40,140 @@ namespace ApiInspector.MainWindow
         {
             var methodDefinition = input.MethodDefinition;
 
-            var suggestions      = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
+            var allSuggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
 
-            var deserializeParameterAt = fun((int index) =>
+            object deserialize(string json, Type targetType)
             {
-                var json = input.MethodParametersInJson[index];
-
-                var targetType = methodDefinition.Parameters[index].ParameterType.GetDotNetType();
                 if (targetType == typeof(string))
                 {
                     return json;
                 }
 
                 return Serializer.Deserialize(json, targetType);
-            });
+            }
 
             var text = input.SQL;
 
             var sqlParameters = new Dictionary<string, DbParameterInfo>();
 
-            foreach (var suggestion in suggestions)
+            SqlDbType getSqlDbType(object value)
             {
-                if (text.Contains(suggestion))
+                if (value == null)
                 {
-                    foreach (var parameterDefinition in methodDefinition.Parameters)
-                    {
-                        void processComplexSuggestion()
-                        {
-                            var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name + ".";
-
-                            if (text.Contains(prefix))
-                            {
-                                var propertyPath = suggestion.RemoveIfStartsWith(prefix);
-
-                                var key = suggestion.Replace(".", "_");
-
-                                text = text.Replace(suggestion, key);
-
-                                var value = ReflectionUtil.ReadPropertyPath(deserializeParameterAt(parameterDefinition.Index), propertyPath);
-
-                                var parameter = new DbParameterInfo
-                                {
-                                    Name  = key,
-                                    Value = value
-                                };
-
-                                if (value is string)
-                                {
-                                    parameter.SqlDbType = SqlDbType.VarChar;
-                                }
-                                else
-                                {
-                                    throw new NotImplementedException(value + string.Empty);
-                                }
-
-                                sqlParameters.Add(key, parameter);
-                            }
-                        }
-
-                        void processSimpleSuggestion ()
-                        {
-                            var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name;
-
-                            if (text.Contains(prefix))
-                            {
-                                var key = parameterDefinition.Name;
-
-                                if (sqlParameters.ContainsKey(key))
-                                {
-                                    return;
-                                }
-
-                                var value = deserializeParameterAt(parameterDefinition.Index);
-
-                                var parameter = new DbParameterInfo
-                                {
-                                    Name  = key,
-                                    Value = value
-                                };
-
-                                if (value is string)
-                                {
-                                    parameter.SqlDbType = SqlDbType.VarChar;
-                                }
-                                else if (value is int)
-                                {
-                                    parameter.SqlDbType = SqlDbType.Int;
-                                }
-                                else
-                                {
-                                    throw new NotImplementedException(value + string.Empty);
-                                }
-
-                                sqlParameters.Add(key, parameter);
-                            }
-                        }
-
-                        if (suggestion.Contains("."))
-                        {
-                            processComplexSuggestion();
-                        }
-                        else
-                        {
-                            processSimpleSuggestion();
-                        }
-                    }
+                    return SqlDbType.VarChar;
                 }
+
+                var typeMap = new Dictionary<Type, SqlDbType>
+                {
+                    [typeof(string)]         = SqlDbType.NVarChar,
+                    [typeof(char[])]         = SqlDbType.NVarChar,
+                    [typeof(byte)]           = SqlDbType.TinyInt,
+                    [typeof(short)]          = SqlDbType.SmallInt,
+                    [typeof(int)]            = SqlDbType.Int,
+                    [typeof(long)]           = SqlDbType.BigInt,
+                    [typeof(byte[])]         = SqlDbType.Image,
+                    [typeof(bool)]           = SqlDbType.Bit,
+                    [typeof(DateTime)]       = SqlDbType.DateTime2,
+                    [typeof(DateTimeOffset)] = SqlDbType.DateTimeOffset,
+                    [typeof(decimal)]        = SqlDbType.Money,
+                    [typeof(float)]          = SqlDbType.Real,
+                    [typeof(double)]         = SqlDbType.Float,
+                    [typeof(TimeSpan)]       = SqlDbType.Time
+                };
+
+                var type = value.GetType();
+
+                // Allow nullable types to be handled
+                type = Nullable.GetUnderlyingType(type) ?? type;
+
+                if (typeMap.ContainsKey(type))
+                {
+                    return typeMap[type];
+                }
+
+                throw new ArgumentException($"{type.FullName} is not a supported .NET class");
+            }
+
+            void processSimpleSuggestion(string name, object value)
+            {
+                var prefix = CecilHelper.PrefixCharacter + name;
+
+                if (!text.Contains(prefix))
+                {
+                    return;
+                }
+
+                var isComplex = text.Contains(CecilHelper.PrefixCharacter + name + ".");
+                if (isComplex)
+                {
+                    return;
+                }
+
+                var key = name;
+
+                if (sqlParameters.ContainsKey(key))
+                {
+                    return;
+                }
+
+                var parameter = new DbParameterInfo
+                {
+                    Name      = key,
+                    Value     = value,
+                    SqlDbType = getSqlDbType(value)
+                };
+
+                sqlParameters.Add(key, parameter);
+            }
+
+            void processComplexSuggestion(string name, object value)
+            {
+                var prefix = CecilHelper.PrefixCharacter + name + ".";
+
+                var suggestions = from x in allSuggestions
+                                  where x.StartsWith(prefix)
+                                  orderby x.Length descending
+                                  select x;
+
+
+                void processSuggestion(string suggestion)
+                {
+                    if (!text.Contains(suggestion))
+                    {
+                       return;
+                    }
+
+                    var propertyPath = suggestion.RemoveIfStartsWith(prefix);
+
+                    var key = suggestion.Replace(".", "_");
+
+                    text = text.Replace(suggestion, key);
+
+                    var sqlValue = ReflectionUtil.ReadPropertyPath(value, propertyPath);
+
+                    var parameter = new DbParameterInfo
+                    {
+                        Name      = key,
+                        Value     = sqlValue,
+                        SqlDbType = getSqlDbType(sqlValue)
+                    };
+
+                    sqlParameters.Add(key, parameter);
+                }
+
+                foreach (var suggestion in suggestions)
+                {
+                    processSuggestion(suggestion);
+                }
+            }
+
+            foreach (var parameterDefinition in methodDefinition.Parameters)
+            {
+                var parameterName  = parameterDefinition.Name;
+                var parameterValue = deserialize(input.MethodParametersInJson[parameterDefinition.Index], parameterDefinition.ParameterType.GetDotNetType());
+
+                processSimpleSuggestion(parameterName, parameterValue);
+                processComplexSuggestion(parameterName, parameterValue);
             }
 
             return new CompileSQLOperationOutput

@@ -8,6 +8,11 @@ namespace ApiInspector.DataAccess
         #region Public Methods
         public static object ReadPropertyPath(object src, string propName)
         {
+            if (src == null)
+            {
+                return null;
+            }
+
             if (string.IsNullOrWhiteSpace(propName))
             {
                 return src;
