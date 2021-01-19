@@ -46,19 +46,119 @@ namespace ApiInspector.MainWindow
 
         static CompileSQLOperationOutput CompileSQLOperation(MethodDefinition methodDefinition ,CompileSQLOperationInput  input)
         {
+            var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
+
+            var deserializeParameterAt = fun((int index) =>
+            {
+                var json = input.MethodParametersInJson[index];
+
+                var targetType  = methodDefinition.Parameters[index].ParameterType.GetDotNetType();
+                if (targetType == typeof(string))
+                {
+                    return json;
+                }
+                return Serialization.Serializer.Deserialize(json, targetType );
+            });
+
+            var text = input.SQL;
+            
+            var sqlParameters = new Dictionary<string, DbParameterInfo>();
+
+            foreach (var suggestion in suggestions)
+            {
+                if (text.Contains(suggestion))
+                {
+                    foreach (var parameterDefinition in methodDefinition.Parameters)
+                    {
+
+                        var processComplexSuggestion = fun(() =>
+                        {
+                            var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name + ".";
+
+                            if (text.Contains(prefix))
+                            {
+                                var propertyPath = suggestion.RemoveIfStartsWith(prefix);
+
+                                var key = suggestion.Replace(".", "_");
+
+                                text = text.Replace(suggestion, key);
+
+                                var value = ReflectionUtil.ReadPropertyPath(deserializeParameterAt(parameterDefinition.Index), propertyPath);
+
+                                var parameter = new DbParameterInfo
+                                {
+                                    Name  = key,
+                                    Value = value
+                                };
+
+                                if (value is string)
+                                {
+                                    parameter.SqlDbType = SqlDbType.VarChar;
+                                }
+                                else
+                                {
+                                    throw new NotImplementedException(value + string.Empty);
+                                }
+
+                                sqlParameters.Add(key, parameter);
+                            }
+                        });
+
+                        var processSimpleSuggestion = fun(() =>
+                        {
+                            var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name ;
+
+                            if (text.Contains(prefix))
+                            {
+                                var key = parameterDefinition.Name;
+
+                                if (sqlParameters.ContainsKey(key))
+                                {
+                                    return;
+                                }
+
+                                var value = deserializeParameterAt(parameterDefinition.Index);
+
+                                var parameter = new DbParameterInfo
+                                {
+                                    Name  = key,
+                                    Value = value
+                                };
+
+                                if (value is string)
+                                {
+                                    parameter.SqlDbType = SqlDbType.VarChar;
+                                }
+                                else if (value is int)
+                                {
+                                    parameter.SqlDbType = SqlDbType.Int;
+                                }
+                                else
+                                {
+                                    throw new NotImplementedException(value + string.Empty);
+                                }
+
+                                
+                                sqlParameters.Add(key, parameter);
+                            }
+                        });
+
+                        if (suggestion.Contains("."))
+                        {
+                            processComplexSuggestion();
+                        }
+                        else
+                        {
+                            processSimpleSuggestion();
+                        }
+                    }
+                }
+            }
 
             return new CompileSQLOperationOutput()
             {
-                SQL = input.SQL,
-                SqlParameters = new List<DbParameterInfo>()
-                {
-                    new DbParameterInfo
-                    {
-                        Name = "A",
-                        SqlDbType = SqlDbType.Char,
-                        Value = "Aloha"
-                    }
-                }
+                SQL = text,
+                SqlParameters = sqlParameters.Values.ToList()
             };
         }
 
