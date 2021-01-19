@@ -8,6 +8,7 @@ using ApiInspector.DataAccess;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using BOA.Common.Extensions;
 using BOA.Common.Types;
 using Mono.Cecil;
@@ -15,24 +16,17 @@ using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
-
-
-
     partial class AssertionValueCalculator
     {
-
-        
-
         internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition, InvokeOutput invocationOutput, EnvironmentInfo environmentInfo)
         {
             var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
-
 
             var deserializeParameterAt = fun((int index) =>
             {
                 var json = invocationOutput.InvocationParameters[index];
 
-                return Serialization.Serializer.Deserialize(json, methodDefinition.Parameters[index].ParameterType.GetDotNetType());
+                return Serializer.Deserialize(json, methodDefinition.Parameters[index].ParameterType.GetDotNetType());
             });
 
             var text = valueAccessInfo.Text.Trim();
@@ -43,19 +37,19 @@ namespace ApiInspector.MainWindow
                 {
                     if (text.StartsWith(CecilHelper.OutputPrefix))
                     {
-                        var propertyPath = text.RemoveIfStartsWith(CecilHelper.OutputPrefix+".");
+                        var propertyPath = text.RemoveIfStartsWith(CecilHelper.OutputPrefix + ".");
 
                         propertyPath = text.RemoveIfStartsWith(CecilHelper.OutputPrefix);
 
-                        var methodReturnValue = Serialization.Serializer.Deserialize(invocationOutput.ExecutionResponseAsJson, methodDefinition.ReturnType.GetDotNetType());
-                        
+                        var methodReturnValue = Serializer.Deserialize(invocationOutput.ExecutionResponseAsJson, methodDefinition.ReturnType.GetDotNetType());
+
                         return ReflectionUtil.ReadPropertyPath(methodReturnValue, propertyPath);
                     }
 
                     foreach (var parameterDefinition in methodDefinition.Parameters)
                     {
                         var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name;
-                        if ( text.StartsWith(prefix))
+                        if (text.StartsWith(prefix))
                         {
                             text = text.RemoveIfStartsWith(prefix);
                             text = text.RemoveIfStartsWith(".");
@@ -68,7 +62,6 @@ namespace ApiInspector.MainWindow
                 return text;
             }
 
-
             if (string.IsNullOrWhiteSpace(valueAccessInfo.DatabaseName))
             {
                 return "Hata: DatabaseName is empty";
@@ -78,34 +71,33 @@ namespace ApiInspector.MainWindow
 
             if (!Enum.TryParse(valueAccessInfo.DatabaseName, true, out database))
             {
-                return "Hata: DatabaseName is not recognized";
+                return "Hata: DatabaseName is not recognized." + valueAccessInfo.DatabaseName;
             }
 
-           DataTable sqlToDataTable()
+            DataTable sqlToDataTable()
             {
                 var boaContext = new BOAContext(environmentInfo, Console.Write);
-                
+
                 var input = new CompileSQLOperationInput
                 {
-                    MethodDefinition = methodDefinition,
-                    MethodParametersInJson = invocationOutput.InvocationParameters,
+                    MethodDefinition        = methodDefinition,
+                    MethodParametersInJson  = invocationOutput.InvocationParameters,
                     MethodReturnValueInJson = invocationOutput.ExecutionResponseAsJson,
-                    SQL = text
+                    SQL                     = text
                 };
                 var sqlOperationOutput = CompileSQLOperation(input);
-
 
                 var command = boaContext.Context.DBLayer.GetDBCommand(database, sqlOperationOutput.SQL, new SqlParameter[0], CommandType.Text);
                 foreach (var item in sqlOperationOutput.SqlParameters)
                 {
-                    boaContext.Context.DBLayer.AddInParameter(command,item.Name,item.SqlDbType,item.Value);
+                    boaContext.Context.DBLayer.AddInParameter(command, item.Name, item.SqlDbType, item.Value);
                 }
 
                 var reader = command.ExecuteReader();
-                var dt  = new DataTable();
+                var dt     = new DataTable();
                 dt.Load(reader);
                 reader.Close();
-            
+
                 boaContext.Dispose();
 
                 return dt;
@@ -113,10 +105,9 @@ namespace ApiInspector.MainWindow
 
             var dataTable = sqlToDataTable();
 
-            
-            if (dataTable.Columns.Count ==1)
+            if (dataTable.Columns.Count == 1)
             {
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(dataTable.Columns[0].DataType));
+                var list = (IList) Activator.CreateInstance(typeof(List<>).MakeGenericType(dataTable.Columns[0].DataType));
 
                 foreach (DataRow row in dataTable.Rows)
                 {
@@ -129,13 +120,10 @@ namespace ApiInspector.MainWindow
                 }
 
                 return list;
-
             }
 
             return dataTable;
         }
-        
-        
 
         public static string RunAssertion(object actual, object expected, string operatorName)
         {
@@ -143,10 +131,11 @@ namespace ApiInspector.MainWindow
             {
                 if (expected is string && actual != null && actual.GetType() != typeof(string))
                 {
-                    expected= Serialization.Serializer.Deserialize((string) expected, actual.GetType());
+                    expected = Serializer.Deserialize((string) expected, actual.GetType());
                 }
-                var actualJson = Serialization.Serializer.SerializeToJson(actual);
-                var expectedJson = Serialization.Serializer.SerializeToJson(expected);
+
+                var actualJson   = Serializer.SerializeToJson(actual);
+                var expectedJson = Serializer.SerializeToJson(expected);
                 if (actualJson != expectedJson)
                 {
                     return $"Actual value: {actualJson} is not equals to expected value: {expectedJson}";
