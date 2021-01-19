@@ -106,6 +106,7 @@
     <Compile Include="MainWindow\Execution.cs">
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainWindow\Icons.cs" />
     <Compile Include="MainWindow\ScenarioEditor.xaml.cs">
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
     </Compile>

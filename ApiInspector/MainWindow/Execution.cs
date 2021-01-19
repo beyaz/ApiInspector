@@ -149,6 +149,18 @@ namespace ApiInspector.MainWindow
                 try
                 {
                     ExecuteSelectedScenario();
+
+                    Dispatcher.InvokeAsync(() =>
+                    {
+                        executeSelectedScenarioButton.ShowSuccessIcon();
+
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(3000);
+                            await Dispatcher.BeginInvoke(fun(() => executeSelectedScenarioButton.ShowExecuteIcon2()));
+                        });
+                    });
+
                 }
                 catch (Exception exception)
                 {
