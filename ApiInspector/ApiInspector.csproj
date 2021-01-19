@@ -101,6 +101,7 @@
       <DependentUpon>AssertionsEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataAccess\CecilHelper.cs" />
+    <Compile Include="MainWindow\AssertionValueCalculator.CompileSQLOperation.cs" />
     <Compile Include="MainWindow\AssertionValueCalculator.cs" />
     <Compile Include="MainWindow\Execution.cs">
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
