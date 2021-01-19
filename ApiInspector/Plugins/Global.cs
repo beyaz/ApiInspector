@@ -5,6 +5,7 @@ using ApiInspector.DataAccess;
 using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
+using Newtonsoft.Json;
 
 namespace ApiInspector.Plugins
 {
@@ -50,6 +51,13 @@ namespace ApiInspector.Plugins
 
             return new CustomSerializeResult();
         }
+
+        public static IReadOnlyList<JsonConverter> JsonConverters = new List<JsonConverter>
+        {
+
+        };
+
+
         #endregion
     }
 

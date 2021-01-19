@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ApiInspector.Plugins;
 using Newtonsoft.Json;
 
 namespace ApiInspector.Serialization
@@ -100,13 +101,29 @@ namespace ApiInspector.Serialization
                 DefaultValueHandling  = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
                 Formatting            = Formatting.Indented,
                 DateFormatString      = "yyyy.MM.dd hh:mm:ss",
-                Converters            = new List<JsonConverter> {new DecimalConverter()},
+                Converters            = JsonConverters,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 PreserveReferencesHandling =PreserveReferencesHandling.None
             };
 
             return JsonConvert.SerializeObject(value, settings);
         }
+
+        static IList<JsonConverter> JsonConverters
+        {
+            get
+            {
+                var list = new List<JsonConverter>
+                {
+                    new DecimalConverter()
+                };
+
+                list.AddRange(Global.JsonConverters);
+
+                return list;
+            }
+        } 
+
         #endregion
     }
 }
