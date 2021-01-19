@@ -90,6 +90,9 @@ namespace ApiInspector.MainWindow
         /// </summary>
         AssertionsEditor ActivateAssertions()
         {
+            EnableAllTopButtons();
+            buttonAssertions.IsPressed = true;
+
             var assertionsEditor = new AssertionsEditor();
 
             assertionsEditor.Loaded += (s, e) => assertionsEditor.Connect(scope);
@@ -104,8 +107,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void ActivateExportPanel(object sender, RoutedEventArgs e)
         {
-            EnableAllTopButtons();
-            buttonActivateExportPanel.IsPressed = true;
+           
 
             ActivateExportPanel();
         }
@@ -116,6 +118,9 @@ namespace ApiInspector.MainWindow
         void ActivateExportPanel()
         {
             var scenario = scope.Get(SelectedScenario);
+
+            EnableAllTopButtons();
+            buttonActivateExportPanel.IsPressed = true;
 
             var editor = new TextBox();
 
@@ -131,6 +136,9 @@ namespace ApiInspector.MainWindow
         {
             var scenario         = scope.Get(SelectedScenario);
             var methodDefinition = scope.Get(SelectedMethodDefinition);
+
+            EnableAllTopButtons();
+            buttonActivateInputOutputPanel.IsPressed = true;
 
             InvokeOutput FindOutput()
             {
@@ -289,8 +297,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAssertionsClicked(object sender, RoutedEventArgs e)
         {
-            EnableAllTopButtons();
-            buttonAssertions.IsPressed = true;
+           
 
             ActivateAssertions();
         }
@@ -300,9 +307,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
         {
-            EnableAllTopButtons();
-
-            buttonActivateInputOutputPanel.IsPressed = true;
+            
 
             ActivateInputOutputPanel();
         }
