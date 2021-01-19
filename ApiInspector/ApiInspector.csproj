@@ -114,6 +114,7 @@
     <Compile Include="Models\ScenarioInfo.cs" />
     <Compile Include="Models\ValueAccessInfo.cs" />
     <Compile Include="Plugins\Global.cs" />
+    <Compile Include="Plugins\MethodDefinitionConverter.cs" />
     <Compile Include="Test\ClassA.cs" />
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />

@@ -54,7 +54,7 @@ namespace ApiInspector.Plugins
 
         public static IReadOnlyList<JsonConverter> JsonConverters = new List<JsonConverter>
         {
-
+            new MethodDefinitionConverter()
         };
 
 
@@ -92,15 +92,15 @@ namespace ApiInspector.Plugins
         #region Public Methods
         public static CustomDeserializeResult CustomDeserialize(string json, Type targetType)
         {
-            if (targetType == typeof(MethodDefinition))
-            {
-                return new CustomDeserializeResult
-                {
-                    IsProcessed = true,
+            //if (targetType == typeof(MethodDefinition))
+            //{
+            //    return new CustomDeserializeResult
+            //    {
+            //        IsProcessed = true,
 
-                    Instance = ToMethodDefinition(Serializer.Deserialize<CecilMethodDefinitionSerializationInfo>(json))
-                };
-            }
+            //        Instance = ToMethodDefinition(Serializer.Deserialize<CecilMethodDefinitionSerializationInfo>(json))
+            //    };
+            //}
 
             return new CustomDeserializeResult();
         }
@@ -112,14 +112,14 @@ namespace ApiInspector.Plugins
                 return new CustomSerializeResult {IsProcessed = true};
             }
 
-            if (instance is MethodDefinition methodDefinition)
-            {
-                return new CustomSerializeResult
-                {
-                    IsProcessed = true,
-                    Json        = methodDefinition.FullName
-                };
-            }
+            //if (instance is MethodDefinition methodDefinition)
+            //{
+            //    return new CustomSerializeResult
+            //    {
+            //        IsProcessed = true,
+            //        Json        = methodDefinition.FullName
+            //    };
+            //}
 
             return new CustomSerializeResult();
         }

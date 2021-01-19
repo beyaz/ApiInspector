@@ -40,6 +40,8 @@ namespace ApiInspector.History
             var dbConnection   = scope.Get(DbConnection);
 
             dbConnection.Delete(CreateFrom(invocationInfo));
+
+            
         }
 
         /// <summary>

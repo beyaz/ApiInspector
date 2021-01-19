@@ -17,6 +17,8 @@ namespace ApiInspector.MainWindow
         public IReadOnlyList<string> MethodParametersInJson { get; set; }
 
         public string MethodReturnValueInJson { get; set; }
+
+        public MethodDefinition MethodDefinition{ get; set; }
     }
 
     class CompileSQLOperationOutput
@@ -35,9 +37,11 @@ namespace ApiInspector.MainWindow
 
     partial class AssertionValueCalculator
     {
-        static CompileSQLOperationOutput CompileSQLOperation(MethodDefinition methodDefinition, CompileSQLOperationInput input)
+        static CompileSQLOperationOutput CompileSQLOperation(CompileSQLOperationInput input)
         {
-            var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
+            var methodDefinition = input.MethodDefinition;
+
+            var suggestions      = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
 
             var deserializeParameterAt = fun((int index) =>
             {
@@ -62,7 +66,7 @@ namespace ApiInspector.MainWindow
                 {
                     foreach (var parameterDefinition in methodDefinition.Parameters)
                     {
-                        var processComplexSuggestion = fun(() =>
+                        void processComplexSuggestion()
                         {
                             var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name + ".";
 
@@ -93,9 +97,9 @@ namespace ApiInspector.MainWindow
 
                                 sqlParameters.Add(key, parameter);
                             }
-                        });
+                        }
 
-                        var processSimpleSuggestion = fun(() =>
+                        void processSimpleSuggestion ()
                         {
                             var prefix = CecilHelper.PrefixCharacter + parameterDefinition.Name;
 
@@ -131,7 +135,7 @@ namespace ApiInspector.MainWindow
 
                                 sqlParameters.Add(key, parameter);
                             }
-                        });
+                        }
 
                         if (suggestion.Contains("."))
                         {

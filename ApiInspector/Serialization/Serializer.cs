@@ -46,7 +46,7 @@ namespace ApiInspector.Serialization
                 throw new ArgumentNullException(nameof(jsonContent));
             }
 
-            return JsonConvert.DeserializeObject<T>(jsonContent);
+            return JsonConvert.DeserializeObject<T>(jsonContent,CreateJsonSerializerSettings());
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ApiInspector.Serialization
                 throw new ArgumentNullException(nameof(jsonContent));
             }
 
-            return JsonConvert.DeserializeObject(jsonContent, targetType);
+            return JsonConvert.DeserializeObject(jsonContent, targetType,CreateJsonSerializerSettings());
         }
 
         /// <summary>
@@ -96,17 +96,25 @@ namespace ApiInspector.Serialization
                 return null;
             }
 
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling  = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include,
-                Formatting            = Formatting.Indented,
-                DateFormatString      = "yyyy.MM.dd hh:mm:ss",
-                Converters            = JsonConverters,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                PreserveReferencesHandling =PreserveReferencesHandling.None
-            };
+            var settings = CreateJsonSerializerSettings();
+            
+            settings.DefaultValueHandling = ignoreDefaultValues ? DefaultValueHandling.Ignore : DefaultValueHandling.Include;
+
 
             return JsonConvert.SerializeObject(value, settings);
+        }
+
+        public static JsonSerializerSettings CreateJsonSerializerSettings()
+        {
+            return  new JsonSerializerSettings
+            {
+                DefaultValueHandling       = DefaultValueHandling.Ignore,
+                Formatting                 = Formatting.Indented,
+                DateFormatString           = "yyyy.MM.dd hh:mm:ss",
+                Converters                 = JsonConverters,
+                ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
+                PreserveReferencesHandling =PreserveReferencesHandling.None
+            };
         }
 
         static IList<JsonConverter> JsonConverters

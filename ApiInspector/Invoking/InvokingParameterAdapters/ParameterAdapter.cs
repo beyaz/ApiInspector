@@ -122,7 +122,7 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
 
             if (targetParameterType.IsClass && input.InvocationValue is string invocationValueAsString)
             {
-                var invocationValue = JsonConvert.DeserializeObject(invocationValueAsString, targetParameterType);
+                var invocationValue = Serialization.Serializer.Deserialize(invocationValueAsString, targetParameterType);
 
                 return input.WithInvocationValue(invocationValue);
             }

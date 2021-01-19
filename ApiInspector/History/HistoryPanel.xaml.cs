@@ -75,18 +75,7 @@ namespace ApiInspector.History
 
         public Action<string> Trace = Console.WriteLine;
 
-        /// <summary>
-        ///     Deletes the selected item from History.
-        /// </summary>
-        void DeleteSelectedItemFromHistory(InvocationInfo info)
-        {
-            new Scope
-            {
-                {SelectedInvocationInfo, info}
-            }.PublishEvent(HistoryEvent.RemoveSelectedInvocationInfo);
-
-            Refresh();
-        }
+        
 
         /// <summary>
         ///     Histories the filter.
@@ -118,7 +107,9 @@ namespace ApiInspector.History
             {
                 if (historyListBox.SelectedItem != null)
                 {
-                    DeleteSelectedItemFromHistory((InvocationInfo) historyListBox.SelectedItem);
+                    scope.PublishEvent(HistoryEvent.RemoveSelectedInvocationInfo);
+
+                    Refresh();
                 }
             }
         }
