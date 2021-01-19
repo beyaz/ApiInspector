@@ -14,6 +14,7 @@ namespace ApiInspector.Test
         public string StringProp0 { get; set; }
         public string StringProp1 { get; set; }
         public string StringProp2 { get; set; }
+        public string StringProp21 { get; set; }
 
         public int IntProp0 { get; set; }
         public int IntProp1 { get; set; }

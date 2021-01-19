@@ -135,6 +135,7 @@ namespace ApiInspector.MainWindow
                                   orderby x.Length descending
                                   select x;
 
+               
 
                 void processSuggestion(string suggestion)
                 {
@@ -175,6 +176,15 @@ namespace ApiInspector.MainWindow
                 processSimpleSuggestion(parameterName, parameterValue);
                 processComplexSuggestion(parameterName, parameterValue);
             }
+
+            if (methodDefinition.ReturnType.FullName != "System.Void")
+            {
+                var returnValue = deserialize(input.MethodReturnValueInJson, methodDefinition.ReturnType.GetDotNetType());
+
+                processSimpleSuggestion("output", returnValue);
+                processComplexSuggestion("output", returnValue);    
+            }
+            
 
             return new CompileSQLOperationOutput
             {
