@@ -143,6 +143,8 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
+            UpdateScenarioActionIcon(success:null);
+
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
             Task.Run(() =>
             {
@@ -150,23 +152,32 @@ namespace ApiInspector.MainWindow
                 {
                     ExecuteSelectedScenario();
 
-                    Dispatcher.InvokeAsync(() =>
-                    {
-                        executeSelectedScenarioButton.ShowSuccessIcon();
-
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(3000);
-                            await Dispatcher.BeginInvoke(fun(() => executeSelectedScenarioButton.ShowExecuteIcon2()));
-                        });
-                    });
-
+                    UpdateScenarioActionIcon(success:true);
                 }
                 catch (Exception exception)
                 {
+                    UpdateScenarioActionIcon(success:false);
+
                     MessageBox.Show("Hata: " + exception);
                 }
             });
+        }
+
+        void UpdateScenarioActionIcon(bool? success)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                var actionButton = FindSelectedActionButton();
+                
+                Execute(success, new Dictionary<Func<bool?, bool>, Action>
+                {
+                    {x => x == null, () => actionButton.HideIcon()},
+                    {x => x == true, () => actionButton.ShowSuccessIcon()},
+                    {x => x == false, () => actionButton.ShowFailIcon()}
+                });
+
+            });
+
         }
 
         void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)

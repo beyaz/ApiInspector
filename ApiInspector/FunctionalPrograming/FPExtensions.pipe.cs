@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FunctionalPrograming
 {
@@ -56,5 +57,20 @@ namespace FunctionalPrograming
         public static I pipe<A, B, C, D, E, F, G, H, I>(A x, Func<A, B> f, Func<B, C> g, Func<C, D> h, Func<D, E> i, Func<E, F> j, Func<F, G> k, Func<G, H> l, Func<H, I> m) =>
             m(l(k(j(i(h(g(f(x))))))));
         #endregion
+
+
+
+        public static void Execute<TKey>(TKey value, Dictionary<Func<TKey, bool>, Action> conditions)
+        {
+            foreach (var pair in conditions)
+            {
+                var canEnter = pair.Key(value);
+                if (canEnter)
+                {
+                    pair.Value();
+                }
+            }
+        }
+
     }
 }

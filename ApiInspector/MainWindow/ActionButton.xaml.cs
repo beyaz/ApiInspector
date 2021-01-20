@@ -20,9 +20,9 @@ namespace ApiInspector.MainWindow
             IconVisibility = Visibility.Visible;
         }
 
-        public void ShowExecuteIcon2()
+        public void ShowFailIcon()
         {
-            IconGeometry   = Icons.Execute;
+            IconGeometry   = Icons.Settings;
             IconVisibility = Visibility.Visible;
         }
 
