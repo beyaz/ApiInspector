@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using ApiInspector.Application;
+using ApiInspector.DataAccess;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
@@ -202,16 +203,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var findMethod = fun(() =>
             {
-                bool isMatch(MethodInfo m)
-                {
-                    var fullMethodName   = m.ToString().Replace(", ",",");
-
-                    var name = fullMethodName.Split(' ')[1];
-
-                    return name == invocationInfo.MethodName;
-                }
-
-                var mi = targetType.GetMethods(AllBindings).FirstOrDefault(isMatch);
+                var mi = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == invocationInfo.MethodName);
 
                 if (mi == null)
                 {

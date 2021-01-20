@@ -127,5 +127,10 @@ namespace ApiInspector.Test
         {
             return new[] {"A"};
         }
+
+        public static int AddOne(int value)
+        {
+            return value + 1;
+        }
     }
 }

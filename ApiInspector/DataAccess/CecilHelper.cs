@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Plugins;
@@ -25,6 +26,16 @@ namespace ApiInspector.DataAccess
         {
             var sb = new StringBuilder(methodDefinition.Name);
             Type.GetType("Mono.Cecil.Mixin,Mono.Cecil", true).GetMethod("MethodSignatureFullName")?.Invoke(null,new object[]{methodDefinition, sb});
+            return sb.ToString();
+        }
+
+        public static string GetMethodNameWithSignature(this MethodInfo methodInfo)
+        {
+            var sb = new StringBuilder(methodInfo.Name);
+            sb.Append("(");
+            sb.Append(string.Join(",", methodInfo.GetParameters().Select(p => p.ParameterType.FullName)));
+            sb.Append(")");
+
             return sb.ToString();
         }
 

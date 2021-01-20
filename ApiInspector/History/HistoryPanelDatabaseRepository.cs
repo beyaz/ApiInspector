@@ -41,7 +41,23 @@ namespace ApiInspector.History
 
             dbConnection.Delete(CreateFrom(invocationInfo));
 
-            
+            void try_remove_previous_version_model_record()
+            {
+                var key = invocationInfo.ToString();
+                if (key.Contains("("))
+                {
+                    key = key.Substring(0,key.IndexOf("(", StringComparison.Ordinal));
+                    var oldModel = new RecordModel
+                    {
+                        Key      = key,
+                        UserName = scope.Get(UserName)
+                    };
+                    dbConnection.Delete(oldModel);
+                }
+            }
+
+            try_remove_previous_version_model_record();
+
         }
 
         /// <summary>
