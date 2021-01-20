@@ -30,7 +30,13 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        void ExecuteSelectedScenario()
+        
+        void UpdateUI(Action action)
+        {
+            Dispatcher.InvokeAsync(action);
+        }
+
+        bool ExecuteSelectedScenario()
         {
             var scenario = scope.Get(SelectedScenario);
 
@@ -38,34 +44,15 @@ namespace ApiInspector.MainWindow
 
             var invocationInfo  = InvocationInfo;
             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
-
-            void UpdateUI(Action action)
-            {
-                Dispatcher.InvokeAsync(action);
-            }
-
-            void OnEnteredToExecution()
-            {
-                UpdateUI(() => executeSelectedScenarioButton.Text      = "Executing...");
-                UpdateUI(() => executeSelectedScenarioButton.IsEnabled = false);
-            }
-
-            void OnExitToExecution()
-            {
-                UpdateUI(() => executeSelectedScenarioButton.Text      = "Execute");
-                UpdateUI(() => executeSelectedScenarioButton.IsEnabled = true);
-            }
-
+            
             void trace(string message)
             {
                 scope.Get(Trace)(message);
             }
-
-            OnEnteredToExecution();
-
+            
             var scenarioIndex = scenarios.IndexOf(scenario);
 
-            trace($"------------- EXECUTE STARTED For {scenarioIndex + 1} -------------");
+            trace("EXECUTE STARTED");
 
             var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
 
@@ -78,15 +65,18 @@ namespace ApiInspector.MainWindow
 
             UpdateUI(() => { UpdateOutput?.Invoke(); });
 
-            
+            if (!invokeOutput.IsSuccess)
+            {
+                trace("EXECUTION IS FAILED.");
+                return false;
+            }
 
-            var runAssertions = fun(() =>
+            bool runAssertions()
             {
                 var methodDefinition = scope.Get(SelectedMethodDefinition);
 
-                var runAssertion = fun((AssertionInfo assertionInfo) =>
+                bool runAssertion(AssertionInfo assertionInfo)
                 {
-
                     var env      = EnvironmentInfo.Parse(invocationInfo.Environment);
 
                     var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual,methodDefinition,invokeOutput,env);
@@ -107,32 +97,35 @@ namespace ApiInspector.MainWindow
 
                     if (errorMessage != null)
                     {
-
-                        
-
                         return false;
                     }
 
                     return true;
-                });
+                }
 
                 foreach (var assertion in scenario.Assertions)
                 {
                     var isSuccess = runAssertion(assertion);
                     if (!isSuccess)
                     {
-                        return;
+                        return false;
                     }
                 }
-            });
 
-            runAssertions();
+                return true;
+            }
 
-            trace(Empty);
-            trace(Empty);
-            trace($"------------- EXECUTE FINISHED {scenarioIndex + 1} -------------");
+            var isAssertionsExecutedSuccessfully = runAssertions();
+            if (!isAssertionsExecutedSuccessfully)
+            {
+                trace("EXECUTION IS SUCCESSFULL BUT ASSERTIONS ARE FAILED.");
+                return false;
+            }
 
-            OnExitToExecution();
+            trace("EXECUTION IS SUCCESSFULL");
+
+            return true;
+
         }
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
@@ -145,20 +138,38 @@ namespace ApiInspector.MainWindow
 
             UpdateScenarioActionIcon(success:null);
 
+            void OnEnteredToExecution()
+            {
+                UpdateUI(() => executeSelectedScenarioButton.Text      = "Executing...");
+                UpdateUI(() => executeSelectedScenarioButton.IsEnabled = false);
+            }
+
+            void OnExitToExecution()
+            {
+                UpdateUI(() => executeSelectedScenarioButton.Text      = "Execute");
+                UpdateUI(() => executeSelectedScenarioButton.IsEnabled = true);
+            }
+
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
             Task.Run(() =>
             {
                 try
                 {
-                    ExecuteSelectedScenario();
+                    OnEnteredToExecution();
 
-                    UpdateScenarioActionIcon(success:true);
+                    var isSuccess = ExecuteSelectedScenario();
+
+                    UpdateScenarioActionIcon(isSuccess);
                 }
                 catch (Exception exception)
                 {
-                    UpdateScenarioActionIcon(success:false);
+                    UpdateScenarioActionIcon(success: false);
 
                     MessageBox.Show("Hata: " + exception);
+                }
+                finally
+                {
+                    OnExitToExecution();
                 }
             });
         }

@@ -47,6 +47,7 @@ namespace ApiInspector.Models
 
 
         public  const string IsEquals = "=";
+        public  const string IsNotEquals = "!=";
 
         #region Public Methods
         /// <summary>
@@ -57,14 +58,11 @@ namespace ApiInspector.Models
             return new[]
             {
                 IsEquals,
-                "!=",
+                IsNotEquals,
                 ">",
                 ">=",
                 "<",
-                "<=",
-                "Contains",
-                "StartsWith",
-                "EndsWith"
+                "<="
             };
         }
         #endregion

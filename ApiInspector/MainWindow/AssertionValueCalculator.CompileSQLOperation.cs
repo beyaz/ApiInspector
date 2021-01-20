@@ -91,7 +91,7 @@ namespace ApiInspector.MainWindow
                     return typeMap[type];
                 }
 
-                throw new ArgumentException($"{type.FullName} is not a supported .NET class");
+                return SqlDbType.Structured;
             }
 
             void processSimpleSuggestion(string name, object value)

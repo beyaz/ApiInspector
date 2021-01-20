@@ -30,7 +30,16 @@ namespace ApiInspector.MainWindow
             {
                 if (sqlOperationOutput.SqlParameters.Count==1)
                 {
-                    return sqlOperationOutput.SqlParameters[0].Value;
+                    if (input.SQL != sqlOperationOutput.SQL)
+                    {
+                        return sqlOperationOutput.SqlParameters[0].Value;    
+                    }
+
+                    if (input.SQL == "@output")
+                    {
+                        return sqlOperationOutput.SqlParameters[0].Value;    
+                    }
+                    
                 }
 
                 return valueAccessInfo.Text;
@@ -92,7 +101,27 @@ namespace ApiInspector.MainWindow
 
         public static string RunAssertion(object actual, object expected, string operatorName)
         {
-            if (operatorName == AssertionOperatorNames.IsEquals)
+            string shouldBeEqual(string actualJson, string expectedJson)
+            {
+                if (actualJson != expectedJson)
+                {
+                    return $"Actual value: {actualJson} [SHOULD BE EQUAL TO] expected value: {expectedJson}";
+                }
+
+                return null;
+            }
+
+            string shouldNotBeEqual(string actualJson, string expectedJson)
+            {
+                if (actualJson == expectedJson)
+                {
+                    return $"Actual value: {actualJson} [SHOULD NOT BE EQUAL TO] expected value: {expectedJson}";
+                }
+
+                return null;
+            }
+
+            string operatorEqual(Func<string,string,string> operatorFunc)
             {
                 if (expected is string && actual != null && actual.GetType() != typeof(string))
                 {
@@ -101,12 +130,17 @@ namespace ApiInspector.MainWindow
 
                 var actualJson   = Serializer.SerializeToJson(actual);
                 var expectedJson = Serializer.SerializeToJson(expected);
-                if (actualJson != expectedJson)
-                {
-                    return $"Actual value: {actualJson} is not equals to expected value: {expectedJson}";
-                }
 
-                return null;
+                return operatorFunc(actualJson, expectedJson);
+            }
+
+            if (operatorName == AssertionOperatorNames.IsEquals)
+            {
+                return operatorEqual(shouldBeEqual);
+            }
+            if (operatorName == AssertionOperatorNames.IsNotEquals)
+            {
+                return operatorEqual(shouldNotBeEqual);
             }
 
             return "NotImplemented operator: " + operatorName;
