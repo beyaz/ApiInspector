@@ -18,12 +18,14 @@ namespace ApiInspector.MainWindow
         {
             IconGeometry   = Icons.Success;
             IconVisibility = Visibility.Visible;
+            iconPath.Fill  = new SolidColorBrush(Colors.DodgerBlue);
         }
 
         public void ShowFailIcon()
         {
-            IconGeometry   = Icons.Settings;
+            IconGeometry   = Icons.Fail;
             IconVisibility = Visibility.Visible;
+            iconPath.Fill  = new SolidColorBrush(Colors.OrangeRed);
         }
 
 
