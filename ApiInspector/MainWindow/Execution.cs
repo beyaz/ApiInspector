@@ -169,13 +169,9 @@ namespace ApiInspector.MainWindow
             {
                 var actionButton = FindSelectedActionButton();
                 
-                Execute(success, new Dictionary<Func<bool?, bool>, Action>
-                {
-                    {x => x == null, () => actionButton.HideIcon()},
-                    {x => x == true, () => actionButton.ShowSuccessIcon()},
-                    {x => x == false, () => actionButton.ShowFailIcon()}
-                });
-
+                If(success == null, actionButton.HideIcon);
+                If(success == true,  actionButton.ShowSuccessIcon);
+                If(success == false, actionButton.ShowFailIcon);
             });
 
         }

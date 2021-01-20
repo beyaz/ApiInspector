@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace FunctionalPrograming
 {
@@ -60,15 +61,14 @@ namespace FunctionalPrograming
 
 
 
-        public static void Execute<TKey>(TKey value, Dictionary<Func<TKey, bool>, Action> conditions)
+        /// <summary>
+        /// Ifs the specified condition.
+        /// </summary>
+        public static void If(bool condition, Action body)
         {
-            foreach (var pair in conditions)
+            if (condition)
             {
-                var canEnter = pair.Key(value);
-                if (canEnter)
-                {
-                    pair.Value();
-                }
+                body();
             }
         }
 
