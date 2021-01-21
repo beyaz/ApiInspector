@@ -15,7 +15,9 @@ namespace ApiInspector.MainWindow
 {
     partial class ScenarioEditor
     {
+        #region Fields
         public Action<string> ShowErrorNotification;
+        #endregion
 
         #region Public Methods
         public void ExecuteAllScenarioList()
@@ -30,102 +32,110 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        
-        void UpdateUI(Action action)
-        {
-            Dispatcher.InvokeAsync(action);
-        }
-
         bool ExecuteSelectedScenario()
         {
-            var scenario = scope.Get(SelectedScenario);
+            void trace(string message)
+            {
+                scope.Get(Trace)(message);
+            }
+
+            trace("EXECUTE STARTED");
 
             scope.TryRemove(InvokeOutputs);
 
             var invocationInfo  = InvocationInfo;
             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
-            
-            void trace(string message)
+
+            if (invocationInfo.MethodName == EndOfDay.MethodAccessText)
             {
-                scope.Get(Trace)(message);
-            }
-            
-            var scenarioIndex = scenarios.IndexOf(scenario);
-
-            trace("EXECUTE STARTED");
-
-            var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
-
-            UpdateScenarioOutput(scenarioIndex, invokeOutput);
-
-            if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
-            {
-                WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
-            }
-
-            UpdateUI(() => { UpdateOutput?.Invoke(); });
-
-            if (!invokeOutput.IsSuccess)
-            {
-                trace("EXECUTION IS FAILED.");
-                return false;
-            }
-
-            bool runAssertions()
-            {
-                var methodDefinition = scope.Get(SelectedMethodDefinition);
-
-                bool runAssertion(AssertionInfo assertionInfo)
+                var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, -1);
+                if (!invokeOutput.IsSuccess)
                 {
-                    var env      = EnvironmentInfo.Parse(invocationInfo.Environment);
+                    trace(invokeOutput.Error.ToString());
+                    trace("EXECUTION IS FAILED.");
+                    return false;
+                }
 
-                    var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual,methodDefinition,invokeOutput,env);
-                    var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected,methodDefinition,invokeOutput,env);
-                    var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
-                    
-                    UpdateUI(() =>
+                trace("EXECUTION IS SUCCESSFULL");
+                return true;
+            }
+
+            {
+                var scenario = scope.Get(SelectedScenario);
+
+                var scenarioIndex = scenarios.IndexOf(scenario);
+
+                var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
+
+                UpdateScenarioOutput(scenarioIndex, invokeOutput);
+
+                if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
+                {
+                    WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
+                }
+
+                UpdateUI(() => { UpdateOutput?.Invoke(); });
+
+                if (!invokeOutput.IsSuccess)
+                {
+                    trace("EXECUTION IS FAILED.");
+                    return false;
+                }
+
+                bool runAssertions()
+                {
+                    var methodDefinition = scope.Get(SelectedMethodDefinition);
+
+                    bool runAssertion(AssertionInfo assertionInfo)
                     {
-                        var assertionsEditor = ActivateAssertions();
+                        var env = EnvironmentInfo.Parse(invocationInfo.Environment);
 
-                        assertionsEditor.Loaded += (s, e) =>
+                        var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, invokeOutput, env);
+                        var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env);
+                        var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
+
+                        UpdateUI(() =>
                         {
-                            assertionsEditor.scope.Update(AssertionErrorMap, new KeyValuePair<AssertionInfo, string>(assertionInfo, errorMessage));
-                            assertionsEditor.selectedAssertion = assertionInfo;
-                        };
+                            var assertionsEditor = ActivateAssertions();
 
-                    });
+                            assertionsEditor.Loaded += (s, e) =>
+                            {
+                                assertionsEditor.scope.Update(AssertionErrorMap, new KeyValuePair<AssertionInfo, string>(assertionInfo, errorMessage));
+                                assertionsEditor.selectedAssertion = assertionInfo;
+                            };
+                        });
 
-                    if (errorMessage != null)
+                        if (errorMessage != null)
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                    foreach (var assertion in scenario.Assertions)
                     {
-                        return false;
+                        var isSuccess = runAssertion(assertion);
+                        if (!isSuccess)
+                        {
+                            return false;
+                        }
                     }
 
                     return true;
                 }
 
-                foreach (var assertion in scenario.Assertions)
+                var isAssertionsExecutedSuccessfully = runAssertions();
+                if (!isAssertionsExecutedSuccessfully)
                 {
-                    var isSuccess = runAssertion(assertion);
-                    if (!isSuccess)
-                    {
-                        return false;
-                    }
+                    trace("EXECUTION IS SUCCESSFULL BUT ASSERTIONS ARE FAILED.");
+                    return false;
                 }
+
+                trace("EXECUTION IS SUCCESSFULL");
 
                 return true;
             }
-
-            var isAssertionsExecutedSuccessfully = runAssertions();
-            if (!isAssertionsExecutedSuccessfully)
-            {
-                trace("EXECUTION IS SUCCESSFULL BUT ASSERTIONS ARE FAILED.");
-                return false;
-            }
-
-            trace("EXECUTION IS SUCCESSFULL");
-
-            return true;
-
         }
 
         void OnExecuteClicked(object sender, RoutedEventArgs e)
@@ -136,7 +146,7 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
-            UpdateScenarioActionIcon(success:null);
+            UpdateScenarioActionIcon(success: null);
 
             void OnEnteredToExecution()
             {
@@ -179,12 +189,11 @@ namespace ApiInspector.MainWindow
             Dispatcher.InvokeAsync(() =>
             {
                 var actionButton = FindSelectedActionButton();
-                
+
                 If(success == null, actionButton.HideIcon);
-                If(success == true,  actionButton.ShowSuccessIcon);
+                If(success == true, actionButton.ShowSuccessIcon);
                 If(success == false, actionButton.ShowFailIcon);
             });
-
         }
 
         void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)
@@ -195,6 +204,11 @@ namespace ApiInspector.MainWindow
             }
 
             scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
+        }
+
+        void UpdateUI(Action action)
+        {
+            Dispatcher.InvokeAsync(action);
         }
         #endregion
     }

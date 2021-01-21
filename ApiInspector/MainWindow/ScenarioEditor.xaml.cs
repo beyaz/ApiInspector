@@ -217,7 +217,7 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
             scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
-            scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
+            // scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
             scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
             
 
