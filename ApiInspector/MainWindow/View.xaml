@@ -5,6 +5,8 @@
         xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:invocationInfoEditor = "clr-namespace:ApiInspector.InvocationInfoEditor"
         xmlns:history = "clr-namespace:ApiInspector.History"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         xmlns:components = "clr-namespace:ApiInspector.Components"
         xmlns:mainWindow = "clr-namespace:ApiInspector.MainWindow"
         mc:Ignorable = "d"

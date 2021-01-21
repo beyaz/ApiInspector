@@ -58,8 +58,8 @@ namespace ApiInspector.MainWindow
 
                 historyPanel.Refresh();
 
-                scenarioEditor.Connect(scope);
                 scenarioEditor.ShowErrorNotification = ShowErrorNotification;
+                scenarioEditor.Connect(scope);
 
                 scope.Update(AddNewScenario, fun((ScenarioInfo scenario) =>
                 {
