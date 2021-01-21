@@ -8,6 +8,7 @@ using System.Windows.Input;
 using ApiInspector.Models;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
+using static ApiInspector.MainWindow.Mixin;
 using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.History
@@ -140,7 +141,7 @@ namespace ApiInspector.History
                         return items;
                     }
 
-                    return new List<InvocationInfo> {new InvocationInfo()};
+                    return new List<InvocationInfo> {CreateNewInvocationInfo()};
                 });
 
                 var getItems = fun(() =>

@@ -8,6 +8,7 @@ using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
 using static ApiInspector.Keys;
+using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
 
@@ -289,7 +290,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAddNewScenarioClicked(object sender, RoutedEventArgs e)
         {
-            scope.Get(AddNewScenario)(new ScenarioInfo{ Assertions = new List<AssertionInfo>(),MethodParameters = new List<InvocationMethodParameterInfo>()});
+            scope.Get(AddNewScenario)(CreateNewScenarioInfo());
         }
 
         /// <summary>

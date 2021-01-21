@@ -57,20 +57,8 @@ namespace ApiInspector.InvocationInfoEditor
         }
 
         #region Public Methods
-        /// <summary>
-        ///     Connects the specified invocation information.
-        /// </summary>
-        public void Connect(InvocationInfo invocationInfo, StackPanel panel, MethodDefinition methodDefinition)
-        {
-            var invocationParameters = invocationInfo.Parameters = invocationInfo.Parameters ?? new List<InvocationMethodParameterInfo>();
-
-            panel.Children.Clear();
-
-            foreach (var element in Create(invocationInfo.Parameters,methodDefinition))
-            {
-                panel.Children.Add(element);
-            }
-        }
+        
+        
         #endregion
 
         #region Methods

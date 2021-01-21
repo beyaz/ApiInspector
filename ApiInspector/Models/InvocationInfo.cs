@@ -9,6 +9,11 @@ namespace ApiInspector.Models
     [Serializable]
     public class InvocationInfo
     {
+        public InvocationInfo()
+        {
+            
+        }
+
         #region Public Properties
         /// <summary>
         ///     Gets or sets the name of the assembly.
@@ -38,7 +43,7 @@ namespace ApiInspector.Models
         /// <summary>
         ///     Gets or sets the parameters.
         /// </summary>
-        public List<InvocationMethodParameterInfo> Parameters { get; set; } = new List<InvocationMethodParameterInfo>();
+        public List<InvocationMethodParameterInfo> Parameters { get; set; }
 
         /// <summary>
         ///     Gets or sets the response output file path.
