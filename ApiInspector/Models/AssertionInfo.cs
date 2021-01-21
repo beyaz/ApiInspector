@@ -48,6 +48,10 @@ namespace ApiInspector.Models
 
         public  const string IsEquals = "=";
         public  const string IsNotEquals = "!=";
+        public  const string GreaterThan = ">";
+        public  const string LessThan = "<";
+        public  const string LessThanOrEquals = "<=";
+        public  const string GreaterThanOrEquals = ">=";
 
         #region Public Methods
         /// <summary>
@@ -59,10 +63,10 @@ namespace ApiInspector.Models
             {
                 IsEquals,
                 IsNotEquals,
-                ">",
-                ">=",
-                "<",
-                "<="
+                GreaterThan,
+                GreaterThanOrEquals,
+                LessThan,
+                LessThanOrEquals
             };
         }
         #endregion

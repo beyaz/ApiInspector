@@ -11,9 +11,7 @@ using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
 using ApiInspector.Plugins;
-using BOA.Base;
 using BOA.Common.Types;
-using Mono.Cecil;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
@@ -189,9 +187,13 @@ namespace ApiInspector.Invoking.Invokers
 
                 boaContext.Authenticate(ChannelContract.EOD);
 
-                new EndOfDayInvoker().Invoke(targetType);
+                var errorMessage = EndOfDayInvoker.Invoke(targetType);
+                if (errorMessage == null)
+                {
+                    return InvokeOutput.EODSuccess;    
+                }
 
-                return InvokeOutput.EODSuccess;
+                return new InvokeOutput(new Exception(errorMessage));
             });
             var eodOutput = tryToInvokeAsEndOfDay();
             if (eodOutput != null)
@@ -201,19 +203,11 @@ namespace ApiInspector.Invoking.Invokers
 
             trace($"Started to search method: {invocationInfo.MethodName}");
 
-            var findMethod = fun(() =>
+            var methodInfo = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == invocationInfo.MethodName);
+            if (methodInfo == null)
             {
-                var mi = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == invocationInfo.MethodName);
-
-                if (mi == null)
-                {
-                    throw new Exception("Method not found.");
-                }
-
-                return mi;
-            });
-
-            var methodInfo = findMethod();
+                throw new Exception("Method not found.");
+            }
 
             // TRY BOA Authenticate
             if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")

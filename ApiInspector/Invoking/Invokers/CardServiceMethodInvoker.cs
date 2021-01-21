@@ -3,8 +3,10 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ApiInspector.DataAccess;
 using ApiInspector.Invoking.BoaSystem;
 using static FunctionalPrograming.FPExtensions;
+using static ApiInspector.Utility;
 
 namespace ApiInspector.Invoking.Invokers
 {
@@ -21,7 +23,6 @@ namespace ApiInspector.Invoking.Invokers
         {
             var invocationParameters = input.InvocationParameters;
             var targetType           = input.TargetType;
-            var methodName           = input.MethodName;
 
             trace("Searching service interface...");
 
@@ -32,7 +33,7 @@ namespace ApiInspector.Invoking.Invokers
             }
 
             trace("Searching method in service...");
-            var method = targetType.GetMethod(methodName);
+            var method = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == input.MethodName);
             if (method == null)
             {
                 throw new ArgumentNullException(nameof(method));
@@ -40,6 +41,9 @@ namespace ApiInspector.Invoking.Invokers
 
             trace("Accessing service method parameter type.");
             var parameterType = method.GetParameters()[0].ParameterType;
+
+            var methodName = input.MethodName.Substring(0,input.MethodName.IndexOf("(", StringComparison.Ordinal));
+
 
             var SourceCode = @"
 

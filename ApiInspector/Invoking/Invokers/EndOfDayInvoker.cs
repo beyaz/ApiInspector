@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BOA.Common.Helpers;
+using BOA.Common.Types;
 using BOA.EOD.Base;
 using static FunctionalPrograming.FPExtensions;
 
@@ -13,7 +17,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified eod type.
         /// </summary>
-        public void Invoke(Type eodType)
+        public static string Invoke(Type eodType)
         {
             var eodInstance = (EODBase) Activator.CreateInstance(eodType);
 
@@ -25,6 +29,20 @@ namespace ApiInspector.Invoking.Invokers
             invoke("BeforeProcess");
             invoke("Process");
             invoke("AfterProcess");
+
+            var context = eodInstance.GetContext();
+            if (context.Success)
+            {
+                return null;
+            }
+
+            var results = new List<Result>();
+            foreach (var list in context.Results.Select(x => x.Results))
+            {
+               results.AddRange(list);
+            }
+
+            return StringHelper.ResultToDetailedString(results);
         }
         #endregion
     }
