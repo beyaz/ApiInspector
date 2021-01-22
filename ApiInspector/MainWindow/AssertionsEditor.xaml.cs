@@ -209,10 +209,7 @@ namespace ApiInspector.MainWindow
 
                 actionButton.SetValue(AssertionDataProperty,assertion);
 
-                actionButton.Click += (s, e) =>
-                {
-                    selectedAssertion = assertion;
-                };
+                actionButton.Click += (s, e) => { selectedAssertion = assertion; };
 
                 assertionNumbersContainer.Children.Add(actionButton);
                 
