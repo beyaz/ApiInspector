@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ApiInspector.Models;
 
 namespace ApiInspector.MainWindow
@@ -13,7 +9,7 @@ namespace ApiInspector.MainWindow
         {
             return new ScenarioInfo
             {
-                Assertions = new List<AssertionInfo>(), 
+                Assertions       = new List<AssertionInfo>(),
                 MethodParameters = new List<InvocationMethodParameterInfo>()
             };
         }
@@ -30,6 +26,5 @@ namespace ApiInspector.MainWindow
         {
             return invocationInfo.MethodName == EndOfDay.MethodAccessText;
         }
-      
     }
 }
