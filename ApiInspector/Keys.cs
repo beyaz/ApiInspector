@@ -34,7 +34,7 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<InvocationInfo> SelectedInvocationInfo => CreateKey<InvocationInfo>();
 
-        public static DataKey<Action<ScenarioInfo>> AddNewScenario => CreateKey<Action<ScenarioInfo>>();
+        
         
 
         public static DataKey<ScenarioInfo> SelectedScenario => CreateKey<ScenarioInfo>();

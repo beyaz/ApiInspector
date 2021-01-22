@@ -31,11 +31,13 @@ namespace ApiInspector.MainWindow
         ///     The scope
         /// </summary>
         Scope scope;
+
+        Action UpdateOutput;
         #endregion
 
         #region Constructors
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ScenarioEditor"/> class.
+        ///     Initializes a new instance of the <see cref="ScenarioEditor" /> class.
         /// </summary>
         public ScenarioEditor()
         {
@@ -70,6 +72,7 @@ namespace ApiInspector.MainWindow
         ///     Gets the scenarios.
         /// </summary>
         List<ScenarioInfo> scenarios => scope.Get(SelectedInvocationInfo).Scenarios;
+
         /// <summary>
         ///     Gets the selected scenario.
         /// </summary>
@@ -108,8 +111,6 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void ActivateExportPanel(object sender, RoutedEventArgs e)
         {
-           
-
             ActivateExportPanel();
         }
 
@@ -178,12 +179,10 @@ namespace ApiInspector.MainWindow
                 responseTextView.Text = output.ExecutionResponseAsJson;
             });
 
-
             var inputEditors = ParameterPanelIntegration.Create(scenario.MethodParameters, methodDefinition).ToArray();
 
             EnableAllTopButtons();
             buttonActivateInputOutputPanel.IsPressed = true;
-
 
             CurrentContent = NewColumnSplittedGrid(NewGroupBox(NewBoldTextBlock("Method Parameters"), NewStackPanel(inputEditors)),
                                                    NewGroupBox(NewBoldTextBlock("Response"), responseTextView));
@@ -193,7 +192,11 @@ namespace ApiInspector.MainWindow
             UpdateOutput = updateResponseOutputText;
         }
 
-        Action UpdateOutput;
+        void AddNewScenario(ScenarioInfo scenarioInfo)
+        {
+            scenarios.Add(scenarioInfo);
+            scope.Update(SelectedScenario, scenarioInfo);
+        }
 
         /// <summary>
         ///     Arranges the remove scenario button visibility.
@@ -209,6 +212,24 @@ namespace ApiInspector.MainWindow
             removeScenarioButton.Visibility = Visibility.Hidden;
         }
 
+        void ArrangeVisibilityOnEodMethod()
+        {
+            if (IsEndOfDayMethod(InvocationInfo))
+            {
+                tabHeadersContainerPanel.Visibility = Visibility.Collapsed;
+                addRemovePanel.Visibility           = Visibility.Collapsed;
+                scenarioNumbersContainer.Visibility = Visibility.Collapsed;
+                contentContainer.Visibility         = Visibility.Collapsed;
+            }
+            else
+            {
+                tabHeadersContainerPanel.Visibility = Visibility.Visible;
+                addRemovePanel.Visibility           = Visibility.Visible;
+                scenarioNumbersContainer.Visibility = Visibility.Visible;
+                contentContainer.Visibility         = Visibility.Visible;
+            }
+        }
+
         /// <summary>
         ///     Attaches the events.
         /// </summary>
@@ -220,7 +241,6 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
             // scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
             scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
-            
 
             scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
 
@@ -242,11 +262,10 @@ namespace ApiInspector.MainWindow
 
             foreach (var scenario in scenarioList)
             {
-                scope.Get(AddNewScenario)(scenario);
+                AddNewScenario(scenario);
             }
         }
 
-        
         void EnableAllTopButtons()
         {
             buttonActivateInputOutputPanel.IsPressed = false;
@@ -290,7 +309,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAddNewScenarioClicked(object sender, RoutedEventArgs e)
         {
-            scope.Get(AddNewScenario)(CreateNewScenarioInfo());
+            AddNewScenario(CreateNewScenarioInfo());
         }
 
         /// <summary>
@@ -298,8 +317,6 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAssertionsClicked(object sender, RoutedEventArgs e)
         {
-           
-
             ActivateAssertions();
         }
 
@@ -308,8 +325,6 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
         {
-            
-
             ActivateInputOutputPanel();
         }
 
@@ -349,23 +364,5 @@ namespace ApiInspector.MainWindow
             VerticalIndent(scenarioNumbersContainer, 10);
         }
         #endregion
-
-        void ArrangeVisibilityOnEodMethod()
-        {
-            if (IsEndOfDayMethod(InvocationInfo))
-            {
-                tabHeadersContainerPanel.Visibility = Visibility.Collapsed;
-                addRemovePanel.Visibility           = Visibility.Collapsed;
-                scenarioNumbersContainer.Visibility = Visibility.Collapsed;
-                contentContainer.Visibility         = Visibility.Collapsed;
-            }
-            else
-            {
-                tabHeadersContainerPanel.Visibility = Visibility.Visible;
-                addRemovePanel.Visibility           = Visibility.Visible;
-                scenarioNumbersContainer.Visibility = Visibility.Visible;
-                contentContainer.Visibility         = Visibility.Visible;
-            }
-        }
     }
 }

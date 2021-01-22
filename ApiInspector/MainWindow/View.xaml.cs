@@ -2,10 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using ApiInspector.Invoking.BoaSystem;
-using ApiInspector.Models;
 using ApiInspector.Tracing;
-using static ApiInspector.Keys;
-using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -60,12 +57,6 @@ namespace ApiInspector.MainWindow
 
                 scenarioEditor.ShowErrorNotification = ShowErrorNotification;
                 scenarioEditor.Connect(scope);
-
-                scope.Update(AddNewScenario, fun((ScenarioInfo scenario) =>
-                {
-                    scope.Get(SelectedInvocationInfo).Scenarios.Add(scenario);
-                    scope.Update(SelectedScenario, scenario);
-                }));
 
                 UpdateTitle();
             };
