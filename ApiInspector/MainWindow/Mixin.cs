@@ -28,7 +28,7 @@ namespace ApiInspector.MainWindow
             return invocationInfo.MethodName == EndOfDay.MethodAccessText;
         }
 
-        
+        // TODO: check usage
         public static void UpdateAssertionResponseAsSuccess(Scope scope, AssertionInfo assertionInfo)
         {
             assertionInfo.lastExecutionErrorMessage = null;
