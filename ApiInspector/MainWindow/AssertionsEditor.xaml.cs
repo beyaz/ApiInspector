@@ -17,35 +17,57 @@ using static FunctionalPrograming.FPExtensions;
 namespace ApiInspector.MainWindow
 {
     /// <summary>
-    /// Interaction logic for AssertionsEditor.xaml
+    ///     Interaction logic for AssertionsEditor.xaml
     /// </summary>
     public partial class AssertionsEditor
     {
-        public static readonly DependencyProperty AssertionDataProperty = DependencyProperty.Register("AssertionData", typeof(AssertionInfo), typeof(AssertionsEditor), new PropertyMetadata(default(AssertionInfo)));
+        #region Static Fields
+        static readonly DependencyProperty AssertionDataProperty = DependencyProperty.Register("AssertionData", typeof(AssertionInfo), typeof(AssertionsEditor), new PropertyMetadata(default(AssertionInfo)));
+        #endregion
 
-        bool HasSelectedAssertion => scope.Contains(SelectedAssertion) && scope.Get(SelectedAssertion) != null;
-
-        void AddNewAssertion(AssertionInfo assertionInfo)
-        {
-            Assertions.Add(assertionInfo);
-            selectedAssertion = assertionInfo;
-        }
-
-        MethodDefinition methodDefinition => scope.Get(SelectedMethodDefinition);
-      
-
-
+        #region Fields
         internal Scope scope;
+        #endregion
 
-        List<AssertionInfo> Assertions => scope.Get(SelectedScenario).Assertions;
+        #region Constructors
+        public AssertionsEditor()
+        {
+            InitializeComponent();
+        }
+        #endregion
 
+        #region Public Properties
         public AssertionInfo selectedAssertion
         {
             get => scope.Get(SelectedAssertion);
-            set=>scope.Update(SelectedAssertion,value);
+            set => scope.Update(SelectedAssertion, value);
         }
-            
+        #endregion
 
+        #region Properties
+        List<AssertionInfo> Assertions => scope.Get(SelectedScenario).Assertions;
+
+        /// <summary>
+        ///     Sets the content of the current.
+        /// </summary>
+        FrameworkElement CurrentContent
+        {
+            set
+            {
+                contentContainer.Children.Clear();
+                if (value != null)
+                {
+                    contentContainer.Children.Add(value);
+                }
+            }
+        }
+
+        bool HasSelectedAssertion => scope.Contains(SelectedAssertion) && scope.Get(SelectedAssertion) != null;
+
+        MethodDefinition methodDefinition => scope.Get(SelectedMethodDefinition);
+        #endregion
+
+        #region Methods
         internal void Connect(Scope scope)
         {
             this.scope = new Scope
@@ -59,43 +81,209 @@ namespace ApiInspector.MainWindow
             BuildAssertionList();
         }
 
+        void AddNewAssertion(AssertionInfo assertionInfo)
+        {
+            Assertions.Add(assertionInfo);
+            selectedAssertion = assertionInfo;
+        }
+
+        void ArrangeRemoveAssertionButtonVisibility()
+        {
+            if (HasSelectedAssertion)
+            {
+                removeScenarioButton.Visibility = Visibility.Visible;
+                return;
+            }
+
+            removeScenarioButton.Visibility = Visibility.Hidden;
+        }
+
         void AttachEvents()
         {
             scope.OnUpdate(SelectedAssertion, UpdateNumbers);
             scope.OnUpdate(SelectedAssertion, ShowSelectedAssertion);
             scope.OnUpdate(SelectedAssertion, ArrangeRemoveAssertionButtonVisibility);
-            scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);   
-            
+            scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);
         }
 
-        void ShowSelectedAssertion()
+        void BuildAssertionList()
         {
-            if (HasSelectedAssertion)
+            var assertions = new List<AssertionInfo>(Assertions);
+
+            Assertions.Clear();
+
+            if (assertions.Count > 0)
             {
-                CurrentContent = CreateEditor(selectedAssertion);    
+                foreach (var assertion in assertions)
+                {
+                    AddNewAssertion(assertion);
+                }
             }
             else
             {
-                CurrentContent = null;
+                selectedAssertion = null;
             }
-            
         }
 
-
-        /// <summary>
-        ///     Sets the content of the current.
-        /// </summary>
-        FrameworkElement CurrentContent
+        FrameworkElement CreateEditor(AssertionInfo assertionInfo)
         {
-            set
+            var firstRow = fun(() =>
             {
-                contentContainer.Children.Clear();
-                if (value != null)
+                var descriptionEditor = new TextBox();
+
+                Bind(descriptionEditor, TextBox.TextProperty, assertionInfo, nameof(assertionInfo.Description));
+
+                return NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
+            });
+
+            var secondRow = fun(() =>
+            {
+                var createLeft = fun(() =>
                 {
-                    contentContainer.Children.Add(value);    
-                }
-                
-            }
+                    var editor = CreateEditor(assertionInfo.Actual);
+
+                    return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
+                });
+
+                var createExpected = fun(() =>
+                {
+                    var editor = CreateEditor(assertionInfo.Expected);
+
+                    return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
+                });
+
+                var createOperatorEditor = fun(() =>
+                {
+                    var editor = new IntellisenseTextBox
+                    {
+                        Suggestions           = AssertionOperatorNames.GetDescriptions(),
+                        IsTextAlignmentCenter = true
+                    };
+
+                    Bind(editor, AutoCompleteTextBox.TextProperty, assertionInfo, nameof(assertionInfo.OperatorName));
+
+                    return NewStackPanel(NewBoldTextBlock("Operator"), editor)
+                           .WithMargin(new Thickness(10, 0, 10, 0))
+                           .WithVerticalAlignmentCenter();
+                });
+
+                return NewGridWithColumns(new[] {10, 4, 10}, createLeft(), createOperatorEditor(), createExpected());
+            });
+
+            var thirdRow = fun(() =>
+            {
+                var getErrorText = fun(() =>
+                {
+                    if (!scope.Contains(AssertionErrorMap))
+                    {
+                        return null;
+                    }
+
+                    var map = scope.Get(AssertionErrorMap);
+                    if (map.Key == assertionInfo)
+                    {
+                        return map.Value;
+                    }
+
+                    return null;
+                });
+
+                var foreground = Brushes.Crimson;
+
+                var resultIndicator = new TextBox
+                {
+                    TextWrapping                = TextWrapping.Wrap,
+                    AcceptsReturn               = true,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    Text                        = getErrorText(),
+                    Foreground                  = foreground,
+                    BorderBrush                 = foreground
+                };
+
+                var label = new TextBlock
+                {
+                    FontWeight = FontWeights.Bold,
+                    Text       = "Result",
+                    Foreground = foreground
+                };
+
+                var panel = NewGroupBox(label, resultIndicator);
+
+                panel.Visibility = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
+
+                return panel;
+            });
+
+            return NewGridWithRows(new[] {"Auto", "70", "30"}, firstRow(), secondRow(), thirdRow());
+        }
+
+        FrameworkElement CreateEditor(ValueAccessInfo data)
+        {
+            var firstRow = fun(() =>
+            {
+                var databaseNameEditor = new IntellisenseTextBox
+                {
+                    Suggestions = Enum.GetNames(typeof(Databases)),
+                    Text        = data.DatabaseName
+                };
+                Bind(databaseNameEditor, AutoCompleteTextBox.TextProperty, data, nameof(data.DatabaseName));
+
+                var arrangeDatabaseNameEditorVisibility = fun(() =>
+                {
+                    if (data.FetchFromDatabase)
+                    {
+                        databaseNameEditor.Visibility = Visibility.Visible;
+                        return;
+                    }
+
+                    databaseNameEditor.Visibility = Visibility.Collapsed;
+                });
+
+                var createFetchFromDatabaseEditor = fun(() =>
+                {
+                    var checkBox = new CheckBox
+                    {
+                        Content   = "From Database",
+                        IsChecked = data.FetchFromDatabase
+                    };
+
+                    checkBox.Checked += (s, e) =>
+                    {
+                        data.FetchFromDatabase = true;
+                        arrangeDatabaseNameEditorVisibility();
+                    };
+
+                    checkBox.Unchecked += (s, e) =>
+                    {
+                        data.FetchFromDatabase = false;
+                        arrangeDatabaseNameEditorVisibility();
+                    };
+
+                    return checkBox;
+                });
+
+                arrangeDatabaseNameEditorVisibility();
+
+                return NewGridWithColumns(new[] {"Auto", "*"}, createFetchFromDatabaseEditor(), databaseNameEditor.WithMarginLeft(5));
+            });
+
+            var sqlEditor = fun(() =>
+            {
+                var editor = new SQLTextEditor
+                {
+                    Text = data.Text
+                };
+
+                var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
+
+                editor.SetAutoComplete(suggestions.ToList());
+
+                editor.TextChanged += (s, e) => { data.Text = editor.Text; };
+
+                return editor;
+            });
+
+            return NewGridWithRows(new[] {"Auto", "*"}, firstRow(), sqlEditor());
         }
 
         void MakePressedSelectedAssertion()
@@ -109,7 +297,7 @@ namespace ApiInspector.MainWindow
             {
                 foreach (ActionButton child in assertionNumbersContainer.Children)
                 {
-                    var assertion = (AssertionInfo)child.GetValue(AssertionDataProperty);
+                    var assertion = (AssertionInfo) child.GetValue(AssertionDataProperty);
 
                     if (assertion == selectedAssertion)
                     {
@@ -125,49 +313,6 @@ namespace ApiInspector.MainWindow
             {
                 actionButton.IsPressed = true;
             }
-        }
-
-        
-
-        
-
-        void ArrangeRemoveAssertionButtonVisibility()
-        {
-            if (HasSelectedAssertion)
-            {
-                removeScenarioButton.Visibility = Visibility.Visible;
-                return;
-            }
-
-            removeScenarioButton.Visibility = Visibility.Hidden;
-        }
-
-        void BuildAssertionList()
-        {
-            var assertions = new List<AssertionInfo>(Assertions);
-
-            Assertions.Clear();
-
-            if (assertions.Count >0)
-            {
-                foreach (var assertion in assertions)
-                {
-                    AddNewAssertion(assertion);
-                }
-            }
-            else
-            {
-                selectedAssertion = null;
-            }
-
-        
-        }
-
-
-
-        public AssertionsEditor()
-        {
-            InitializeComponent();
         }
 
         void OnAddNewAssertionClicked(object sender, RoutedEventArgs e)
@@ -194,6 +339,18 @@ namespace ApiInspector.MainWindow
             BuildAssertionList();
         }
 
+        void ShowSelectedAssertion()
+        {
+            if (HasSelectedAssertion)
+            {
+                CurrentContent = CreateEditor(selectedAssertion);
+            }
+            else
+            {
+                CurrentContent = null;
+            }
+        }
+
         void UpdateNumbers()
         {
             assertionNumbersContainer.Children.Clear();
@@ -207,190 +364,17 @@ namespace ApiInspector.MainWindow
                     Text = i.ToString()
                 };
 
-                actionButton.SetValue(AssertionDataProperty,assertion);
+                actionButton.SetValue(AssertionDataProperty, assertion);
 
                 actionButton.Click += (s, e) => { selectedAssertion = assertion; };
 
                 assertionNumbersContainer.Children.Add(actionButton);
-                
+
                 i++;
             }
 
-            VerticalIndent(assertionNumbersContainer,10);
+            VerticalIndent(assertionNumbersContainer, 10);
         }
-
-
-         FrameworkElement CreateEditor(AssertionInfo assertionInfo)
-         {
-
-             var firstRow = fun(() =>
-             {
-                 var descriptionEditor = new TextBox();
-
-                 Bind(descriptionEditor,TextBox.TextProperty,assertionInfo,nameof(assertionInfo.Description));
-
-                 return NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
-             });
-
-             var secondRow = fun(() =>
-             {
-                 var createLeft = fun(() =>
-                 {
-                     var editor = CreateEditor(assertionInfo.Actual);
-
-                     return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
-                 });
-
-                 var createExpected = fun(() =>
-                 {
-                     var editor = CreateEditor(assertionInfo.Expected);
-
-                     return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
-                 });
-
-                 var createOperatorEditor = fun(() =>
-                 {
-                     var editor = new IntellisenseTextBox
-                     {
-                         Suggestions           = AssertionOperatorNames.GetDescriptions(),
-                         IsTextAlignmentCenter = true
-                     };
-
-                     Bind(editor,AutoCompleteTextBox.TextProperty,assertionInfo,nameof(assertionInfo.OperatorName));
-
-                     return NewStackPanel(NewBoldTextBlock("Operator"), editor)
-                            .WithMargin(new Thickness(10, 0, 10, 0))
-                            .WithVerticalAlignmentCenter();
-                 });
-
-
-                 return NewGridWithColumns(new[] {10, 4, 10}, createLeft() , createOperatorEditor(), createExpected());
-
-             });
-
-            var thirdRow = fun(() =>
-            {
-                var getErrorText = fun(() =>
-                {
-                    if (!scope.Contains(AssertionErrorMap))
-                    {
-                        return null;
-                    }
-
-                    var map = scope.Get(AssertionErrorMap);
-                    if (map.Key == assertionInfo)
-                    {
-                        return map.Value;
-                    }
-
-                    return null;
-
-                });
-
-                var foreground = Brushes.Crimson;
-
-                var resultIndicator = new TextBox
-                {
-                    TextWrapping                = TextWrapping.Wrap,
-                    AcceptsReturn               = true,
-                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                    Text                        = getErrorText(),
-                    Foreground                  = foreground,
-                    BorderBrush                 = foreground,
-                };
-
-                var label = new TextBlock
-                {
-                    FontWeight = FontWeights.Bold,
-                    Text       = "Result",
-                    Foreground = foreground,
-                };
-
-                var panel = NewGroupBox(label, resultIndicator);
-
-                panel.Visibility = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
-
-                return panel;
-            });
-
-            return NewGridWithRows(new []{"Auto","70","30"},firstRow(), secondRow(),thirdRow());
-
-        }
-
-
-
-
-        FrameworkElement CreateEditor(ValueAccessInfo data)
-        {
-            var firstRow = fun(() =>
-            {
-                var databaseNameEditor = new IntellisenseTextBox
-                {
-                    Suggestions = Enum.GetNames(typeof(Databases)),
-                    Text = data.DatabaseName
-                };
-                Bind(databaseNameEditor,AutoCompleteTextBox.TextProperty,data,nameof(data.DatabaseName));
-
-                var arrangeDatabaseNameEditorVisibility = fun(() =>
-                {
-                    if (data.FetchFromDatabase)
-                    {
-                        databaseNameEditor.Visibility = Visibility.Visible;
-                        return;
-                    }
-                    databaseNameEditor.Visibility = Visibility.Collapsed;
-                });
-
-                var createFetchFromDatabaseEditor = fun(() =>
-                {
-                    var checkBox = new CheckBox
-                    {
-                        Content   = "From Database",
-                        IsChecked = data.FetchFromDatabase
-                    };
-
-                    checkBox.Checked += (s, e) =>
-                    {
-                        data.FetchFromDatabase = true;
-                        arrangeDatabaseNameEditorVisibility();
-                    };
-
-                    checkBox.Unchecked += (s, e) =>
-                    {
-                        data.FetchFromDatabase = false;
-                        arrangeDatabaseNameEditorVisibility();
-                    };
-
-                    return checkBox;
-
-                });
-               
-
-                arrangeDatabaseNameEditorVisibility();
-
-                return NewGridWithColumns(new[]{"Auto","*"},createFetchFromDatabaseEditor(), databaseNameEditor.WithMarginLeft(5));
-            });
-            
-
-            var sqlEditor = fun(() =>
-            {
-                var editor = new SQLTextEditor
-                {
-                    Text = data.Text
-                };
-
-                var suggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
-
-                editor.SetAutoComplete(suggestions.ToList());
-
-                editor.TextChanged += (s, e) => { data.Text = editor.Text; };
-
-                return editor;
-            });
-
-            return NewGridWithRows(new[] {"Auto", "*"}, firstRow(), sqlEditor());
-        }
-
-      
+        #endregion
     }
 }
