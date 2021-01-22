@@ -72,12 +72,7 @@ namespace ApiInspector
         #endregion
     }
 
-    enum Events
-    {
-        
-        
-        RemoveSelectedScenario
-    }
+   
 
     
     

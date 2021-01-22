@@ -238,17 +238,12 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedScenario, UpdateNumbers);
             scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
             scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
-            scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
-            // scope.OnUpdate(SelectedMethodDefinition, ActivateInputOutputPanel);
-            scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
-
             scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
 
-            scope.SubscribeEvent(Events.RemoveSelectedScenario, () =>
-            {
-                scenarios.Remove(selectedScenario);
-                BuildScenarioList();
-            });
+            scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
+            scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
+
+           
         }
 
         /// <summary>
@@ -333,7 +328,8 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnRemoveSelectedScenarioClicked(object sender, RoutedEventArgs e)
         {
-            scope.PublishEvent(Events.RemoveSelectedScenario);
+            scenarios.Remove(selectedScenario);
+            BuildScenarioList();
         }
 
         /// <summary>
