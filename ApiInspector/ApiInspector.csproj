@@ -112,6 +112,7 @@
       <DependentUpon>ScenarioEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\AssertionInfo.cs" />
+    <Compile Include="Models\AssertionOperatorNames.cs" />
     <Compile Include="Models\Fix.cs" />
     <Compile Include="Models\ScenarioInfo.cs" />
     <Compile Include="Models\ValueAccessInfo.cs" />
