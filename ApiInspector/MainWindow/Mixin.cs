@@ -26,6 +26,10 @@ namespace ApiInspector.MainWindow
             };
         }
 
+        public static bool IsEndOfDayMethod(InvocationInfo invocationInfo)
+        {
+            return invocationInfo.MethodName == EndOfDay.MethodAccessText;
+        }
       
     }
 }

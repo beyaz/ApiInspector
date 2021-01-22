@@ -8,6 +8,7 @@ using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
 using static System.String;
 using static ApiInspector.Keys;
+using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
 
@@ -46,17 +47,20 @@ namespace ApiInspector.MainWindow
             var invocationInfo  = InvocationInfo;
             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
 
-            if (invocationInfo.MethodName == EndOfDay.MethodAccessText)
+            if (IsEndOfDayMethod(invocationInfo))
             {
                 var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, -1);
                 if (!invokeOutput.IsSuccess)
                 {
                     trace(invokeOutput.Error.ToString());
+
                     trace("EXECUTION IS FAILED.");
+
                     return false;
                 }
 
                 trace("EXECUTION IS SUCCESSFULL");
+
                 return true;
             }
 

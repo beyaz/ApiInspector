@@ -75,8 +75,6 @@ namespace ApiInspector
     enum ScenarioEvent
     {
         
-        NewScenarioAdded,
-
         
         RemoveSelectedScenario
     }

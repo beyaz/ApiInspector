@@ -352,8 +352,7 @@ namespace ApiInspector.MainWindow
 
         void ArrangeVisibilityOnEodMethod()
         {
-            var isEodMethod = InvocationInfo?.MethodName == EndOfDay.MethodAccessText;
-            if (isEodMethod)
+            if (IsEndOfDayMethod(InvocationInfo))
             {
                 tabHeadersContainerPanel.Visibility = Visibility.Collapsed;
                 addRemovePanel.Visibility           = Visibility.Collapsed;

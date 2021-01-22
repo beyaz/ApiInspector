@@ -65,7 +65,6 @@ namespace ApiInspector.MainWindow
                 {
                     scope.Get(SelectedInvocationInfo).Scenarios.Add(scenario);
                     scope.Update(SelectedScenario, scenario);
-                    scope.PublishEvent(ScenarioEvent.NewScenarioAdded);
                 }));
 
                 UpdateTitle();
