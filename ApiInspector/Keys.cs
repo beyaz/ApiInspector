@@ -72,7 +72,7 @@ namespace ApiInspector
         #endregion
     }
 
-    enum ScenarioEvent
+    enum Events
     {
         
         

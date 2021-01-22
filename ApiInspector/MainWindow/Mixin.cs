@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ApiInspector.Models;
 
 namespace ApiInspector.MainWindow
@@ -25,6 +26,23 @@ namespace ApiInspector.MainWindow
         public static bool IsEndOfDayMethod(InvocationInfo invocationInfo)
         {
             return invocationInfo.MethodName == EndOfDay.MethodAccessText;
+        }
+
+        
+        public static void UpdateAssertionResponseAsSuccess(Scope scope, AssertionInfo assertionInfo)
+        {
+            assertionInfo.lastExecutionErrorMessage = null;
+            assertionInfo.lastExecutionIsSuccess    = true;
+        }
+        public static void UpdateAssertionResponseAsFail(Scope scope, AssertionInfo assertionInfo,string errorMessage)
+        {
+            assertionInfo.lastExecutionErrorMessage = errorMessage;
+            assertionInfo.lastExecutionIsSuccess    = false;
+        }
+        public static void ClearAssertionResponse(Scope scope, AssertionInfo assertionInfo)
+        {
+            assertionInfo.lastExecutionErrorMessage = null;
+            assertionInfo.lastExecutionIsSuccess    = null;
         }
     }
 }

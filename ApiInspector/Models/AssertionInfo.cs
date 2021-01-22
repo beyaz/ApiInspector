@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace ApiInspector.Models
 {
@@ -35,6 +36,12 @@ namespace ApiInspector.Models
         ///     Gets or sets the name of the operator.
         /// </summary>
         public string OperatorName { get; set; }
+        #endregion
+
+        #region Extra
+        [JsonIgnore] public bool? lastExecutionIsSuccess;
+
+        [JsonIgnore] public string lastExecutionErrorMessage;
         #endregion
     }
 }

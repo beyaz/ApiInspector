@@ -244,7 +244,7 @@ namespace ApiInspector.MainWindow
 
             scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
 
-            scope.SubscribeEvent(ScenarioEvent.RemoveSelectedScenario, () =>
+            scope.SubscribeEvent(Events.RemoveSelectedScenario, () =>
             {
                 scenarios.Remove(selectedScenario);
                 BuildScenarioList();
@@ -333,7 +333,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnRemoveSelectedScenarioClicked(object sender, RoutedEventArgs e)
         {
-            scope.PublishEvent(ScenarioEvent.RemoveSelectedScenario);
+            scope.PublishEvent(Events.RemoveSelectedScenario);
         }
 
         /// <summary>
