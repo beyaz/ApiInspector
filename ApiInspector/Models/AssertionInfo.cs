@@ -9,14 +9,13 @@ namespace ApiInspector.Models
     public class AssertionInfo
     {
         #region Constructors
-        #endregion
-
-        #region Public Properties
         // ReSharper disable once EmptyConstructor
         public AssertionInfo()
         {
-            
         }
+        #endregion
+
+        #region Public Properties
         /// <summary>
         ///     Gets or sets the actual.
         /// </summary>
