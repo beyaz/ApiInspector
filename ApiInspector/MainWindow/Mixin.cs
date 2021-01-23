@@ -71,6 +71,11 @@ namespace ApiInspector.MainWindow
             scope.PublishEvent(OnAssertionResponseUpdated);
         }
 
+        public static void ClearAssertionExecuteResponses(this Scope scope )
+        {
+            scope.TryRemove(AssertionExecuteResponseList);
+        }
+
         static List<AssertionExecuteResponseInfo> GetItems(this Scope scope)
         {
             if (!scope.Contains(AssertionExecuteResponseList))

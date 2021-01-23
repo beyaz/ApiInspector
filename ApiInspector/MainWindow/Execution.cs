@@ -43,6 +43,7 @@ namespace ApiInspector.MainWindow
             trace("EXECUTE STARTED");
 
             scope.TryRemove(InvokeOutputs);
+            scope.ClearAssertionExecuteResponses();
 
             var invocationInfo  = InvocationInfo;
             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
