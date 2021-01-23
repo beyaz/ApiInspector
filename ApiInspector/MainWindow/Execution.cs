@@ -25,8 +25,6 @@ namespace ApiInspector.MainWindow
 
             try
             {
-                scope.ClearScenarioOutputs();
-                
 
                 scope.PublishEvent(OnExecutionStarted);
 
@@ -101,7 +99,6 @@ namespace ApiInspector.MainWindow
 
             var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenarioIndex);
 
-            scope.UpdateScenarioOutput(scenario, invokeOutput);
 
             if (!invokeOutput.IsSuccess)
             {

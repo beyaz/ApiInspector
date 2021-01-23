@@ -94,7 +94,6 @@
     <Compile Include="FunctionalPrograming\Response.cs" />
     <Compile Include="FunctionalPrograming\Result.cs" />
     <Compile Include="InvocationInfoEditor\View.cs" />
-    <Compile Include="MainWindow\Mixin.InvokeOutputs.cs" />
     <Compile Include="MainWindow\Mixin.AssertionExecuteResponse.cs" />
     <Compile Include="MainWindow\ActionButton.xaml.cs">
       <DependentUpon>ActionButton.xaml</DependentUpon>

@@ -130,7 +130,8 @@ namespace ApiInspector.MainWindow
             {
                 Dispatcher.InvokeAsync(() =>
                 {
-                    var output = scope.FindScenarioOutput(scenario);
+
+                    var output = scope.TryGetScenarioExecuteResponse(scenario)?.InvokeOutput;
                     if (output == null)
                     {
                         responseTextView.Text = null;
@@ -156,8 +157,8 @@ namespace ApiInspector.MainWindow
                                                    NewGroupBox(NewBoldTextBlock("Response"), responseTextView));
 
 
-            responseTextView.Loaded   += (s, e) => scope.SubscribeEvent(OnInvokeOutputChanged,  updateResponseOutputText);
-            responseTextView.Unloaded += (s, e) => scope.UnSubscribeEvent(OnInvokeOutputChanged, updateResponseOutputText);
+            responseTextView.Loaded   += (s, e) => scope.SubscribeEvent(OnScenarioExecuteResponseUpdated,  updateResponseOutputText);
+            responseTextView.Unloaded += (s, e) => scope.UnSubscribeEvent(OnScenarioExecuteResponseUpdated, updateResponseOutputText);
 
             CurrentContent = content;
 
