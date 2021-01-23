@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Windows;
-using ApiInspector.Components;
-using ApiInspector.DataAccess;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
+using static ApiInspector.MainWindow.Mixin;
 
 namespace ApiInspector.Application
 {
@@ -13,7 +12,8 @@ namespace ApiInspector.Application
     partial class App
     {
         #region Static Fields
-        
+        internal static readonly Scope AppScope = new Scope();
+
         static ErrorMonitor errorMonitor;
         #endregion
 
@@ -25,8 +25,6 @@ namespace ApiInspector.Application
         {
             BoaAssemblyResolver.AttachToCurrentDomain();
             errorMonitor = new ErrorMonitor(this);
-
-
         }
         #endregion
 
@@ -67,10 +65,9 @@ namespace ApiInspector.Application
 
             errorMonitor.StartMonitor();
 
-            MainWindow = new View
-            {
-                ShowErrorNotification = errorMonitor.ShowErrorNotification
-            };
+            AppScope.Add(ShowErrorNotificationKey, errorMonitor.ShowErrorNotification);
+
+            MainWindow = new View();
 
             MainWindow.Show();
         }

@@ -14,9 +14,7 @@ namespace ApiInspector.MainWindow
 {
     partial class ScenarioEditor
     {
-        #region Fields
-        public Action<string> ShowErrorNotification;
-        #endregion
+        
 
         #region Methods
         bool ExecuteSelectedScenario()
@@ -129,7 +127,7 @@ namespace ApiInspector.MainWindow
         {
             if (!HasInvocationInfo || IsNullOrWhiteSpace(InvocationInfo.MethodName))
             {
-                ShowErrorNotification("MethodName can not be empty.");
+                scope.ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
 

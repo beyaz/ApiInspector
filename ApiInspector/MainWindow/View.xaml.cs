@@ -1,8 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Tracing;
+using static ApiInspector.Application.App;
+using static ApiInspector.MainWindow.Mixin;
 
 namespace ApiInspector.MainWindow
 {
@@ -12,8 +13,6 @@ namespace ApiInspector.MainWindow
     partial class View
     {
         #region Fields
-        public Action<string> ShowErrorNotification;
-
         /// <summary>
         ///     The scope
         /// </summary>
@@ -35,17 +34,14 @@ namespace ApiInspector.MainWindow
 
             InitializeComponent();
 
-            void UpdateTitle()
-            {
-                Title = "ApiInspector - " + EnvironmentVariables.GetUserName();
-            }
-
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
             traceMonitor.StartToMonitor();
 
             Loaded += (s, e) =>
             {
+                scope.Add(ShowErrorNotificationKey, AppScope.Get(ShowErrorNotificationKey));
+
                 scope.Update(Keys.Trace, traceQueue.AddMessage);
 
                 historyPanel.Trace = traceQueue.AddMessage;
@@ -55,10 +51,9 @@ namespace ApiInspector.MainWindow
 
                 historyPanel.Refresh();
 
-                scenarioEditor.ShowErrorNotification = ShowErrorNotification;
                 scenarioEditor.Connect(scope);
 
-                UpdateTitle();
+                Title = "ApiInspector - " + EnvironmentVariables.GetUserName();
             };
 
             Closed += (s, e) => { System.Windows.Application.Current.Shutdown(); };
@@ -81,7 +76,6 @@ namespace ApiInspector.MainWindow
         {
             Process.Start(@"D:\BOA\Server\bin\ApiInspectorConfiguration\");
         }
-
         #endregion
     }
 }
