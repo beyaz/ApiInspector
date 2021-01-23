@@ -128,12 +128,8 @@ namespace ApiInspector.MainWindow
                 scope.ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
-
             
-
             UpdateScenarioActionIcon(success: null);
-
-            
 
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
             Task.Run(() =>
@@ -141,7 +137,6 @@ namespace ApiInspector.MainWindow
                 try
                 {
                     scope.PublishEvent(OnExecutionStarted);
-
 
                     var isSuccess = ExecuteSelectedScenario();
 

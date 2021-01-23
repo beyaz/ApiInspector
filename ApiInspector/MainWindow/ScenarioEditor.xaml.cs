@@ -221,10 +221,10 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void AttachEvents()
         {
-            scope.OnUpdate(SelectedScenario, UpdateNumbers);
-            scope.OnUpdate(SelectedScenario, ArrangeRemoveScenarioButtonVisibility);
-            scope.OnUpdate(SelectedScenario, MakePressedSelectedScenario);
-            scope.OnUpdate(SelectedScenario, ActivateInputOutputPanel);
+            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(UpdateNumbers));
+            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(ArrangeRemoveScenarioButtonVisibility));
+            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(MakePressedSelectedScenario));
+            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(ActivateInputOutputPanel));
 
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
             scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
