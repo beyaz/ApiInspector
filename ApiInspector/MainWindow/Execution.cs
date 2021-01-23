@@ -72,16 +72,18 @@ namespace ApiInspector.MainWindow
 
                 scope.UpdateScenarioOutput(scenario, invokeOutput);
 
-                if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
-                {
-                    WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
-                }
-
                 if (!invokeOutput.IsSuccess)
                 {
                     trace("EXECUTION IS FAILED.");
                     return false;
                 }
+
+                if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
+                {
+                    WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
+                }
+
+                
 
                 bool runAssertions()
                 {
