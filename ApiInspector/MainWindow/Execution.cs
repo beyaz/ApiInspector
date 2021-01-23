@@ -83,8 +83,6 @@ namespace ApiInspector.MainWindow
                     WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
                 }
 
-                
-
                 bool runAssertions()
                 {
                     var methodDefinition = scope.Get(SelectedMethodDefinition);
