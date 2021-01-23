@@ -98,16 +98,19 @@ namespace ApiInspector.MainWindow
                         var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env);
                         var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
 
+                        scope.UpdateAssertionExecuteResponse(new AssertionExecuteResponseInfo(assertionInfo){ ErrorMessage = errorMessage });
+
                         UpdateUI(() =>
                         {
                             var assertionsEditor = ActivateAssertions();
 
                             assertionsEditor.Loaded += (s, e) =>
                             {
-                                assertionsEditor.scope.Update(AssertionErrorMap, new KeyValuePair<AssertionInfo, string>(assertionInfo, errorMessage));
                                 assertionsEditor.selectedAssertion = assertionInfo;
                             };
                         });
+
+                        
 
                         if (errorMessage != null)
                         {

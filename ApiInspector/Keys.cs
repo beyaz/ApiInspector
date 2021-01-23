@@ -14,7 +14,7 @@ namespace ApiInspector
     static class Keys
     {
 
-
+        
 
         #region Public Properties
         /// <summary>
@@ -40,8 +40,6 @@ namespace ApiInspector
         public static DataKey<ScenarioInfo> SelectedScenario => CreateKey<ScenarioInfo>();
 
         public static DataKey<AssertionInfo> SelectedAssertion => CreateKey<AssertionInfo>();
-
-        public static DataKey<KeyValuePair<AssertionInfo,string>> AssertionErrorMap => CreateKey<KeyValuePair<AssertionInfo,string>>();
 
         public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>();
 

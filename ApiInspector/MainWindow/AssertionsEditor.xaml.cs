@@ -11,6 +11,8 @@ using BOA.Common.Types;
 using Mono.Cecil;
 using WpfControls;
 using static ApiInspector.Keys;
+using static ApiInspector.MainWindow.AssertionExecuteResponseInfoExtension;
+using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
 
@@ -33,6 +35,10 @@ namespace ApiInspector.MainWindow
         public AssertionsEditor()
         {
             InitializeComponent();
+            
+            Loaded += (s, e) => AttachEvents();
+            Loaded += (s, e) => BuildAssertionList();
+            Unloaded += (s, e) => DeAttachEvents();
         }
         #endregion
 
@@ -68,18 +74,7 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        internal void Connect(Scope scope)
-        {
-            this.scope = new Scope
-            {
-                {SelectedScenario, scope.Get(SelectedScenario)},
-                {SelectedMethodDefinition, scope.Get(SelectedMethodDefinition)}
-            };
-
-            AttachEvents();
-
-            BuildAssertionList();
-        }
+        
 
         void AddNewAssertion(AssertionInfo assertionInfo)
         {
@@ -104,6 +99,14 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedAssertion, ShowSelectedAssertion);
             scope.OnUpdate(SelectedAssertion, ArrangeRemoveAssertionButtonVisibility);
             scope.OnUpdate(SelectedAssertion, MakePressedSelectedAssertion);
+        }
+
+        void DeAttachEvents()
+        {
+            scope.UnUpdate(SelectedAssertion, UpdateNumbers);
+            scope.UnUpdate(SelectedAssertion, ShowSelectedAssertion);
+            scope.UnUpdate(SelectedAssertion, ArrangeRemoveAssertionButtonVisibility);
+            scope.UnUpdate(SelectedAssertion, MakePressedSelectedAssertion);
         }
 
         void BuildAssertionList()
@@ -172,22 +175,6 @@ namespace ApiInspector.MainWindow
 
             var thirdRow = fun(() =>
             {
-                var getErrorText = fun(() =>
-                {
-                    if (!scope.Contains(AssertionErrorMap))
-                    {
-                        return null;
-                    }
-
-                    var map = scope.Get(AssertionErrorMap);
-                    if (map.Key == assertionInfo)
-                    {
-                        return map.Value;
-                    }
-
-                    return null;
-                });
-
                 var foreground = Brushes.Crimson;
 
                 var resultIndicator = new TextBox
@@ -195,7 +182,6 @@ namespace ApiInspector.MainWindow
                     TextWrapping                = TextWrapping.Wrap,
                     AcceptsReturn               = true,
                     VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                    Text                        = getErrorText(),
                     Foreground                  = foreground,
                     BorderBrush                 = foreground
                 };
@@ -208,8 +194,17 @@ namespace ApiInspector.MainWindow
                 };
 
                 var panel = NewGroupBox(label, resultIndicator);
+                
+                void calculateUI()
+                {
+                    resultIndicator.Text = scope.TryGetAssertionExecuteResponse(assertionInfo)?.ErrorMessage?? string.Empty;
+                    panel.Visibility     = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
+                }
 
-                panel.Visibility = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
+                panel.Loaded += (s, e) => scope.SubscribeEvent(OnAssertionResponseUpdated, calculateUI);
+                panel.Unloaded += (s, e) => scope.UnSubscribeEvent(OnAssertionResponseUpdated, calculateUI);
+
+                calculateUI();
 
                 return panel;
             });
@@ -363,6 +358,27 @@ namespace ApiInspector.MainWindow
                 {
                     Text = i.ToString()
                 };
+
+                void calculateIcon()
+                {
+                    var assertionExecuteResponse = scope.TryGetAssertionExecuteResponse(assertion);
+                    if (assertionExecuteResponse == null)
+                    {
+                        actionButton.IconVisibility = Visibility.Collapsed;
+                        return;
+                    }
+
+                    if (assertionExecuteResponse.IsSuccess)
+                    {
+                        actionButton.ShowSuccessIcon();
+                        return;
+                    }
+
+                    actionButton.ShowFailIcon();
+                }
+                calculateIcon();
+                actionButton.Loaded   += (s, e) => scope.SubscribeEvent(OnAssertionResponseUpdated, calculateIcon);
+                actionButton.Unloaded += (s, e) => scope.UnSubscribeEvent(OnAssertionResponseUpdated, calculateIcon);
 
                 actionButton.SetValue(AssertionDataProperty, assertion);
 

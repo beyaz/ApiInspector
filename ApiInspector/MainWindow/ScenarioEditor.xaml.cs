@@ -97,9 +97,10 @@ namespace ApiInspector.MainWindow
             EnableAllTopButtons();
             buttonAssertions.IsPressed = true;
 
-            var assertionsEditor = new AssertionsEditor();
-
-            assertionsEditor.Loaded += (s, e) => assertionsEditor.Connect(scope);
+            var assertionsEditor = new AssertionsEditor
+            {
+                scope = scope
+            };
 
             CurrentContent = assertionsEditor;
 

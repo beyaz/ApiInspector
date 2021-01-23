@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ApiInspector.Models;
 
@@ -27,22 +29,65 @@ namespace ApiInspector.MainWindow
         {
             return invocationInfo.MethodName == EndOfDay.MethodAccessText;
         }
-
-        // TODO: check usage
-        public static void UpdateAssertionResponseAsSuccess(Scope scope, AssertionInfo assertionInfo)
+        
+        public static DataKey<T> CreateKey<T>(Type locatedType,[CallerMemberName] string callerMemberName = null)
         {
-            assertionInfo.lastExecutionErrorMessage = null;
-            assertionInfo.lastExecutionIsSuccess    = true;
-        }
-        public static void UpdateAssertionResponseAsFail(Scope scope, AssertionInfo assertionInfo,string errorMessage)
-        {
-            assertionInfo.lastExecutionErrorMessage = errorMessage;
-            assertionInfo.lastExecutionIsSuccess    = false;
-        }
-        public static void ClearAssertionResponse(Scope scope, AssertionInfo assertionInfo)
-        {
-            assertionInfo.lastExecutionErrorMessage = null;
-            assertionInfo.lastExecutionIsSuccess    = null;
+            return new DataKey<T>(locatedType, callerMemberName);
         }
     }
+
+    sealed class AssertionExecuteResponseInfo
+    {
+        public readonly AssertionInfo AssertionInfo;
+
+        public AssertionExecuteResponseInfo(AssertionInfo assertionInfo)
+        {
+            AssertionInfo = assertionInfo;
+        }
+
+        public string ErrorMessage { get; set; }
+
+        public bool IsSuccess => string.IsNullOrWhiteSpace(ErrorMessage);
+    }
+
+    static class AssertionExecuteResponseInfoExtension
+    {
+        public static string OnAssertionResponseUpdated = nameof(OnAssertionResponseUpdated);
+
+        static DataKey<List<AssertionExecuteResponseInfo>> AssertionExecuteResponseList => Mixin.CreateKey<List<AssertionExecuteResponseInfo>>(typeof(AssertionExecuteResponseInfo));
+
+        public static void UpdateAssertionExecuteResponse(this Scope scope, AssertionExecuteResponseInfo value)
+        {
+            var items = scope.GetItems();
+            if (items.All(x => x.AssertionInfo != value.AssertionInfo))
+            {
+                items.Add(value);
+            }
+
+            var record = items.First(x => x.AssertionInfo == value.AssertionInfo);
+
+            record.ErrorMessage = value.ErrorMessage;
+
+            scope.PublishEvent(OnAssertionResponseUpdated);
+        }
+
+        static List<AssertionExecuteResponseInfo> GetItems(this Scope scope)
+        {
+            if (!scope.Contains(AssertionExecuteResponseList))
+            {
+                scope.Add(AssertionExecuteResponseList,new List<AssertionExecuteResponseInfo>());
+            }
+
+                return scope.Get(AssertionExecuteResponseList);
+            
+        }
+
+        public static AssertionExecuteResponseInfo TryGetAssertionExecuteResponse(this Scope scope, AssertionInfo value)
+        {
+            return scope.GetItems().FirstOrDefault(x=>x.AssertionInfo == value);
+        }
+    }
+
+
+    
 }

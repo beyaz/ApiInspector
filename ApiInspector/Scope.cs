@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ApiInspector.Invoking.BoaSystem;
+using ApiInspector.MainWindow;
 using ApiInspector.Serialization;
 using BOA.DataFlow;
 using static ApiInspector.Keys;
