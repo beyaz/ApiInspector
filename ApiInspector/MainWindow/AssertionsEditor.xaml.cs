@@ -11,7 +11,6 @@ using BOA.Common.Types;
 using Mono.Cecil;
 using WpfControls;
 using static ApiInspector.Keys;
-using static ApiInspector.MainWindow.AssertionExecuteResponseInfoExtension;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
