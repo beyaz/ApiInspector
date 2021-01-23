@@ -73,14 +73,14 @@ namespace ApiInspector.MainWindow
                 {
                     var methodDefinition = scope.Get(SelectedMethodDefinition);
 
-                    bool runAssertion(AssertionInfo assertionInfo)
+                    string runAssertion(AssertionInfo assertionInfo)
                     {
                         var env = EnvironmentInfo.Parse(invocationInfo.Environment);
 
                         var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, invokeOutput, env);
                         var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env);
                         var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
-
+                        
                         scope.UpdateAssertionExecuteResponse(new AssertionExecuteResponseInfo(assertionInfo) {ErrorMessage = errorMessage});
 
                         UpdateUI(() =>
@@ -90,18 +90,13 @@ namespace ApiInspector.MainWindow
                             assertionsEditor.Loaded += (s, e) => { assertionsEditor.selectedAssertion = assertionInfo; };
                         });
 
-                        if (errorMessage != null)
-                        {
-                            return false;
-                        }
-
-                        return true;
+                        return errorMessage;
                     }
 
                     foreach (var assertion in scenario.Assertions)
                     {
-                        var isSuccess = runAssertion(assertion);
-                        if (!isSuccess)
+                        var assertionErrorMessage = runAssertion(assertion);
+                        if (assertionErrorMessage != null)
                         {
                             return false;
                         }
