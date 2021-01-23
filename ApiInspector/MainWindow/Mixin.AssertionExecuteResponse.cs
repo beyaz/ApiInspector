@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ApiInspector.Models;
 
@@ -26,12 +27,13 @@ namespace ApiInspector.MainWindow
 
     sealed class ScenarioExecuteResponseInfo
     {
-        readonly List<AssertionExecuteResponseInfo> AssertionExecuteResponses = new List<AssertionExecuteResponseInfo>();
+        public List<AssertionExecuteResponseInfo> AssertionExecuteResponses { get; }= new List<AssertionExecuteResponseInfo>();
 
         public ScenarioInfo Scenario { get; set; }
 
-       
-
+        public string ErrorMessage { get; set; }
+        
+        public Exception Exception { get; set; }
 
     }
 
@@ -39,11 +41,35 @@ namespace ApiInspector.MainWindow
 
     static partial class Mixin
     {
+        public static string OnScenarioExecuteResponseUpdated = nameof(OnScenarioExecuteResponseUpdated);
+
         static DataKey<List<ScenarioExecuteResponseInfo>> ScenarioExecuteResponses => CreateKey<List<ScenarioExecuteResponseInfo>>(typeof(Mixin));
         
 
+        static List<ScenarioExecuteResponseInfo> GetScenarioExecuteResponses(this Scope scope)
+        {
+            if (!scope.Contains(ScenarioExecuteResponses))
+            {
+                scope.Add(ScenarioExecuteResponses, new List<ScenarioExecuteResponseInfo>());
+            }
 
+            return scope.Get(ScenarioExecuteResponses);
+        }
+        
+        public static void UpdateScenarioExecuteResponse(this Scope scope, ScenarioExecuteResponseInfo value)
+        {
+            var items = scope.GetScenarioExecuteResponses();
+            if (items.All(x => x.Scenario != value.Scenario))
+            {
+                items.Add(value);
+            }
 
+            var record = items.First(x => x.Scenario == value.Scenario);
+
+            record.ErrorMessage = value.ErrorMessage;
+
+            scope.PublishEvent(OnScenarioExecuteResponseUpdated);
+        }
 
 
 
