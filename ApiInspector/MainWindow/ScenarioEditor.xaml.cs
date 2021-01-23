@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ApiInspector.Components;
 using ApiInspector.InvocationInfoEditor;
-using ApiInspector.Invoking;
 using ApiInspector.Models;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
-using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -26,14 +23,11 @@ namespace ApiInspector.MainWindow
         public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(ScenarioInfo), typeof(ScenarioEditor), new PropertyMetadata(default(ScenarioInfo)));
         #endregion
 
-        #region Fields
         /// <summary>
         ///     The scope
         /// </summary>
         Scope scope;
 
-        Action UpdateOutput;
-        #endregion
 
         #region Constructors
         /// <summary>
@@ -144,35 +138,44 @@ namespace ApiInspector.MainWindow
             buttonActivateInputOutputPanel.IsPressed = true;
             
             var responseTextView = new JsonTextEditor();
-            var updateResponseOutputText = fun(() =>
+
+            void updateResponseOutputText()
             {
-                var output = scope.FindScenarioOutput(scenario);
-                if (output == null)
+                Dispatcher.InvokeAsync(() =>
                 {
-                    responseTextView.Text = null;
-                    return;
-                }
+                    var output = scope.FindScenarioOutput(scenario);
+                    if (output == null)
+                    {
+                        responseTextView.Text = null;
+                        return;
+                    }
 
-                if (!output.IsSuccess)
-                {
-                    responseTextView.Text = "ERROR: " + output.Error;
-                    return;
-                }
+                    if (!output.IsSuccess)
+                    {
+                        responseTextView.Text = "ERROR: " + output.Error;
+                        return;
+                    }
 
-                responseTextView.Text = output.ExecutionResponseAsJson;
-            });
+                    responseTextView.Text = output.ExecutionResponseAsJson;
+                });
+            }
 
             var inputEditors = ParameterPanelIntegration.Create(scenario.MethodParameters, methodDefinition).ToArray();
 
             EnableAllTopButtons();
             buttonActivateInputOutputPanel.IsPressed = true;
 
-            CurrentContent = NewColumnSplittedGrid(NewGroupBox(NewBoldTextBlock("Method Parameters"), NewStackPanel(inputEditors)),
+            var content = NewColumnSplittedGrid(NewGroupBox(NewBoldTextBlock("Method Parameters"), NewStackPanel(inputEditors)),
                                                    NewGroupBox(NewBoldTextBlock("Response"), responseTextView));
+
+
+            responseTextView.Loaded   += (s, e) => scope.SubscribeEvent(OnInvokeOutputChanged,  updateResponseOutputText);
+            responseTextView.Unloaded += (s, e) => scope.UnSubscribeEvent(OnInvokeOutputChanged, updateResponseOutputText);
+
+            CurrentContent = content;
 
             updateResponseOutputText();
 
-            UpdateOutput = updateResponseOutputText;
         }
 
         void AddNewScenario(ScenarioInfo scenarioInfo)

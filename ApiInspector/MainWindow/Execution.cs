@@ -77,8 +77,6 @@ namespace ApiInspector.MainWindow
                     WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
                 }
 
-                UpdateUI(() => { UpdateOutput?.Invoke(); });
-
                 if (!invokeOutput.IsSuccess)
                 {
                     trace("EXECUTION IS FAILED.");
