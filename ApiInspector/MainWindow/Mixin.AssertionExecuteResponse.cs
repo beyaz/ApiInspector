@@ -24,8 +24,29 @@ namespace ApiInspector.MainWindow
         #endregion
     }
 
+    sealed class ScenarioExecuteResponseInfo
+    {
+        readonly List<AssertionExecuteResponseInfo> AssertionExecuteResponses = new List<AssertionExecuteResponseInfo>();
+
+        public ScenarioInfo Scenario { get; set; }
+
+       
+
+
+    }
+
+
+
     static partial class Mixin
     {
+        static DataKey<List<ScenarioExecuteResponseInfo>> ScenarioExecuteResponses => CreateKey<List<ScenarioExecuteResponseInfo>>(typeof(Mixin));
+        
+
+
+
+
+
+
         #region Static Fields
         public static string OnAssertionResponseUpdated = nameof(OnAssertionResponseUpdated);
         #endregion
