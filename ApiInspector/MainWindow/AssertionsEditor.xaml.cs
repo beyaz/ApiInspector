@@ -200,8 +200,8 @@ namespace ApiInspector.MainWindow
                     panel.Visibility     = string.IsNullOrWhiteSpace(resultIndicator.Text) ? Visibility.Collapsed : Visibility.Visible;
                 }
 
-                panel.Loaded += (s, e) => scope.SubscribeEvent(OnAssertionResponseUpdated, calculateUI);
-                panel.Unloaded += (s, e) => scope.UnSubscribeEvent(OnAssertionResponseUpdated, calculateUI);
+                panel.Loaded   += (s, e) => scope.SubscribeEvent(OnScenarioExecuteResponseUpdated, calculateUI);
+                panel.Unloaded += (s, e) => scope.UnSubscribeEvent(OnScenarioExecuteResponseUpdated, calculateUI);
 
                 calculateUI();
 
@@ -376,8 +376,8 @@ namespace ApiInspector.MainWindow
                     actionButton.ShowFailIcon();
                 }
                 calculateIcon();
-                actionButton.Loaded   += (s, e) => scope.SubscribeEvent(OnAssertionResponseUpdated, calculateIcon);
-                actionButton.Unloaded += (s, e) => scope.UnSubscribeEvent(OnAssertionResponseUpdated, calculateIcon);
+                actionButton.Loaded   += (s, e) => scope.SubscribeEvent(OnScenarioExecuteResponseUpdated, calculateIcon);
+                actionButton.Unloaded += (s, e) => scope.UnSubscribeEvent(OnScenarioExecuteResponseUpdated, calculateIcon);
 
                 actionButton.SetValue(AssertionDataProperty, assertion);
 

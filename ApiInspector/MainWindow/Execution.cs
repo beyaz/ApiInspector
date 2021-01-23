@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using ApiInspector.Invoking.BoaSystem;
@@ -14,108 +15,136 @@ namespace ApiInspector.MainWindow
 {
     partial class ScenarioEditor
     {
-        
 
-        #region Methods
-        bool ExecuteSelectedScenario()
+        void ExecuteSelectedScenarioAndProcessResponse()
         {
             void trace(string message)
             {
                 scope.Get(Trace)(message);
             }
 
-            trace("EXECUTE STARTED");
+            try
+            {
+                scope.ClearScenarioOutputs();
+                
 
-            scope.ClearScenarioOutputs();
-            scope.ClearAssertionExecuteResponses();
+                scope.PublishEvent(OnExecutionStarted);
+
+                trace("EXECUTE STARTED");
+
+                var response = ExecuteSelectedScenario();
+                
+                UpdateUI(()=>scope.UpdateScenarioExecuteResponse(response));
+
+                var invokeOutput = response.InvokeOutput;
+                if (!invokeOutput.IsSuccess)
+                {
+                    trace(invokeOutput.Error.ToString());
+                    trace("EXECUTION IS FAILED.");
+                    return;
+                }
+
+                var failedAssertion = response.AssertionExecuteResponses.FirstOrDefault(a => !a.IsSuccess)?.AssertionInfo;
+                if (failedAssertion != null)
+                {
+                    trace("EXECUTION IS SUCCESSFULL BUT ASSERTIONS ARE FAILED.");
+
+                    // focus to failed assertion
+                    UpdateUI(() =>
+                    {
+                        var assertionsEditor = ActivateAssertions();
+
+                        assertionsEditor.Loaded += (s, e) => { assertionsEditor.selectedAssertion = failedAssertion; };
+                    });
+                        
+                    return;
+                }
+
+                trace("EXECUTION IS SUCCESSFULL");
+
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Beklenmedik bir hata oluştu.(Abdullah Beyaztaş'a mail atarsanız sevinirim.) " + exception);
+            }
+            finally
+            {
+                scope.PublishEvent(OnExecutionFinished);
+
+            }
+        }
+
+
+
+        #region Methods
+        ScenarioExecuteResponseInfo ExecuteSelectedScenario()
+        {
+            var returnValue = new ScenarioExecuteResponseInfo();
 
             var invocationInfo  = InvocationInfo;
             var environmentInfo = EnvironmentInfo.Parse(invocationInfo.Environment);
 
             if (IsEndOfDayMethod(invocationInfo))
             {
-                var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, -1);
-                if (!invokeOutput.IsSuccess)
-                {
-                    trace(invokeOutput.Error.ToString());
+                returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, -1);
 
-                    trace("EXECUTION IS FAILED.");
-
-                    return false;
-                }
-
-                trace("EXECUTION IS SUCCESSFULL");
-
-                return true;
+                return returnValue;
             }
 
+            var scenario = scope.Get(SelectedScenario);
+
+            scope.ClearScenarioExecuteResponse(scenario);
+
+            returnValue.Scenario = scenario;
+
+            var scenarioIndex = scenarios.IndexOf(scenario);
+
+            var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenarioIndex);
+
+            scope.UpdateScenarioOutput(scenario, invokeOutput);
+
+            if (!invokeOutput.IsSuccess)
             {
-                var scenario = scope.Get(SelectedScenario);
-
-                var scenarioIndex = scenarios.IndexOf(scenario);
-
-                var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
-
-                scope.UpdateScenarioOutput(scenario, invokeOutput);
-
-                if (!invokeOutput.IsSuccess)
-                {
-                    trace("EXECUTION IS FAILED.");
-                    return false;
-                }
-
-                if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
-                {
-                    WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
-                }
-
-                bool runAssertions()
-                {
-                    var methodDefinition = scope.Get(SelectedMethodDefinition);
-
-                    string runAssertion(AssertionInfo assertionInfo)
-                    {
-                        var env = EnvironmentInfo.Parse(invocationInfo.Environment);
-
-                        var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, invokeOutput, env);
-                        var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env);
-                        var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
-                        
-                        scope.UpdateAssertionExecuteResponse(new AssertionExecuteResponseInfo(assertionInfo) {ErrorMessage = errorMessage});
-
-                        UpdateUI(() =>
-                        {
-                            var assertionsEditor = ActivateAssertions();
-
-                            assertionsEditor.Loaded += (s, e) => { assertionsEditor.selectedAssertion = assertionInfo; };
-                        });
-
-                        return errorMessage;
-                    }
-
-                    foreach (var assertion in scenario.Assertions)
-                    {
-                        var assertionErrorMessage = runAssertion(assertion);
-                        if (assertionErrorMessage != null)
-                        {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-
-                var isAssertionsExecutedSuccessfully = runAssertions();
-                if (!isAssertionsExecutedSuccessfully)
-                {
-                    trace("EXECUTION IS SUCCESSFULL BUT ASSERTIONS ARE FAILED.");
-                    return false;
-                }
-
-                trace("EXECUTION IS SUCCESSFULL");
-
-                return true;
+                return returnValue;
             }
+
+            if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
+            {
+                WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
+            }
+
+            void runAssertions()
+            {
+                var methodDefinition = scope.Get(SelectedMethodDefinition);
+
+                string runAssertion(AssertionInfo assertionInfo)
+                {
+                    var env = EnvironmentInfo.Parse(invocationInfo.Environment);
+
+                    var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, invokeOutput, env);
+                    var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env);
+                    var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
+
+                    returnValue.AssertionExecuteResponses.Add(new AssertionExecuteResponseInfo(assertionInfo) {ErrorMessage = errorMessage});
+
+                    return errorMessage;
+                }
+
+                foreach (var assertion in scenario.Assertions)
+                {
+                    var assertionErrorMessage = runAssertion(assertion);
+                    if (assertionErrorMessage != null)
+                    {
+                        return;
+                    }
+                }
+
+            }
+
+            runAssertions();
+
+            return returnValue;
+
         }
 
         const string OnExecutionStarted = nameof(OnExecutionStarted);
@@ -132,30 +161,10 @@ namespace ApiInspector.MainWindow
             UpdateScenarioActionIcon(success: null);
 
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
-            Task.Run(() =>
-            {
-                try
-                {
-                    scope.PublishEvent(OnExecutionStarted);
-
-                    var isSuccess = ExecuteSelectedScenario();
-
-                    UpdateScenarioActionIcon(isSuccess);
-                }
-                catch (Exception exception)
-                {
-                    UpdateScenarioActionIcon(success: false);
-
-                    MessageBox.Show("Hata: " + exception);
-                }
-                finally
-                {
-                    scope.PublishEvent(OnExecutionFinished);
-
-                }
-            });
+            Task.Run(() => { ExecuteSelectedScenarioAndProcessResponse(); });
         }
 
+        // TODO check
         void UpdateScenarioActionIcon(bool? success)
         {
             Dispatcher.InvokeAsync(() =>

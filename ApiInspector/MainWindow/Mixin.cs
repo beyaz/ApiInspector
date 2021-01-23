@@ -37,6 +37,19 @@ namespace ApiInspector.MainWindow
             };
         }
 
+        public static Exception SafeRun(Action action)
+        {
+            try
+            {
+                action();
+                return null;
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+        }
+
         /// <summary>
         ///     Creates the new scenario information.
         /// </summary>

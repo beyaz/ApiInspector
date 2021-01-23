@@ -1,39 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ApiInspector.Invoking;
 using ApiInspector.Models;
 
 namespace ApiInspector.MainWindow
 {
     sealed class AssertionExecuteResponseInfo
     {
-        #region Fields
         public readonly AssertionInfo AssertionInfo;
-        #endregion
-
-        #region Constructors
         public AssertionExecuteResponseInfo(AssertionInfo assertionInfo)
         {
             AssertionInfo = assertionInfo;
         }
-        #endregion
-
-        #region Public Properties
         public string ErrorMessage { get; set; }
 
         public bool IsSuccess => string.IsNullOrWhiteSpace(ErrorMessage);
-        #endregion
     }
 
     sealed class ScenarioExecuteResponseInfo
     {
-        public List<AssertionExecuteResponseInfo> AssertionExecuteResponses { get; }= new List<AssertionExecuteResponseInfo>();
+        public List<AssertionExecuteResponseInfo> AssertionExecuteResponses { set;get; }= new List<AssertionExecuteResponseInfo>();
 
         public ScenarioInfo Scenario { get; set; }
 
-        public string ErrorMessage { get; set; }
-        
-        public Exception Exception { get; set; }
+        public InvokeOutput InvokeOutput{ get; set; }
+
+        public bool IsSuccess => InvokeOutput.IsSuccess && AssertionExecuteResponses.All(x => x.IsSuccess);
 
     }
 
@@ -45,7 +38,21 @@ namespace ApiInspector.MainWindow
 
         static DataKey<List<ScenarioExecuteResponseInfo>> ScenarioExecuteResponses => CreateKey<List<ScenarioExecuteResponseInfo>>(typeof(Mixin));
         
+        public static void ClearScenarioExecuteResponse(this Scope scope,ScenarioInfo scenarioInfo)
+        {
+            var response = scope.TryGetScenarioExecuteResponse(scenarioInfo);
+            if (response == null)
+            {
+                return;
+            }
 
+            scope.GetScenarioExecuteResponses().Remove(response);
+        }
+
+        public static ScenarioExecuteResponseInfo TryGetScenarioExecuteResponse(this Scope scope, ScenarioInfo value)
+        {
+            return scope.GetScenarioExecuteResponses().FirstOrDefault(x => x.Scenario == value);
+        }
         static List<ScenarioExecuteResponseInfo> GetScenarioExecuteResponses(this Scope scope)
         {
             if (!scope.Contains(ScenarioExecuteResponses))
@@ -66,58 +73,30 @@ namespace ApiInspector.MainWindow
 
             var record = items.First(x => x.Scenario == value.Scenario);
 
-            record.ErrorMessage = value.ErrorMessage;
+            record.InvokeOutput              = value.InvokeOutput;
+            record.AssertionExecuteResponses = value.AssertionExecuteResponses;
 
             scope.PublishEvent(OnScenarioExecuteResponseUpdated);
         }
 
 
 
-        #region Static Fields
-        public static string OnAssertionResponseUpdated = nameof(OnAssertionResponseUpdated);
-        #endregion
-
-        #region Properties
-        static DataKey<List<AssertionExecuteResponseInfo>> AssertionExecuteResponseList => CreateKey<List<AssertionExecuteResponseInfo>>(typeof(AssertionExecuteResponseInfo));
-        #endregion
-
-        #region Public Methods
-        public static void ClearAssertionExecuteResponses(this Scope scope)
+        public static AssertionExecuteResponseInfo TryGetAssertionExecuteResponse(this Scope scope, AssertionInfo assertionInfo)
         {
-            scope.TryRemove(AssertionExecuteResponseList);
-        }
-
-        public static AssertionExecuteResponseInfo TryGetAssertionExecuteResponse(this Scope scope, AssertionInfo value)
-        {
-            return scope.GetItems().FirstOrDefault(x => x.AssertionInfo == value);
-        }
-
-        public static void UpdateAssertionExecuteResponse(this Scope scope, AssertionExecuteResponseInfo value)
-        {
-            var items = scope.GetItems();
-            if (items.All(x => x.AssertionInfo != value.AssertionInfo))
+            foreach (var scenarioExecuteResponseInfo in scope.GetScenarioExecuteResponses())
             {
-                items.Add(value);
+                foreach (var assertionExecuteResponseInfo in scenarioExecuteResponseInfo.AssertionExecuteResponses)
+                {
+                    if (assertionExecuteResponseInfo.AssertionInfo == assertionInfo)
+                    {
+                        return assertionExecuteResponseInfo;
+                    }
+                }
             }
 
-            var record = items.First(x => x.AssertionInfo == value.AssertionInfo);
-
-            record.ErrorMessage = value.ErrorMessage;
-
-            scope.PublishEvent(OnAssertionResponseUpdated);
+            return null;
         }
-        #endregion
 
-        #region Methods
-        static List<AssertionExecuteResponseInfo> GetItems(this Scope scope)
-        {
-            if (!scope.Contains(AssertionExecuteResponseList))
-            {
-                scope.Add(AssertionExecuteResponseList, new List<AssertionExecuteResponseInfo>());
-            }
-
-            return scope.Get(AssertionExecuteResponseList);
-        }
-        #endregion
+        
     }
 }

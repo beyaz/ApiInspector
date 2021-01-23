@@ -9,6 +9,7 @@ using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Common.Types;
 using Mono.Cecil;
+using static ApiInspector.MainWindow.Mixin;
 
 namespace ApiInspector.MainWindow
 {
@@ -98,7 +99,11 @@ namespace ApiInspector.MainWindow
             {
                 if (expected is string && actual != null && actual.GetType() != typeof(string))
                 {
-                    expected = Serializer.Deserialize((string) expected, actual.GetType());
+                    var exception = SafeRun(() => { expected = Serializer.Deserialize((string) expected, actual.GetType()); });
+                    if (exception != null)
+                    {
+                        return exception.ToString();
+                    }
                 }
 
                 var actualJson   = Serializer.SerializeToJson(actual);

@@ -356,6 +356,28 @@ namespace ApiInspector.MainWindow
 
                 actionButton.Click += (s, e) => { scope.Update(SelectedScenario, scenario); };
 
+                void calculateIcon()
+                {
+                    var scenarioExecuteResponseInfo = scope.TryGetScenarioExecuteResponse(scenario);
+                    if (scenarioExecuteResponseInfo == null)
+                    {
+                        actionButton.IconVisibility = Visibility.Collapsed;
+                        return;
+                    }
+
+                    if (scenarioExecuteResponseInfo.IsSuccess)
+                    {
+                        actionButton.ShowSuccessIcon();
+                        return;
+                    }
+
+                    actionButton.ShowFailIcon();
+                }
+                calculateIcon();
+                actionButton.Loaded   += (s, e) => scope.SubscribeEvent(OnScenarioExecuteResponseUpdated, calculateIcon);
+                actionButton.Unloaded += (s, e) => scope.UnSubscribeEvent(OnScenarioExecuteResponseUpdated, calculateIcon);
+
+
                 scenarioNumbersContainer.Children.Add(actionButton);
 
                 i++;
