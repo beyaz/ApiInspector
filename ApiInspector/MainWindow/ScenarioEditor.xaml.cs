@@ -142,29 +142,11 @@ namespace ApiInspector.MainWindow
 
             EnableAllTopButtons();
             buttonActivateInputOutputPanel.IsPressed = true;
-
-            InvokeOutput FindOutput()
-            {
-                var invokeOutputs = scope.TryGet(InvokeOutputs_old);
-
-                if (invokeOutputs == null || invokeOutputs.Length == 0)
-                {
-                    return null;
-                }
-
-                var scenarioIndex = scenarios.IndexOf(scenario);
-                if (scenarioIndex >= 0 && invokeOutputs.Length > scenarioIndex)
-                {
-                    return invokeOutputs[scenarioIndex];
-                }
-
-                return null;
-            }
-
+            
             var responseTextView = new JsonTextEditor();
             var updateResponseOutputText = fun(() =>
             {
-                var output = FindOutput();
+                var output = scope.FindScenarioOutput(scenario);
                 if (output == null)
                 {
                     responseTextView.Text = null;

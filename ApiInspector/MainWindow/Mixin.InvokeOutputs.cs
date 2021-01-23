@@ -5,31 +5,24 @@ namespace ApiInspector.MainWindow
 {
     static partial class Mixin
     {
-        #region Public Properties
-        // public static string OnAssertionResponseUpdated = nameof(OnAssertionResponseUpdated);
+        #region Static Fields
+        public static string OnInvokeOutputChanged = nameof(OnInvokeOutputChanged);
+        #endregion
 
-        public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>(typeof(Mixin));
+        #region Properties
+        static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>(typeof(Mixin));
         #endregion
 
         #region Public Methods
-        public static void UpdateScenarioOutput(this Scope scope, ScenarioInfo scenarioInfo, InvokeOutput invokeOutput)
+        public static void ClearScenarioOutputs(this Scope scope)
         {
-            var scenarios = scope.Get(Keys.SelectedInvocationInfo).Scenarios;
-
-            if (!scope.Contains(InvokeOutputs))
-            {
-                scope.Add(InvokeOutputs, new InvokeOutput[scenarios.Count]);
-            }
-
-            var scenarioIndex = scenarios.IndexOf(scenarioInfo);
-
-            scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
+            scope.TryRemove(InvokeOutputs);
+            scope.PublishEvent(OnInvokeOutputChanged);
         }
 
         public static InvokeOutput FindScenarioOutput(this Scope scope, ScenarioInfo scenarioInfo)
         {
             var invokeOutputs = scope.TryGet(InvokeOutputs);
-
 
             if (invokeOutputs == null || invokeOutputs.Length == 0)
             {
@@ -45,6 +38,22 @@ namespace ApiInspector.MainWindow
             }
 
             return null;
+        }
+
+        public static void UpdateScenarioOutput(this Scope scope, ScenarioInfo scenarioInfo, InvokeOutput invokeOutput)
+        {
+            var scenarios = scope.Get(Keys.SelectedInvocationInfo).Scenarios;
+
+            if (!scope.Contains(InvokeOutputs))
+            {
+                scope.Add(InvokeOutputs, new InvokeOutput[scenarios.Count]);
+            }
+
+            var scenarioIndex = scenarios.IndexOf(scenarioInfo);
+
+            scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
+
+            scope.PublishEvent(OnInvokeOutputChanged);
         }
         #endregion
     }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
-using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
@@ -42,7 +40,7 @@ namespace ApiInspector.MainWindow
 
             trace("EXECUTE STARTED");
 
-            scope.TryRemove(InvokeOutputs_old);
+            scope.ClearScenarioOutputs();
             scope.ClearAssertionExecuteResponses();
 
             var invocationInfo  = InvocationInfo;
@@ -72,7 +70,7 @@ namespace ApiInspector.MainWindow
 
                 var invokeOutput = Invoker.Invoke(environmentInfo, trace, invocationInfo, scenarioIndex);
 
-                UpdateScenarioOutput(scenarioIndex, invokeOutput);
+                scope.UpdateScenarioOutput(scenario, invokeOutput);
 
                 if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
                 {
@@ -204,15 +202,7 @@ namespace ApiInspector.MainWindow
             });
         }
 
-        void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)
-        {
-            if (!scope.Contains(InvokeOutputs_old))
-            {
-                scope.Add(InvokeOutputs_old, new InvokeOutput[scenarios.Count]);
-            }
-
-            scope.Get(InvokeOutputs_old)[scenarioIndex] = invokeOutput;
-        }
+        
 
         void UpdateUI(Action action)
         {
