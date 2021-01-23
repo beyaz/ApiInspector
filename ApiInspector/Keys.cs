@@ -41,7 +41,7 @@ namespace ApiInspector
 
         public static DataKey<AssertionInfo> SelectedAssertion => CreateKey<AssertionInfo>();
 
-        public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>();
+        public static DataKey<InvokeOutput[]> InvokeOutputs_old => CreateKey<InvokeOutput[]>();
 
         /// <summary>
         ///     Gets the serialize history for database insert.

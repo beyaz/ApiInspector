@@ -42,7 +42,7 @@ namespace ApiInspector.MainWindow
 
             trace("EXECUTE STARTED");
 
-            scope.TryRemove(InvokeOutputs);
+            scope.TryRemove(InvokeOutputs_old);
             scope.ClearAssertionExecuteResponses();
 
             var invocationInfo  = InvocationInfo;
@@ -206,12 +206,12 @@ namespace ApiInspector.MainWindow
 
         void UpdateScenarioOutput(int scenarioIndex, InvokeOutput invokeOutput)
         {
-            if (!scope.Contains(InvokeOutputs))
+            if (!scope.Contains(InvokeOutputs_old))
             {
-                scope.Add(InvokeOutputs, new InvokeOutput[scenarios.Count]);
+                scope.Add(InvokeOutputs_old, new InvokeOutput[scenarios.Count]);
             }
 
-            scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
+            scope.Get(InvokeOutputs_old)[scenarioIndex] = invokeOutput;
         }
 
         void UpdateUI(Action action)

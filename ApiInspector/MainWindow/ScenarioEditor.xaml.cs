@@ -145,7 +145,7 @@ namespace ApiInspector.MainWindow
 
             InvokeOutput FindOutput()
             {
-                var invokeOutputs = scope.TryGet(InvokeOutputs);
+                var invokeOutputs = scope.TryGet(InvokeOutputs_old);
 
                 if (invokeOutputs == null || invokeOutputs.Length == 0)
                 {
