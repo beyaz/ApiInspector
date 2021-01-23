@@ -229,6 +229,24 @@ namespace ApiInspector.MainWindow
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
             scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
 
+            scope.SubscribeEvent(OnExecutionStarted, () =>
+            {
+                UpdateUI(() =>
+                {
+                    executeSelectedScenarioButton.Text      = "Executing...";
+                    executeSelectedScenarioButton.IsEnabled = false;
+                });
+            });
+
+            scope.SubscribeEvent(OnExecutionFinished, () =>
+            {
+                UpdateUI(() =>
+                {
+                    executeSelectedScenarioButton.Text      = "Execute";
+                    executeSelectedScenarioButton.IsEnabled = true;
+                });
+            });
+
            
         }
 

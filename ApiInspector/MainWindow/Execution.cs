@@ -118,6 +118,9 @@ namespace ApiInspector.MainWindow
             }
         }
 
+        const string OnExecutionStarted = nameof(OnExecutionStarted);
+        const string OnExecutionFinished = nameof(OnExecutionFinished);
+
         void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
             if (!HasInvocationInfo || IsNullOrWhiteSpace(InvocationInfo.MethodName))
@@ -126,26 +129,19 @@ namespace ApiInspector.MainWindow
                 return;
             }
 
+            
+
             UpdateScenarioActionIcon(success: null);
 
-            void OnEnteredToExecution()
-            {
-                UpdateUI(() => executeSelectedScenarioButton.Text      = "Executing...");
-                UpdateUI(() => executeSelectedScenarioButton.IsEnabled = false);
-            }
-
-            void OnExitToExecution()
-            {
-                UpdateUI(() => executeSelectedScenarioButton.Text      = "Execute");
-                UpdateUI(() => executeSelectedScenarioButton.IsEnabled = true);
-            }
+            
 
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
             Task.Run(() =>
             {
                 try
                 {
-                    OnEnteredToExecution();
+                    scope.PublishEvent(OnExecutionStarted);
+
 
                     var isSuccess = ExecuteSelectedScenario();
 
@@ -159,7 +155,8 @@ namespace ApiInspector.MainWindow
                 }
                 finally
                 {
-                    OnExitToExecution();
+                    scope.PublishEvent(OnExecutionFinished);
+
                 }
             });
         }
