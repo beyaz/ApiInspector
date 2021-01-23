@@ -1,14 +1,51 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using ApiInspector.Invoking;
 using ApiInspector.Models;
 
 namespace ApiInspector.MainWindow
 {
-    
-
     static partial class Mixin
     {
+        #region Public Properties
         // public static string OnAssertionResponseUpdated = nameof(OnAssertionResponseUpdated);
-        
+
+        public static DataKey<InvokeOutput[]> InvokeOutputs => CreateKey<InvokeOutput[]>(typeof(Mixin));
+        #endregion
+
+        #region Public Methods
+        public static void UpdateScenarioOutput(this Scope scope, ScenarioInfo scenarioInfo, InvokeOutput invokeOutput)
+        {
+            var scenarios = scope.Get(Keys.SelectedInvocationInfo).Scenarios;
+
+            if (!scope.Contains(InvokeOutputs))
+            {
+                scope.Add(InvokeOutputs, new InvokeOutput[scenarios.Count]);
+            }
+
+            var scenarioIndex = scenarios.IndexOf(scenarioInfo);
+
+            scope.Get(InvokeOutputs)[scenarioIndex] = invokeOutput;
+        }
+
+        public static InvokeOutput FindScenarioOutput(this Scope scope, ScenarioInfo scenarioInfo)
+        {
+            var invokeOutputs = scope.TryGet(InvokeOutputs);
+
+
+            if (invokeOutputs == null || invokeOutputs.Length == 0)
+            {
+                return null;
+            }
+
+            var scenarios = scope.Get(Keys.SelectedInvocationInfo).Scenarios;
+
+            var scenarioIndex = scenarios.IndexOf(scenarioInfo);
+            if (scenarioIndex >= 0 && invokeOutputs.Length > scenarioIndex)
+            {
+                return invokeOutputs[scenarioIndex];
+            }
+
+            return null;
+        }
+        #endregion
     }
 }
