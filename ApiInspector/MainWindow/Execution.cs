@@ -158,24 +158,11 @@ namespace ApiInspector.MainWindow
                 return;
             }
             
-            UpdateScenarioActionIcon(success: null);
-
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
             Task.Run(() => { ExecuteSelectedScenarioAndProcessResponse(); });
         }
 
-        // TODO check
-        void UpdateScenarioActionIcon(bool? success)
-        {
-            Dispatcher.InvokeAsync(() =>
-            {
-                var actionButton = FindSelectedActionButton();
-
-                If(success == null, actionButton.HideIcon);
-                If(success == true, actionButton.ShowSuccessIcon);
-                If(success == false, actionButton.ShowFailIcon);
-            });
-        }
+       
 
         void UpdateUI(Action action)
         {

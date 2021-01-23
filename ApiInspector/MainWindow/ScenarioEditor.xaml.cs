@@ -16,12 +16,6 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class ScenarioEditor
     {
-        #region Static Fields
-        /// <summary>
-        ///     The scenario data property
-        /// </summary>
-        public static readonly DependencyProperty ScenarioDataProperty = DependencyProperty.Register("ScenarioData", typeof(ScenarioInfo), typeof(ScenarioEditor), new PropertyMetadata(default(ScenarioInfo)));
-        #endregion
 
         /// <summary>
         ///     The scope
@@ -29,7 +23,6 @@ namespace ApiInspector.MainWindow
         Scope scope;
 
 
-        #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="ScenarioEditor" /> class.
         /// </summary>
@@ -37,9 +30,6 @@ namespace ApiInspector.MainWindow
         {
             InitializeComponent();
         }
-        #endregion
-
-        #region Properties
         /// <summary>
         ///     Sets the content of the current.
         /// </summary>
@@ -71,9 +61,6 @@ namespace ApiInspector.MainWindow
         ///     Gets the selected scenario.
         /// </summary>
         ScenarioInfo selectedScenario => scope.Get(SelectedScenario);
-        #endregion
-
-        #region Methods
         /// <summary>
         ///     Connects the specified scope.
         /// </summary>
@@ -223,7 +210,6 @@ namespace ApiInspector.MainWindow
         {
             scope.OnUpdate(SelectedScenario, ()=>UpdateUI(UpdateNumbers));
             scope.OnUpdate(SelectedScenario, ()=>UpdateUI(ArrangeRemoveScenarioButtonVisibility));
-            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(MakePressedSelectedScenario));
             scope.OnUpdate(SelectedScenario, ()=>UpdateUI(ActivateInputOutputPanel));
 
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
@@ -272,36 +258,9 @@ namespace ApiInspector.MainWindow
             buttonAssertions.IsPressed               = false;
         }
 
-        /// <summary>
-        ///     Finds the selected action button.
-        /// </summary>
-        ActionButton FindSelectedActionButton()
-        {
-            foreach (ActionButton child in scenarioNumbersContainer.Children)
-            {
-                var scenario = (ScenarioInfo) child.GetValue(ScenarioDataProperty);
+        
 
-                if (scenario == scope.Get(SelectedScenario))
-                {
-                    return child;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        ///     Makes the pressed selected scenario.
-        /// </summary>
-        void MakePressedSelectedScenario()
-        {
-            var actionButton = FindSelectedActionButton();
-
-            if (actionButton != null)
-            {
-                actionButton.IsPressed = true;
-            }
-        }
+        
 
         /// <summary>
         ///     Called when [add new scenario clicked].
@@ -352,7 +311,6 @@ namespace ApiInspector.MainWindow
                     Text = i.ToString()
                 };
 
-                actionButton.SetValue(ScenarioDataProperty, scenario);
 
                 actionButton.Click += (s, e) => { scope.Update(SelectedScenario, scenario); };
 
@@ -377,6 +335,23 @@ namespace ApiInspector.MainWindow
                 actionButton.Loaded   += (s, e) => scope.SubscribeEvent(OnScenarioExecuteResponseUpdated, calculateIcon);
                 actionButton.Unloaded += (s, e) => scope.UnSubscribeEvent(OnScenarioExecuteResponseUpdated, calculateIcon);
 
+                void arrangeIsPressed()
+                {
+                    if (selectedScenario == scenario)
+                    {
+                        actionButton.IsPressed = true;
+                        return;
+                    }
+
+                    actionButton.IsPressed = false;
+                }
+
+                arrangeIsPressed();
+
+                actionButton.Loaded   += (s, e) => scope.OnUpdate(SelectedScenario, arrangeIsPressed);
+                actionButton.Unloaded += (s, e) => scope.UnUpdate(SelectedScenario, arrangeIsPressed);
+
+
 
                 scenarioNumbersContainer.Children.Add(actionButton);
 
@@ -385,6 +360,5 @@ namespace ApiInspector.MainWindow
 
             VerticalIndent(scenarioNumbersContainer, 10);
         }
-        #endregion
     }
 }
