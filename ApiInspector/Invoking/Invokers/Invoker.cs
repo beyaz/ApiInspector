@@ -295,8 +295,8 @@ namespace ApiInspector.Invoking.Invokers
             var stopwatch = Stopwatch.StartNew();
 
             var responseInvokeMethod = invokeMethod();
-
             
+            responseInvokeMethod = Global.NormalizeInvokedMethodReturnValue(responseInvokeMethod);
 
             stopwatch.Stop();
 

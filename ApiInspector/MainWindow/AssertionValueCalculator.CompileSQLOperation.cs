@@ -6,6 +6,7 @@ using ApiInspector.DataAccess;
 using ApiInspector.Serialization;
 using BOA.Common.Extensions;
 using Mono.Cecil;
+using static ApiInspector.Plugins.Global;
 
 namespace ApiInspector.MainWindow
 {
@@ -177,9 +178,9 @@ namespace ApiInspector.MainWindow
                 processComplexSuggestion(parameterName, parameterValue);
             }
 
-            if (methodDefinition.ReturnType.FullName != "System.Void")
+            if (!IsVoidMethod(methodDefinition))
             {
-                var returnValue = deserialize(input.MethodReturnValueInJson, methodDefinition.ReturnType.GetDotNetType());
+                var returnValue = deserialize(input.MethodReturnValueInJson, GetReturnTypeDefinitionOf(methodDefinition).GetDotNetType());
 
                 processSimpleSuggestion("output", returnValue);
                 processComplexSuggestion("output", returnValue);    

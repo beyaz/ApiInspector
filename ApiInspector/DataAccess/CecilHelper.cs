@@ -4,11 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using ApiInspector.InvocationInfoEditor;
-using ApiInspector.Plugins;
 using BOA.Base;
-using BOA.Common.Extensions;
 using Mono.Cecil;
-using Newtonsoft.Json;
+using static ApiInspector.Plugins.Global;
 
 namespace ApiInspector.DataAccess
 {
@@ -159,18 +157,9 @@ namespace ApiInspector.DataAccess
         {
             var roots = new Dictionary<string, TypeDefinition>();
             {
-                var returnTypeReference = methodDefinition.ReturnType;
-            
-                var isVoidType = returnTypeReference.FullName == "System.Void" || returnTypeReference.FullName == "BOA.Common.Types.ResponseBase";
-
-                if (!isVoidType)
+                if (!IsVoidMethod(methodDefinition))
                 {
-                    if (returnTypeReference.FullName.StartsWith("BOA.Common.Types.GenericResponse`1<"))
-                    {
-                        returnTypeReference = ((GenericInstanceType)returnTypeReference).GenericArguments[0];
-                    }
-                
-                    roots.Add(OutputPrefix+".",returnTypeReference.Resolve());
+                    roots.Add(OutputPrefix+".", GetReturnTypeDefinitionOf(methodDefinition));
                 }
 
                 foreach (var parameterDefinition in methodDefinition.Parameters)
