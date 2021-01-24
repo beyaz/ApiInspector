@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.DataAccess
@@ -41,5 +42,27 @@ namespace ApiInspector.DataAccess
             return getProp(propName).GetValue(src, null);
         }
         #endregion
+
+        public static void SaveValueToPropertyPath(object value, object instance, string propertyPath)
+        {
+            var parts = propertyPath.Split('.');
+            
+            var prop  = instance.GetType().GetProperty(parts[0]);
+
+            if (prop == null)
+            {
+                throw new MissingMemberException(instance.GetType().FullName, parts[0]);
+            }
+
+            if (parts.Length == 1)
+            {
+                prop.SetValue(instance, value, null);
+            }
+            else
+            {
+                instance = prop.GetValue(instance);
+                SaveValueToPropertyPath(value,instance, string.Join(".", parts.Skip(1)));
+            }
+        }
     }
 }

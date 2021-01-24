@@ -24,7 +24,7 @@ namespace ApiInspector.MainWindow
             {
                 if (actualJson != expectedJson)
                 {
-                    return $"Actual value: {actualJson} [SHOULD BE EQUAL TO] expected value: {expectedJson}";
+                    return $"Actual value: '{actualJson}' [SHOULD BE EQUAL TO] expected value: '{expectedJson}'";
                 }
 
                 return null;
@@ -115,7 +115,7 @@ namespace ApiInspector.MainWindow
 
                 string trim(string str)
                 {
-                    return str.Trim('\"', ' ', '\\');
+                    return str?.Trim('\"', ' ', '\\');
                 }
 
                 actualJson   = trim(actualJson);

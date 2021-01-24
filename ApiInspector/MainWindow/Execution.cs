@@ -7,6 +7,7 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
+using ApiInspector.Serialization;
 using static System.String;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
@@ -101,12 +102,14 @@ namespace ApiInspector.MainWindow
             {
                 var methodDefinition = scope.Get(SelectedMethodDefinition);
 
+               
+
                 var env = EnvironmentInfo.Parse(invocationInfo.Environment);
 
                 
                 var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput(string.Empty)
                 {
-                    InvocationParameters = scenario.MethodParameters.Select(x=>Serialization.Serializer.SerializeToJson(x.Value)).ToList()
+                    InvocationParameters = scenario.MethodParameters.Select(x=>x.Value).ToList()
                 }, env);
 
                 var targetPath = assertionInfo.Expected.Text.Trim();
@@ -115,11 +118,16 @@ namespace ApiInspector.MainWindow
                 {
                     foreach (var parameterDefinition in methodDefinition.Parameters)
                     {
-                        if (targetPath == CecilHelper.PrefixCharacter + parameterDefinition.Name)
+                        var prefix = $"{CecilHelper.PrefixCharacter}{parameterDefinition.Name}.";
+                        if (targetPath.StartsWith(prefix))
                         {
+                            var instance = DeserializeForMethodParameter(scenario.MethodParameters[parameterDefinition.Index].Value, parameterDefinition.ParameterType.GetDotNetType());
+
+                            ReflectionUtil.SaveValueToPropertyPath(actual, instance, targetPath.RemoveFromStart(prefix));
+                            
                             scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
                             {
-                                Value = Serialization.Serializer.SerializeToJson(actual)
+                                Value = SerializeForMethodParameter(instance)
                             };
                         }
 
@@ -133,7 +141,7 @@ namespace ApiInspector.MainWindow
                         {
                             scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
                             {
-                                Value = Serialization.Serializer.SerializeToJson(actual)
+                                Value = SerializeForMethodParameter(actual)
                             };
                         }
 

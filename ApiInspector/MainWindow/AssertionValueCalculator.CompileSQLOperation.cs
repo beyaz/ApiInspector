@@ -6,6 +6,7 @@ using ApiInspector.DataAccess;
 using ApiInspector.Serialization;
 using BOA.Common.Extensions;
 using Mono.Cecil;
+using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.Plugins.Global;
 
 namespace ApiInspector.MainWindow
@@ -43,16 +44,7 @@ namespace ApiInspector.MainWindow
 
             var allSuggestions = CecilHelper.GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(methodDefinition);
 
-            object deserialize(string json, Type targetType)
-            {
-                if (targetType == typeof(string))
-                {
-                    return json;
-                }
-
-
-                return Serializer.Deserialize(json, targetType);
-            }
+            
 
             var text = input.SQL;
 
@@ -173,7 +165,7 @@ namespace ApiInspector.MainWindow
             foreach (var parameterDefinition in methodDefinition.Parameters)
             {
                 var parameterName  = parameterDefinition.Name;
-                var parameterValue = deserialize(input.MethodParametersInJson[parameterDefinition.Index], parameterDefinition.ParameterType.GetDotNetType());
+                var parameterValue = DeserializeForMethodParameter(input.MethodParametersInJson[parameterDefinition.Index], parameterDefinition.ParameterType.GetDotNetType());
 
                 processSimpleSuggestion(parameterName, parameterValue);
                 processComplexSuggestion(parameterName, parameterValue);
@@ -181,7 +173,7 @@ namespace ApiInspector.MainWindow
 
             if (!IsVoidMethod(methodDefinition))
             {
-                var returnValue = deserialize(input.MethodReturnValueInJson, GetReturnTypeDefinitionOf(methodDefinition).GetDotNetType());
+                var returnValue = DeserializeForMethodParameter(input.MethodReturnValueInJson, GetReturnTypeDefinitionOf(methodDefinition).GetDotNetType());
 
                 processSimpleSuggestion("output", returnValue);
                 processComplexSuggestion("output", returnValue);    

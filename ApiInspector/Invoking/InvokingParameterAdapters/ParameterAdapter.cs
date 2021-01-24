@@ -139,7 +139,7 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
 
             if (targetParameterType == typeof(string))
             {
-                return input;
+                return input.WithInvocationValue(input.InvocationValue);
             }
 
             return null;
