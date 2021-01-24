@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
 using static ApiInspector.MainWindow.Mixin;
@@ -11,6 +12,10 @@ namespace ApiInspector.Application
     /// </summary>
     partial class App
     {
+
+        public static System.Windows.Input.Cursor DefaultCursor => System.Windows.Input.Cursors.Arrow;
+
+
         #region Static Fields
         internal static readonly Scope AppScope = new Scope();
 
@@ -25,6 +30,8 @@ namespace ApiInspector.Application
         {
             BoaAssemblyResolver.AttachToCurrentDomain();
             errorMonitor = new ErrorMonitor(this);
+
+            Mouse.OverrideCursor = DefaultCursor;
         }
         #endregion
 

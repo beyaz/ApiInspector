@@ -10,6 +10,24 @@ namespace ApiInspector.MainWindow
     /// </summary>
     static partial class Mixin
     {
+
+        public static void DisableMouseClicksForThisApplication()
+        {
+            if (System.Windows.Application.Current.MainWindow != null)
+            {
+                System.Windows.Application.Current.MainWindow.IsHitTestVisible = false;
+            }
+        }
+
+        public static void EnableMouseClicksForThisApplication()
+        {
+            if (System.Windows.Application.Current.MainWindow != null)
+            {
+                System.Windows.Application.Current.MainWindow.IsHitTestVisible = true;
+            }
+        }
+
+
         #region Public Properties
         /// <summary>
         ///     Gets the show error notification key.

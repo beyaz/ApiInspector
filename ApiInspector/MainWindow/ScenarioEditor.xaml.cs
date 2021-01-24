@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ApiInspector.Components;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
+using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
@@ -267,8 +269,12 @@ namespace ApiInspector.MainWindow
             {
                 UpdateUI(() =>
                 {
-                    executeSelectedScenarioButton.Text      = "Executing...";
-                    executeSelectedScenarioButton.IsEnabled = false;
+                    executeSelectedScenarioButton.Text                             = "Executing...";
+                    executeSelectedScenarioButton.IsEnabled                        = false;
+                    Mouse.OverrideCursor                                           = System.Windows.Input.Cursors.Wait;
+                    
+                    
+                   DisableMouseClicksForThisApplication();
                 });
             });
 
@@ -278,6 +284,9 @@ namespace ApiInspector.MainWindow
                 {
                     executeSelectedScenarioButton.Text      = "Execute";
                     executeSelectedScenarioButton.IsEnabled = true;
+                    Mouse.OverrideCursor                    = DefaultCursor;
+
+                    EnableMouseClicksForThisApplication();
                 });
             });
 
