@@ -20,7 +20,7 @@ namespace ApiInspector.DataAccess
 
             var getProp = fun((string propertyName) =>
             {
-                var propertyInfo = src.GetType()?.GetProperty(propertyName);
+                var propertyInfo = src.GetType().GetProperty(propertyName);
                 if (propertyInfo == null)
                 {
                     throw new MissingMemberException(propName);

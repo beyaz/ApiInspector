@@ -137,7 +137,7 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
-            if (targetParameterType == typeof(string) && input.InvocationValue is string)
+            if (targetParameterType == typeof(string))
             {
                 return input;
             }

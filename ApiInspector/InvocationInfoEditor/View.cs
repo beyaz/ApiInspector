@@ -258,9 +258,9 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (selectedMethodDefinition!= null)
                 {
-                    if (invocationInfo.MethodName != CecilHelper.GetMethodNameWithSignature(selectedMethodDefinition))
+                    if (invocationInfo.MethodName != selectedMethodDefinition.GetMethodNameWithSignature())
                     {
-                        invocationInfo.MethodName = CecilHelper.GetMethodNameWithSignature(selectedMethodDefinition);
+                        invocationInfo.MethodName = selectedMethodDefinition.GetMethodNameWithSignature();
                         methodNameIntellisenseTextBox.SetValue(invocationInfo.MethodName);
 
                     }

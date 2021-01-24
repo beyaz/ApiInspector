@@ -12,7 +12,7 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         /// <summary>
         ///     Initializes a new instance of the <see cref="ParameterAdapterInput" /> class.
         /// </summary>
-        public ParameterAdapterInput(ParameterInfo parameterInfo, BOAContext boaContext, object invocationValue)
+        public ParameterAdapterInput(ParameterInfo parameterInfo, BOAContext boaContext, string invocationValue)
         {
             ParameterInfo   = parameterInfo;
             BoaContext      = boaContext;
@@ -26,10 +26,13 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         /// </summary>
         public BOAContext BoaContext { get; }
 
+        public string InvocationValue { get; }
+
         /// <summary>
         ///     Gets or sets the invocation value.
         /// </summary>
-        public object InvocationValue { get; }
+        public object AdaptedInvocationValue { get; private set; }
+
 
         /// <summary>
         ///     Gets or sets the parameter information.
@@ -41,9 +44,9 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         /// <summary>
         ///     Withes the invocation value.
         /// </summary>
-        public ParameterAdapterInput WithInvocationValue(object invocationValue)
+        public ParameterAdapterInput WithInvocationValue(object adaptedInvocationValue)
         {
-            return new ParameterAdapterInput(ParameterInfo, BoaContext, invocationValue);
+            return new ParameterAdapterInput(ParameterInfo, BoaContext, InvocationValue){ AdaptedInvocationValue = adaptedInvocationValue};
         }
         #endregion
     }

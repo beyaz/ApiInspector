@@ -16,8 +16,7 @@ namespace ApiInspector.Invoking.InstanceCreators
         public static object TryCreate(Type targetType, BOAContext boaContext)
         {
             var instance     = Activator.CreateInstance(targetType);
-            var objectHelper = instance as ObjectHelper;
-            if (objectHelper != null)
+            if (instance is ObjectHelper objectHelper)
             {
                 objectHelper.Context = boaContext.GetObjectHelper().Context;
             }

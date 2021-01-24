@@ -47,7 +47,7 @@ namespace ApiInspector.Invoking.Invokers
                     var input = tryAdapt(parameterAdapterInput);
                     if (input != null)
                     {
-                        return input.InvocationValue;
+                        return input.AdaptedInvocationValue;
                     }
                 }
 

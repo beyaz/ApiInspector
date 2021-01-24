@@ -165,21 +165,7 @@ namespace ApiInspector.Plugins
         #endregion
 
         #region Methods
-        static MethodDefinition ToMethodDefinition(CecilMethodDefinitionSerializationInfo data)
-        {
-            foreach (var moduleDefinition in AssemblyDefinition.ReadAssembly(data.AssemblyPath).Modules)
-            {
-                foreach (var item in moduleDefinition.Types)
-                {
-                    if (item.FullName == data.ClassName)
-                    {
-                        return item.Methods.FirstOrDefault(m => m.GetMethodNameWithSignature() == data.MethodNameWithSignature);
-                    }
-                }
-            }
-
-            throw new Exception(data.MethodNameWithSignature);
-        }
+        
         #endregion
     }
 }
