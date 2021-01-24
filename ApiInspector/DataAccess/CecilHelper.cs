@@ -157,30 +157,43 @@ namespace ApiInspector.DataAccess
        
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameterFromMethodDefinition(MethodDefinition methodDefinition)
         {
-
+            var roots = new Dictionary<string, TypeDefinition>();
+            {
+                var returnTypeReference = methodDefinition.ReturnType;
             
+                var isVoidType = returnTypeReference.FullName == "System.Void" || returnTypeReference.FullName == "BOA.Common.Types.ResponseBase";
 
-            var items = new List<string>();
-
-            var history = new List<TypeDefinition>();
-
-            if (methodDefinition.ReturnType.FullName !="System.Void")
-            {
-                CollectPropertiesThatCanBeSQLParameter(methodDefinition.ReturnType.Resolve(), OutputPrefix+".", items,history);    
-            }
-
-            foreach (var parameterDefinition in methodDefinition.Parameters)
-            {
-                if (parameterDefinition.ParameterType.FullName == typeof(ObjectHelper).FullName)
+                if (!isVoidType)
                 {
-                    continue;
+                    if (returnTypeReference.FullName.StartsWith("BOA.Common.Types.GenericResponse`1<"))
+                    {
+                        returnTypeReference = ((GenericInstanceType)returnTypeReference).GenericArguments[0];
+                    }
+                
+                    roots.Add(OutputPrefix+".",returnTypeReference.Resolve());
                 }
 
-                CollectPropertiesThatCanBeSQLParameter(parameterDefinition.ParameterType.Resolve(), PrefixCharacter+parameterDefinition.Name+".", items,history);
+                foreach (var parameterDefinition in methodDefinition.Parameters)
+                {
+                    if (parameterDefinition.ParameterType.FullName == typeof(ObjectHelper).FullName)
+                    {
+                        continue;
+                    }
+
+                    roots.Add(PrefixCharacter + parameterDefinition.Name + ".", parameterDefinition.ParameterType.Resolve());
+                }
             }
 
-            
+            var items = new List<string>();
+            {
+                var history = new List<TypeDefinition>();
 
+                foreach (var pair in roots)
+                {
+                    CollectPropertiesThatCanBeSQLParameter(pair.Value, pair.Key, items,history);
+                }
+            }
+            
             return items;
         }
 
