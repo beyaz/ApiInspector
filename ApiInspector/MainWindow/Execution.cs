@@ -119,7 +119,7 @@ namespace ApiInspector.MainWindow
                         {
                             scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
                             {
-                                Value = actual
+                                Value = Serialization.Serializer.SerializeToJson(actual)
                             };
                         }
 
@@ -133,7 +133,7 @@ namespace ApiInspector.MainWindow
                         {
                             scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
                             {
-                                Value = actual
+                                Value = Serialization.Serializer.SerializeToJson(actual)
                             };
                         }
 

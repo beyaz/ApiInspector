@@ -165,7 +165,7 @@ namespace ApiInspector.InvocationInfoEditor
                 {
                     if (defaultValueIsZero(definition.ParameterType) && string.IsNullOrWhiteSpace(parameterInfo.Value+string.Empty))
                     {
-                        parameterInfo.Value = 0;
+                        parameterInfo.Value = 0.ToString();
                     }
 
                     var editor = new TextBox
@@ -190,12 +190,9 @@ namespace ApiInspector.InvocationInfoEditor
 
                 // complex items should be as json input
                 {
-                    if (parameterInfo.Value != null && !(parameterInfo.Value is string))
-                    {
-                        parameterInfo.Value = Serializer.SerializeToJson(parameterInfo.Value);
-                    }
+                    
 
-                    if (string.IsNullOrWhiteSpace(parameterInfo.Value + string.Empty))
+                    if (string.IsNullOrWhiteSpace(parameterInfo.Value ))
                     {
                         parameterInfo.Value = GetDefaultJsonForClass(definition.ParameterType.FullName) ?? string.Empty;
                     }

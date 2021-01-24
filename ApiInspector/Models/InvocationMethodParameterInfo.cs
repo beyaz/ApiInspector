@@ -12,7 +12,7 @@ namespace ApiInspector.Models
         /// <summary>
         ///     Gets or sets the value.
         /// </summary>
-        public object Value { get; set; }
+        public string Value { get; set; }
         #endregion
     }
 }
