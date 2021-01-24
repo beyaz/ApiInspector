@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +17,26 @@ namespace ApiInspector.MainWindow
     /// </summary>
     public partial class ScenarioEditor
     {
+        DataKey<ContentTypeName> SelectedContentTypeKey => CreateKey<ContentTypeName>(typeof(ScenarioEditor));
+
+        enum ContentTypeName
+        {
+            InputOutputPanel,
+            AssertionsPanel,
+            ExportPanel
+        }
+
+        ContentTypeName SelectedContentTypeName
+        {
+            set
+            {
+                scope.Update(SelectedContentTypeKey,value);
+            }
+            get
+            {
+                return scope.Get(SelectedContentTypeKey);
+            }
+        }
 
         /// <summary>
         ///     The scope
@@ -93,7 +114,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void ActivateExportPanel(object sender, RoutedEventArgs e)
         {
-            ActivateExportPanel();
+            SelectedContentTypeName = ContentTypeName.ExportPanel;
         }
 
         /// <summary>
@@ -211,7 +232,33 @@ namespace ApiInspector.MainWindow
         {
             scope.OnUpdate(SelectedScenario, ()=>UpdateUI(UpdateNumbers));
             scope.OnUpdate(SelectedScenario, ()=>UpdateUI(ArrangeRemoveScenarioButtonVisibility));
-            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(ActivateInputOutputPanel));
+            scope.OnUpdate(SelectedScenario, ()=>UpdateUI(()=>scope.Update(SelectedContentTypeKey,ContentTypeName.InputOutputPanel)));
+            scope.OnUpdate(SelectedContentTypeKey, () =>
+            {
+                Dispatcher.InvokeAsync(() =>
+                {
+                    switch (scope.Get(SelectedContentTypeKey))
+                    {
+                        case ContentTypeName.InputOutputPanel:
+                        {
+                            ActivateInputOutputPanel();
+                            return;
+                        }
+                        case ContentTypeName.AssertionsPanel:
+                        {
+                            ActivateAssertions();
+                            return;
+                        }
+                        case ContentTypeName.ExportPanel:
+                        {
+                            ActivateExportPanel();
+                            return;
+                        }
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                });
+            });
 
             scope.OnUpdate(SelectedMethodDefinition, BuildScenarioList);
             scope.OnUpdate(SelectedMethodDefinition, ArrangeVisibilityOnEodMethod);
@@ -276,7 +323,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnAssertionsClicked(object sender, RoutedEventArgs e)
         {
-            ActivateAssertions();
+            SelectedContentTypeName = ContentTypeName.AssertionsPanel;
         }
 
         /// <summary>
@@ -284,7 +331,7 @@ namespace ApiInspector.MainWindow
         /// </summary>
         void OnButtonActivateInputOutputPanelClicked(object sender, RoutedEventArgs e)
         {
-            ActivateInputOutputPanel();
+            SelectedContentTypeName = ContentTypeName.InputOutputPanel;
         }
 
         /// <summary>
@@ -313,7 +360,14 @@ namespace ApiInspector.MainWindow
                 };
 
 
-                actionButton.Click += (s, e) => { scope.Update(SelectedScenario, scenario); };
+                actionButton.Click += (s, e) =>
+                {
+                    var currentContentTypeName = SelectedContentTypeName;
+
+                    scope.Update(SelectedScenario, scenario);
+                    
+                    UpdateUI(()=>SelectedContentTypeName = currentContentTypeName);
+                };
 
                 void calculateIcon()
                 {
