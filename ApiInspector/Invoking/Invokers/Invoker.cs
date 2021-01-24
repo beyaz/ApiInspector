@@ -94,9 +94,9 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified environment information.
         /// </summary>
-        public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo, int scenarioIndex)
+        public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-            return AppDomainHelper.CallInIsolatedDomain((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo, scenarioIndex), trace,ToOutput);
+            return AppDomainHelper.CallInIsolatedDomain((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo, parameters), trace,ToOutput);
         }
 
         static InvokeOutput ToOutput(Exception exception)
@@ -107,7 +107,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        public static InvokeOutput Invoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, int scenarioIndex)
+        public static InvokeOutput Invoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
             var fail = fun((Exception exception) =>
             {
@@ -118,7 +118,7 @@ namespace ApiInspector.Invoking.Invokers
 
             try
             {
-                return UnsafeInvoke(boaContext, trace, invocationInfo, scenarioIndex);
+                return UnsafeInvoke(boaContext, trace, invocationInfo, parameters);
             }
             catch (Exception exception)
             {
@@ -154,7 +154,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
-        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, int scenarioIndex)
+        static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
 
             var success = fun((object responseOfInvokeMethod) =>
@@ -219,16 +219,7 @@ namespace ApiInspector.Invoking.Invokers
 
             trace("Preparing invocation parameters");
 
-            var prepareParameters = fun(() =>
-            {
-                var parameters = invocationInfo.Scenarios[scenarioIndex].MethodParameters ?? new List<InvocationMethodParameterInfo>();
-
-                return InvocationParameterPreparer.Prepare(parameters, methodInfo, boaContext, trace);
-            });
-
-            var invocationParameters = prepareParameters();
-
-
+            var invocationParameters = InvocationParameterPreparer.Prepare(parameters?? new List<InvocationMethodParameterInfo>(), methodInfo, boaContext, trace);
 
             trace("Invoke started. Response waiting...");
 
@@ -360,13 +351,13 @@ namespace ApiInspector.Invoking.Invokers
             /// <summary>
             ///     Invokes the specified environment information.
             /// </summary>
-            public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo, int scenarioIndex)
+            public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
             {
                 var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
 
                 using (var boaContext = new BOAContext(environmentInfo, trace))
                 {
-                    return Invoker.Invoke(boaContext, trace, invocationInfo, scenarioIndex);
+                    return Invoker.Invoke(boaContext, trace, invocationInfo, parameters);
                 }
             }
             #endregion

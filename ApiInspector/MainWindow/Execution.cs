@@ -9,7 +9,6 @@ using static System.String;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.Utility;
-using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector.MainWindow
 {
@@ -84,7 +83,7 @@ namespace ApiInspector.MainWindow
 
             if (IsEndOfDayMethod(invocationInfo))
             {
-                returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, -1);
+                returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, null);
 
                 return returnValue;
             }
@@ -95,9 +94,7 @@ namespace ApiInspector.MainWindow
 
             returnValue.Scenario = scenario;
 
-            var scenarioIndex = scenarios.IndexOf(scenario);
-
-            var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenarioIndex);
+            var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenario.MethodParameters);
 
 
             if (!invokeOutput.IsSuccess)
