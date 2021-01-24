@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BOA.Common.Helpers;
+using BOA.Common.Types;
 
 namespace ApiInspector.Test
 {
@@ -132,6 +130,20 @@ namespace ApiInspector.Test
         {
             return value + 1;
         }
+
+        public static GenericResponse<ClassA> GetGenericResponseA(string stringProp0, string stringProp1)
+        {
+            var response = ResponseFactoryHelper.GetGenericResponse<ClassA>();
+
+            response.Value = new ClassA
+            {
+                StringProp0 = stringProp0,
+                StringProp1 = stringProp1
+            };
+
+            return response;
+        }
+
     }
     
 }

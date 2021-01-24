@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using ApiInspector.DataAccess;
 using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Models;
@@ -106,8 +108,18 @@ namespace ApiInspector.MainWindow
                     }
                 }
 
+                
+
                 var actualJson   = Serializer.SerializeToJson(actual);
                 var expectedJson = Serializer.SerializeToJson(expected);
+
+                string trim(string str)
+                {
+                    return str.Trim('\"', ' ', '\\');
+                }
+
+                actualJson   = trim(actualJson);
+                expectedJson = trim(expectedJson);
 
                 return operatorFunc(actualJson, expectedJson);
             }
@@ -167,7 +179,7 @@ namespace ApiInspector.MainWindow
                         return sqlOperationOutput.SqlParameters[0].Value;
                     }
 
-                    if (input.SQL == "@output")
+                    if (input.SQL == "@output" || methodDefinition.Parameters.Any(p=>CecilHelper.PrefixCharacter + p.Name==  input.SQL))
                     {
                         return sqlOperationOutput.SqlParameters[0].Value;
                     }
