@@ -173,7 +173,7 @@ namespace ApiInspector.MainWindow
 
             if (!IsVoidMethod(methodDefinition))
             {
-                var returnValue = DeserializeForMethodParameter(input.MethodReturnValueInJson, GetReturnTypeDefinitionOf(methodDefinition).GetDotNetType());
+                var returnValue = DeserializeForMethodParameter(input.MethodReturnValueInJson, GetReturnTypeReferenceOf(methodDefinition).GetDotNetType());
 
                 processSimpleSuggestion("output", returnValue);
                 processComplexSuggestion("output", returnValue);    

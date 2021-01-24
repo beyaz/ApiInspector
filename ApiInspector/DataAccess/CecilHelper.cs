@@ -175,11 +175,9 @@ namespace ApiInspector.DataAccess
 
             var items = new List<string>();
             {
-                var history = new List<TypeDefinition>();
-
                 foreach (var pair in roots)
                 {
-                    CollectPropertiesThatCanBeSQLParameter(pair.Value, pair.Key, items,history);
+                    CollectPropertiesThatCanBeSQLParameter(pair.Value, pair.Key, items,history:new List<TypeDefinition>());
                 }
             }
             

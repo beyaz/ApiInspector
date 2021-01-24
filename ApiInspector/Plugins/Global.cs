@@ -32,6 +32,11 @@ namespace ApiInspector.Plugins
 
         public static TypeDefinition GetReturnTypeDefinitionOf(MethodDefinition methodDefinition)
         {
+            return GetReturnTypeReferenceOf(methodDefinition).Resolve();
+        }
+
+        public static TypeReference GetReturnTypeReferenceOf(MethodDefinition methodDefinition)
+        {
             var returnTypeReference = methodDefinition.ReturnType;
 
             if (returnTypeReference.FullName.StartsWith("BOA.Common.Types.GenericResponse`1<"))
@@ -39,7 +44,7 @@ namespace ApiInspector.Plugins
                 returnTypeReference = ((GenericInstanceType)returnTypeReference).GenericArguments[0];
             }
 
-            return returnTypeReference.Resolve();
+            return returnTypeReference;
         }
 
         public static bool IsVoidMethod(MethodDefinition methodDefinition)
