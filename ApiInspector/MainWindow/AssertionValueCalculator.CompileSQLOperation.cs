@@ -50,6 +50,7 @@ namespace ApiInspector.MainWindow
                     return json;
                 }
 
+
                 return Serializer.Deserialize(json, targetType);
             }
 

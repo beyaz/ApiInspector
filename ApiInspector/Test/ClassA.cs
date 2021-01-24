@@ -144,6 +144,18 @@ namespace ApiInspector.Test
             return response;
         }
 
+        public static GenericResponse<ClassA> ModifyValue(ClassA value, string stringProp0, string stringProp1)
+        {
+            var response = ResponseFactoryHelper.GetGenericResponse<ClassA>();
+
+            value.StringProp0 = stringProp0;
+            value.StringProp1 = stringProp1;
+
+            response.Value = value;
+
+            return response;
+        }
+
     }
     
 }

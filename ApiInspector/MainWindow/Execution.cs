@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using ApiInspector.DataAccess;
+using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
@@ -94,6 +96,60 @@ namespace ApiInspector.MainWindow
 
             returnValue.Scenario = scenario;
 
+
+            void processAssignmentsBeforeInvoke(AssertionInfo assertionInfo)
+            {
+                var methodDefinition = scope.Get(SelectedMethodDefinition);
+
+                var env = EnvironmentInfo.Parse(invocationInfo.Environment);
+
+                
+                var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput(string.Empty)
+                {
+                    InvocationParameters = scenario.MethodParameters.Select(x=>Serialization.Serializer.SerializeToJson(x.Value)).ToList()
+                }, env);
+
+                var targetPath = assertionInfo.Expected.Text.Trim();
+
+                if (targetPath.Contains("."))
+                {
+                    foreach (var parameterDefinition in methodDefinition.Parameters)
+                    {
+                        if (targetPath == CecilHelper.PrefixCharacter + parameterDefinition.Name)
+                        {
+                            scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
+                            {
+                                Value = actual
+                            };
+                        }
+
+                    }
+                }
+                else
+                {
+                    foreach (var parameterDefinition in methodDefinition.Parameters)
+                    {
+                        if (targetPath == CecilHelper.PrefixCharacter + parameterDefinition.Name)
+                        {
+                            scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
+                            {
+                                Value = actual
+                            };
+                        }
+
+                    }
+                }
+
+                returnValue.AssertionExecuteResponses.Add(new AssertionExecuteResponseInfo(assertionInfo));
+
+            }
+
+            foreach (var assertionInfo in scenario.Assertions.Where(a=>a.OperatorName == AssertionOperatorNames.AssignTo))
+            {
+                processAssignmentsBeforeInvoke(assertionInfo);
+            }
+
+
             var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenario.MethodParameters);
 
 
@@ -124,7 +180,7 @@ namespace ApiInspector.MainWindow
                     return errorMessage;
                 }
 
-                foreach (var assertion in scenario.Assertions)
+                foreach (var assertion in scenario.Assertions.Where(a=>a.OperatorName != AssertionOperatorNames.AssignTo))
                 {
                     var assertionErrorMessage = runAssertion(assertion);
                     if (assertionErrorMessage != null)
