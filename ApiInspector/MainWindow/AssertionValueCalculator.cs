@@ -124,12 +124,12 @@ namespace ApiInspector.MainWindow
                 return operatorFunc(actualJson, expectedJson);
             }
 
-            if (operatorName == AssertionOperatorNames.IsEquals)
+            if (operatorName == AssertionOperatorNames.IsEqual)
             {
                 return doEqualityOperation(shouldBeEqual);
             }
 
-            if (operatorName == AssertionOperatorNames.IsNotEquals)
+            if (operatorName == AssertionOperatorNames.IsNotEqual)
             {
                 return doEqualityOperation(shouldNotBeEqual);
             }
@@ -139,7 +139,7 @@ namespace ApiInspector.MainWindow
                 return doOperationAsNumber(shouldBeGreaterThan);
             }
 
-            if (operatorName == AssertionOperatorNames.GreaterThanOrEquals)
+            if (operatorName == AssertionOperatorNames.GreaterThanOrEqual)
             {
                 return doOperationAsNumber(shouldBeGreaterThanOrEqual);
             }
@@ -149,7 +149,7 @@ namespace ApiInspector.MainWindow
                 return doOperationAsNumber(shouldBeLessThan);
             }
 
-            if (operatorName == AssertionOperatorNames.LessThanOrEquals)
+            if (operatorName == AssertionOperatorNames.LessThanOrEqual)
             {
                 return doOperationAsNumber(shouldBeLessThanOrEqual);
             }

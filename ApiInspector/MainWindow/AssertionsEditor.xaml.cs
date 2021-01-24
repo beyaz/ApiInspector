@@ -321,7 +321,7 @@ namespace ApiInspector.MainWindow
                 {
                     DatabaseName = Databases.Boa.ToString()
                 },
-                OperatorName = AssertionOperatorNames.IsEquals
+                OperatorName = AssertionOperatorNames.IsEqual
             };
 
             AddNewAssertion(assertion);

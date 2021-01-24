@@ -9,12 +9,13 @@ namespace ApiInspector.Models
     {
 
 
-        public  const string IsEquals = "=";
-        public  const string IsNotEquals = "!=";
-        public  const string GreaterThan = ">";
-        public  const string LessThan = "<";
-        public  const string LessThanOrEquals = "<=";
-        public  const string GreaterThanOrEquals = ">=";
+        public  const string IsEqual = "Is Equal";
+        public  const string IsNotEqual = "Is Not Equal";
+        public  const string GreaterThan = "Greater Than";
+        public  const string LessThan = "Less Than";
+        public  const string LessThanOrEqual = "Less Than or Equal";
+        public  const string GreaterThanOrEqual = "Greater Than or Equal";
+        public  const string AssignTo = "Assign";
 
         #region Public Methods
         /// <summary>
@@ -24,12 +25,13 @@ namespace ApiInspector.Models
         {
             return new[]
             {
-                IsEquals,
-                IsNotEquals,
+                IsEqual,
+                IsNotEqual,
                 GreaterThan,
-                GreaterThanOrEquals,
+                GreaterThanOrEqual,
                 LessThan,
-                LessThanOrEquals
+                LessThanOrEqual,
+                AssignTo
             };
         }
         #endregion
