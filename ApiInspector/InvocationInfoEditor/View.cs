@@ -50,6 +50,56 @@ namespace ApiInspector.InvocationInfoEditor
                     return NewStackPanel(lbl, editor);
                 });
 
+                var crateMethodNamePart = fun(() =>
+                {
+                    var lbl = new Label
+                    {
+                        FontWeight = fontWeight,
+                        Content    = "Method Name"
+                    };
+
+                    lbl.Loaded += (s, e) =>
+                    {
+                        scope.OnUpdate(SelectedMethodDefinition, () =>
+                        {
+                            var returnTypeFullName = scope.TryGet(SelectedMethodDefinition)?.ReturnType.FullName;
+                            
+                            if (returnTypeFullName == null)
+                            {
+                                lbl.Content = "Method Name";
+                                return;
+                            }
+
+                            // beautify returnTypeFullName
+                            {
+                                var replaceMap = new Dictionary<string,string>
+                                {
+                                    {"`1",string.Empty},
+                                    {"`2",string.Empty},
+                                    {"`3",string.Empty},
+                                    {"`4",string.Empty},
+                                
+                                    {"System.Collections.Generic.",string.Empty },
+                                    {"System.Collections.",string.Empty },
+                                    {"BOA.Common.Types.",string.Empty },
+                                    {"System.",string.Empty },
+
+                                };
+
+                                foreach (var pair in replaceMap)
+                                {
+                                    returnTypeFullName = returnTypeFullName.Replace(pair.Key, pair.Value);
+                                }
+                            }
+                            
+                            lbl.Content = $"Method Name returns: {returnTypeFullName}";
+                        });
+                    };
+
+
+                    return NewStackPanel(lbl, methodNameIntellisenseTextBox);
+                });
+
                 var labelSeparatedGridSplitter = fun((GridSplitter gridSplitter) =>
                 {
                     methodNameIntellisenseTextBox.Loaded += (s, e) =>
@@ -68,7 +118,7 @@ namespace ApiInspector.InvocationInfoEditor
                                                                     createInput("Assembly Name", assemblyIntellisenseTextBox))
                                                  ,
                                                  NewColumnSplittedGrid(createInput("Class Name", classNameIntellisenseTextBox),
-                                                                       createInput("Method Name", methodNameIntellisenseTextBox),labelSeparatedGridSplitter))
+                                                                       crateMethodNamePart(),labelSeparatedGridSplitter))
                                                 );
             });
 
