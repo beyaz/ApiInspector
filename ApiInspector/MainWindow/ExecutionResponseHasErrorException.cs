@@ -3,7 +3,7 @@
 namespace ApiInspector.MainWindow
 {
     [Serializable]
-    public class ExecutionResponseHasErrorException : Exception
+    public sealed class ExecutionResponseHasErrorException : Exception
     {
         #region Constructors
         public ExecutionResponseHasErrorException()

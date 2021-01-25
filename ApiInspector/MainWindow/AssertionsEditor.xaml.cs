@@ -131,7 +131,10 @@ namespace ApiInspector.MainWindow
         {
             var firstRow = fun(() =>
             {
-                var descriptionEditor = new TextBox();
+                var descriptionEditor = new TextBox
+                {
+                    Foreground = DescriptionForeground
+                };
 
                 Bind(descriptionEditor, TextBox.TextProperty, assertionInfo, nameof(assertionInfo.Description));
 

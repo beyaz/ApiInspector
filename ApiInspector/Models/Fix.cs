@@ -38,7 +38,6 @@ namespace ApiInspector.Models
                         new ScenarioInfo
                         {
                             MethodParameters       = new List<InvocationMethodParameterInfo>(),
-                            ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
                             Assertions             = new List<AssertionInfo>()
                         }
                     };
@@ -51,7 +50,6 @@ namespace ApiInspector.Models
                     new ScenarioInfo
                     {
                         MethodParameters       = invocationInfo.Parameters,
-                        ResponseOutputFilePath = invocationInfo.ResponseOutputFilePath,
                         Assertions             = new List<AssertionInfo>()
                     }
                 };

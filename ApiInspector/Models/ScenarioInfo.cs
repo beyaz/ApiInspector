@@ -23,6 +23,8 @@ namespace ApiInspector.Models
         /// </summary>
         public List<InvocationMethodParameterInfo> MethodParameters { get; set; }
 
+        public string Description { get; set; }
+
         /// <summary>
         ///     Gets or sets the response output file path.
         /// </summary>

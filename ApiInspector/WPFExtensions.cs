@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector
@@ -14,7 +15,7 @@ namespace ApiInspector
     {
         #region Public Methods
 
-        
+        public static SolidColorBrush DescriptionForeground = Brushes.RosyBrown;
 
 
         public static T SearchInMergedDictionaries<T>(string key)

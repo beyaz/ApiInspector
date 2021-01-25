@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace ApiInspector.MainWindow
 {
@@ -25,7 +27,7 @@ namespace ApiInspector.MainWindow
         {
             InputOutputPanel,
             AssertionsPanel,
-            ExportPanel
+            DescriptionPanel
         }
 
         ContentTypeName SelectedContentTypeName
@@ -114,26 +116,38 @@ namespace ApiInspector.MainWindow
         /// <summary>
         ///     Activates the export panel.
         /// </summary>
-        void ActivateExportPanel(object sender, RoutedEventArgs e)
+        void ActivateDescriptionPanel(object sender, RoutedEventArgs e)
         {
-            SelectedContentTypeName = ContentTypeName.ExportPanel;
+            SelectedContentTypeName = ContentTypeName.DescriptionPanel;
         }
 
         /// <summary>
         ///     Activates the export panel.
         /// </summary>
-        void ActivateExportPanel()
+        void ActivateDescriptionPanel()
         {
             var scenario = scope.Get(SelectedScenario);
 
             EnableAllTopButtons();
-            buttonActivateExportPanel.IsPressed = true;
+            buttonActivateDescriptionPanel.IsPressed = true;
 
-            var editor = new TextBox();
+            var editor = new TextBox
+            {
+                TextWrapping                = TextWrapping.Wrap,
+                AcceptsReturn               = true,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Foreground =  DescriptionForeground
+            };
 
-            Bind(editor, TextBox.TextProperty, scenario, nameof(scenario.ResponseOutputFilePath));
+            Bind(editor, TextBox.TextProperty, scenario, nameof(scenario.Description));
 
-            CurrentContent = NewGroupBox(NewBoldTextBlock("Export"), NewStackPanel(NewBoldTextBlock("Export Result To Path"), editor)).UpdatePadding(10);
+            
+
+            CurrentContent = new Border
+            {
+                Child = editor,
+                Padding = new Thickness(5)
+            };
         }
 
         /// <summary>
@@ -251,9 +265,9 @@ namespace ApiInspector.MainWindow
                             ActivateAssertions();
                             return;
                         }
-                        case ContentTypeName.ExportPanel:
+                        case ContentTypeName.DescriptionPanel:
                         {
-                            ActivateExportPanel();
+                            ActivateDescriptionPanel();
                             return;
                         }
                         default:
@@ -311,7 +325,7 @@ namespace ApiInspector.MainWindow
         void EnableAllTopButtons()
         {
             buttonActivateInputOutputPanel.IsPressed = false;
-            buttonActivateExportPanel.IsPressed      = false;
+            buttonActivateDescriptionPanel.IsPressed      = false;
             buttonAssertions.IsPressed               = false;
         }
 

@@ -166,10 +166,7 @@ namespace ApiInspector.MainWindow
                 return returnValue;
             }
 
-            if (!IsNullOrWhiteSpace(scenario.ResponseOutputFilePath))
-            {
-                WriteToFile(scenario.ResponseOutputFilePath, invokeOutput.ExecutionResponseAsJson);
-            }
+            
 
             void runAssertions()
             {

@@ -36,7 +36,7 @@
                 <StackPanel Orientation="Horizontal" Grid.Column="0" x:Name="tabHeadersContainerPanel" >
                     <local:ActionButton   Text="Input - Output" Margin="5" x:Name="buttonActivateInputOutputPanel"  Click="OnButtonActivateInputOutputPanelClicked" />
                     <local:ActionButton   Text="Assertions" Margin="5" x:Name="buttonAssertions" Click="OnAssertionsClicked" />
-                    <local:ActionButton   Text="Export Result" Margin="5" x:Name="buttonActivateExportPanel" Click="ActivateExportPanel" />
+                    <local:ActionButton   Text="Description" Margin="5" x:Name="buttonActivateDescriptionPanel" Click="ActivateDescriptionPanel" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal"  Grid.Column="1">
