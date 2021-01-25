@@ -3,16 +3,23 @@
 namespace ApiInspector.MainWindow
 {
     [Serializable]
-    public class ExecutionResponseHasErrorException:Exception
+    public class ExecutionResponseHasErrorException : Exception
     {
-        public ExecutionResponseHasErrorException(string message):base(message)
+        #region Constructors
+        public ExecutionResponseHasErrorException()
         {
-            
         }
 
+        public ExecutionResponseHasErrorException(string message) : base(message)
+        {
+        }
+        #endregion
+
+        #region Public Methods
         public override string ToString()
         {
             return Message;
         }
+        #endregion
     }
 }
