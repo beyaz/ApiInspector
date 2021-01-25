@@ -50,16 +50,16 @@ namespace ApiInspector.History
 
             scope.OnUpdate(HistoryItems, fun(() =>
             {
-                var getItems = fun(() => scope.Get(HistoryItems));
+                var items = scope.Get(HistoryItems);
 
                 void initializeItemsSource()
                 {
-                    historyListBox.ItemsSource = getItems(); 
+                    historyListBox.ItemsSource = items; 
                 }
 
                 void trySelectFirstItem()
                 {
-                    historyListBox.SelectedItem = getItems().FirstOrDefault();
+                    historyListBox.SelectedItem = items.FirstOrDefault();
                 }
 
                 void reAssignCollectionFilter()
