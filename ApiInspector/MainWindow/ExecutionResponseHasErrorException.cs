@@ -2,7 +2,8 @@
 
 namespace ApiInspector.MainWindow
 {
-    class ExecutionResponseHasErrorException:Exception
+    [Serializable]
+    public class ExecutionResponseHasErrorException:Exception
     {
         public ExecutionResponseHasErrorException(string message):base(message)
         {
