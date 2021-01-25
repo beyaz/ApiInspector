@@ -52,11 +52,20 @@ namespace ApiInspector.History
             {
                 var getItems = fun(() => scope.Get(HistoryItems));
 
-                var initializeItemsSource = fun(() => { historyListBox.ItemsSource = getItems(); });
+                void initializeItemsSource()
+                {
+                    historyListBox.ItemsSource = getItems(); 
+                }
 
-                var trySelectFirstItem = fun(() => { historyListBox.SelectedItem = getItems().FirstOrDefault(); });
+                void trySelectFirstItem()
+                {
+                    historyListBox.SelectedItem = getItems().FirstOrDefault();
+                }
 
-                var reAssignCollectionFilter = fun(() => { ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = HistoryFilter; });
+                void reAssignCollectionFilter()
+                {
+                    ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = HistoryFilter;
+                }
 
                 initializeItemsSource();
                 trySelectFirstItem();
