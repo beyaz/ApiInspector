@@ -1,9 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ApiInspector.Models
 {
     static class Fix
     {
+        static InvocationInfo ReOrderAssertions(InvocationInfo invocationInfo)
+        {
+            foreach (var scenario in invocationInfo.Scenarios)
+            {
+                if (scenario.Assertions.Any(x=>x.OperatorName == AssertionOperatorNames.AssignTo))
+                {
+                    scenario.Assertions = scenario.Assertions.OrderByDescending(x => x.OperatorName == AssertionOperatorNames.AssignTo).ToList();    
+                }
+                
+            }
+
+            return invocationInfo;
+        }
         public static InvocationInfo FixAsScenarioModel(InvocationInfo invocationInfo)
         {
             if (invocationInfo.MethodName == EndOfDay.MethodAccessText)
@@ -48,7 +62,7 @@ namespace ApiInspector.Models
 
             
 
-            return invocationInfo;
+            return ReOrderAssertions(invocationInfo);
         }
     }
 }

@@ -5,6 +5,7 @@ using ApiInspector.Models;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using static ApiInspector.Keys;
+using static ApiInspector.Models.Fix;
 using static Newtonsoft.Json.JsonConvert;
 
 namespace ApiInspector.History
@@ -28,7 +29,7 @@ namespace ApiInspector.History
                 userName
             });
 
-            return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList().Select(Fix.FixAsScenarioModel).ToList();
+            return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList().Select(FixAsScenarioModel).ToList();
         }
 
         /// <summary>
