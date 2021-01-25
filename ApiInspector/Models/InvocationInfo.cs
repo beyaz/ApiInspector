@@ -64,6 +64,12 @@ namespace ApiInspector.Models
         {
             return $"{ClassName}:{MethodName}";
         }
+
+        public static bool IsSame(InvocationInfo left,InvocationInfo right)
+        {
+            return left.ToString() == right.ToString();
+        }
+
         #endregion
     }
 }

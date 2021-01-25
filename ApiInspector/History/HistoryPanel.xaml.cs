@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApiInspector.Models;
+using static ApiInspector.History.DataKeys;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
@@ -18,6 +19,8 @@ namespace ApiInspector.History
     /// </summary>
     partial class HistoryPanel
     {
+        bool HasAlreadyHistories => scope.Contains(HistoryItems);
+
         #region Fields
         public Action<string> Trace = Console.WriteLine;
 
@@ -71,6 +74,8 @@ namespace ApiInspector.History
                 trySelectFirstItem();
                 reAssignCollectionFilter();
             }));
+
+            scope.OnUpdate(SearchTextKey,InitializeHistoryPanel);
         }
 
         /// <summary>
@@ -129,6 +134,8 @@ namespace ApiInspector.History
         /// </summary>
         void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            scope.Update(SearchTextKey,historyFilterTextBox.Text);
+
             CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
         }
 
@@ -188,7 +195,26 @@ namespace ApiInspector.History
                     return new List<InvocationInfo>();
                 });
 
-                scope.Update(HistoryItems, shouldContainsMinimumOneItem(getItems()));
+                var dbRecords = shouldContainsMinimumOneItem(getItems()).ToList();
+                if (HasAlreadyHistories)
+                {
+                    var selectedItem = (InvocationInfo)historyListBox.SelectedItem;
+                    if (selectedItem != null)
+                    {
+                        dbRecords.Add(selectedItem);
+                    }
+
+                    historyListBox.ItemsSource = dbRecords;
+
+                    CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
+
+                    Trace($"History is refreshed. Fetched record count is {dbRecords.Count}");
+
+                    return;
+                }
+
+
+                scope.Update(HistoryItems, dbRecords);
 
                 Trace("History is loaded.");
             });

@@ -23,11 +23,34 @@ namespace ApiInspector.History
         {
             var userName     = scope.Get(UserName);
             var dbConnection = scope.Get(DbConnection);
+            var searchText = scope.TryGet(DataKeys.SearchTextKey);
 
-            var records = dbConnection.Query<RecordModel>($"SELECT * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC", new
+            List<RecordModel> records = null;
+            if (string.IsNullOrWhiteSpace(searchText) || searchText.Length <=3)
             {
-                userName
-            });
+                var sql = $"SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC";
+                records = dbConnection.Query<RecordModel>(sql, new
+                {
+                    userName
+                }).ToList();
+
+                if (records.Count ==0)
+                {
+                    sql = "SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) ORDER BY LastExecutionTime DESC";
+                    records = dbConnection.Query<RecordModel>(sql).ToList();
+                }
+            }
+            else
+            {
+                searchText = $"%{searchText}%";
+
+                var sql = $"SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE [Key] LIKE @{nameof(searchText)} OR [Value] LIKE @{nameof(searchText)} ORDER BY LastExecutionTime DESC";
+                records = dbConnection.Query<RecordModel>(sql, new
+                {
+                    searchText
+                }).ToList();
+            }
+            
 
             return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList().Select(FixAsScenarioModel).ToList();
         }
