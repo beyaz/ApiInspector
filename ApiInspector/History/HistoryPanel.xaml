@@ -12,7 +12,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <Label FontWeight = "Bold" >History</Label>
-            <TextBox x:Name = "historyFilterTextBox" TextChanged = "HistoryFilterTextBox_OnTextChanged" />
+            <TextBox x:Name = "historyFilterTextBox" TextChanged = "HistoryFilterTextBox_OnTextChanged" ToolTip="Search method name or any input value" />
         </StackPanel>
         <ListBox Grid.Row = "1" x:Name = "historyListBox" SelectionChanged = "HistoryListBox_OnSelected"
                  KeyDown = "HistoryListBox_OnKeyDown" />

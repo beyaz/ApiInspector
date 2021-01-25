@@ -60,7 +60,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                     lbl.Loaded += (s, e) =>
                     {
-                        scope.OnUpdate(SelectedMethodDefinition, () =>
+                        scope?.OnUpdate(SelectedMethodDefinition, () =>
                         {
                             var returnTypeFullName = scope.TryGet(SelectedMethodDefinition)?.ReturnType.FullName;
                             

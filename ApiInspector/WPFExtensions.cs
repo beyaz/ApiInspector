@@ -14,7 +14,7 @@ namespace ApiInspector
     {
         #region Public Methods
 
-
+        
 
 
         public static T SearchInMergedDictionaries<T>(string key)

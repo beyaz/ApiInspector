@@ -19,6 +19,8 @@ namespace ApiInspector.History
     partial class HistoryPanel
     {
         #region Fields
+        public Action<string> Trace = Console.WriteLine;
+
         /// <summary>
         ///     The scope
         /// </summary>
@@ -43,8 +45,8 @@ namespace ApiInspector.History
         {
             this.scope = scope;
 
-            scope.SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => HistoryPanelDatabaseRepository.Remove(scope));
-            scope.SubscribeEvent(HistoryEvent.SaveToHistory, () => HistoryPanelDatabaseRepository.SaveToHistory(scope));
+            scope.SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => Remove(scope));
+            scope.SubscribeEvent(HistoryEvent.SaveToHistory, () => SaveToHistory(scope));
 
             scope.OnUpdate(HistoryItems, fun(() =>
             {
@@ -72,12 +74,6 @@ namespace ApiInspector.History
         #endregion
 
         #region Methods
-        
-
-        public Action<string> Trace = Console.WriteLine;
-
-        
-
         /// <summary>
         ///     Histories the filter.
         /// </summary>
@@ -88,7 +84,35 @@ namespace ApiInspector.History
                 return true;
             }
 
-            return ((InvocationInfo) item).ToString().IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+            var invocationInfo = (InvocationInfo) item;
+
+            bool isMatch(string value)
+            {
+                if (value == null)
+                {
+                    return false;
+                }
+
+                return value.IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+            }
+
+            if (isMatch(invocationInfo.ToString()))
+            {
+                return true;
+            }
+
+            foreach (var scenarioInfo in invocationInfo.Scenarios)
+            {
+                foreach (var methodParameterInfo in scenarioInfo.MethodParameters)
+                {
+                    if (isMatch(methodParameterInfo.Value))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Tracing;
@@ -33,6 +34,10 @@ namespace ApiInspector.MainWindow
             InitializeGlobalFontStyle();
 
             InitializeComponent();
+
+           
+
+           
 
             var traceMonitor = new TraceMonitor(traceViewer, Dispatcher, traceQueue);
 
