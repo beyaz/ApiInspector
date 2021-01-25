@@ -70,6 +70,7 @@ namespace ApiInspector.DataAccess
                         propertyInfo.SetValue(instance,innerInstance);
                     }
 
+                    instance     = innerInstance;
                     propertyPath = string.Join(".", parts.Skip(1));
 
                     continue;

@@ -165,7 +165,17 @@ namespace ApiInspector.MainWindow
             foreach (var parameterDefinition in methodDefinition.Parameters)
             {
                 var parameterName  = parameterDefinition.Name;
-                var parameterValue = DeserializeForMethodParameter(input.MethodParametersInJson[parameterDefinition.Index], parameterDefinition.ParameterType.GetDotNetType());
+
+                object parameterValue = null;
+                {
+                    var json = input.MethodParametersInJson[parameterDefinition.Index];
+                    if (json != null)
+                    {
+                        parameterValue = DeserializeForMethodParameter(json, parameterDefinition.ParameterType.GetDotNetType());    
+                    }
+                }
+                
+                
 
                 processSimpleSuggestion(parameterName, parameterValue);
                 processComplexSuggestion(parameterName, parameterValue);

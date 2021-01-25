@@ -95,6 +95,7 @@
     <Compile Include="FunctionalPrograming\Result.cs" />
     <Compile Include="History\DataKeys.cs" />
     <Compile Include="InvocationInfoEditor\View.cs" />
+    <Compile Include="MainWindow\ExecutionResponseHasErrorException.cs" />
     <Compile Include="MainWindow\Mixin.Serialization.cs" />
     <Compile Include="MainWindow\Mixin.AssertionExecuteResponse.cs" />
     <Compile Include="MainWindow\ActionButton.xaml.cs">
@@ -121,6 +122,7 @@
     <Compile Include="Models\ValueAccessInfo.cs" />
     <Compile Include="Plugins\Global.cs" />
     <Compile Include="Plugins\MethodDefinitionConverter.cs" />
+    <Compile Include="Plugins\ObjectHelperConverter.cs" />
     <Compile Include="Test\ClassA.cs" />
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />

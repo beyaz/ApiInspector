@@ -180,6 +180,8 @@ namespace ApiInspector.InvocationInfoEditor
 
                 if (definition.ParameterType.FullName == typeof(ObjectHelper).FullName)
                 {
+                    parameterInfo.Value = null;
+
                     var editor = new TextBox
                     {
                         IsEnabled = false,

@@ -11,6 +11,15 @@ namespace ApiInspector.MainWindow
     static partial class Mixin
     {
 
+        public static object GetDefaultValue(this Type type)
+        {
+            if(type.IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
+        }
+
         public static void DisableMouseClicksForThisApplication()
         {
             if (System.Windows.Application.Current.MainWindow != null)

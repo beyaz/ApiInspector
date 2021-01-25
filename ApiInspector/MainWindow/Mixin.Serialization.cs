@@ -31,6 +31,11 @@ namespace ApiInspector.MainWindow
                 return json;
             }
 
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return targetType.GetDefaultValue();
+            }
+
 
             return Serializer.Deserialize(json, targetType);
         }
