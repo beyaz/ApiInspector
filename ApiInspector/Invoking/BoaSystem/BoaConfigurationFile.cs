@@ -1,6 +1,6 @@
 ﻿using System;
 using BOA.Common.Configuration;
-using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
+using static ApiInspector._;
 
 namespace ApiInspector.Invoking.BoaSystem
 {

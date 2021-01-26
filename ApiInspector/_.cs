@@ -7,5 +7,9 @@ namespace ApiInspector
 {
     static partial class _
     {
+        public static string GetConfigurationDirectoryPath()
+        {
+            return @"d:\boa\server\bin\ApiInspectorConfiguration\";
+        }
     }
 }

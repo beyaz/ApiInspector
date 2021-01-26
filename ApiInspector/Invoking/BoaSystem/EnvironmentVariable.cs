@@ -2,7 +2,7 @@
 using System.IO;
 using static System.IO.File;
 using static System.String;
-using static ApiInspector.Invoking.BoaSystem.BoaConfigurationDirectory;
+using static ApiInspector._;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static BOA.Common.Helpers.SerializeHelper;

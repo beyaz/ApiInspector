@@ -136,7 +136,6 @@
     <Compile Include="Application\BoaAssemblyResolver.cs" />
     <Compile Include="InvocationInfoEditor\CommonAssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
-    <Compile Include="Invoking\BoaSystem\BoaConfigurationDirectory.cs" />
     <Compile Include="Invoking\BoaSystem\BoaConfigurationFile.cs" />
     <Compile Include="Invoking\BoaSystem\BoaDirectInvokeDisposer.cs" />
     <Compile Include="Invoking\BoaSystem\EnvironmentInfo.cs" />
