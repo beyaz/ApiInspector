@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using static ApiInspector.Utility;
 using static System.IO.File;
@@ -7,21 +9,27 @@ namespace ApiInspector
 {
     static partial class _
     {
-        public static string ConfigurationDirectoryPath
+
+        public static IDbConnection DbConnection
         {
-            get { return @"d:\boa\server\bin\ApiInspectorConfiguration\"; }
+            get
+            {
+                return new SqlConnection("server=srvdev\\ATLAS;database =BOA;integrated security=true");
+            }
         }
 
+
+        #region Public Properties
         public static string AuthenticationUserName
         {
             get
             {
                 // remove old file
-                File.Delete(Path.Combine(ConfigurationDirectoryPath, "EnvironmentVariables.json"));
+                Delete(Path.Combine(ConfigurationDirectoryPath, "EnvironmentVariables.json"));
 
                 var filePath = Path.Combine(ConfigurationDirectoryPath, "BOA.UserName.txt");
-                
-                IfFileNotExistsThen(filePath, ()=>WriteToFile(filePath, Environment.UserName));
+
+                IfFileNotExistsThen(filePath, () => WriteToFile(filePath, Environment.UserName));
 
                 var userName = ReadAllText(filePath);
 
@@ -31,8 +39,13 @@ namespace ApiInspector
                 }
 
                 return userName.Trim();
-
             }
         }
+
+        public static string ConfigurationDirectoryPath
+        {
+            get { return @"d:\boa\server\bin\ApiInspectorConfiguration\"; }
+        }
+        #endregion
     }
 }

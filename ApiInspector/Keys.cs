@@ -17,10 +17,7 @@ namespace ApiInspector
         
 
         #region Public Properties
-        /// <summary>
-        ///     Gets the database connection.
-        /// </summary>
-        public static DataKey<IDbConnection> DbConnection => CreateKey<IDbConnection>();
+        
 
         public static DataKey<MethodDefinition> SelectedMethodDefinition => CreateKey<MethodDefinition>();
 
@@ -52,10 +49,7 @@ namespace ApiInspector
         /// </summary>
         public static DataKey<Action<string>> Trace => CreateKey<Action<string>>();
 
-        /// <summary>
-        ///     Gets the name of the user.
-        /// </summary>
-        public static DataKey<string> UserName => CreateKey<string>();
+        
         #endregion
 
         #region Methods

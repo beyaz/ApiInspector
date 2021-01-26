@@ -16,8 +16,6 @@ namespace ApiInspector
         /// </summary>
         public Scope()
         {
-            SetupGet(DbConnection, context => ConnectionInfo.GetDbConnection());
-            SetupGet(UserName, context => _.AuthenticationUserName);
             SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
             
             Add(Trace, m => { });

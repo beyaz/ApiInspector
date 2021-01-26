@@ -58,7 +58,7 @@ namespace ApiInspector.MainWindow
 
                 scenarioEditor.Connect(scope);
 
-                Title = "ApiInspector - " + scope.Get(Keys.UserName);
+                Title = "ApiInspector - " + _.AuthenticationUserName;
             };
 
             Closed += (s, e) => { System.Windows.Application.Current.Shutdown(); };
