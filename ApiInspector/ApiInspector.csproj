@@ -129,7 +129,6 @@
     <Compile Include="Test\ClassA.cs" />
     <Compile Include="WPFExtensions.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="ConnectionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

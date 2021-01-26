@@ -5,7 +5,7 @@ namespace ApiInspector.Models
     /// <summary>
     ///     The assertion operator names
     /// </summary>
-    class AssertionOperatorNames
+    static class AssertionOperatorNames
     {
 
 
@@ -16,6 +16,7 @@ namespace ApiInspector.Models
         public  const string LessThanOrEqual = "Less Than or Equal";
         public  const string GreaterThanOrEqual = "Greater Than or Equal";
         public  const string AssignTo = "Assign";
+        public  const string AssignToVariable = "Assign to Variable";
 
         #region Public Methods
         /// <summary>
@@ -31,7 +32,8 @@ namespace ApiInspector.Models
                 GreaterThanOrEqual,
                 LessThan,
                 LessThanOrEqual,
-                AssignTo
+                AssignTo,
+                AssignToVariable
             };
         }
         #endregion
