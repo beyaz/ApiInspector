@@ -215,7 +215,7 @@ namespace ApiInspector.InvocationInfoEditor
 
         static string GetDefaultJsonForClass(string classFullName)
         {
-            var parameterType = FindTypeByFullName(classFullName);
+            var parameterType = _.FindTypeByFullName(classFullName);
             if (parameterType != null)
             {
                 return Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));

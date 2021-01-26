@@ -11,8 +11,8 @@ namespace ApiInspector.InvocationInfoEditor
         [TestMethod]
         public void Find()
         {
-            FindTypeByFullName("BOA.Types.InternetBanking.WebCreditCardRequest").Should().NotBeNull();
-            FindTypeByFullName("BOA.Card.Contracts.CreditCard.Limit.ChangeCorporateCardLimitRequest").Should().NotBeNull();
+            _.FindTypeByFullName("BOA.Types.InternetBanking.WebCreditCardRequest").Should().NotBeNull();
+            _.FindTypeByFullName("BOA.Card.Contracts.CreditCard.Limit.ChangeCorporateCardLimitRequest").Should().NotBeNull();
         }
         #endregion
     }
