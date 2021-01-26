@@ -1,8 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using ApiInspector.Application;
 using static ApiInspector.Utility;
 using static System.IO.File;
 
@@ -10,22 +7,23 @@ namespace ApiInspector
 {
     static partial class _
     {
-        public static string GetConfigurationDirectoryPath()
+        public static string ConfigurationDirectoryPath
         {
-            return @"d:\boa\server\bin\ApiInspectorConfiguration\";
+            get { return @"d:\boa\server\bin\ApiInspectorConfiguration\"; }
         }
-
-        public static string EnvironmentVariablesJsonFilePath=>Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
-
 
         public static string AuthenticationUserName
         {
             get
             {
+                // remove old file
+                File.Delete(Path.Combine(ConfigurationDirectoryPath, "EnvironmentVariables.json"));
 
-                IfFileNotExistsThen(EnvironmentVariablesJsonFilePath, ()=>WriteToFile(EnvironmentVariablesJsonFilePath, Environment.UserName));
+                var filePath = Path.Combine(ConfigurationDirectoryPath, "BOA.UserName.txt");
+                
+                IfFileNotExistsThen(filePath, ()=>WriteToFile(filePath, Environment.UserName));
 
-                var userName = ReadAllText(EnvironmentVariablesJsonFilePath);
+                var userName = ReadAllText(filePath);
 
                 if (string.IsNullOrWhiteSpace(userName))
                 {

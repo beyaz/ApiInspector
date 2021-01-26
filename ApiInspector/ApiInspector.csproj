@@ -139,7 +139,6 @@
     <Compile Include="Invoking\BoaSystem\BoaConfigurationFile.cs" />
     <Compile Include="Invoking\BoaSystem\BoaDirectInvokeDisposer.cs" />
     <Compile Include="Invoking\BoaSystem\EnvironmentInfo.cs" />
-    <Compile Include="Invoking\BoaSystem\EnvironmentVariable.cs" />
     <Compile Include="Invoking\InstanceCreators\InstanceCreator.cs" />
     <Compile Include="Invoking\Invokers\CardServiceMethodInvokerInput.cs" />
     <Compile Include="Invoking\Invokers\EODTestHelper.cs" />

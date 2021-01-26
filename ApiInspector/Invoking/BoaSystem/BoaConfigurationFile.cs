@@ -15,7 +15,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public static void Load(Func<string> environmentInfo, Action<string> trace)
         {
-            var configurationDirectoryPath = GetConfigurationDirectoryPath();
+            var configurationDirectoryPath = ConfigurationDirectoryPath;
 
             var configFilePath = $"{configurationDirectoryPath}{environmentInfo()}.config";
 
