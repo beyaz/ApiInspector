@@ -20,8 +20,6 @@ namespace ApiInspector.Invoking.BoaSystem
         #region Constructors
         static EnvironmentVariables()
         {
-            var outputFilePath = Path.Combine(GetConfigurationDirectoryPath(), "EnvironmentVariables.json");
-
             var createOutputFile = fun(() =>
             {
                 var environmentVariableFileModel = new EnvironmentVariableFileModel
@@ -32,12 +30,12 @@ namespace ApiInspector.Invoking.BoaSystem
 
                 var fileContent = SerializeToJsonDoNotIgnoreDefaultValues(environmentVariableFileModel);
 
-                WriteToFile(outputFilePath, fileContent);
+                WriteToFile(EnvironmentVariablesJsonFilePath, fileContent);
             });
 
-            var ensureOutputFileExists = fun(() => { IfFileNotExistsThen(outputFilePath, createOutputFile); });
+            var ensureOutputFileExists = fun(() => { IfFileNotExistsThen(EnvironmentVariablesJsonFilePath, createOutputFile); });
 
-            var readModelFromFile = fun(() => JsonToObject<EnvironmentVariableFileModel>(ReadAllText(outputFilePath)));
+            var readModelFromFile = fun(() => JsonToObject<EnvironmentVariableFileModel>(ReadAllText(EnvironmentVariablesJsonFilePath)));
 
             var useLocalProxyForCardServices = fun(() =>
             {
