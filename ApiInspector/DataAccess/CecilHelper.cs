@@ -39,7 +39,7 @@ namespace ApiInspector.DataAccess
 
         public static Type GetDotNetType(this TypeReference type)
         {
-            return TypeFinder.FindType(type.GetReflectionName());
+            return TypeFinder.FindTypeByFullName(type.GetReflectionName());
         }
 
         static string GetReflectionName(this TypeReference type)

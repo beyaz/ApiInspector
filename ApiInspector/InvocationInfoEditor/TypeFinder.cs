@@ -3,6 +3,14 @@ using System.Linq;
 using System.Reflection;
 using static ApiInspector.Application.BoaAssemblyResolver;
 
+namespace ApiInspector
+{
+    static partial class _
+    {
+        
+    }
+}
+
 namespace ApiInspector.InvocationInfoEditor
 {
     /// <summary>
@@ -14,7 +22,7 @@ namespace ApiInspector.InvocationInfoEditor
         /// <summary>
         ///     Finds the type.
         /// </summary>
-        public static Type FindType(string fullName)
+        public static Type FindTypeByFullName(string fullName)
         {
             var type = Type.GetType(fullName);
             if (type != null)

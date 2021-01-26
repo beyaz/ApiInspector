@@ -171,6 +171,8 @@
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Util\JsonSorter.cs" />
+    <Compile Include="_TypeFinding.cs" />
+    <Compile Include="_.cs" />
     <Page Include="History\HistoryPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

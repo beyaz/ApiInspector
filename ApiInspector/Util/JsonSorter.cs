@@ -50,7 +50,7 @@ namespace ApiInspector.Util
 
             var serializer = new Serializer();
 
-            var type = FindType(classFullName);
+            var type = FindTypeByFullName(classFullName);
             if (type == null)
             {
                 throw new ArgumentException(nameof(type));
