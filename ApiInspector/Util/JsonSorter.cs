@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiInspector.Serialization;
-using static ApiInspector.InvocationInfoEditor.TypeFinder;
 
 namespace ApiInspector.Util
 {

@@ -8,7 +8,6 @@ using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
-using static ApiInspector.InvocationInfoEditor.TypeFinder;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
 
