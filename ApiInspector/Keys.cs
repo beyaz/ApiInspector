@@ -39,11 +39,7 @@ namespace ApiInspector
         public static DataKey<AssertionInfo> SelectedAssertion => CreateKey<AssertionInfo>();
 
 
-        /// <summary>
-        ///     Gets the serialize history for database insert.
-        /// </summary>
-        public static DataKey<Func<object, string>> SerializeHistoryForDatabaseInsert => CreateKey<Func<object, string>>();
-
+        
         /// <summary>
         ///     The trace
         /// </summary>

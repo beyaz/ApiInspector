@@ -1,5 +1,4 @@
 ﻿using System;
-using ApiInspector.Serialization;
 using BOA.DataFlow;
 using static ApiInspector.Keys;
 
@@ -16,8 +15,6 @@ namespace ApiInspector
         /// </summary>
         public Scope()
         {
-            SetupGet(SerializeHistoryForDatabaseInsert, context => new Serializer().SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames);
-            
             Add(Trace, m => { });
         }
         #endregion

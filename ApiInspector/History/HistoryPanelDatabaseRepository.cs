@@ -7,6 +7,7 @@ using Dapper.Contrib.Extensions;
 using static ApiInspector._;
 using static ApiInspector.Keys;
 using static ApiInspector.Models.Fix;
+using static ApiInspector.Serialization.Serializer;
 using static Newtonsoft.Json.JsonConvert;
 
 namespace ApiInspector.History
@@ -108,17 +109,13 @@ namespace ApiInspector.History
         static RecordModel CreateFrom(InvocationInfo info)
         {
             var key = info.ToString();
-
-            var scope = new Scope();
-
             var userName  = _.AuthenticationUserName;
-            var serialize = scope.Get(SerializeHistoryForDatabaseInsert);
 
             return new RecordModel
             {
                 Key               = key,
                 UserName          = userName,
-                Value             = serialize(info),
+                Value             = SerializeToJson(info),
                 LastExecutionTime = DateTime.Now
             };
         }

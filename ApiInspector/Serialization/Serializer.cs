@@ -62,27 +62,7 @@ namespace ApiInspector.Serialization
             return JsonConvert.DeserializeObject(jsonContent, targetType,CreateJsonSerializerSettings());
         }
 
-        /// <summary>
-        ///     Serializes to json ignore default values handle object type names.
-        /// </summary>
-        public string SerializeToJsonIgnoreDefaultValuesHandleObjectTypeNames(object value)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling  = DefaultValueHandling.Ignore,
-                Formatting            = Formatting.Indented,
-                DateFormatString      = "yyyy.MM.dd hh:mm:ss",
-                TypeNameHandling      = TypeNameHandling.Objects,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            };
-
-            return JsonConvert.SerializeObject(value, settings);
-        }
+        
         #endregion
 
         #region Methods
