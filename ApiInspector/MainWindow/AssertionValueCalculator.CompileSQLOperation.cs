@@ -20,6 +20,8 @@ namespace ApiInspector.MainWindow
         public string MethodReturnValueInJson { get; set; }
 
         public MethodDefinition MethodDefinition { get; set; }
+
+        public Dictionary<string, string> VariablesMap{ get; set; }
     }
 
     class CompileSQLOperationOutput
@@ -174,8 +176,6 @@ namespace ApiInspector.MainWindow
                         parameterValue = DeserializeForMethodParameter(json, parameterDefinition.ParameterType.GetDotNetType());    
                     }
                 }
-                
-                
 
                 processSimpleSuggestion(parameterName, parameterValue);
                 processComplexSuggestion(parameterName, parameterValue);
@@ -189,6 +189,11 @@ namespace ApiInspector.MainWindow
                 processComplexSuggestion("output", returnValue);    
             }
             
+            foreach (var pair in input.VariablesMap)
+            {
+                processSimpleSuggestion(pair.Key.RemoveFromStart(CecilHelper.PrefixCharacter), pair.Value);
+            }
+
 
             return new CompileSQLOperationOutput
             {

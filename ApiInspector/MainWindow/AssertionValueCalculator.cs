@@ -159,14 +159,15 @@ namespace ApiInspector.MainWindow
         #endregion
 
         #region Methods
-        internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition, InvokeOutput invocationOutput, EnvironmentInfo environmentInfo)
+        internal static object CalculateFrom(ValueAccessInfo valueAccessInfo, MethodDefinition methodDefinition, InvokeOutput invocationOutput, EnvironmentInfo environmentInfo, Dictionary<string, string> variablesMap)
         {
             var input = new CompileSQLOperationInput
             {
                 MethodDefinition        = methodDefinition,
                 MethodParametersInJson  = invocationOutput.InvocationParameters,
                 MethodReturnValueInJson = invocationOutput.ExecutionResponseAsJson,
-                SQL                     = valueAccessInfo.Text.Trim()
+                SQL                     = valueAccessInfo.Text.Trim(),
+                VariablesMap = variablesMap
             };
             var sqlOperationOutput = CompileSQLOperation(input);
 

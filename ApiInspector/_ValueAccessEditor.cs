@@ -13,7 +13,10 @@ namespace ApiInspector
             return new DataKey<T>(typeof(_), callerMemberName);
         }
 
-       
+        public static bool IsAssignToVariableOperator(string operatorName)
+        {
+            return operatorName == AssertionOperatorNames.AssignToVariable;
+        }
 
         public static bool IsAssertionInfoShouldProcessBeforeExecutionStart(AssertionInfo assertionInfo)
         {

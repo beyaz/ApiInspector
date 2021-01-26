@@ -8,6 +8,7 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
+using FunctionalPrograming;
 using static System.String;
 using static ApiInspector._;
 using static ApiInspector.Keys;
@@ -101,38 +102,45 @@ namespace ApiInspector.MainWindow
                 var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput(Empty)
                 {
                     InvocationParameters = scenario.MethodParameters.Select(x => x.Value).ToList()
-                }, env);
+                }, env,scope.Get(VariablesMap));
 
                 var targetPath = assertionInfo.Expected.Text.Trim();
 
-                if (targetPath.Contains("."))
+                if (IsAssignToVariableOperator(assertionInfo.OperatorName))
                 {
-                    foreach (var parameterDefinition in methodDefinition.Parameters)
-                    {
-                        var prefix = $"{CecilHelper.PrefixCharacter}{parameterDefinition.Name}.";
-                        if (targetPath.StartsWith(prefix))
-                        {
-                            var instance = DeserializeForMethodParameter(scenario.MethodParameters[parameterDefinition.Index].Value, parameterDefinition.ParameterType.GetDotNetType());
-
-                            ReflectionUtil.SaveValueToPropertyPath(actual, instance, targetPath.RemoveFromStart(prefix));
-
-                            scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
-                            {
-                                Value = SerializeForMethodParameter(instance)
-                            };
-                        }
-                    }
+                    scope.Get(VariablesMap).AddOrUpdate(targetPath,actual + Empty);
                 }
                 else
                 {
-                    foreach (var parameterDefinition in methodDefinition.Parameters)
+                    if (targetPath.Contains("."))
                     {
-                        if (targetPath == CecilHelper.PrefixCharacter + parameterDefinition.Name)
+                        foreach (var parameterDefinition in methodDefinition.Parameters)
                         {
-                            scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
+                            var prefix = $"{CecilHelper.PrefixCharacter}{parameterDefinition.Name}.";
+                            if (targetPath.StartsWith(prefix))
                             {
-                                Value = SerializeForMethodParameter(actual)
-                            };
+                                var instance = DeserializeForMethodParameter(scenario.MethodParameters[parameterDefinition.Index].Value, parameterDefinition.ParameterType.GetDotNetType());
+
+                                ReflectionUtil.SaveValueToPropertyPath(actual, instance, targetPath.RemoveFromStart(prefix));
+
+                                scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
+                                {
+                                    Value = SerializeForMethodParameter(instance)
+                                };
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var parameterDefinition in methodDefinition.Parameters)
+                        {
+                            if (targetPath == CecilHelper.PrefixCharacter + parameterDefinition.Name)
+                            {
+                                scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
+                                {
+                                    Value = SerializeForMethodParameter(actual)
+                                };
+                            }
                         }
                     }
                 }
@@ -160,8 +168,8 @@ namespace ApiInspector.MainWindow
                 {
                     var env = EnvironmentInfo.Parse(invocationInfo.Environment);
 
-                    var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, invokeOutput, env);
-                    var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env);
+                    var actual       = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, invokeOutput, env,scope.Get(VariablesMap));
+                    var expected     = AssertionValueCalculator.CalculateFrom(assertionInfo.Expected, methodDefinition, invokeOutput, env,scope.Get(VariablesMap));
                     var errorMessage = AssertionValueCalculator.RunAssertion(actual, expected, assertionInfo.OperatorName);
 
                     returnValue.AssertionExecuteResponses.Add(new AssertionExecuteResponseInfo(assertionInfo) {ErrorMessage = errorMessage});
