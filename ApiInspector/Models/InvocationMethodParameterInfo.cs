@@ -6,7 +6,7 @@ namespace ApiInspector.Models
     ///     The invocation method parameter information
     /// </summary>
     [Serializable]
-    public class InvocationMethodParameterInfo
+    public sealed class InvocationMethodParameterInfo
     {
         #region Public Properties
         /// <summary>

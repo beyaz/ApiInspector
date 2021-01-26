@@ -7,7 +7,7 @@ namespace ApiInspector.Models
     ///     The scenario information
     /// </summary>
     [Serializable]
-    public class ScenarioInfo
+    public sealed class ScenarioInfo
     {
         #region Constructors
         #endregion

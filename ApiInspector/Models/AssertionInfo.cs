@@ -6,7 +6,7 @@ namespace ApiInspector.Models
     ///     The assertion information
     /// </summary>
     [Serializable]
-    public class AssertionInfo
+    public sealed class AssertionInfo
     {
         #region Constructors
         // ReSharper disable once EmptyConstructor

@@ -7,7 +7,7 @@ namespace ApiInspector.Models
     ///     The invocation information
     /// </summary>
     [Serializable]
-    public class InvocationInfo
+    public sealed class InvocationInfo
     {
         public InvocationInfo()
         {

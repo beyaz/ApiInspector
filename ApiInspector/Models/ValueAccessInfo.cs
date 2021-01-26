@@ -6,7 +6,7 @@ namespace ApiInspector.Models
     ///     The value access information
     /// </summary>
     [Serializable]
-    public class ValueAccessInfo
+    public sealed class ValueAccessInfo
     {
         #region Public Properties
         /// <summary>
