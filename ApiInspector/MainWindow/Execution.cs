@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,17 +8,15 @@ using ApiInspector.Invoking;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.Invokers;
 using ApiInspector.Models;
-using ApiInspector.Serialization;
 using static System.String;
+using static ApiInspector._;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
-using static ApiInspector.Utility;
 
 namespace ApiInspector.MainWindow
 {
     partial class ScenarioEditor
     {
-
         void ExecuteSelectedScenarioAndProcessResponse()
         {
             void trace(string message)
@@ -27,14 +26,13 @@ namespace ApiInspector.MainWindow
 
             try
             {
-
                 scope.PublishEvent(OnExecutionStarted);
 
                 trace("EXECUTE STARTED");
 
                 var response = ExecuteSelectedScenario();
-                
-                UpdateUI(()=>scope.UpdateScenarioExecuteResponse(response));
+
+                UpdateUI(() => scope.UpdateScenarioExecuteResponse(response));
 
                 var invokeOutput = response.InvokeOutput;
                 if (!invokeOutput.IsSuccess)
@@ -56,12 +54,11 @@ namespace ApiInspector.MainWindow
 
                         assertionsEditor.Loaded += (s, e) => { assertionsEditor.selectedAssertion = failedAssertion; };
                     });
-                        
+
                     return;
                 }
 
                 trace("EXECUTION IS SUCCESSFULL");
-
             }
             catch (Exception exception)
             {
@@ -70,11 +67,8 @@ namespace ApiInspector.MainWindow
             finally
             {
                 scope.PublishEvent(OnExecutionFinished);
-
             }
         }
-
-
 
         #region Methods
         ScenarioExecuteResponseInfo ExecuteSelectedScenario()
@@ -94,22 +88,19 @@ namespace ApiInspector.MainWindow
             var scenario = scope.Get(SelectedScenario);
 
             scope.ClearScenarioExecuteResponse(scenario);
+            scope.Update(VariablesMap, new Dictionary<string, string>());
 
             returnValue.Scenario = scenario;
-
 
             void processAssignmentsBeforeInvoke(AssertionInfo assertionInfo)
             {
                 var methodDefinition = scope.Get(SelectedMethodDefinition);
 
-               
-
                 var env = EnvironmentInfo.Parse(invocationInfo.Environment);
 
-                
-                var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput(string.Empty)
+                var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput(Empty)
                 {
-                    InvocationParameters = scenario.MethodParameters.Select(x=>x.Value).ToList()
+                    InvocationParameters = scenario.MethodParameters.Select(x => x.Value).ToList()
                 }, env);
 
                 var targetPath = assertionInfo.Expected.Text.Trim();
@@ -124,13 +115,12 @@ namespace ApiInspector.MainWindow
                             var instance = DeserializeForMethodParameter(scenario.MethodParameters[parameterDefinition.Index].Value, parameterDefinition.ParameterType.GetDotNetType());
 
                             ReflectionUtil.SaveValueToPropertyPath(actual, instance, targetPath.RemoveFromStart(prefix));
-                            
+
                             scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
                             {
                                 Value = SerializeForMethodParameter(instance)
                             };
                         }
-
                     }
                 }
                 else
@@ -144,29 +134,23 @@ namespace ApiInspector.MainWindow
                                 Value = SerializeForMethodParameter(actual)
                             };
                         }
-
                     }
                 }
 
                 returnValue.AssertionExecuteResponses.Add(new AssertionExecuteResponseInfo(assertionInfo));
-
             }
 
-            foreach (var assertionInfo in scenario.Assertions.Where(a=>a.OperatorName == AssertionOperatorNames.AssignTo))
+            foreach (var assertionInfo in scenario.Assertions.Where(IsAssertionInfoShouldProcessBeforeExecutionStart))
             {
                 processAssignmentsBeforeInvoke(assertionInfo);
             }
 
-
             var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenario.MethodParameters);
-
 
             if (!invokeOutput.IsSuccess)
             {
                 return returnValue;
             }
-
-            
 
             void runAssertions()
             {
@@ -185,7 +169,7 @@ namespace ApiInspector.MainWindow
                     return errorMessage;
                 }
 
-                foreach (var assertion in scenario.Assertions.Where(a=>a.OperatorName != AssertionOperatorNames.AssignTo))
+                foreach (var assertion in scenario.Assertions.Where(x => !IsAssertionInfoShouldProcessBeforeExecutionStart(x)))
                 {
                     var assertionErrorMessage = runAssertion(assertion);
                     if (assertionErrorMessage != null)
@@ -193,13 +177,11 @@ namespace ApiInspector.MainWindow
                         return;
                     }
                 }
-
             }
 
             runAssertions();
 
             return returnValue;
-
         }
 
         const string OnExecutionStarted = nameof(OnExecutionStarted);
@@ -212,12 +194,10 @@ namespace ApiInspector.MainWindow
                 scope.ShowErrorNotification("MethodName can not be empty.");
                 return;
             }
-            
+
             Task.Run(() => scope.PublishEvent(HistoryEvent.SaveToHistory));
             Task.Run(() => { ExecuteSelectedScenarioAndProcessResponse(); });
         }
-
-       
 
         void UpdateUI(Action action)
         {
