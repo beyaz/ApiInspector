@@ -157,7 +157,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 AuthenticationContext = new AuthenticationContext
                 {
                     Channel  = channelContract,
-                    UserName = EnvironmentVariables.GetUserName()
+                    UserName = _.AuthenticationUserName
                 }
             };
             trace("Authenticate response waiting...");
@@ -221,10 +221,8 @@ namespace ApiInspector.Invoking.BoaSystem
 
             objectHelper.Context.DBLayer.BeginTransaction();
 
-            if (EnvironmentVariables.UseLocalProxyForCardServices())
-            {
-                CardService.UseLocalProxy = true;
-            }
+            // TODO: fixme in cache in object helper
+            CardService.UseLocalProxy = true;
 
             return data.WithObjectHelper(objectHelper);
         }
