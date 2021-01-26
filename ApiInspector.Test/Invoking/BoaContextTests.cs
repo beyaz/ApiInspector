@@ -4,6 +4,7 @@ using ApiInspector.Invoking.BoaSystem;
 using BOA.Common.Types;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static ApiInspector._;
 
 namespace ApiInspector.Invoking
 {
@@ -14,7 +15,7 @@ namespace ApiInspector.Invoking
         [TestMethod]
         public void Authenticate()
         {
-            BoaAssemblyResolver.AttachToCurrentDomain();
+            AttachBoaSystemAssemblyResolverToCurrentDomain();
 
             CallDev();
             CallTest();

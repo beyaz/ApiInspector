@@ -133,7 +133,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\BoaAssemblyResolver.cs" />
     <Compile Include="InvocationInfoEditor\CommonAssemblySearchDirectories.cs" />
     <Compile Include="EndOfDay.cs" />
     <Compile Include="Invoking\BoaSystem\BoaConfigurationFile.cs" />

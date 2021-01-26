@@ -3,54 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ApiInspector.Application;
 using static FunctionalPrograming.FPExtensions;
 
 namespace ApiInspector
 {
     /// <summary>
-    ///     The 
+    ///     The
     /// </summary>
     static partial class _
     {
-
         #region Public Methods
-        
-        
-        public static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
+        /// <summary>
+        ///     Attaches the boa system assembly resolver to current domain.
+        /// </summary>
+        public static void AttachBoaSystemAssemblyResolverToCurrentDomain()
         {
-            var trace = fun((string message) => Console.WriteLine(message));
-
-            trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
-
-            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
-            {
-                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
-            }
-
-            var searchDirectories = new List<string>
-            {
-                @"D:\BOA\server\bin",
-                @"D:\BOA\client\bin",
-                @"D:\BOA\client\bin\en",
-                @"D:\BOA\HSM\server\bin",
-                @"D:\BOA\BOA.Integration\server\bin"
-            };
-            foreach (var searchDirectory in searchDirectories)
-            {
-                var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
-                if (File.Exists(filePath))
-                {
-                    trace($"Loading assembly: {filePath}");
-                    return Assembly.Load(File.ReadAllBytes(filePath));
-                }
-            }
-
-            trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
-
-            return null;
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveBoaSystemAssembly;
         }
-        
+
         /// <summary>
         ///     Finds the type.
         /// </summary>
@@ -97,7 +67,66 @@ namespace ApiInspector
 
             return null;
         }
+
+        /// <summary>
+        ///     Resolves the boa system assembly.
+        /// </summary>
+        public static Assembly ResolveBoaSystemAssembly(object sender, ResolveEventArgs args)
+        {
+            var name  = args.Name;
+            var index = name.IndexOf(',');
+            if (index > 0)
+            {
+                name = name.Substring(0, index);
+            }
+
+            var assembly = FindAssembly(name);
+            if (assembly != null)
+            {
+                return assembly;
+            }
+
+            throw new ArgumentException("AssemblyNotFound:" + args.Name);
+        }
         #endregion
 
+        #region Methods
+        /// <summary>
+        ///     Finds the assembly.
+        /// </summary>
+        static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
+        {
+            var trace = fun((string message) => Console.WriteLine(message));
+
+            trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
+
+            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
+            {
+                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
+            }
+
+            var searchDirectories = new List<string>
+            {
+                @"D:\BOA\server\bin",
+                @"D:\BOA\client\bin",
+                @"D:\BOA\client\bin\en",
+                @"D:\BOA\HSM\server\bin",
+                @"D:\BOA\BOA.Integration\server\bin"
+            };
+            foreach (var searchDirectory in searchDirectories)
+            {
+                var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
+                if (File.Exists(filePath))
+                {
+                    trace($"Loading assembly: {filePath}");
+                    return Assembly.Load(File.ReadAllBytes(filePath));
+                }
+            }
+
+            trace($"Assembly Not Found: {assemblyFileNameWithoutExtension}");
+
+            return null;
+        }
+        #endregion
     }
 }

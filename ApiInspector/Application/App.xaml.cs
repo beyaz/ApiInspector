@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using ApiInspector.MainWindow;
 using ApiInspector.Tracing;
+using static ApiInspector._;
 using static ApiInspector.MainWindow.Mixin;
 
 namespace ApiInspector.Application
@@ -28,7 +29,7 @@ namespace ApiInspector.Application
         /// </summary>
         public App()
         {
-            BoaAssemblyResolver.AttachToCurrentDomain();
+            AttachBoaSystemAssemblyResolverToCurrentDomain();
             errorMonitor = new ErrorMonitor(this);
 
             Mouse.OverrideCursor = DefaultCursor;

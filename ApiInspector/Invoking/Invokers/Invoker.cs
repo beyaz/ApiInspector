@@ -44,7 +44,7 @@ namespace ApiInspector.Invoking.Invokers
             };
 
             var domain = AppDomain.CreateDomain("AppDomainIsolation:" + Guid.NewGuid(), null, setup);
-            domain.AssemblyResolve += BoaAssemblyResolver.DomainAssemblyResolve;
+            domain.AssemblyResolve += _.ResolveBoaSystemAssembly;
 
             var type = typeof(T);
 
