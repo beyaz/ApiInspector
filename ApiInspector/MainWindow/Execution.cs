@@ -108,6 +108,7 @@ namespace ApiInspector.MainWindow
 
                 if (IsAssignToVariableOperator(assertionInfo.OperatorName))
                 {
+                    scope.Get(Trace)($"{targetPath} value updated with {actual}");
                     scope.Get(VariablesMap).AddOrUpdate(targetPath,actual + Empty);
                 }
                 else
@@ -116,7 +117,7 @@ namespace ApiInspector.MainWindow
                     {
                         foreach (var parameterDefinition in methodDefinition.Parameters)
                         {
-                            var prefix = $"{CecilHelper.PrefixCharacter}{parameterDefinition.Name}.";
+                            var prefix = $"{IntellisensePrefix}{parameterDefinition.Name}.";
                             if (targetPath.StartsWith(prefix))
                             {
                                 var instance = DeserializeForMethodParameter(scenario.MethodParameters[parameterDefinition.Index].Value, parameterDefinition.ParameterType.GetDotNetType());
@@ -134,7 +135,7 @@ namespace ApiInspector.MainWindow
                     {
                         foreach (var parameterDefinition in methodDefinition.Parameters)
                         {
-                            if (targetPath == CecilHelper.PrefixCharacter + parameterDefinition.Name)
+                            if (targetPath == IntellisensePrefix + parameterDefinition.Name)
                             {
                                 scenario.MethodParameters[parameterDefinition.Index] = new InvocationMethodParameterInfo
                                 {

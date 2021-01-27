@@ -169,7 +169,7 @@ namespace ApiInspector.DataAccess
                         continue;
                     }
 
-                    roots.Add(PrefixCharacter + parameterDefinition.Name + ".", parameterDefinition.ParameterType.Resolve());
+                    roots.Add(_.IntellisensePrefix + parameterDefinition.Name + ".", parameterDefinition.ParameterType.Resolve());
                 }
             }
 
@@ -184,8 +184,8 @@ namespace ApiInspector.DataAccess
             return items;
         }
 
-        public const string PrefixCharacter = "@";
-        public const string OutputPrefix= PrefixCharacter+ "output";
+        
+        public const string OutputPrefix= _.IntellisensePrefix+ "output";
 
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameter(object instance)
         {

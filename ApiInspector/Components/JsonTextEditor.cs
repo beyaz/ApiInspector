@@ -19,7 +19,10 @@ namespace ApiInspector.Components
         /// <summary>
         ///     The editor
         /// </summary>
-        protected readonly FastColoredTextBox editor = new FastColoredTextBox();
+        protected readonly FastColoredTextBox editor = new FastColoredTextBox
+        {
+            AutoIndent = false
+        };
         #endregion
 
         #region Constructors

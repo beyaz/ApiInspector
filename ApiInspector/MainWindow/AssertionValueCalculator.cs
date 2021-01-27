@@ -180,7 +180,10 @@ namespace ApiInspector.MainWindow
                         return sqlOperationOutput.SqlParameters[0].Value;
                     }
 
-                    if (input.SQL == "@output" || methodDefinition.Parameters.Any(p=>CecilHelper.PrefixCharacter + p.Name==  input.SQL))
+                    var isNamedParameter = input.SQL == "@output" || 
+                                           methodDefinition.Parameters.Any(p => _.IntellisensePrefix + p.Name == input.SQL)||
+                                           variablesMap.ContainsKey(input.SQL);
+                    if (isNamedParameter)
                     {
                         return sqlOperationOutput.SqlParameters[0].Value;
                     }

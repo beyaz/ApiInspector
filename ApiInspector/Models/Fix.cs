@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using static ApiInspector._;
 
 namespace ApiInspector.Models
 {
@@ -9,9 +10,9 @@ namespace ApiInspector.Models
         {
             foreach (var scenario in invocationInfo.Scenarios)
             {
-                if (scenario.Assertions.Any(x=>x.OperatorName == AssertionOperatorNames.AssignTo))
+                if (scenario.Assertions.Any(IsAssertionInfoShouldProcessBeforeExecutionStart))
                 {
-                    scenario.Assertions = scenario.Assertions.OrderByDescending(x => x.OperatorName == AssertionOperatorNames.AssignTo).ToList();    
+                    scenario.Assertions = scenario.Assertions.OrderByDescending(IsAssertionInfoShouldProcessBeforeExecutionStart).ToList();    
                 }
                 
             }

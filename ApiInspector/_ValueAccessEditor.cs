@@ -6,6 +6,8 @@ namespace ApiInspector
 {
     static partial class _
     {
+        public const string IntellisensePrefix = "@";
+
         public static DataKey<Dictionary<string, string>> VariablesMap => CreateKey<Dictionary<string, string>>();
 
         static DataKey<T> CreateKey<T>([CallerMemberName] string callerMemberName = null)

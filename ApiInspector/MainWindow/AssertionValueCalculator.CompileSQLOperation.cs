@@ -6,6 +6,7 @@ using ApiInspector.DataAccess;
 using ApiInspector.Serialization;
 using BOA.Common.Extensions;
 using Mono.Cecil;
+using static ApiInspector._;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.Plugins.Global;
 
@@ -90,16 +91,16 @@ namespace ApiInspector.MainWindow
                 return SqlDbType.Structured;
             }
 
-            void processSimpleSuggestion(string name, object value)
+            void processSimpleSuggestion(string name, Func<object> getValue)
             {
-                var prefix = CecilHelper.PrefixCharacter + name;
+                var prefix = IntellisensePrefix + name;
 
                 if (!text.Contains(prefix))
                 {
                     return;
                 }
 
-                var isComplex = text.Contains(CecilHelper.PrefixCharacter + name + ".");
+                var isComplex = text.Contains(IntellisensePrefix + name + ".");
                 if (isComplex)
                 {
                     return;
@@ -112,6 +113,7 @@ namespace ApiInspector.MainWindow
                     return;
                 }
 
+                var value = getValue();
                 var parameter = new DbParameterInfo
                 {
                     Name      = key,
@@ -122,9 +124,9 @@ namespace ApiInspector.MainWindow
                 sqlParameters.Add(key, parameter);
             }
 
-            void processComplexSuggestion(string name, object value)
+            void processComplexSuggestion(string name, Func<object> getValue)
             {
-                var prefix = CecilHelper.PrefixCharacter + name + ".";
+                var prefix = IntellisensePrefix + name + ".";
 
                 var suggestions = from x in allSuggestions
                                   where x.StartsWith(prefix)
@@ -145,6 +147,8 @@ namespace ApiInspector.MainWindow
                     var key = suggestion.Replace(".", "_");
 
                     text = text.Replace(suggestion, key);
+
+                    var value = getValue();
 
                     var sqlValue = ReflectionUtil.ReadPropertyPath(value, propertyPath);
 
@@ -168,30 +172,35 @@ namespace ApiInspector.MainWindow
             {
                 var parameterName  = parameterDefinition.Name;
 
-                object parameterValue = null;
+                object getParameterValue()
                 {
                     var json = input.MethodParametersInJson[parameterDefinition.Index];
-                    if (json != null)
+                    if (json == null)
                     {
-                        parameterValue = DeserializeForMethodParameter(json, parameterDefinition.ParameterType.GetDotNetType());    
+                        return null;
                     }
+
+                    return DeserializeForMethodParameter(json, parameterDefinition.ParameterType.GetDotNetType());    
                 }
 
-                processSimpleSuggestion(parameterName, parameterValue);
-                processComplexSuggestion(parameterName, parameterValue);
+                processSimpleSuggestion(parameterName, getParameterValue);
+                processComplexSuggestion(parameterName, getParameterValue);
             }
 
             if (!IsVoidMethod(methodDefinition))
             {
-                var returnValue = DeserializeForMethodParameter(input.MethodReturnValueInJson, GetReturnTypeReferenceOf(methodDefinition).GetDotNetType());
+                object getReturnValue()
+                {
+                    return DeserializeForMethodParameter(input.MethodReturnValueInJson, GetReturnTypeReferenceOf(methodDefinition).GetDotNetType());
+                }
 
-                processSimpleSuggestion("output", returnValue);
-                processComplexSuggestion("output", returnValue);    
+                processSimpleSuggestion("output", getReturnValue);
+                processComplexSuggestion("output", getReturnValue);    
             }
             
             foreach (var pair in input.VariablesMap)
             {
-                processSimpleSuggestion(pair.Key.RemoveFromStart(CecilHelper.PrefixCharacter), pair.Value);
+                processSimpleSuggestion(pair.Key.RemoveFromStart(IntellisensePrefix), ()=>pair.Value);
             }
 
 
