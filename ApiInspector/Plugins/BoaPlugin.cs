@@ -7,6 +7,13 @@ using Newtonsoft.Json.Converters;
 
 namespace ApiInspector.Plugins
 {
+    static class PluginLoader
+    {
+        public static void AttachPlugins()
+        {
+            BoaPlugin.Attach();
+        }
+    }
     public static class BoaPlugin
     {
         public static void Attach()

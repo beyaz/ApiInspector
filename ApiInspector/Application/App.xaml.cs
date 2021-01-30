@@ -70,7 +70,7 @@ namespace ApiInspector.Application
         /// </summary>
         void OnStartup(object sender, StartupEventArgs e)
         {
-            BoaPlugin.Attach();
+            PluginLoader.AttachPlugins();
 
             ApplySkin();
 

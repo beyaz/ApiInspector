@@ -341,6 +341,8 @@ namespace ApiInspector.Invoking.Invokers
             /// </summary>
             public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
             {
+                PluginLoader.AttachPlugins();
+
                 var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
 
                 using (var boaContext = new BOAContext(environmentInfo, trace))
