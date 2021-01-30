@@ -103,7 +103,8 @@ namespace ApiInspector.Serialization
             {
                 var list = new List<JsonConverter>
                 {
-                    new DecimalConverter()
+                    new DecimalConverter(),
+                    new Newtonsoft.Json.Converters.StringEnumConverter()
                 };
 
                 list.AddRange(Global.JsonConverters);
