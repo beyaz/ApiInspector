@@ -3,6 +3,7 @@ using ApiInspector.Serialization;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using Mono.Cecil;
+using Newtonsoft.Json.Converters;
 
 namespace ApiInspector.Plugins
 {
@@ -13,12 +14,12 @@ namespace ApiInspector.Plugins
             _.AddJsonConverter(new MethodDefinitionConverter());
             _.AddJsonConverter(new ObjectHelperConverter());
             _.AddJsonConverter(new DecimalConverter());
-            _.AddJsonConverter(new Newtonsoft.Json.Converters.StringEnumConverter());
+            _.AddJsonConverter(new StringEnumConverter());
 
             _.AddToInvokedMethodReturnValuePipe(NormalizeInvokedMethodReturnValue);
             _.AddToIsVoidMethodPipe(IsVoidMethod);
+            _.AddToTypeReferencePipe(GeTypeReference);
         }
-
 
         static object NormalizeInvokedMethodReturnValue(object value)
         {
@@ -43,11 +44,21 @@ namespace ApiInspector.Plugins
             return value;
         }
 
-         static bool IsVoidMethod(MethodDefinition methodDefinition)
+        static bool IsVoidMethod(MethodDefinition methodDefinition)
         {
             var fullTypeName = methodDefinition.ReturnType.FullName;
 
             return fullTypeName == "System.Void" || fullTypeName == "BOA.Common.Types.ResponseBase";
+        }
+
+        static TypeReference GeTypeReference(TypeReference typeReference)
+        {
+            if (typeReference.FullName.StartsWith("BOA.Common.Types.GenericResponse`1<"))
+            {
+                typeReference = ((GenericInstanceType) typeReference).GenericArguments[0];
+            }
+
+            return typeReference;
         }
     }
 }

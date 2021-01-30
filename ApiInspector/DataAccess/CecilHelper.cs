@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using ApiInspector.InvocationInfoEditor;
 using BOA.Base;
 using Mono.Cecil;
 using static ApiInspector._;
-using static ApiInspector.Plugins.Global;
 
 namespace ApiInspector.DataAccess
 {
@@ -160,7 +158,7 @@ namespace ApiInspector.DataAccess
             {
                 if (!IsVoidMethod(methodDefinition))
                 {
-                    roots.Add(OutputPrefix+".", GetReturnTypeReferenceOf(methodDefinition).Resolve());
+                    roots.Add(OutputPrefix+".", GetTypeReference(methodDefinition.ReturnType).Resolve());
                 }
 
                 foreach (var parameterDefinition in methodDefinition.Parameters)

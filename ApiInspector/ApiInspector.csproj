@@ -124,7 +124,6 @@
     <Compile Include="Models\ScenarioInfo.cs" />
     <Compile Include="Models\ValueAccessInfo.cs" />
     <Compile Include="Plugins\BoaPlugin.cs" />
-    <Compile Include="Plugins\Global.cs" />
     <Compile Include="Plugins\MethodDefinitionConverter.cs" />
     <Compile Include="Plugins\ObjectHelperConverter.cs" />
     <Compile Include="Test\ClassA.cs" />

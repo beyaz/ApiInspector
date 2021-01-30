@@ -48,5 +48,24 @@ namespace ApiInspector
             return false;
         } 
         #endregion
+
+        #region GetTypeReference
+        static readonly List<Func<TypeReference, TypeReference>> typeReferencePipe = new List<Func<TypeReference, TypeReference>>();
+
+        public static void AddToTypeReferencePipe(Func<TypeReference, TypeReference> func)
+        {
+            typeReferencePipe.Add(func);
+        }
+
+        public static TypeReference GetTypeReference(TypeReference typeReference)
+        {
+            foreach (var func in typeReferencePipe)
+            {
+                typeReference = func(typeReference);
+            }
+
+            return typeReference;
+        } 
+        #endregion
     }
 }

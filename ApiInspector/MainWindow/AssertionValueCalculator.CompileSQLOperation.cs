@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using ApiInspector.DataAccess;
-using ApiInspector.Serialization;
 using BOA.Common.Extensions;
 using Mono.Cecil;
 using static ApiInspector._;
 using static ApiInspector.MainWindow.Mixin;
-using static ApiInspector.Plugins.Global;
 
 namespace ApiInspector.MainWindow
 {
@@ -191,7 +189,7 @@ namespace ApiInspector.MainWindow
             {
                 object getReturnValue()
                 {
-                    return DeserializeForMethodParameter(input.MethodReturnValueInJson, GetReturnTypeReferenceOf(methodDefinition).GetDotNetType());
+                    return DeserializeForMethodParameter(input.MethodReturnValueInJson, GetTypeReference(methodDefinition.ReturnType).GetDotNetType());
                 }
 
                 processSimpleSuggestion("output", getReturnValue);
