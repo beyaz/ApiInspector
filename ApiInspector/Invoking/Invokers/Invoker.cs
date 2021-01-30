@@ -157,15 +157,7 @@ namespace ApiInspector.Invoking.Invokers
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
 
-            var success = fun((object responseOfInvokeMethod) =>
-            {
-                var response = Global.CustomSerialize(responseOfInvokeMethod);
-                if (response.IsProcessed)
-                {
-                    return new InvokeOutput(response.Json);
-                }
-                return new InvokeOutput(SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod));
-            });
+            var success = fun((object responseOfInvokeMethod) => new InvokeOutput(SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)));
 
             var findTargetType = fun(() =>
             {
@@ -306,11 +298,7 @@ namespace ApiInspector.Invoking.Invokers
                     return null;
                 }
 
-                var result = Global.CustomSerialize(instance);
-                if (result.IsProcessed)
-                {
-                    return result.Json;
-                }
+                
 
                 return SerializeToJson(instance);
             });

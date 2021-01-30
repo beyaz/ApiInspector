@@ -1,5 +1,4 @@
 ﻿using System;
-using ApiInspector.Plugins;
 using BOA.Base;
 using Newtonsoft.Json;
 
@@ -39,21 +38,7 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
             return null;
         }
 
-        public static ParameterAdapterInput TryAdaptForCustomTypes(ParameterAdapterInput input)
-        {
-            var targetParameterType = input.ParameterInfo.ParameterType;
-
-            if (input.InvocationValue is string invocationValueAsString)
-            {
-                var response = Global.CustomDeserialize(invocationValueAsString,targetParameterType);
-                if (response.IsProcessed)
-                {
-                    return input.WithInvocationValue(response.Instance);
-                }
-            }
-
-            return null;
-        }
+        
 
         /// <summary>
         ///     Tries the adapt for i convertible types.

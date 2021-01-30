@@ -24,7 +24,6 @@ namespace ApiInspector.Invoking.Invokers
             ParameterAdapter.TryAdaptForStringType,
             ParameterAdapter.TryAdaptForDateTime,
             ParameterAdapter.TryAdaptForObjectHelperType,
-            ParameterAdapter.TryAdaptForCustomTypes,
             ParameterAdapter.TryAdaptForSerializableTypes,
             ParameterAdapter.TryAdaptForIConvertibleTypes
         };
