@@ -159,7 +159,7 @@ namespace ApiInspector.DataAccess
             {
                 if (!IsVoidMethod(methodDefinition))
                 {
-                    roots.Add(OutputPrefix+".", GetReturnTypeDefinitionOf(methodDefinition));
+                    roots.Add(OutputPrefix+".", GetReturnTypeReferenceOf(methodDefinition).Resolve());
                 }
 
                 foreach (var parameterDefinition in methodDefinition.Parameters)

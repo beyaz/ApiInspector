@@ -7,12 +7,6 @@ namespace ApiInspector.Plugins
 {
     public static class Global
     {
-        
-
-        public static TypeDefinition GetReturnTypeDefinitionOf(MethodDefinition methodDefinition)
-        {
-            return GetReturnTypeReferenceOf(methodDefinition).Resolve();
-        }
 
         public static TypeReference GetReturnTypeReferenceOf(MethodDefinition methodDefinition)
         {
