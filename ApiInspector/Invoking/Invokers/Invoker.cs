@@ -279,7 +279,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var responseInvokeMethod = invokeMethod();
             
-            responseInvokeMethod = Global.NormalizeInvokedMethodReturnValue(responseInvokeMethod);
+            responseInvokeMethod = _.NormalizeInvokedMethodReturnValue(responseInvokeMethod);
 
             stopwatch.Stop();
 
