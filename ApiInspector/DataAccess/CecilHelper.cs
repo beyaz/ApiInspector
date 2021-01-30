@@ -6,6 +6,7 @@ using System.Text;
 using ApiInspector.InvocationInfoEditor;
 using BOA.Base;
 using Mono.Cecil;
+using static ApiInspector._;
 using static ApiInspector.Plugins.Global;
 
 namespace ApiInspector.DataAccess
@@ -39,7 +40,7 @@ namespace ApiInspector.DataAccess
 
         public static Type GetDotNetType(this TypeReference type)
         {
-            return _.FindTypeByFullName(type.GetReflectionName());
+            return FindTypeByFullName(type.GetReflectionName());
         }
 
         static string GetReflectionName(this TypeReference type)
@@ -169,7 +170,7 @@ namespace ApiInspector.DataAccess
                         continue;
                     }
 
-                    roots.Add(_.IntellisensePrefix + parameterDefinition.Name + ".", parameterDefinition.ParameterType.Resolve());
+                    roots.Add(IntellisensePrefix + parameterDefinition.Name + ".", parameterDefinition.ParameterType.Resolve());
                 }
             }
 
@@ -185,7 +186,7 @@ namespace ApiInspector.DataAccess
         }
 
         
-        public const string OutputPrefix= _.IntellisensePrefix+ "output";
+        public const string OutputPrefix= IntellisensePrefix+ "output";
 
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameter(object instance)
         {

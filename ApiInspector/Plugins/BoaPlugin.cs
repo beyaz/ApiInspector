@@ -2,6 +2,7 @@
 using ApiInspector.Serialization;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
+using Mono.Cecil;
 
 namespace ApiInspector.Plugins
 {
@@ -15,6 +16,7 @@ namespace ApiInspector.Plugins
             _.AddJsonConverter(new Newtonsoft.Json.Converters.StringEnumConverter());
 
             _.AddToInvokedMethodReturnValuePipe(NormalizeInvokedMethodReturnValue);
+            _.AddToIsVoidMethodPipe(IsVoidMethod);
         }
 
 
@@ -39,6 +41,13 @@ namespace ApiInspector.Plugins
             }
 
             return value;
+        }
+
+         static bool IsVoidMethod(MethodDefinition methodDefinition)
+        {
+            var fullTypeName = methodDefinition.ReturnType.FullName;
+
+            return fullTypeName == "System.Void" || fullTypeName == "BOA.Common.Types.ResponseBase";
         }
     }
 }

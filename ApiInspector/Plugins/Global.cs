@@ -20,12 +20,7 @@ namespace ApiInspector.Plugins
             return returnTypeReference;
         }
 
-        public static bool IsVoidMethod(MethodDefinition methodDefinition)
-        {
-            var fullTypeName = methodDefinition.ReturnType.FullName;
-
-            return fullTypeName == "System.Void" || fullTypeName == "BOA.Common.Types.ResponseBase";
-        }
+        
 
         
     }
