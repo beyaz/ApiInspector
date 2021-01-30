@@ -123,6 +123,7 @@
     <Compile Include="Models\Fix.cs" />
     <Compile Include="Models\ScenarioInfo.cs" />
     <Compile Include="Models\ValueAccessInfo.cs" />
+    <Compile Include="Plugins\BoaPlugin.cs" />
     <Compile Include="Plugins\Global.cs" />
     <Compile Include="Plugins\MethodDefinitionConverter.cs" />
     <Compile Include="Plugins\ObjectHelperConverter.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Util\JsonSorter.cs" />
+    <Compile Include="_Serialization.cs" />
     <Compile Include="_ValueAccessEditor.cs" />
     <Compile Include="_EnvironmentVariables.cs" />
     <Compile Include="_TypeFinding.cs" />

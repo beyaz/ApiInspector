@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using ApiInspector.Plugins;
 using Newtonsoft.Json;
+using static ApiInspector._;
 
 namespace ApiInspector.Serialization
 {
@@ -84,34 +83,9 @@ namespace ApiInspector.Serialization
             return JsonConvert.SerializeObject(value, settings);
         }
 
-        public static JsonSerializerSettings CreateJsonSerializerSettings()
-        {
-            return  new JsonSerializerSettings
-            {
-                DefaultValueHandling       = DefaultValueHandling.Ignore,
-                Formatting                 = Formatting.Indented,
-                DateFormatString           = "yyyy.MM.dd hh:mm:ss",
-                Converters                 = JsonConverters,
-                ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
-                PreserveReferencesHandling =PreserveReferencesHandling.None
-            };
-        }
+        
 
-        static IList<JsonConverter> JsonConverters
-        {
-            get
-            {
-                var list = new List<JsonConverter>
-                {
-                    new DecimalConverter(),
-                    new Newtonsoft.Json.Converters.StringEnumConverter()
-                };
-
-                list.AddRange(Global.JsonConverters);
-
-                return list;
-            }
-        } 
+        
 
         #endregion
     }

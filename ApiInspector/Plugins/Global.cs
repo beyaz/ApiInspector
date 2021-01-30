@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using ApiInspector.MainWindow;
+﻿using ApiInspector.MainWindow;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
 using Mono.Cecil;
-using Newtonsoft.Json;
 
 namespace ApiInspector.Plugins
 {
-
     public static class Global
     {
 
@@ -67,12 +63,6 @@ namespace ApiInspector.Plugins
        
 
        
-
-        public static IReadOnlyList<JsonConverter> JsonConverters = new List<JsonConverter>
-        {
-            new MethodDefinitionConverter(),
-            new ObjectHelperConverter()
-        };
 
 
         #endregion

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using ApiInspector.MainWindow;
+using ApiInspector.Plugins;
 using ApiInspector.Tracing;
 using static ApiInspector._;
 using static ApiInspector.MainWindow.Mixin;
@@ -69,6 +70,8 @@ namespace ApiInspector.Application
         /// </summary>
         void OnStartup(object sender, StartupEventArgs e)
         {
+            BoaPlugin.Attach();
+
             ApplySkin();
 
             errorMonitor.StartMonitor();
