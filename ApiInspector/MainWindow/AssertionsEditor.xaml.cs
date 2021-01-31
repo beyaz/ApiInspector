@@ -10,6 +10,7 @@ using ApiInspector.Models;
 using BOA.Common.Types;
 using Mono.Cecil;
 using WpfControls;
+using static ApiInspector._;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
@@ -392,6 +393,8 @@ namespace ApiInspector.MainWindow
             }
 
             VerticalIndent(assertionNumbersContainer, 10);
+
+            AttachDragAndDropFunctionality(assertionNumbersContainer, ()=>Assertions);
         }
         #endregion
     }

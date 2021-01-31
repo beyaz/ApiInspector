@@ -8,6 +8,7 @@ using System.Windows.Input;
 using ApiInspector.Components;
 using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
+using static ApiInspector._;
 using static ApiInspector.Application.App;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
@@ -437,6 +438,8 @@ namespace ApiInspector.MainWindow
             }
 
             VerticalIndent(scenarioNumbersContainer, 10);
+
+            AttachDragAndDropFunctionality(scenarioNumbersContainer, ()=>scenarios);
         }
     }
 }

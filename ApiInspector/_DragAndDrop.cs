@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,7 +9,26 @@ namespace ApiInspector
     static partial class _
     {
         #region Public Methods
-        public static void AttachDragAndDropFunctionality(StackPanel panel, Action<int, int> onOperationCompleted)
+        public static void AttachDragAndDropFunctionality(StackPanel panel, Func<IList> getList)
+        {
+            if (panel.AllowDrop)
+            {
+                return;
+            }
+
+            AttachDragAndDropFunctionality(panel, (sourceIndex, targetIndex) =>
+            {
+                var list = getList();
+
+                var temp = list[sourceIndex];
+                list.Remove(temp);
+                list.Insert(targetIndex, temp);
+            });
+        }
+        #endregion
+
+        #region Methods
+        static void AttachDragAndDropFunctionality(StackPanel panel, Action<int, int> onOperationCompleted)
         {
             var       isDown          = false;
             var       isDragging      = false;
@@ -90,6 +110,8 @@ namespace ApiInspector
                     realDragSource.ReleaseMouseCapture();
                 }
             }
+
+
 
             panel.PreviewMouseLeftButtonDown += previewMouseLeftButtonDown;
             panel.PreviewMouseLeftButtonUp   += previewMouseLeftButtonUp;
