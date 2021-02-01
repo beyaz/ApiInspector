@@ -21,7 +21,8 @@ namespace ApiInspector
                 DateFormatString           = "yyyy.MM.dd hh:mm:ss",
                 Converters                 = jsonConverters,
                 ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
-                PreserveReferencesHandling =PreserveReferencesHandling.None
+                PreserveReferencesHandling =PreserveReferencesHandling.None,
+                TypeNameHandling = TypeNameHandling.Auto
             };
         }
     }

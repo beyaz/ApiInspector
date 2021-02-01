@@ -6,6 +6,12 @@ namespace ApiInspector
 {
     static partial class _
     {
+
+        public static bool IsCardServiceAssembly(string assemblyFileName)
+        {
+            return assemblyFileName?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) == true;
+        }
+
         #region NormalizeInvokedMethodReturnValue
         static readonly List<Func<object, object>> invokedMethodReturnValuePipe = new List<Func<object, object>>();
 
@@ -56,6 +62,8 @@ namespace ApiInspector
         {
             typeReferencePipe.Add(func);
         }
+
+
 
         public static TypeReference GetTypeReference(TypeReference typeReference)
         {

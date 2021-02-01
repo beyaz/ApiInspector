@@ -12,6 +12,7 @@ using ApiInspector.Invoking.InstanceCreators;
 using ApiInspector.Models;
 using ApiInspector.Plugins;
 using BOA.Common.Types;
+using static ApiInspector._;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
@@ -44,7 +45,7 @@ namespace ApiInspector.Invoking.Invokers
             };
 
             var domain = AppDomain.CreateDomain("AppDomainIsolation:" + Guid.NewGuid(), null, setup);
-            domain.AssemblyResolve += _.ResolveBoaSystemAssembly;
+            domain.AssemblyResolve += ResolveBoaSystemAssembly;
 
             var type = typeof(T);
 
@@ -202,7 +203,9 @@ namespace ApiInspector.Invoking.Invokers
             }
 
             // TRY BOA Authenticate
-            if (invocationInfo.AssemblyName.StartsWith("BOA.") && invocationInfo.AssemblyName != "BOA.OneDesigner.dll")
+            if (invocationInfo.AssemblyName.StartsWith("BOA.") && 
+                invocationInfo.AssemblyName != "BOA.OneDesigner.dll" && 
+                !IsCardServiceAssembly(invocationInfo.AssemblyName))
             {
                 trace("Authentication is started. Because assembly name starts with BOA prefix.");
 
@@ -231,7 +234,7 @@ namespace ApiInspector.Invoking.Invokers
                 {
                     var methodName = invocationInfo.MethodName;
 
-                    if (targetType.Namespace?.StartsWith("BOA.Card.Services.", StringComparison.OrdinalIgnoreCase) != true)
+                    if (!IsCardServiceAssembly(targetType.Namespace))
                     {
                         return TryMethodInvokeResponse.NotInvoked;
                     }
@@ -279,7 +282,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var responseInvokeMethod = invokeMethod();
             
-            responseInvokeMethod = _.NormalizeInvokedMethodReturnValue(responseInvokeMethod);
+            responseInvokeMethod = NormalizeInvokedMethodReturnValue(responseInvokeMethod);
 
             stopwatch.Stop();
 

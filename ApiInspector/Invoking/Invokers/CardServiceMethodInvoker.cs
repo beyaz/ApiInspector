@@ -32,6 +32,10 @@ namespace ApiInspector.Invoking.Invokers
                 throw new ArgumentNullException(nameof(serviceInterface));
             }
 
+            var configFilePath = @"D:\work\BOA.CardModules\Dev\BOA.Card.CreditCard\BOA.Card.Services.CreditCard.Online\Web.config";
+            _.ChangeAppConfig(configFilePath);
+
+
             trace("Searching method in service...");
             var method = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == input.MethodName);
             if (method == null)
@@ -45,24 +49,61 @@ namespace ApiInspector.Invoking.Invokers
             var methodName = input.MethodName.Substring(0,input.MethodName.IndexOf("(", StringComparison.Ordinal));
 
 
-            var SourceCode = @"
+            string getCSharpCode()
+            {
+                if (method.ReturnType.FullName == "System.Void")
+                {
+                    return   @"
 
-using BOA.Base;
-using BOA.Proxy.Kernel.Card;
+using BOA.Card.Core.ServiceBus;
 
 namespace ApiInspector.Invoking.Dynamic
 {
     class ServiceWrapper
     {
-        public static object Wrap(ObjectHelper objectHelper, " + parameterType.FullName + @" request)
+        public static void Wrap(" + parameterType.FullName + @" request)
         {
-            return CardLocalProxy.Call(objectHelper, (" + serviceInterface.FullName + @" service) => service." + methodName + @"(request));
+            EverestContext.Current.Build();
+
+            using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
+            {
+                var service = EverestContext.Current.GetService<"+ serviceInterface.FullName +@">();
+
+                service."+ methodName +@"(request);
+            }
         }
     }
 }
 
 ";
-            const string location = @"d:\boa\server\bin\";
+                }
+
+                return @"
+
+using BOA.Card.Core.ServiceBus;
+
+namespace ApiInspector.Invoking.Dynamic
+{
+    class ServiceWrapper
+    {
+        public static object Wrap(" + parameterType.FullName + @" request)
+        {
+            EverestContext.Current.Build();
+
+            using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
+            {
+                var service = EverestContext.Current.GetService<"+ serviceInterface.FullName +@">();
+
+                return service."+ methodName +@"(request);
+            }
+        }
+    }
+}
+
+";
+            }
+
+            const string location   = @"d:\boa\server\bin\";
 
             var referencedAssemblies = new List<string>
             {
@@ -70,12 +111,11 @@ namespace ApiInspector.Invoking.Dynamic
                 "mscorlib.dll",
                 "System.dll",
 
-                $"{location}BOA.Proxy.Kernel.Card.dll",
-                $"{location}BOA.Common.dll",
-                $"{location}BOA.Base.dll",
+                $"{location}BOA.Card.Core.dll",
                 $"{location}BOA.Card.Contracts.dll",
                 $"{location}BOA.Card.Contracts.Online.dll",
-                $"{location}BOA.Card.Definitions.dll"
+                $"{location}BOA.Card.Definitions.dll",
+                $"{location}SimpleInjector.dll"
             };
 
             var compilerParams = new CompilerParameters(referencedAssemblies.ToArray())
@@ -87,7 +127,7 @@ namespace ApiInspector.Invoking.Dynamic
             };
 
             trace("Started to compile...");
-            var results = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(compilerParams, SourceCode);
+            var results = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(compilerParams, getCSharpCode());
             if (results.Errors.Count > 0)
             {
                 trace("Compile fail.");
@@ -115,16 +155,9 @@ namespace ApiInspector.Invoking.Dynamic
                 throw new ArgumentNullException(nameof(methodInfo));
             }
 
-            trace("Creating ObjectHelper...");
-            var wrapMethodParameters = new List<object>
-            {
-                boaContext.GetObjectHelper()
-            };
-            wrapMethodParameters.AddRange(invocationParameters);
-
             trace("Service invocation is started. Waiting response...");
 
-            var response = methodInfo.Invoke(null, wrapMethodParameters.ToArray());
+            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
 
             trace("Service invocation is success.");
 
