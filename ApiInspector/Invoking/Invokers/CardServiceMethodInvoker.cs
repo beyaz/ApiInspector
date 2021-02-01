@@ -74,6 +74,7 @@ namespace ApiInspector.Invoking.Dynamic
                 $"{location}BOA.Common.dll",
                 $"{location}BOA.Base.dll",
                 $"{location}BOA.Card.Contracts.dll",
+                $"{location}BOA.Card.Contracts.Online.dll",
                 $"{location}BOA.Card.Definitions.dll"
             };
 

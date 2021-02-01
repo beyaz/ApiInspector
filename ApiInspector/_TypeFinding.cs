@@ -35,6 +35,7 @@ namespace ApiInspector
             var list = new[]
             {
                 "BOA.Card.Contracts",
+                "BOA.Card.Contracts.Online",
                 "BOA.Process.Kernel.Card",
                 "BOA.Integration.Model.MobileBranch"
             };
@@ -119,7 +120,8 @@ namespace ApiInspector
                 if (File.Exists(filePath))
                 {
                     trace($"Loading assembly: {filePath}");
-                    return Assembly.Load(File.ReadAllBytes(filePath));
+                    // Assembly.Load(File.ReadAllBytes(filePath));
+                    return Assembly.LoadFrom(filePath);
                 }
             }
 
