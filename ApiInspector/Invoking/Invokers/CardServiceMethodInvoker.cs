@@ -76,6 +76,13 @@ namespace ApiInspector.Invoking.Dynamic
                 var service = EverestContext.Current.GetService<"+ serviceInterface.FullName +@">();
 
                 service."+ methodName +@"(request);
+
+                var transactionContext = EverestContext.Current.GetService<TransactionContext>();
+
+                if (transactionContext.Exception != null)
+                {
+                    throw transactionContext.Exception;
+                }
             }
         }
     }
@@ -100,7 +107,16 @@ namespace ApiInspector.Invoking.Dynamic
             {
                 var service = EverestContext.Current.GetService<"+ serviceInterface.FullName +@">();
 
-                return service."+ methodName +@"(request);
+                var output = service."+ methodName +@"(request);
+
+                var transactionContext = EverestContext.Current.GetService<TransactionContext>();
+
+                if (transactionContext.Exception != null)
+                {
+                    throw transactionContext.Exception;
+                }
+            
+                return output;
             }
         }
     }
