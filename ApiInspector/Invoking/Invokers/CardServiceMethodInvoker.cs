@@ -1,10 +1,12 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using ApiInspector.DataAccess;
 using ApiInspector.Invoking.BoaSystem;
+using static ApiInspector._;
 using static FunctionalPrograming.FPExtensions;
 using static ApiInspector.Utility;
 
@@ -19,7 +21,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Invokes the specified context.
         /// </summary>
-        public static object Invoke(CardServiceMethodInvokerInput input, Action<string> trace, BOAContext boaContext)
+        public static object Invoke(CardServiceMethodInvokerInput input, Action<string> trace, string environment)
         {
             var invocationParameters = input.InvocationParameters;
             var targetType           = input.TargetType;
@@ -32,8 +34,12 @@ namespace ApiInspector.Invoking.Invokers
                 throw new ArgumentNullException(nameof(serviceInterface));
             }
 
-            var configFilePath = @"D:\work\BOA.CardModules\Dev\BOA.Card.CreditCard\BOA.Card.Services.CreditCard.Online\Web.config";
-            _.ChangeAppConfig(configFilePath);
+            var serviceProjectName = Path.GetFileNameWithoutExtension(targetType.Assembly.CodeBase);
+
+            
+            var configFilePath = GetWebConfigFilePath(serviceInterface.AssemblyQualifiedName,environment);
+            
+            ChangeAppConfig(configFilePath);
 
 
             trace("Searching method in service...");

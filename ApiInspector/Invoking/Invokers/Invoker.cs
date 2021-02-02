@@ -241,7 +241,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
-                    return new TryMethodInvokeResponse(CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, boaContext));
+                    return new TryMethodInvokeResponse(CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, invocationInfo.Environment));
 
                 });
 

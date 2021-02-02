@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using ApiInspector.Invoking.BoaSystem;
 using static ApiInspector.Utility;
 using static System.IO.File;
 
@@ -46,6 +47,26 @@ namespace ApiInspector
         {
             get { return @"d:\boa\server\bin\ApiInspectorConfiguration\"; }
         }
+
+        public static IDbConnection GetBoaCardDbConnection(EnvironmentInfo environmentInfo)
+        {
+            if (environmentInfo.IsDev)
+            {
+                return new SqlConnection(@"Data Source=srvxdev\zumrut;Initial Catalog=BOACard;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;");
+            }
+            if (environmentInfo.IsTest)
+            {
+                return new SqlConnection(@"Data Source=srvxtest\zumrut;Initial Catalog=BOACard;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;");
+            }
+            if (environmentInfo.IsPrep)
+            {
+                return new SqlConnection(@"Data Source=srvxprep\zumrut;Initial Catalog=BOACard;Min Pool Size=10; Max Pool Size=100;Application Name=BOAApp;Integrated Security=true;");
+            }
+
+            throw new NotImplementedException(environmentInfo.ToString());
+        }
+
+
         #endregion
     }
 }

@@ -166,6 +166,7 @@
     <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Util\JsonSorter.cs" />
+    <Compile Include="_FileOperations.cs" />
     <Compile Include="_ConfigurationFile.cs" />
     <Compile Include="_DragAndDrop.cs" />
     <Compile Include="_Invoking.cs" />
