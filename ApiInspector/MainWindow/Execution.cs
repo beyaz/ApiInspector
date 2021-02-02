@@ -39,7 +39,7 @@ namespace ApiInspector.MainWindow
                 var invokeOutput = response.InvokeOutput;
                 if (!IsSuccess(invokeOutput))
                 {
-                    trace(invokeOutput.Error.ToString());
+                    trace(invokeOutput.Error);
                     trace("EXECUTION IS FAILED.");
                     return;
                 }

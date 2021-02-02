@@ -9,22 +9,20 @@ namespace ApiInspector.Invoking
     [Serializable]
     class InvokeOutput
     {
-        #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="InvokeOutput" /> class.
         /// </summary>
         public InvokeOutput(Exception exception)
         {
-            Error = exception;
+            Error = exception.ToString();
         }
 
        
 
-        #region Public Properties
         /// <summary>
         ///     Gets the error.
         /// </summary>
-        public Exception Error { set; get; }
+        public string Error { set; get; }
 
         /// <summary>
         ///     The execution response as json
@@ -40,6 +38,5 @@ namespace ApiInspector.Invoking
         }
 
 
-        #endregion
     }
 }
