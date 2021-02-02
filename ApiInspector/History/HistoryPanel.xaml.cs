@@ -201,8 +201,10 @@ namespace ApiInspector.History
                     var selectedItem = (InvocationInfo)historyListBox.SelectedItem;
                     if (selectedItem != null)
                     {
+                        dbRecords.RemoveAll(x => InvocationInfo.IsSame(x, selectedItem));
                         dbRecords.Add(selectedItem);
                     }
+
 
                     historyListBox.ItemsSource = dbRecords;
 
