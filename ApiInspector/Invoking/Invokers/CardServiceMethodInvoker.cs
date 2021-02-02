@@ -163,7 +163,7 @@ namespace ApiInspector.Invoking.Dynamic
 
             trace("Service invocation is started. Waiting response...");
 
-            var response = methodInfo.Invoke(null, invocationParameters.ToArray());
+            var response = _.InvokeStaticMethod(methodInfo, invocationParameters.ToArray());
 
             trace("Service invocation is success.");
 

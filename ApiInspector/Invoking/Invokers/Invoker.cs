@@ -129,6 +129,10 @@ namespace ApiInspector.Invoking.Invokers
             {
                 return UnsafeInvoke(boaContext, trace, invocationInfo, parameters);
             }
+            catch (InvocationFailedException exception)
+            {
+                return fail(exception.InnerException);
+            }
             catch (Exception exception)
             {
                 return fail(exception);
@@ -235,7 +239,7 @@ namespace ApiInspector.Invoking.Invokers
                         return TryMethodInvokeResponse.NotInvoked;
                     }
 
-                    return  new TryMethodInvokeResponse(methodInfo.Invoke(null, invocationParameters.ToArray()));
+                    return  new TryMethodInvokeResponse(_.InvokeStaticMethod(methodInfo, invocationParameters.ToArray()));
                 });
 
                 var tryInvokeAsCardServiceMethod = fun(() =>
@@ -262,7 +266,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var instance = InstanceCreator.Create(targetType, boaContext);
 
-                    return new TryMethodInvokeResponse(methodInfo.Invoke(instance, invocationParameters.ToArray()));
+                    return new TryMethodInvokeResponse(_.InvokeNonStaticMethod(methodInfo,instance, invocationParameters.ToArray()));
                 });
 
                 var tryMethodInvokeResponse = tryInvokeStaticMethod();
