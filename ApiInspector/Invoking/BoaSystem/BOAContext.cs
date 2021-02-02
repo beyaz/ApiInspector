@@ -8,6 +8,7 @@ using BOA.Common.Helpers;
 using BOA.Common.Types;
 using BOA.Process.Kernel.Card.Internal;
 using FunctionalPrograming;
+using static ApiInspector._;
 using UserManager = BOA.Proxy.UserManager;
 
 namespace ApiInspector.Invoking.BoaSystem
@@ -157,7 +158,7 @@ namespace ApiInspector.Invoking.BoaSystem
                 AuthenticationContext = new AuthenticationContext
                 {
                     Channel  = channelContract,
-                    UserName = _.AuthenticationUserName
+                    UserName = AuthenticationUserName
                 }
             };
             trace("Authenticate response waiting...");

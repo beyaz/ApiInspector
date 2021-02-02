@@ -11,6 +11,7 @@ using ApiInspector.Models;
 using FunctionalPrograming;
 using static System.String;
 using static ApiInspector._;
+using static ApiInspector.Invoking.__;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 
@@ -36,7 +37,7 @@ namespace ApiInspector.MainWindow
                 UpdateUI(() => scope.UpdateScenarioExecuteResponse(response));
 
                 var invokeOutput = response.InvokeOutput;
-                if (!invokeOutput.IsSuccess)
+                if (!IsSuccess(invokeOutput))
                 {
                     trace(invokeOutput.Error.ToString());
                     trace("EXECUTION IS FAILED.");
@@ -156,7 +157,7 @@ namespace ApiInspector.MainWindow
 
             var invokeOutput = returnValue.InvokeOutput = Invoker.Invoke(environmentInfo, scope.Get(Trace), invocationInfo, scenario.MethodParameters);
 
-            if (!invokeOutput.IsSuccess)
+            if (!IsSuccess(invokeOutput))
             {
                 return returnValue;
             }

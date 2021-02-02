@@ -35,10 +35,6 @@ namespace ApiInspector.Invoking
         /// </summary>
         public string ExecutionResponseAsJson { set; get; }
 
-        /// <summary>
-        ///     Gets a value indicating whether this instance is success.
-        /// </summary>
-        public bool IsSuccess => Error == null;
 
         public IReadOnlyList<string> InvocationParameters { get; set; }
 

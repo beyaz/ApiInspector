@@ -10,6 +10,7 @@ using ApiInspector.InvocationInfoEditor;
 using ApiInspector.Models;
 using static ApiInspector._;
 using static ApiInspector.Application.App;
+using static ApiInspector.Invoking.__;
 using static ApiInspector.Keys;
 using static ApiInspector.MainWindow.Mixin;
 using static ApiInspector.WPFExtensions;
@@ -176,7 +177,7 @@ namespace ApiInspector.MainWindow
                         return;
                     }
 
-                    if (!output.IsSuccess)
+                    if (!IsSuccess(output))
                     {
                         responseTextView.Text = "ERROR: " + output.Error;
                         return;

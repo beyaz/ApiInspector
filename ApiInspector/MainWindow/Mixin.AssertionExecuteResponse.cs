@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ApiInspector.Invoking;
 using ApiInspector.Models;
+using static ApiInspector.Invoking.__;
 
 namespace ApiInspector.MainWindow
 {
@@ -26,7 +27,7 @@ namespace ApiInspector.MainWindow
 
         public InvokeOutput InvokeOutput{ get; set; }
 
-        public bool IsSuccess => InvokeOutput.IsSuccess && AssertionExecuteResponses.All(x => x.IsSuccess);
+        public bool IsSuccess => IsSuccess(InvokeOutput) && AssertionExecuteResponses.All(x => x.IsSuccess);
 
     }
 
