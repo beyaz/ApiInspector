@@ -28,12 +28,12 @@ namespace ApiInspector.Invoking
         /// <summary>
         ///     Gets the error.
         /// </summary>
-        public Exception Error { get; }
+        public Exception Error { set; get; }
 
         /// <summary>
         ///     The execution response as json
         /// </summary>
-        public string ExecutionResponseAsJson { get; }
+        public string ExecutionResponseAsJson { set; get; }
 
         /// <summary>
         ///     Gets a value indicating whether this instance is success.

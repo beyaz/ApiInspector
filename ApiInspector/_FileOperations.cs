@@ -8,33 +8,35 @@ namespace ApiInspector
     static partial class _
     {
         #region Public Methods
-        public static string FindWebConfigFilePath(string rootDirectory, string projectName)
-        {
-            var webConfigFilePath = Path.Combine(rootDirectory, projectName, "Web.config");
-            if (File.Exists(webConfigFilePath))
-            {
-                return webConfigFilePath;
-            }
+        //public static string FindWebConfigFilePath(string rootDirectory, string projectName)
+        //{
+        //    var webConfigFilePath = Path.Combine(rootDirectory, projectName, "Web.config");
+        //    if (File.Exists(webConfigFilePath))
+        //    {
+        //        return webConfigFilePath;
+        //    }
 
-            if (File.Exists(Path.Combine(rootDirectory, "Web.config")))
-            {
-                return null;
-            }
+        //    if (File.Exists(Path.Combine(rootDirectory, "Web.config")))
+        //    {
+        //        return null;
+        //    }
 
-            foreach (var directory in Directory.GetDirectories(rootDirectory))
-            {
-                var configFilePath = GetWebConfigFilePath(directory, projectName);
-                if (configFilePath != null)
-                {
-                    return configFilePath;
-                }
-            }
+        //    foreach (var directory in Directory.GetDirectories(rootDirectory))
+        //    {
+        //        var configFilePath = GetWebConfigFilePath(directory, projectName);
+        //        if (configFilePath != null)
+        //        {
+        //            return configFilePath;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public static string GetWebConfigFilePath(string interfaceTypeAssemblyQualifiedName, string environment)
         {
+            interfaceTypeAssemblyQualifiedName = ChangeVersionNumber(interfaceTypeAssemblyQualifiedName, "1.0.0.0");
+
             var environmentInfo =  EnvironmentInfo.Parse(environment);
 
             var remoteServiceConfigurationUrl = string.Empty;
@@ -127,6 +129,18 @@ SELECT TOP 1 shd.DOMAIN_ID
             return filePath;
 
         }
+
+        static string ChangeVersionNumber(string assemblyQualifiedNameOfType,string newVersionNumber)
+        {
+            var versionIndex = assemblyQualifiedNameOfType.IndexOf("Version=") + "Version=".Length;
+
+            var commaIndex   = assemblyQualifiedNameOfType.IndexOf(",",versionIndex);
+
+            var versionNumber = assemblyQualifiedNameOfType.Substring(versionIndex, commaIndex - versionIndex);
+
+            return assemblyQualifiedNameOfType.Replace(versionNumber, newVersionNumber);
+        }
+
 
 
         #endregion

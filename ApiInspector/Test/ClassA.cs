@@ -4,6 +4,14 @@ using BOA.Common.Types;
 
 namespace ApiInspector.Test
 {
+    class NonSerializableException:Exception
+    {
+        public NonSerializableException(string message):base(message)
+        {
+            
+        }
+    }
+
     [Serializable]
     public class ClassA
     {
@@ -129,6 +137,11 @@ namespace ApiInspector.Test
         public static int AddOne(int value)
         {
             return value + 1;
+        }
+
+        public static string ThrowNewNonSerializableException(string a)
+        {
+            throw new NonSerializableException(a);
         }
 
         public static GenericResponse<ClassA> GetGenericResponseA(string stringProp0, string stringProp1)

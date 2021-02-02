@@ -97,10 +97,17 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-            return AppDomainHelper.CallInIsolatedDomain((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo, parameters), trace,ToOutput);
+            var invokeOutputAsJson  = AppDomainHelper.CallInIsolatedDomain<InvokeExternal,string>((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo, parameters), trace,ToInvokeOutputAsJson);
+
+            return Deserialize<InvokeOutput>(invokeOutputAsJson);
         }
 
-        static InvokeOutput ToOutput(Exception exception)
+        static string ToInvokeOutputAsJson(Exception exception)
+        {
+            return SerializeToJson(new InvokeOutput(exception));
+        }
+
+        static InvokeOutput ToInvokeOutput(Exception exception)
         {
             return new InvokeOutput(exception);
         }
@@ -114,7 +121,7 @@ namespace ApiInspector.Invoking.Invokers
             {
                 boaContext.Dispose();
 
-                return ToOutput(exception);
+                return ToInvokeOutput(exception);
             });
 
             try
@@ -342,16 +349,20 @@ namespace ApiInspector.Invoking.Invokers
             /// <summary>
             ///     Invokes the specified environment information.
             /// </summary>
-            public InvokeOutput Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
+            public string Invoke(EnvironmentInfo environmentInfo, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
             {
                 PluginLoader.AttachPlugins();
 
-                var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
+                InvokeOutput output = null;
+
+                var trace  = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
 
                 using (var boaContext = new BOAContext(environmentInfo, trace))
                 {
-                    return Invoker.Invoke(boaContext, trace, invocationInfo, parameters);
+                    output = Invoker.Invoke(boaContext, trace, invocationInfo, parameters);
                 }
+
+                return SerializeToJson(output);
             }
             #endregion
         }
