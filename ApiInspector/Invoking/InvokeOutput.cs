@@ -18,11 +18,7 @@ namespace ApiInspector.Invoking
             Error = exception;
         }
 
-        public InvokeOutput(string responseAsJson)
-        {
-            ExecutionResponseAsJson = responseAsJson;
-        }
-        #endregion
+       
 
         #region Public Properties
         /// <summary>
@@ -38,12 +34,11 @@ namespace ApiInspector.Invoking
 
         public IReadOnlyList<string> InvocationParameters { get; set; }
 
-        InvokeOutput()
+        public InvokeOutput()
         {
             
         }
 
-        public static readonly InvokeOutput EODSuccess = new InvokeOutput();
 
         #endregion
     }

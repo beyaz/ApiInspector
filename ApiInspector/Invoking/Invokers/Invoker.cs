@@ -13,6 +13,7 @@ using ApiInspector.Models;
 using ApiInspector.Plugins;
 using BOA.Common.Types;
 using static ApiInspector._;
+using static ApiInspector.Invoking.__;
 using static ApiInspector.Serialization.Serializer;
 using static ApiInspector.Utility;
 using static FunctionalPrograming.FPExtensions;
@@ -165,7 +166,7 @@ namespace ApiInspector.Invoking.Invokers
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
 
-            var success = fun((object responseOfInvokeMethod) => new InvokeOutput(SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)));
+            var success = fun((object responseOfInvokeMethod) => new InvokeOutput{ ExecutionResponseAsJson = SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)});
 
             var findTargetType = fun(() =>
             {
@@ -190,7 +191,7 @@ namespace ApiInspector.Invoking.Invokers
                 var errorMessage = EndOfDayInvoker.Invoke(targetType);
                 if (errorMessage == null)
                 {
-                    return InvokeOutput.EODSuccess;    
+                    return EODSuccess;    
                 }
 
                 return new InvokeOutput(new Exception(errorMessage));

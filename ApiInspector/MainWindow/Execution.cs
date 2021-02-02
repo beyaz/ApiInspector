@@ -100,7 +100,7 @@ namespace ApiInspector.MainWindow
 
                 var env = EnvironmentInfo.Parse(invocationInfo.Environment);
 
-                var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput(Empty)
+                var actual = AssertionValueCalculator.CalculateFrom(assertionInfo.Actual, methodDefinition, new InvokeOutput()
                 {
                     InvocationParameters = scenario.MethodParameters.Select(x => x.Value).ToList()
                 }, env,scope.Get(VariablesMap));

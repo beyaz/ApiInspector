@@ -6,5 +6,7 @@
         {
             return invokeOutput.Error == null;
         }
+
+        public static readonly InvokeOutput EODSuccess = new InvokeOutput();
     }
 }
