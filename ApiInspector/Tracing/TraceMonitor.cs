@@ -67,6 +67,16 @@ namespace ApiInspector.Tracing
                 }
             });
         }
+
+        public void CleanAllMessages()
+        {
+            dispatcher.Invoke(() =>
+            {
+                traceQueue.ClearQueue();
+                traceViewer.Document.Blocks.Clear();
+            });
+        }
+
         #endregion
     }
 }

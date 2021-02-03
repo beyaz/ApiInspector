@@ -285,6 +285,7 @@ namespace ApiInspector.MainWindow
             {
                 UpdateUI(() =>
                 {
+                    ClearUserVisibleTrace();
                     executeSelectedScenarioButton.Text                             = "Executing...";
                     executeSelectedScenarioButton.IsEnabled                        = false;
                     Mouse.OverrideCursor                                           = System.Windows.Input.Cursors.Wait;

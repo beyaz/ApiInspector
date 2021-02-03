@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApiInspector.Models;
+using static ApiInspector._;
 using static ApiInspector.History.DataKeys;
 using static ApiInspector.History.HistoryPanelDatabaseRepository;
 using static ApiInspector.Keys;
@@ -19,11 +20,7 @@ namespace ApiInspector.History
     /// </summary>
     partial class HistoryPanel
     {
-        bool HasAlreadyHistories => scope.Contains(HistoryItems);
-
         #region Fields
-        public Action<string> Trace = Console.WriteLine;
-
         /// <summary>
         ///     The scope
         /// </summary>
@@ -38,6 +35,10 @@ namespace ApiInspector.History
         {
             InitializeComponent();
         }
+        #endregion
+
+        #region Properties
+        bool HasAlreadyHistories => scope.Contains(HistoryItems);
         #endregion
 
         #region Public Methods
@@ -57,7 +58,7 @@ namespace ApiInspector.History
 
                 void initializeItemsSource()
                 {
-                    historyListBox.ItemsSource = items; 
+                    historyListBox.ItemsSource = items;
                 }
 
                 void trySelectFirstItem()
@@ -75,7 +76,7 @@ namespace ApiInspector.History
                 reAssignCollectionFilter();
             }));
 
-            scope.OnUpdate(SearchTextKey,InitializeHistoryPanel);
+            scope.OnUpdate(SearchTextKey, InitializeHistoryPanel);
         }
 
         /// <summary>
@@ -134,7 +135,7 @@ namespace ApiInspector.History
         /// </summary>
         void HistoryFilterTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            scope.Update(SearchTextKey,historyFilterTextBox.Text);
+            scope.Update(SearchTextKey, historyFilterTextBox.Text);
 
             CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
         }
@@ -160,7 +161,7 @@ namespace ApiInspector.History
         /// </summary>
         void HistoryListBox_OnSelected(object sender, RoutedEventArgs e)
         {
-            Trace("History item clicked.");
+            UserVisibleTrace("History item clicked.");
 
             scope.Update(SelectedInvocationInfo, (InvocationInfo) historyListBox.SelectedItem);
         }
@@ -172,7 +173,7 @@ namespace ApiInspector.History
         {
             Dispatcher.InvokeAsync(() =>
             {
-                Trace("History is loading...");
+                UserVisibleTrace("History is loading...");
 
                 var shouldContainsMinimumOneItem = fun((IReadOnlyList<InvocationInfo> items) =>
                 {
@@ -198,27 +199,25 @@ namespace ApiInspector.History
                 var dbRecords = shouldContainsMinimumOneItem(getItems()).ToList();
                 if (HasAlreadyHistories)
                 {
-                    var selectedItem = (InvocationInfo)historyListBox.SelectedItem;
+                    var selectedItem = (InvocationInfo) historyListBox.SelectedItem;
                     if (selectedItem != null)
                     {
                         dbRecords.RemoveAll(x => InvocationInfo.IsSame(x, selectedItem));
                         dbRecords.Add(selectedItem);
                     }
 
-
                     historyListBox.ItemsSource = dbRecords;
 
                     CollectionViewSource.GetDefaultView(historyListBox.ItemsSource).Refresh();
 
-                    Trace($"History is refreshed. Fetched record count is {dbRecords.Count}");
+                    UserVisibleTrace($"History is refreshed. Fetched record count is {dbRecords.Count}");
 
                     return;
                 }
 
-
                 scope.Update(HistoryItems, dbRecords);
 
-                Trace("History is loaded.");
+                UserVisibleTrace("History is loaded.");
             });
         }
         #endregion

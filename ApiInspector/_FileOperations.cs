@@ -1,12 +1,18 @@
 ﻿using System;
-using Dapper;
 using System.IO;
 using ApiInspector.Invoking.BoaSystem;
+using Dapper;
 
 namespace ApiInspector
 {
     static partial class _
     {
+        #region Static Fields
+        public static Action<string> UserVisibleTrace = Console.WriteLine;
+        public static Action ClearUserVisibleTrace = () => { };
+
+        #endregion
+
         #region Public Methods
         //public static string FindWebConfigFilePath(string rootDirectory, string projectName)
         //{
@@ -37,7 +43,7 @@ namespace ApiInspector
         {
             interfaceTypeAssemblyQualifiedName = ChangeVersionNumber(interfaceTypeAssemblyQualifiedName, "1.0.0.0");
 
-            var environmentInfo =  EnvironmentInfo.Parse(environment);
+            var environmentInfo = EnvironmentInfo.Parse(environment);
 
             var remoteServiceConfigurationUrl = string.Empty;
             {
@@ -58,7 +64,6 @@ namespace ApiInspector
                 }
             }
 
-            
             var sql = $@"
 SELECT TOP 1 shd.DOMAIN_ID
   FROM CFG.SERVICE_REGISTRATION sr  WITH(NOLOCK) INNER JOIN
@@ -77,9 +82,8 @@ SELECT TOP 1 shd.DOMAIN_ID
             {
                 throw new InvalidOperationException($"DomainId not found. {nameof(interfaceTypeAssemblyQualifiedName)} : {interfaceTypeAssemblyQualifiedName} | {nameof(environment)} : {environment}");
             }
-            
-            
-            
+
+            UserVisibleTrace($"DomainId: {domainId}");
 
             var content = $@"
 <?xml version='1.0' encoding='utf-8'?>
@@ -121,28 +125,28 @@ SELECT TOP 1 shd.DOMAIN_ID
 ";
 
             var projectName = interfaceTypeAssemblyQualifiedName.Substring(0, interfaceTypeAssemblyQualifiedName.IndexOf(','));
-            
-            var filePath    = Path.Combine(ConfigurationDirectoryPath, "CardServiceConfigs", projectName, $"{environment}.config");
 
-            Utility.WriteToFile(filePath,content.Trim());
+            var filePath = Path.Combine(ConfigurationDirectoryPath, "CardServiceConfigs", projectName, $"{environment}.config");
+
+            Utility.WriteToFile(filePath, content.Trim());
+
+            UserVisibleTrace($"CardServiceConfigFileExportedTo: {filePath}");
 
             return filePath;
-
         }
+        #endregion
 
-        static string ChangeVersionNumber(string assemblyQualifiedNameOfType,string newVersionNumber)
+        #region Methods
+        static string ChangeVersionNumber(string assemblyQualifiedNameOfType, string newVersionNumber)
         {
             var versionIndex = assemblyQualifiedNameOfType.IndexOf("Version=") + "Version=".Length;
 
-            var commaIndex   = assemblyQualifiedNameOfType.IndexOf(",",versionIndex);
+            var commaIndex = assemblyQualifiedNameOfType.IndexOf(",", versionIndex);
 
             var versionNumber = assemblyQualifiedNameOfType.Substring(versionIndex, commaIndex - versionIndex);
 
             return assemblyQualifiedNameOfType.Replace(versionNumber, newVersionNumber);
         }
-
-
-
         #endregion
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Tracing;
+using static ApiInspector._;
 using static ApiInspector.Application.App;
 using static ApiInspector.MainWindow.Mixin;
 
@@ -47,9 +48,10 @@ namespace ApiInspector.MainWindow
             {
                 scope.Add(ShowErrorNotificationKey, AppScope.Get(ShowErrorNotificationKey));
 
-                scope.Update(Keys.Trace, traceQueue.AddMessage);
+                UserVisibleTrace      = traceQueue.AddMessage;
+                ClearUserVisibleTrace = traceMonitor.CleanAllMessages;
 
-                historyPanel.Trace = traceQueue.AddMessage;
+                scope.Update(Keys.Trace, traceQueue.AddMessage);
 
                 historyPanel.Connect(scope);
                 currentInvocationInfo.Connect(scope);
@@ -58,7 +60,7 @@ namespace ApiInspector.MainWindow
 
                 scenarioEditor.Connect(scope);
 
-                Title = "ApiInspector - " + _.AuthenticationUserName;
+                Title = "ApiInspector - " + AuthenticationUserName;
             };
 
             Closed += (s, e) => { System.Windows.Application.Current.Shutdown(); };
