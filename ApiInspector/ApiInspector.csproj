@@ -86,6 +86,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\AutoFilteredComboBox.cs" />
     <Compile Include="Components\JsonTextEditor.cs" />
     <Compile Include="DataAccess\ReflectionUtil.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.loop.cs" />
