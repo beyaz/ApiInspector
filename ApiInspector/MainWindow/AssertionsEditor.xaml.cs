@@ -160,13 +160,7 @@ namespace ApiInspector.MainWindow
 
                 var createOperatorEditor = fun(() =>
                 {
-                    var editor = new IntellisenseTextBox
-                    {
-                        Suggestions           = AssertionOperatorNames.GetDescriptions(),
-                        IsTextAlignmentCenter = true
-                    };
-
-                    Bind(editor, AutoCompleteTextBox.TextProperty, assertionInfo, nameof(assertionInfo.OperatorName));
+                    var editor = NewDropDownEditor(assertionInfo, nameof(assertionInfo.OperatorName), AssertionOperatorNames.GetDescriptions());
 
                     return NewStackPanel(NewBoldTextBlock("Operator"), editor)
                            .WithMargin(new Thickness(10, 0, 10, 0))
