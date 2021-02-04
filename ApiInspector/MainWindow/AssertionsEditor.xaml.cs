@@ -213,13 +213,8 @@ namespace ApiInspector.MainWindow
         {
             var firstRow = fun(() =>
             {
-                var databaseNameEditor = new IntellisenseTextBox
-                {
-                    Suggestions = Enum.GetNames(typeof(Databases)),
-                    Text        = data.DatabaseName
-                };
-                Bind(databaseNameEditor, AutoCompleteTextBox.TextProperty, data, nameof(data.DatabaseName));
-
+                var databaseNameEditor = NewDropDownEditor(data, nameof(data.DatabaseName), Enum.GetNames(typeof(Databases)));
+                
                 var arrangeDatabaseNameEditorVisibility = fun(() =>
                 {
                     if (data.FetchFromDatabase)
