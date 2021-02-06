@@ -1,6 +1,7 @@
 ﻿using System;
 using BOA.Base;
 using Newtonsoft.Json;
+using static ApiInspector._;
 
 namespace ApiInspector.Invoking.InvokingParameterAdapters
 {
@@ -105,7 +106,8 @@ namespace ApiInspector.Invoking.InvokingParameterAdapters
         {
             var targetParameterType = input.ParameterInfo.ParameterType;
 
-            if (targetParameterType.IsClass && input.InvocationValue is string invocationValueAsString)
+            
+            if ( !CanPresentSimpleTextBox(GetFullName(targetParameterType)) && input.InvocationValue is string invocationValueAsString)
             {
                 var invocationValue = Serialization.Serializer.Deserialize(invocationValueAsString, targetParameterType);
 

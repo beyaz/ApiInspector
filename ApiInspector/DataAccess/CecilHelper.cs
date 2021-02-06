@@ -30,7 +30,7 @@ namespace ApiInspector.DataAccess
         {
             var sb = new StringBuilder(methodInfo.Name);
             sb.Append("(");
-            sb.Append(string.Join(",", methodInfo.GetParameters().Select(p => p.ParameterType.FullName)));
+            sb.Append(string.Join(",", methodInfo.GetParameters().Select(p => GetFullName(p.ParameterType))));
             sb.Append(")");
 
             return sb.ToString();

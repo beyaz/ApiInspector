@@ -8,6 +8,7 @@ using ApiInspector.Models;
 using ApiInspector.Serialization;
 using BOA.Base;
 using Mono.Cecil;
+using static ApiInspector._;
 using static ApiInspector.WPFExtensions;
 using static FunctionalPrograming.FPExtensions;
 
@@ -104,63 +105,10 @@ namespace ApiInspector.InvocationInfoEditor
 
                 return types.Any(x=>x.FullName == t.FullName);
             });
-
-            var canPresentSimpleTextBox = fun(() =>
-            {
-
-                
-
-                var types = new[]
-                {
-                    typeof(string),
-                    typeof(DateTime),
-                    typeof(DateTime?),
-
-                    // numbers
-                    typeof(byte),
-                    typeof(short),
-                    typeof(int),
-                    typeof(long),
-
-                    // nullable numbers
-                    typeof(byte?),
-                    typeof(short?),
-                    typeof(int?),
-                    typeof(long?),
-
-                    // unsigned numbers
-                    typeof(ushort),
-                    typeof(uint),
-                    typeof(ulong),
-
-                    // unsigned nullable numbers
-                    typeof(ushort?),
-                    typeof(uint?),
-                    typeof(ulong?)
-                };
-
-                var getFullName = fun((Type t) =>
-                {
-                    var genericArguments = t.GetGenericArguments();
-                    if (genericArguments.Length == 1)
-                    {
-                        if (t.GetGenericTypeDefinition() == typeof(Nullable<>))
-                        {
-                            var genericArgument = genericArguments[0];
-
-                            return $"{typeof(Nullable<>).FullName}<{genericArgument.FullName}>";
-                        }
-                    }
-
-                    return t.FullName;
-                });
-
-                return types.Any(t => getFullName(t) == definition.ParameterType.FullName);
-            });
-
+            
             var createEditor = fun(() =>
             {
-                if (canPresentSimpleTextBox())
+                if (CanPresentSimpleTextBox(definition.ParameterType.FullName))
                 {
                     if (defaultValueIsZero(definition.ParameterType) && string.IsNullOrWhiteSpace(parameterInfo.Value+string.Empty))
                     {
@@ -214,7 +162,7 @@ namespace ApiInspector.InvocationInfoEditor
 
         static string GetDefaultJsonForClass(string classFullName)
         {
-            var parameterType = _.FindTypeByFullName(classFullName);
+            var parameterType = FindTypeByFullName(classFullName);
             if (parameterType != null)
             {
                 return Serializer.SerializeToJsonDoNotIgnoreDefaultValues(Activator.CreateInstance(parameterType));
