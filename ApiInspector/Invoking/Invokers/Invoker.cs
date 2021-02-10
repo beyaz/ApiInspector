@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using ApiInspector.Application;
 using ApiInspector.DataAccess;
 using ApiInspector.Invoking.BoaSystem;
 using ApiInspector.Invoking.InstanceCreators;
@@ -98,19 +97,9 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-            var invokeOutputAsJson  = AppDomainHelper.CallInIsolatedDomain<InvokeExternal,string>((InvokeExternal instance) => instance.Invoke(environmentInfo, invocationInfo, parameters), trace,ToInvokeOutputAsJson);
+            var invokeOutputAsJson = AppDomainHelper.CallInIsolatedDomain<InvokeExternal,string>(instance => instance.Invoke(environmentInfo, invocationInfo, parameters), trace, ToInvokeOutputAsJson);
 
             return Deserialize<InvokeOutput>(invokeOutputAsJson);
-        }
-
-        static string ToInvokeOutputAsJson(Exception exception)
-        {
-            return SerializeToJson(new InvokeOutput(exception));
-        }
-
-        static InvokeOutput ToInvokeOutput(Exception exception)
-        {
-            return new InvokeOutput(exception);
         }
 
         /// <summary>
@@ -164,13 +153,47 @@ namespace ApiInspector.Invoking.Invokers
             return targetType;
         }
 
+        static bool IsBoaAuthenticationRequired(string assemblyName)
+        {
+            if (assemblyName == "BOA.OneDesigner.dll")
+            {
+                return false;
+            }
+
+            if (IsCardServiceAssembly(assemblyName))
+            {
+                return false;
+            }
+
+            if (assemblyName.StartsWith("BOA.Types."))
+            {
+                return false;
+            }
+
+            if (assemblyName.StartsWith("BOA."))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        static InvokeOutput ToInvokeOutput(Exception exception)
+        {
+            return new InvokeOutput(exception);
+        }
+
+        static string ToInvokeOutputAsJson(Exception exception)
+        {
+            return SerializeToJson(new InvokeOutput(exception));
+        }
+
         /// <summary>
         ///     Invokes the specified invocation information.
         /// </summary>
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-
-            var success = fun((object responseOfInvokeMethod) => new InvokeOutput{ ExecutionResponseAsJson = SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)});
+            var success = fun((object responseOfInvokeMethod) => new InvokeOutput {ExecutionResponseAsJson = SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)});
 
             var findTargetType = fun(() =>
             {
@@ -195,7 +218,7 @@ namespace ApiInspector.Invoking.Invokers
                 var errorMessage = EndOfDayInvoker.Invoke(targetType);
                 if (errorMessage == null)
                 {
-                    return EODSuccess;    
+                    return EODSuccess;
                 }
 
                 return new InvokeOutput(new Exception(errorMessage));
@@ -208,16 +231,14 @@ namespace ApiInspector.Invoking.Invokers
 
             trace($"Started to search method: {invocationInfo.MethodName}");
 
-            var methodInfo = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == invocationInfo.MethodName);
+            var methodInfo = targetType.GetMethods(AllBindings).FirstOrDefault(m => m.GetMethodNameWithSignature() == invocationInfo.MethodName);
             if (methodInfo == null)
             {
                 throw new Exception("Method not found.");
             }
 
             // TRY BOA Authenticate
-            if (invocationInfo.AssemblyName.StartsWith("BOA.") && 
-                invocationInfo.AssemblyName != "BOA.OneDesigner.dll" && 
-                !IsCardServiceAssembly(invocationInfo.AssemblyName))
+            if (IsBoaAuthenticationRequired(invocationInfo.AssemblyName))
             {
                 trace("Authentication is started. Because assembly name starts with BOA prefix.");
 
@@ -226,7 +247,7 @@ namespace ApiInspector.Invoking.Invokers
 
             trace("Preparing invocation parameters");
 
-            var invocationParameters = InvocationParameterPreparer.Prepare(parameters?? new List<InvocationMethodParameterInfo>(), methodInfo, boaContext, trace);
+            var invocationParameters = InvocationParameterPreparer.Prepare(parameters ?? new List<InvocationMethodParameterInfo>(), methodInfo, boaContext, trace);
 
             trace("Invoke started. Response waiting...");
 
@@ -239,7 +260,7 @@ namespace ApiInspector.Invoking.Invokers
                         return TryMethodInvokeResponse.NotInvoked;
                     }
 
-                    return  new TryMethodInvokeResponse(_.InvokeStaticMethod(methodInfo, invocationParameters.ToArray()));
+                    return new TryMethodInvokeResponse(InvokeStaticMethod(methodInfo, invocationParameters.ToArray()));
                 });
 
                 var tryInvokeAsCardServiceMethod = fun(() =>
@@ -254,7 +275,6 @@ namespace ApiInspector.Invoking.Invokers
                     var cardServiceMethodInvokerInput = new CardServiceMethodInvokerInput(targetType, methodName, invocationParameters);
 
                     return new TryMethodInvokeResponse(CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, invocationInfo.Environment));
-
                 });
 
                 var tryInvokeNonStaticMethod = fun(() =>
@@ -266,7 +286,7 @@ namespace ApiInspector.Invoking.Invokers
 
                     var instance = InstanceCreator.Create(targetType, boaContext);
 
-                    return new TryMethodInvokeResponse(_.InvokeNonStaticMethod(methodInfo,instance, invocationParameters.ToArray()));
+                    return new TryMethodInvokeResponse(InvokeNonStaticMethod(methodInfo, instance, invocationParameters.ToArray()));
                 });
 
                 var tryMethodInvokeResponse = tryInvokeStaticMethod();
@@ -293,7 +313,7 @@ namespace ApiInspector.Invoking.Invokers
             var stopwatch = Stopwatch.StartNew();
 
             var responseInvokeMethod = invokeMethod();
-            
+
             responseInvokeMethod = NormalizeInvokedMethodReturnValue(responseInvokeMethod);
 
             stopwatch.Stop();
@@ -301,8 +321,6 @@ namespace ApiInspector.Invoking.Invokers
             trace($"Successfully invoked in {stopwatch.Elapsed.Milliseconds} milliseconds.");
 
             boaContext.Dispose();
-
-            
 
             var output = success(responseInvokeMethod);
 
@@ -313,36 +331,13 @@ namespace ApiInspector.Invoking.Invokers
                     return null;
                 }
 
-                
-
                 return SerializeToJson(instance);
             });
 
             output.InvocationParameters = invocationParameters.Select(serializeParameter).ToList();
 
             return output;
-
         }
-
-        sealed class TryMethodInvokeResponse
-        {
-            public readonly object MethodReturnValue;
-
-            public  TryMethodInvokeResponse(object methodReturnValue)
-            {
-                MethodReturnValue = methodReturnValue;
-            }
-
-            
-            TryMethodInvokeResponse()
-            {
-                
-            }
-
-            public  static readonly TryMethodInvokeResponse NotInvoked = new TryMethodInvokeResponse();
-
-        }
-
         #endregion
 
         /// <summary>
@@ -360,7 +355,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 InvokeOutput output = null;
 
-                var trace  = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
+                var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
 
                 using (var boaContext = new BOAContext(environmentInfo, trace))
                 {
@@ -368,6 +363,28 @@ namespace ApiInspector.Invoking.Invokers
                 }
 
                 return SerializeToJson(output);
+            }
+            #endregion
+        }
+
+        sealed class TryMethodInvokeResponse
+        {
+            #region Static Fields
+            public static readonly TryMethodInvokeResponse NotInvoked = new TryMethodInvokeResponse();
+            #endregion
+
+            #region Fields
+            public readonly object MethodReturnValue;
+            #endregion
+
+            #region Constructors
+            public TryMethodInvokeResponse(object methodReturnValue)
+            {
+                MethodReturnValue = methodReturnValue;
+            }
+
+            TryMethodInvokeResponse()
+            {
             }
             #endregion
         }
