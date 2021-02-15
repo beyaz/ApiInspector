@@ -2,6 +2,7 @@
 using System.IO;
 using ApiInspector.Invoking.BoaSystem;
 using Dapper;
+using static ApiInspector.Utility;
 
 namespace ApiInspector
 {
@@ -128,7 +129,7 @@ SELECT TOP 1 shd.DOMAIN_ID
 
             var filePath = Path.Combine(ConfigurationDirectoryPath, "CardServiceConfigs", projectName, $"{environment}.config");
 
-            Utility.WriteToFile(filePath, content.Trim());
+            WriteToFile(filePath, content.Trim());
 
             UserVisibleTrace($"CardServiceConfigFileExportedTo: {filePath}");
 
