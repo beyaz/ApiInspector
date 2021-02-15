@@ -63,7 +63,7 @@ namespace ApiInspector.MainWindow
                 Title = "ApiInspector - " + AuthenticationUserName;
             };
 
-            Closed += (s, e) => { System.Windows.Application.Current.Shutdown(); };
+            ShutdownApplicationWhenClosed(this);
         }
         #endregion
 
