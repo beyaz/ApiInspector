@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ApiInspector.DataAccess;
-using ApiInspector.Invoking.BoaSystem;
 using static ApiInspector._;
 using static FunctionalPrograming.FPExtensions;
 using static ApiInspector.Utility;
@@ -36,30 +35,36 @@ namespace ApiInspector.Invoking.Invokers
 
             var serviceProjectName = Path.GetFileNameWithoutExtension(targetType.Assembly.CodeBase);
 
-            
-            var configFilePath = GetWebConfigFilePath(serviceInterface.AssemblyQualifiedName,environment);
-            
+            var configFilePath = GetWebConfigFilePath(serviceInterface.AssemblyQualifiedName, environment);
+
             ChangeAppConfig(configFilePath);
 
-
             trace("Searching method in service...");
-            var method = targetType.GetMethods(AllBindings).FirstOrDefault(m=>m.GetMethodNameWithSignature() == input.MethodName);
+            var method = targetType.GetMethods(AllBindings).FirstOrDefault(m => m.GetMethodNameWithSignature() == input.MethodName);
             if (method == null)
             {
                 throw new ArgumentNullException(nameof(method));
             }
 
             trace("Accessing service method parameter type.");
-            var parameterType = method.GetParameters()[0].ParameterType;
 
-            var methodName = input.MethodName.Substring(0,input.MethodName.IndexOf("(", StringComparison.Ordinal));
+            var methodName = input.MethodName.Substring(0, input.MethodName.IndexOf("(", StringComparison.Ordinal));
 
+            var parameterDefinitionPart = string.Empty;
+            var parameterCallPart       = string.Empty;
+
+            var parameterInfoList = method.GetParameters();
+            if (parameterInfoList.Length == 1)
+            {
+                parameterDefinitionPart = $"{parameterInfoList[0].ParameterType.FullName} request";
+                parameterCallPart       = "request";
+            }
 
             string getCSharpCode()
             {
                 if (method.ReturnType.FullName == "System.Void")
                 {
-                    return   @"
+                    return @"
 
 using BOA.Card.Core.ServiceBus;
 
@@ -67,15 +72,15 @@ namespace ApiInspector.Invoking.Dynamic
 {
     class ServiceWrapper
     {
-        public static void Wrap(" + parameterType.FullName + @" request)
+        public static void Wrap(" + parameterDefinitionPart + @")
         {
             EverestContext.Current.Build();
 
             using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
             {
-                var service = EverestContext.Current.GetService<"+ serviceInterface.FullName +@">();
+                var service = EverestContext.Current.GetService<" + serviceInterface.FullName + @">();
 
-                service."+ methodName +@"(request);
+                service." + methodName + @"(" + parameterCallPart + @");
 
                 var transactionContext = EverestContext.Current.GetService<TransactionContext>();
 
@@ -99,15 +104,15 @@ namespace ApiInspector.Invoking.Dynamic
 {
     class ServiceWrapper
     {
-        public static object Wrap(" + parameterType.FullName + @" request)
+        public static object Wrap(" + parameterDefinitionPart + @")
         {
             EverestContext.Current.Build();
 
             using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
             {
-                var service = EverestContext.Current.GetService<"+ serviceInterface.FullName +@">();
+                var service = EverestContext.Current.GetService<" + serviceInterface.FullName + @">();
 
-                var output = service."+ methodName +@"(request);
+                var output = service." + methodName + @"(" + parameterCallPart + @");
 
                 var transactionContext = EverestContext.Current.GetService<TransactionContext>();
 
@@ -125,7 +130,7 @@ namespace ApiInspector.Invoking.Dynamic
 ";
             }
 
-            const string location   = @"d:\boa\server\bin\";
+            const string location = @"d:\boa\server\bin\";
 
             var referencedAssemblies = new List<string>
             {
@@ -179,7 +184,7 @@ namespace ApiInspector.Invoking.Dynamic
 
             trace("Service invocation is started. Waiting response...");
 
-            var response = _.InvokeStaticMethod(methodInfo, invocationParameters.ToArray());
+            var response = InvokeStaticMethod(methodInfo, invocationParameters.ToArray());
 
             trace("Service invocation is success.");
 
