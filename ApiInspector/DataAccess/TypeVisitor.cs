@@ -14,7 +14,7 @@ namespace ApiInspector.DataAccess
         /// <summary>
         ///     Gets the type definitions in assembly.
         /// </summary>
-        public static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Action<string> trace, string assemblyPath, IEnumerable<string> assemblySearchDirectories)
+        public static IEnumerable<TypeDefinition> GetTypeDefinitionsInAssembly(Action<Exception> onError, string assemblyPath, IEnumerable<string> assemblySearchDirectories)
         {
             var resolver = new DefaultAssemblyResolver();
 
@@ -35,7 +35,7 @@ namespace ApiInspector.DataAccess
             }
             catch (Exception e)
             {
-                trace($"File not Loaded. File:{assemblyPath}, Error: {e}");
+                onError(new Exception($"File not Loaded. File:{assemblyPath}",e));
                 yield break;
             }
 

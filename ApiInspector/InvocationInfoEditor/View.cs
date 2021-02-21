@@ -188,7 +188,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 var assemblySearchDirectories = invocationInfo.GetAssemblySearchDirectories();
 
-                return GetTypeDefinitionsInAssembly(trace, assemblyFilePath, assemblySearchDirectories);
+                return GetTypeDefinitionsInAssembly(e => trace(e.ToString()), assemblyFilePath, assemblySearchDirectories);
             });
 
             var onAssemblySearchDirectoryChanged = fun(() =>
