@@ -54,10 +54,10 @@ namespace ApiInspector.Invoking.Invokers
             var parameterCallPart       = string.Empty;
 
             var parameterInfoList = method.GetParameters();
-            if (parameterInfoList.Length == 1)
+            if (parameterInfoList.Length>0)
             {
-                parameterDefinitionPart = $"{parameterInfoList[0].ParameterType.FullName} request";
-                parameterCallPart       = "request";
+                parameterDefinitionPart = string.Join(" ,", parameterInfoList.Select(p => $"{p.ParameterType.FullName} {p.Name}"));
+                parameterCallPart       = string.Join(" ,", parameterInfoList.Select(p => $"{p.Name}"));
             }
 
             string getCSharpCode()
