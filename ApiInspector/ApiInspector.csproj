@@ -88,6 +88,7 @@
     </ApplicationDefinition>
     <Compile Include="Components\JsonTextEditor.cs" />
     <Compile Include="DataAccess\ReflectionUtil.cs" />
+    <Compile Include="FunctionalPrograming\FPExtensions.curry.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.loop.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.compose.cs" />

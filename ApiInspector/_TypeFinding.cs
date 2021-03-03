@@ -89,13 +89,58 @@ namespace ApiInspector
 
             throw new ArgumentException("AssemblyNotFound:" + args.Name);
         }
+
+        public static Assembly ResolveBoaSystemAssembly(object sender, ResolveEventArgs args, string assemblySearchDirectory)
+        {
+            var name  = args.Name;
+            var index = name.IndexOf(',');
+            if (index > 0)
+            {
+                name = name.Substring(0, index);
+            }
+
+            var assembly = FindAssembly(name,GetAssemblySearchDirectories(assemblySearchDirectory));
+            if (assembly != null)
+            {
+                return assembly;
+            }
+
+            throw new ArgumentException("AssemblyNotFound:" + args.Name);
+        }
+
         #endregion
 
         #region Methods
+
+        static IReadOnlyList<string> GetAssemblySearchDirectories(string assemblySearchDirectory = null)
+        {
+            var searchDirectories = new List<string>
+            {
+                @"D:\BOA\server\bin",
+                @"D:\BOA\client\bin",
+                @"D:\BOA\client\bin\en",
+                @"D:\BOA\HSM\server\bin",
+                @"D:\BOA\BOA.Integration\server\bin"
+            };
+
+            if (assemblySearchDirectory != null && !searchDirectories.Contains(assemblySearchDirectory))
+            {
+                searchDirectories.Insert(0,assemblySearchDirectory);
+            }
+
+            return searchDirectories;
+        }
+            
+
         /// <summary>
         ///     Finds the assembly.
         /// </summary>
         static Assembly FindAssembly(string assemblyFileNameWithoutExtension)
+        {
+            return FindAssembly(assemblyFileNameWithoutExtension,GetAssemblySearchDirectories());
+        }
+
+        static Assembly FindAssembly(string assemblyFileNameWithoutExtension, IReadOnlyList<string> searchDirectories)
         {
             var trace = fun((string message) => Console.WriteLine(message));
 
@@ -106,14 +151,6 @@ namespace ApiInspector
                 assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
             }
 
-            var searchDirectories = new List<string>
-            {
-                @"D:\BOA\server\bin",
-                @"D:\BOA\client\bin",
-                @"D:\BOA\client\bin\en",
-                @"D:\BOA\HSM\server\bin",
-                @"D:\BOA\BOA.Integration\server\bin"
-            };
             foreach (var searchDirectory in searchDirectories)
             {
                 var filePath = $@"{searchDirectory}\{assemblyFileNameWithoutExtension}.dll";
