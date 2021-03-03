@@ -36,7 +36,7 @@ namespace ApiInspector.Invoking.Invokers
         /// <summary>
         ///     Calls the in isolated domain.
         /// </summary>
-        public static TOutput CallInIsolatedDomain<T, TOutput>(Func<T, TOutput> action, Action<string> trace, Func<Exception, TOutput> onFail)
+        public static TOutput CallInIsolatedDomain<T, TOutput>(Func<T, TOutput> action, ResolveEventHandler assemblyResolveHandler, Action<string> trace, Func<Exception, TOutput> onFail)
         {
             var setup = new AppDomainSetup
             {
@@ -45,7 +45,7 @@ namespace ApiInspector.Invoking.Invokers
             };
 
             var domain = AppDomain.CreateDomain("AppDomainIsolation:" + Guid.NewGuid(), null, setup);
-            domain.AssemblyResolve += ResolveBoaSystemAssembly;
+            domain.AssemblyResolve += assemblyResolveHandler;
 
             var type = typeof(T);
 
@@ -97,7 +97,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public static InvokeOutput Invoke(EnvironmentInfo environmentInfo, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-            var invokeOutputAsJson = AppDomainHelper.CallInIsolatedDomain<InvokeExternal,string>(instance => instance.Invoke(environmentInfo, invocationInfo, parameters), trace, ToInvokeOutputAsJson);
+            var invokeOutputAsJson = AppDomainHelper.CallInIsolatedDomain<InvokeExternal,string>(instance => instance.Invoke(environmentInfo, invocationInfo, parameters),ResolveBoaSystemAssembly, trace, ToInvokeOutputAsJson);
 
             return Deserialize<InvokeOutput>(invokeOutputAsJson);
         }
