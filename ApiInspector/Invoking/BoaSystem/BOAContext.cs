@@ -112,7 +112,7 @@ namespace ApiInspector.Invoking.BoaSystem
         /// </summary>
         public void Authenticate()
         {
-            data = LoadBOAConfigurationFile(data, trace);
+            LoadBOAConfigurationFile();
 
             Authenticate(ConfigurationManager.ChannelSection.Channel.DefaultChannel);
         }
@@ -140,6 +140,14 @@ namespace ApiInspector.Invoking.BoaSystem
             data = GetOrCreateObjectHelper(data, trace);
 
             return data.objectHelper;
+        }
+
+        /// <summary>
+        ///     Loads the boa configuration file.
+        /// </summary>
+        public void LoadBOAConfigurationFile()
+        {
+            data = LoadBOAConfigurationFile(data, trace);
         }
         #endregion
 
