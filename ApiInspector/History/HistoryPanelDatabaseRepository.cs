@@ -63,27 +63,19 @@ namespace ApiInspector.History
         public static void Remove(Scope scope)
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
-            var dbConnection   = DbConnection;
-
-            dbConnection.Delete(CreateFrom(invocationInfo));
-
-            void try_remove_previous_version_model_record()
+            
+            var previousKey = invocationInfo.ToString();
+            if (previousKey.Contains("("))
             {
-                var key = invocationInfo.ToString();
-                if (key.Contains("("))
-                {
-                    key = key.Substring(0,key.IndexOf("(", StringComparison.Ordinal));
-                    var oldModel = new RecordModel
-                    {
-                        Key      = key,
-                        UserName = _.AuthenticationUserName
-                    };
-                    dbConnection.Delete(oldModel);
-                }
+                previousKey = previousKey.Substring(0,previousKey.IndexOf("(", StringComparison.Ordinal));
             }
 
-            try_remove_previous_version_model_record();
+            var possibleKeys = new List<string> {CreateFrom(invocationInfo).Key, previousKey};
 
+            foreach (var key in possibleKeys)
+            {
+                DbConnection.Execute($"DELETE FROM DBT.ApiInspectorWhiteStone WHERE [Key] = @{nameof(key)}", new {key});
+            }
         }
 
         /// <summary>
