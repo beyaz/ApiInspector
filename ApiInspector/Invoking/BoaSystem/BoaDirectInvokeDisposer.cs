@@ -19,7 +19,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             var type = Type.GetType("BOA.Common.Helpers.DirectExecuteHelper+BOADirectExecuteGate+BoaWcfAppDomainHelper,BOA.Common", true);
 
-            var getField = fun((string fieldName) =>
+            var getField = Fun((string fieldName) =>
             {
                 var fieldInfo = type.GetField(fieldName, allBindings);
                 if (fieldInfo == null)
@@ -30,9 +30,9 @@ namespace ApiInspector.Invoking.BoaSystem
                 return fieldInfo;
             });
 
-            var clearField = fun((string fieldName) => { getField(fieldName).SetValue(null, null); });
+            var clearField = Fun((string fieldName) => { getField(fieldName).SetValue(null, null); });
 
-            var unloadWcfDomain = fun(() =>
+            var unloadWcfDomain = Fun(() =>
             {
                 var wcfDomain = (AppDomain) getField("wcfDomain").GetValue(null);
 

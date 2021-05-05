@@ -35,11 +35,11 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         public View()
         {
-            var buildUI = fun(() =>
+            var buildUI = Fun(() =>
             {
                 var fontWeight = FontWeights.Bold;
 
-                var createInput = fun((string label, IntellisenseTextBox editor) =>
+                var createInput = Fun((string label, IntellisenseTextBox editor) =>
                 {
                     var lbl = new Label
                     {
@@ -50,7 +50,7 @@ namespace ApiInspector.InvocationInfoEditor
                     return NewStackPanel(lbl, editor);
                 });
 
-                var crateMethodNamePart = fun(() =>
+                var crateMethodNamePart = Fun(() =>
                 {
                     var lbl = new Label
                     {
@@ -100,7 +100,7 @@ namespace ApiInspector.InvocationInfoEditor
                     return NewStackPanel(lbl, methodNameIntellisenseTextBox);
                 });
 
-                var labelSeparatedGridSplitter = fun((GridSplitter gridSplitter) =>
+                var labelSeparatedGridSplitter = Fun((GridSplitter gridSplitter) =>
                 {
                     methodNameIntellisenseTextBox.Loaded += (s, e) =>
                     {
@@ -165,13 +165,13 @@ namespace ApiInspector.InvocationInfoEditor
         /// </summary>
         void RegisterEvents()
         {
-            var getAssemblySearchDirectory = fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
-            var getSelectedInvocationInfo  = fun(() => scope.Get(SelectedInvocationInfo));
-            var getAssemblyFileName        = fun(() => assemblyIntellisenseTextBox.Editor.Text);
-            var getClassName               = fun(() => classNameIntellisenseTextBox.Editor.Text);
+            var getAssemblySearchDirectory = Fun(() => assemblySearchDirectoryIntellisenseTextBox.Editor.Text);
+            var getSelectedInvocationInfo  = Fun(() => scope.Get(SelectedInvocationInfo));
+            var getAssemblyFileName        = Fun(() => assemblyIntellisenseTextBox.Editor.Text);
+            var getClassName               = Fun(() => classNameIntellisenseTextBox.Editor.Text);
             var trace                      = scope.Get(Trace);
 
-            var getUpdateSuggestionsFunc = fun((IntellisenseTextBox textBox) => { return fun((IReadOnlyList<string> suggestions) => textBox.Suggestions = suggestions); });
+            var getUpdateSuggestionsFunc = Fun((IntellisenseTextBox textBox) => { return Fun((IReadOnlyList<string> suggestions) => textBox.Suggestions = suggestions); });
 
             var updateAssemblyNameSuggestions = getUpdateSuggestionsFunc(assemblyIntellisenseTextBox);
             var updateClassNameSuggestions    = getUpdateSuggestionsFunc(classNameIntellisenseTextBox);
@@ -180,7 +180,7 @@ namespace ApiInspector.InvocationInfoEditor
             TypeDefinition   selectedTypeDefinition   = null;
             MethodDefinition selectedMethodDefinition = null;
 
-            var getTypeDefinitionsInAssembly = fun(() =>
+            var getTypeDefinitionsInAssembly = Fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
 
@@ -191,14 +191,14 @@ namespace ApiInspector.InvocationInfoEditor
                 return GetTypeDefinitionsInAssembly(e => trace(e.ToString()), assemblyFilePath, assemblySearchDirectories);
             });
 
-            var onAssemblySearchDirectoryChanged = fun(() =>
+            var onAssemblySearchDirectoryChanged = Fun(() =>
             {
                 var assemblySearchDirectory = getAssemblySearchDirectory();
                 var invocationInfo          = getSelectedInvocationInfo();
 
                 invocationInfo.AssemblySearchDirectory = assemblySearchDirectory;
 
-                var getAssemblyListInDirectory = fun(() =>
+                var getAssemblyListInDirectory = Fun(() =>
                 {
                     if (!Directory.Exists(assemblySearchDirectory))
                     {
@@ -218,13 +218,13 @@ namespace ApiInspector.InvocationInfoEditor
                 updateAssemblyNameSuggestions(getAssemblyListInDirectory());
             });
 
-            var onAssemblyNameChanged = fun(() =>
+            var onAssemblyNameChanged = Fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
 
                 invocationInfo.AssemblyName = getAssemblyFileName();
 
-                var getClassNamesOfSelectedAssembly = fun(() =>
+                var getClassNamesOfSelectedAssembly = Fun(() =>
                 {
                     var assemblyFilePath = invocationInfo.GetAssemblyFilePath();
 
@@ -240,7 +240,7 @@ namespace ApiInspector.InvocationInfoEditor
                 updateClassNameSuggestions(getClassNamesOfSelectedAssembly());
             });
 
-            var updateSelectedMethodDefinition = fun(() =>
+            var updateSelectedMethodDefinition = Fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
 
@@ -270,7 +270,7 @@ namespace ApiInspector.InvocationInfoEditor
                 scope.Update(Keys.SelectedMethodDefinition,selectedMethodDefinition);
             });
 
-            var onClassNameChanged = fun(() =>
+            var onClassNameChanged = Fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
 
@@ -278,7 +278,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 var assemblyFilePath = invocationInfo.GetAssemblyFilePath();
 
-                var findType = fun(() =>
+                var findType = Fun(() =>
                 {
                     if (!File.Exists(assemblyFilePath))
                     {
@@ -297,7 +297,7 @@ namespace ApiInspector.InvocationInfoEditor
                     return;
                 }
 
-                var getMethodNameListFromSelectedType = fun(() =>
+                var getMethodNameListFromSelectedType = Fun(() =>
                 {
                     if (invocationInfo.AssemblySearchDirectory == CommonAssemblySearchDirectories.clientBin)
                     {
@@ -307,7 +307,7 @@ namespace ApiInspector.InvocationInfoEditor
                         };
                     }
 
-                    var filter = fun((MethodDefinition methodDefinition) =>
+                    var filter = Fun((MethodDefinition methodDefinition) =>
                     {
                         if (methodDefinition.IsGetter || methodDefinition.IsSetter || methodDefinition.IsConstructor )
                         {
@@ -333,7 +333,7 @@ namespace ApiInspector.InvocationInfoEditor
 
            
 
-            var onMethodNameChanged = fun(() =>
+            var onMethodNameChanged = Fun(() =>
             {
                 var invocationInfo = getSelectedInvocationInfo();
 

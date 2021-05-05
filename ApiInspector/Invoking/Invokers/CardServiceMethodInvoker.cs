@@ -159,7 +159,7 @@ namespace ApiInspector.Invoking.Dynamic
             {
                 trace("Compile fail.");
 
-                var convertErrorsToException = fun(() =>
+                var convertErrorsToException = Fun(() =>
                 {
                     var errorMessage = new StringBuilder();
                     foreach (CompilerError compilerError in results.Errors)

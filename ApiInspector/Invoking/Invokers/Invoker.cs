@@ -65,7 +65,7 @@ namespace ApiInspector.Invoking.Invokers
 
             listenMessages = true;
 
-            var listen = fun(() =>
+            var listen = Fun(() =>
             {
                 while (listenMessages)
                 {
@@ -119,7 +119,7 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         public static InvokeOutput Invoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-            var fail = fun((Exception exception) =>
+            var fail = Fun((Exception exception) =>
             {
                 boaContext.Dispose();
 
@@ -205,9 +205,9 @@ namespace ApiInspector.Invoking.Invokers
         /// </summary>
         static InvokeOutput UnsafeInvoke(BOAContext boaContext, Action<string> trace, InvocationInfo invocationInfo, IReadOnlyList<InvocationMethodParameterInfo> parameters)
         {
-            var success = fun((object responseOfInvokeMethod) => new InvokeOutput {ExecutionResponseAsJson = SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)});
+            var success = Fun((object responseOfInvokeMethod) => new InvokeOutput {ExecutionResponseAsJson = SerializeToJsonDoNotIgnoreDefaultValues(responseOfInvokeMethod)});
 
-            var findTargetType = fun(() =>
+            var findTargetType = Fun(() =>
             {
                 trace($"Started to search class: {invocationInfo.ClassName}");
 
@@ -216,7 +216,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var targetType = findTargetType();
 
-            var tryToInvokeAsEndOfDay = fun(() =>
+            var tryToInvokeAsEndOfDay = Fun(() =>
             {
                 var methodName = invocationInfo.MethodName;
 
@@ -264,9 +264,9 @@ namespace ApiInspector.Invoking.Invokers
 
             trace("Invoke started. Response waiting...");
 
-            var invokeMethod = fun(() =>
+            var invokeMethod = Fun(() =>
             {
-                var tryInvokeStaticMethod = fun(() =>
+                var tryInvokeStaticMethod = Fun(() =>
                 {
                     if (!methodInfo.IsStatic)
                     {
@@ -276,7 +276,7 @@ namespace ApiInspector.Invoking.Invokers
                     return new TryMethodInvokeResponse(InvokeStaticMethod(methodInfo, invocationParameters.ToArray()));
                 });
 
-                var tryInvokeAsCardServiceMethod = fun(() =>
+                var tryInvokeAsCardServiceMethod = Fun(() =>
                 {
                     var methodName = invocationInfo.MethodName;
 
@@ -290,7 +290,7 @@ namespace ApiInspector.Invoking.Invokers
                     return new TryMethodInvokeResponse(CardServiceMethodInvoker.Invoke(cardServiceMethodInvokerInput, trace, invocationInfo.Environment));
                 });
 
-                var tryInvokeNonStaticMethod = fun(() =>
+                var tryInvokeNonStaticMethod = Fun(() =>
                 {
                     if (methodInfo.IsStatic)
                     {
@@ -337,7 +337,7 @@ namespace ApiInspector.Invoking.Invokers
 
             var output = success(responseInvokeMethod);
 
-            var serializeParameter = fun((object instance) =>
+            var serializeParameter = Fun((object instance) =>
             {
                 if (instance == null)
                 {
@@ -368,7 +368,7 @@ namespace ApiInspector.Invoking.Invokers
 
                 InvokeOutput output = null;
 
-                var trace = fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
+                var trace = Fun((string message) => { AppDomain.CurrentDomain.SetData("trace", message); });
 
                 using (var boaContext = new BOAContext(environmentInfo, trace))
                 {

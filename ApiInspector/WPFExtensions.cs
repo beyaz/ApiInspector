@@ -249,7 +249,7 @@ namespace ApiInspector
 
             foreach (var size in rowDefinitions)
             {
-                var getLength = fun(() =>
+                var getLength = Fun(() =>
                 {
                     if (size == "Auto")
                     {
@@ -285,7 +285,7 @@ namespace ApiInspector
 
             foreach (var size in columnSizes)
             {
-                var getLength = fun(() =>
+                var getLength = Fun(() =>
                 {
                     if (size == "Auto")
                     {

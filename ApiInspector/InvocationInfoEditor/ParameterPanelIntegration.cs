@@ -70,7 +70,7 @@ namespace ApiInspector.InvocationInfoEditor
             var isNullableDateTime = definition.ParameterType.FullName == "System.Nullable`1<System.DateTime>";
             var isDateTime         = definition.ParameterType.FullName == "System.DateTime";
 
-            var getLabel = fun(() =>
+            var getLabel = Fun(() =>
             {
                 if (isNullableDateTime)
                 {
@@ -85,7 +85,7 @@ namespace ApiInspector.InvocationInfoEditor
                 return definition.ParameterType.Name;
             });
             
-            var defaultValueIsZero = fun((TypeReference t) =>
+            var defaultValueIsZero = Fun((TypeReference t) =>
             {
                 var types = new[]
                 {
@@ -106,7 +106,7 @@ namespace ApiInspector.InvocationInfoEditor
                 return types.Any(x=>x.FullName == t.FullName);
             });
             
-            var createEditor = fun(() =>
+            var createEditor = Fun(() =>
             {
                 if (CanPresentSimpleTextBox(definition.ParameterType.FullName))
                 {

@@ -19,7 +19,7 @@ namespace ApiInspector.DataAccess
                 return src;
             }
 
-            var getProp = fun((string propertyName) =>
+            var getProp = Fun((string propertyName) =>
             {
                 var propertyInfo = src.GetType().GetProperty(propertyName);
                 if (propertyInfo == null)

@@ -202,7 +202,7 @@ namespace ApiInspector.Invoking.BoaSystem
 
             context.ApplicationContext = data.authenticationResponse.ApplicationContext;
 
-            var createNewBusinessKey = FPExtensions.fun(() =>
+            var createNewBusinessKey = FPExtensions.Fun(() =>
             {
                 const string ResourceCode = "ODSTATMTCP";
 

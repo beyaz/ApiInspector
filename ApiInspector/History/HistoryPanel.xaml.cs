@@ -52,7 +52,7 @@ namespace ApiInspector.History
             scope.SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => Remove(scope));
             scope.SubscribeEvent(HistoryEvent.SaveToHistory, () => SaveToHistory(scope));
 
-            scope.OnUpdate(HistoryItems, fun(() =>
+            scope.OnUpdate(HistoryItems, Fun(() =>
             {
                 var items = scope.Get(HistoryItems);
 
@@ -175,7 +175,7 @@ namespace ApiInspector.History
             {
                 UserVisibleTrace("History is loading...");
 
-                var shouldContainsMinimumOneItem = fun((IReadOnlyList<InvocationInfo> items) =>
+                var shouldContainsMinimumOneItem = Fun((IReadOnlyList<InvocationInfo> items) =>
                 {
                     if (items.Count > 0)
                     {
@@ -185,7 +185,7 @@ namespace ApiInspector.History
                     return new List<InvocationInfo> {CreateNewInvocationInfo()};
                 });
 
-                var getItems = fun(() =>
+                var getItems = Fun(() =>
                 {
                     var response = Run(() => GetHistory(scope));
                     if (response.IsSuccess)

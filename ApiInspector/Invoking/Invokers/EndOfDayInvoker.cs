@@ -23,7 +23,7 @@ namespace ApiInspector.Invoking.Invokers
 
             EODTestHelper.InitializeContextPropertyOfEOD(eodInstance, DateTime.Today);
 
-            var invoke = fun((string methodName) => EODTestHelper.InvokeMethod(eodInstance, methodName));
+            var invoke = Fun((string methodName) => EODTestHelper.InvokeMethod(eodInstance, methodName));
 
             invoke("InitializeParameters");
             invoke("BeforeProcess");

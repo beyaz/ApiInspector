@@ -130,7 +130,7 @@ namespace ApiInspector.MainWindow
 
         FrameworkElement CreateEditor(AssertionInfo assertionInfo)
         {
-            var firstRow = fun(() =>
+            var firstRow = Fun(() =>
             {
                 var descriptionEditor = new TextBox
                 {
@@ -142,23 +142,23 @@ namespace ApiInspector.MainWindow
                 return NewStackPanel(NewBoldTextBlock("Description"), descriptionEditor);
             });
 
-            var secondRow = fun(() =>
+            var secondRow = Fun(() =>
             {
-                var createLeft = fun(() =>
+                var createLeft = Fun(() =>
                 {
                     var editor = CreateEditor(assertionInfo.Actual);
 
                     return NewGroupBox(NewBoldTextBlock("Actual"), editor).UpdatePadding(5);
                 });
 
-                var createExpected = fun(() =>
+                var createExpected = Fun(() =>
                 {
                     var editor = CreateEditor(assertionInfo.Expected);
 
                     return NewGroupBox(NewBoldTextBlock("Expected"), editor).UpdatePadding(5);
                 });
 
-                var createOperatorEditor = fun(() =>
+                var createOperatorEditor = Fun(() =>
                 {
                     var editor = NewDropDownEditor(assertionInfo, nameof(assertionInfo.OperatorName), AssertionOperatorNames.GetDescriptions());
 
@@ -170,7 +170,7 @@ namespace ApiInspector.MainWindow
                 return NewGridWithColumns(new[] {10, 4, 10}, createLeft(), createOperatorEditor(), createExpected());
             });
 
-            var thirdRow = fun(() =>
+            var thirdRow = Fun(() =>
             {
                 var foreground = Brushes.Crimson;
 
@@ -211,11 +211,11 @@ namespace ApiInspector.MainWindow
 
         FrameworkElement CreateEditor(ValueAccessInfo data)
         {
-            var firstRow = fun(() =>
+            var firstRow = Fun(() =>
             {
                 var databaseNameEditor = NewDropDownEditor(data, nameof(data.DatabaseName), Enum.GetNames(typeof(Databases)));
                 
-                var arrangeDatabaseNameEditorVisibility = fun(() =>
+                var arrangeDatabaseNameEditorVisibility = Fun(() =>
                 {
                     if (data.FetchFromDatabase)
                     {
@@ -226,7 +226,7 @@ namespace ApiInspector.MainWindow
                     databaseNameEditor.Visibility = Visibility.Collapsed;
                 });
 
-                var createFetchFromDatabaseEditor = fun(() =>
+                var createFetchFromDatabaseEditor = Fun(() =>
                 {
                     var checkBox = new CheckBox
                     {
@@ -254,7 +254,7 @@ namespace ApiInspector.MainWindow
                 return NewGridWithColumns(new[] {"Auto", "*"}, createFetchFromDatabaseEditor(), databaseNameEditor.WithMarginLeft(5));
             });
 
-            var sqlEditor = fun(() =>
+            var sqlEditor = Fun(() =>
             {
                 var editor = new SQLTextEditor
                 {

@@ -142,7 +142,7 @@ namespace ApiInspector
 
         static Assembly FindAssembly(string assemblyFileNameWithoutExtension, IReadOnlyList<string> searchDirectories)
         {
-            var trace = fun((string message) => Console.WriteLine(message));
+            var trace = Fun((string message) => Console.WriteLine(message));
 
             trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 

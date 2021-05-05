@@ -39,7 +39,7 @@ namespace ApiInspector.Invoking.Invokers
         #region Methods
         static object CreateInputValue(ParameterAdapterInput parameterAdapterInput, Action<string> trace)
         {
-            var adaptInput = fun(() =>
+            var adaptInput = Fun(() =>
             {
                 foreach (var tryAdapt in parameterAdapters)
                 {
@@ -53,7 +53,7 @@ namespace ApiInspector.Invoking.Invokers
                 throw new Exception($"Parameter not adapted. Value: {parameterAdapterInput.InvocationValue}, target parameter type: {parameterAdapterInput.ParameterInfo.ParameterType}");
             });
 
-            var run = fun((Func<object> action) =>
+            var run = Fun((Func<object> action) =>
             {
                 var stopwatch = Stopwatch.StartNew();
 
