@@ -243,7 +243,7 @@ namespace ApiInspector.Invoking.Invokers
 
             trace($"Started to search method: {invocationInfo.MethodName}");
 
-            var methodInfo = targetType.GetMethods(AllBindings).FirstOrDefault(m => m.GetMethodNameWithSignature() == invocationInfo.MethodName);
+            var methodInfo = targetType.GetMethods(AllBindings).FirstOrDefault(m => CecilHelper.IsSignatureMatched(m, invocationInfo.MethodName));
             if (methodInfo == null)
             {
                 throw new Exception("Method not found.");

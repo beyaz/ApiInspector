@@ -134,6 +134,23 @@ namespace ApiInspector.DataAccess
             return sb.ToString();
         }
 
+        public static bool IsSignatureMatched(MethodInfo methodInfo, string name)
+        {
+            var key = methodInfo.GetMethodNameWithSignature();
+
+            if (key == name)
+            {
+                return true;
+            }
+
+            if (key.Replace("+","/") == name)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static IReadOnlyList<string> GetPropertyPathsThatCanBeSQLParameter(object instance)
         {
             var items = new List<string>();
