@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ApiInspector.DataAccess;
+using ApiInspector.Invoking.BoaSystem;
 using static ApiInspector._;
 using static FunctionalPrograming.FPExtensions;
 using static ApiInspector.Utility;
@@ -62,6 +63,8 @@ namespace ApiInspector.Invoking.Invokers
 
             string getCSharpCode()
             {
+
+                var environmentInfo = EnvironmentInfo.Parse(environment);
                 if (method.ReturnType.FullName == "System.Void")
                 {
                     return @"
@@ -75,6 +78,8 @@ namespace ApiInspector.Invoking.Dynamic
         public static void Wrap(" + parameterDefinitionPart + @")
         {
             EverestContext.Current.Build();
+
+            EverestContext.Current.ContextHeader = EverestContext.Current.ContextHeader ??  new BOA.Card.Core.ServiceBus.ContextHeader{ Environment = "+ '"' + environmentInfo + '"' +@" };
 
             using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
             {
@@ -107,6 +112,8 @@ namespace ApiInspector.Invoking.Dynamic
         public static object Wrap(" + parameterDefinitionPart + @")
         {
             EverestContext.Current.Build();
+
+            EverestContext.Current.ContextHeader = EverestContext.Current.ContextHeader ??  new BOA.Card.Core.ServiceBus.ContextHeader{ Environment = "+ '"' + environmentInfo + '"' +@" };
 
             using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
             {
