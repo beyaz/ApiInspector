@@ -21,6 +21,8 @@ namespace ApiInspector.History
     {
         static List<RecordModel> historyInLocalDirectory;
 
+        static  string HistoryDirectoryPath => Path.Combine(_.InitialConfiguration.ConfigurationDirectoryPath, "History");
+
         #region Public Methods
         /// <summary>
         ///     Gets the history.
@@ -32,23 +34,65 @@ namespace ApiInspector.History
             var searchText           = scope.TryGet(DataKeys.SearchTextKey);
             var searchTextIsNotReady = string.IsNullOrWhiteSpace(searchText) || searchText.Length <= 3;
 
-            List<RecordModel> records                     = null;
+            List<RecordModel> records = null;
 
             var useLocalDirectoryForHistory = _.InitialConfiguration.UseLocalDirectoryForHistory;
             if (useLocalDirectoryForHistory)
             {
                 if (historyInLocalDirectory == null)
                 {
-                    var historyDirectory = Path.Combine(_.InitialConfiguration.ConfigurationDirectoryPath, "History");
-                    if (Directory.Exists(historyDirectory))
+                    if (Directory.Exists(HistoryDirectoryPath))
                     {
-                        historyInLocalDirectory = Directory.GetFiles(historyDirectory, "*.json").Select(x => JsonConvert.DeserializeObject<RecordModel>(File.ReadAllText(x))).ToList();    
+                        historyInLocalDirectory = Directory.GetFiles(HistoryDirectoryPath, "*.json").Select(x => JsonConvert.DeserializeObject<RecordModel>(File.ReadAllText(x))).ToList();    
                     }
                     else
                     {
                         historyInLocalDirectory = new List<RecordModel>();
                     }
-                    
+
+                    if (historyInLocalDirectory.Count ==0)
+                    {
+                        historyInLocalDirectory = new List<RecordModel>
+                        {
+                            CreateFrom(new InvocationInfo
+                            {
+                                AssemblyName            = "ApiInspector.exe",
+                                AssemblySearchDirectory = Path.GetDirectoryName(typeof(HistoryPanelDatabaseRepository).Assembly.Location),
+                                ClassName               = "ApiInspector.Test.ClassB",
+                                Environment             = "dev",
+                                MethodName              = "Topla",
+                                Scenarios               = new List<ScenarioInfo>
+                                {
+                                    new ScenarioInfo
+                                    {
+                                        Description = "Succesfully sum operations",
+                                        
+                                        MethodParameters = new List<InvocationMethodParameterInfo>
+                                        {
+                                            new InvocationMethodParameterInfo
+                                            {
+                                                Value = "5"
+                                            },
+                                            new InvocationMethodParameterInfo
+                                            {
+                                                Value = "6"
+                                            }
+                                        },
+                                        Assertions = new List<AssertionInfo>
+                                        {
+                                            new AssertionInfo
+                                            {
+                                                Description = "5 + 6 should be 11",
+                                                Actual = new ValueAccessInfo(){ Text = "@output"},
+                                                Expected = new ValueAccessInfo{Text = "11"},
+                                                OperatorName = AssertionOperatorNames.IsEqual
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        };
+                    }
                 }
 
                 if (searchTextIsNotReady)
@@ -98,7 +142,9 @@ namespace ApiInspector.History
         {
             var invocationInfo = scope.Get(SelectedInvocationInfo);
             
-            var previousKey = invocationInfo.ToString();
+            var useLocalDirectoryForHistory = _.InitialConfiguration.UseLocalDirectoryForHistory;
+
+            var previousKey                 = invocationInfo.ToString();
             if (previousKey.Contains("("))
             {
                 previousKey = previousKey.Substring(0,previousKey.IndexOf("(", StringComparison.Ordinal));
@@ -108,7 +154,18 @@ namespace ApiInspector.History
 
             foreach (var key in possibleKeys)
             {
-                DbConnection.Execute($"DELETE FROM DBT.ApiInspectorWhiteStone WHERE [Key] = @{nameof(key)}", new {key});
+                if (useLocalDirectoryForHistory)
+                {
+                    if (File.Exists(key))
+                    {
+                        File.Delete(key);
+                    }
+                }
+                else
+                {
+                    DbConnection.Execute($"DELETE FROM DBT.ApiInspectorWhiteStone WHERE [Key] = @{nameof(key)}", new {key});    
+                }
+                
             }
         }
 
@@ -124,7 +181,16 @@ namespace ApiInspector.History
 
             Remove(scope);
 
-            dbConnection.Insert(model);
+            var useLocalDirectoryForHistory = _.InitialConfiguration.UseLocalDirectoryForHistory;
+            if (useLocalDirectoryForHistory)
+            {
+                Utility.WriteToFile(Path.Combine(HistoryDirectoryPath, model.Key.Replace("<","_").Replace(">","_").Replace(":","_")+".json" ) , SerializeObject(model,new JsonSerializerSettings{ Formatting =  Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore}));
+            }
+            else
+            {
+                dbConnection.Insert(model);    
+            }
+            
         }
         #endregion
 

@@ -169,6 +169,10 @@ namespace ApiInspector.Test
             return response;
         }
 
+        public static int Topla(int a, int b)
+        {
+            return a + b;
+        }
     }
     
 }
