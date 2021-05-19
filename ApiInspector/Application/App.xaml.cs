@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using ApiInspector.MainWindow;
 using ApiInspector.Plugins;
 using ApiInspector.Tracing;
+using Newtonsoft.Json;
 using static ApiInspector._;
 using static ApiInspector.MainWindow.Mixin;
 
@@ -30,6 +32,12 @@ namespace ApiInspector.Application
         /// </summary>
         public App()
         {
+            var initialConfigFilePath = Path.Combine(Path.GetDirectoryName(typeof(App).Assembly.Location),"ApiInspector.json");
+            if (File.Exists(initialConfigFilePath))
+            {
+               _.InitialConfiguration = JsonConvert.DeserializeObject<InitialConfiguration>(File.ReadAllText(initialConfigFilePath));
+            }
+
             AttachBoaSystemAssemblyResolverToCurrentDomain();
             errorMonitor = new ErrorMonitor(this);
 

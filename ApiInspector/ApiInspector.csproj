@@ -263,6 +263,11 @@
   <ItemGroup>
     <Resource Include="debug.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ApiInspector.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y "$(TargetDir)$(TargetName).*" "d:\boa\server\bin\</PostBuildEvent>

@@ -8,8 +8,15 @@ using static System.IO.File;
 
 namespace ApiInspector
 {
+    sealed class InitialConfiguration
+    {
+        public string ConfigurationDirectoryPath { get; set; } = @"d:\boa\server\bin\ApiInspectorConfiguration\";
+        public bool UseLocalDirectoryForHistory { get; set; }
+    }
+
     static partial class _
     {
+        public static InitialConfiguration InitialConfiguration = new InitialConfiguration();
 
         public static IDbConnection DbConnection
         {
@@ -45,7 +52,7 @@ namespace ApiInspector
 
         public static string ConfigurationDirectoryPath
         {
-            get { return @"d:\boa\server\bin\ApiInspectorConfiguration\"; }
+            get { return InitialConfiguration.ConfigurationDirectoryPath; }
         }
 
         public static IDbConnection GetBoaCardDbConnection(EnvironmentInfo environmentInfo)

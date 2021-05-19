@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ApiInspector.Models;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json;
 using static ApiInspector._;
 using static ApiInspector.Keys;
 using static ApiInspector.Models.Fix;
@@ -17,42 +19,74 @@ namespace ApiInspector.History
     /// </summary>
     class HistoryPanelDatabaseRepository
     {
+        static List<RecordModel> historyInLocalDirectory;
+
         #region Public Methods
         /// <summary>
         ///     Gets the history.
         /// </summary>
         public static IReadOnlyList<InvocationInfo> GetHistory(Scope scope)
         {
-            var userName     = _.AuthenticationUserName;
-            var dbConnection = DbConnection;
-            var searchText   = scope.TryGet(DataKeys.SearchTextKey);
+            var userName             = _.AuthenticationUserName;
+            var dbConnection         = DbConnection;
+            var searchText           = scope.TryGet(DataKeys.SearchTextKey);
+            var searchTextIsNotReady = string.IsNullOrWhiteSpace(searchText) || searchText.Length <= 3;
 
-            List<RecordModel> records = null;
-            if (string.IsNullOrWhiteSpace(searchText) || searchText.Length <=3)
+            List<RecordModel> records                     = null;
+
+            var useLocalDirectoryForHistory = _.InitialConfiguration.UseLocalDirectoryForHistory;
+            if (useLocalDirectoryForHistory)
             {
-                var sql = $"SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC";
-                records = dbConnection.Query<RecordModel>(sql, new
+                if (historyInLocalDirectory == null)
                 {
-                    userName
-                }).ToList();
+                    var historyDirectory = Path.Combine(_.InitialConfiguration.ConfigurationDirectoryPath, "History");
+                    if (Directory.Exists(historyDirectory))
+                    {
+                        historyInLocalDirectory = Directory.GetFiles(historyDirectory, "*.json").Select(x => JsonConvert.DeserializeObject<RecordModel>(File.ReadAllText(x))).ToList();    
+                    }
+                    else
+                    {
+                        historyInLocalDirectory = new List<RecordModel>();
+                    }
+                    
+                }
 
-                if (records.Count ==0)
+                if (searchTextIsNotReady)
                 {
-                    sql = "SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) ORDER BY LastExecutionTime DESC";
-                    records = dbConnection.Query<RecordModel>(sql).ToList();
+                    records = historyInLocalDirectory.Take(10).OrderBy(x => x.LastExecutionTime).ToList();
+                }
+                else
+                {
+                    records = historyInLocalDirectory.Where(x=>(x.Value+"").IndexOf(searchText,StringComparison.OrdinalIgnoreCase)>=0).OrderBy(x => x.LastExecutionTime).Take(10).ToList();
                 }
             }
             else
             {
-                searchText = $"%{searchText}%";
-
-                var sql = $"SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE [Key] LIKE @{nameof(searchText)} OR [Value] LIKE @{nameof(searchText)} ORDER BY LastExecutionTime DESC";
-                records = dbConnection.Query<RecordModel>(sql, new
+                if (searchTextIsNotReady)
                 {
-                    searchText
-                }).ToList();
+                    var sql = $"SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE UserName = @{nameof(userName)} ORDER BY LastExecutionTime DESC";
+                    records = dbConnection.Query<RecordModel>(sql, new
+                    {
+                        userName
+                    }).ToList();
+
+                    if (records.Count == 0)
+                    {
+                        sql     = "SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) ORDER BY LastExecutionTime DESC";
+                        records = dbConnection.Query<RecordModel>(sql).ToList();
+                    }
+                }
+                else
+                {
+                    searchText = $"%{searchText}%";
+
+                    var sql = $"SELECT TOP 10 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE [Key] LIKE @{nameof(searchText)} OR [Value] LIKE @{nameof(searchText)} ORDER BY LastExecutionTime DESC";
+                    records = dbConnection.Query<RecordModel>(sql, new
+                    {
+                        searchText
+                    }).ToList();
+                }
             }
-            
 
             return records.Select(x => DeserializeObject<InvocationInfo>(x.Value)).ToList().Select(FixAsScenarioModel).ToList();
         }
