@@ -325,7 +325,7 @@ namespace ApiInspector.InvocationInfoEditor
 
                 updateMethodNameSuggestions(methodNames);
 
-                if (invocationInfo.MethodName == methodNameIntellisenseTextBox.Editor.Text)
+                if (!string.IsNullOrWhiteSpace(invocationInfo.MethodName) &&  invocationInfo.MethodName == methodNameIntellisenseTextBox.Editor.Text)
                 {
                     updateSelectedMethodDefinition();
                 }
