@@ -6,7 +6,6 @@ using BOA.Business.Kernel.General;
 using BOA.Common.Configuration;
 using BOA.Common.Helpers;
 using BOA.Common.Types;
-using BOA.Process.Kernel.Card.Internal;
 using FunctionalPrograming;
 using static ApiInspector._;
 using UserManager = BOA.Proxy.UserManager;
@@ -40,23 +39,23 @@ namespace ApiInspector.Invoking.BoaSystem
             return this;
         }
 
-        public BOAContextData WithAuthenticationResponse(AuthenticationResponse authenticationResponse)
+        public BOAContextData WithAuthenticationResponse(AuthenticationResponse response)
         {
-            this.authenticationResponse = authenticationResponse;
+            this.authenticationResponse = response;
 
             return this;
         }
 
-        public BOAContextData WithExecutionDataContext(ExecutionDataContext context)
+        public BOAContextData WithExecutionDataContext(ExecutionDataContext value)
         {
-            this.context = context;
+            this.context = value;
 
             return this;
         }
 
-        public BOAContextData WithObjectHelper(ObjectHelper objectHelper)
+        public BOAContextData WithObjectHelper(ObjectHelper value)
         {
-            this.objectHelper = objectHelper;
+            this.objectHelper = value;
 
             return this;
         }
@@ -229,9 +228,6 @@ namespace ApiInspector.Invoking.BoaSystem
             };
 
             objectHelper.Context.DBLayer.BeginTransaction();
-
-            // TODO: fixme in cache in object helper
-            CardService.UseLocalProxy = true;
 
             return data.WithObjectHelper(objectHelper);
         }
