@@ -94,9 +94,7 @@
     <Compile Include="FunctionalPrograming\FPExtensions.compose.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.fun.cs" />
     <Compile Include="FunctionalPrograming\FPExtensions.pipe.cs" />
-    <Compile Include="FunctionalPrograming\Response.T.cs" />
     <Compile Include="FunctionalPrograming\Response.cs" />
-    <Compile Include="FunctionalPrograming\Result.cs" />
     <Compile Include="History\DataKeys.cs" />
     <Compile Include="InvocationInfoEditor\View.cs" />
     <Compile Include="Invoking\_.cs" />

@@ -44,21 +44,41 @@ namespace FunctionalPrograming
         ///     Runs the specified action.
         /// </summary>
         [Pure]
-        public static Response<T> Run<T>(Func<T> action)
+        public static T SafeRun<T>(Func<T> action)
         {
-            var returnObject = new Response<T>();
-
             try
             {
-                returnObject.Value = action();
+                return action();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                returnObject.AddError(exception);
+                return default(T);
+            }
+        }
+        
+        public static T IfNull<T>(this T instance, Func<T> create)
+        {
+            if (instance != null)
+            {
+                return instance;
             }
 
-            return returnObject;
+            return create();
         }
+        
+
+        
+        [Pure]
+        public static IReadOnlyList<T> AddNewOneItemIfListIsEmpty<T>(this IReadOnlyList<T> items, Func<T> newItem)
+        {
+            if (items.Count > 0)
+            {
+                return items;
+            }
+
+            return new List<T> {newItem()};
+        }
+
         #endregion
     }
 }

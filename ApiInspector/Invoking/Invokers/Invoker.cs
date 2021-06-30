@@ -172,10 +172,10 @@ namespace ApiInspector.Invoking.Invokers
                 return false;
             }
 
-            if (IsCardServiceAssembly(assemblyName))
-            {
-                return false;
-            }
+            //if (IsCardServiceAssembly(assemblyName))
+            //{
+            //    return false;
+            //}
 
             if (assemblyName.StartsWith("BOA.Types."))
             {

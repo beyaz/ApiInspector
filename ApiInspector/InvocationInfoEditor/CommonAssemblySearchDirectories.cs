@@ -15,6 +15,8 @@
         ///     The server bin
         /// </summary>
         public const string serverBin = @"d:\boa\server\bin\";
+
+        public const string IntegrationServerBin = @"D:\BOA\BOA.Integration\server\bin\";
         #endregion
     }
 }

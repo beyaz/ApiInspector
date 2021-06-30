@@ -37,9 +37,7 @@ namespace ApiInspector.History
         }
         #endregion
 
-        #region Properties
-        bool HasAlreadyHistories => scope.Contains(HistoryItems);
-        #endregion
+     
 
         #region Public Methods
         /// <summary>
@@ -52,29 +50,7 @@ namespace ApiInspector.History
             scope.SubscribeEvent(HistoryEvent.RemoveSelectedInvocationInfo, () => Remove(scope));
             scope.SubscribeEvent(HistoryEvent.SaveToHistory, () => SaveToHistory(scope));
 
-            scope.OnUpdate(HistoryItems, Fun(() =>
-            {
-                var items = scope.Get(HistoryItems);
-
-                void initializeItemsSource()
-                {
-                    historyListBox.ItemsSource = items;
-                }
-
-                void trySelectFirstItem()
-                {
-                    historyListBox.SelectedItem = items.FirstOrDefault();
-                }
-
-                void reAssignCollectionFilter()
-                {
-                    ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = HistoryFilter;
-                }
-
-                initializeItemsSource();
-                trySelectFirstItem();
-                reAssignCollectionFilter();
-            }));
+            scope.OnUpdate(HistoryItems, () => OnHistoryItemsUpdated(scope.Get(HistoryItems)));
 
             scope.OnUpdate(SearchTextKey, InitializeHistoryPanel);
         }
@@ -92,9 +68,9 @@ namespace ApiInspector.History
         /// <summary>
         ///     Histories the filter.
         /// </summary>
-        bool HistoryFilter(object item)
+        static bool HistoryFilter(object item, string filterText)
         {
-            if (string.IsNullOrEmpty(historyFilterTextBox.Text))
+            if (string.IsNullOrEmpty(filterText))
             {
                 return true;
             }
@@ -108,7 +84,7 @@ namespace ApiInspector.History
                     return false;
                 }
 
-                return value.IndexOf(historyFilterTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0;
+                return value.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) >= 0;
             }
 
             if (isMatch(invocationInfo.ToString()))
@@ -174,30 +150,14 @@ namespace ApiInspector.History
             Dispatcher.InvokeAsync(() =>
             {
                 UserVisibleTrace("History is loading...");
-
-                var shouldContainsMinimumOneItem = Fun((IReadOnlyList<InvocationInfo> items) =>
-                {
-                    if (items.Count > 0)
-                    {
-                        return items;
-                    }
-
-                    return new List<InvocationInfo> {CreateNewInvocationInfo()};
-                });
-
-                var getItems = Fun(() =>
-                {
-                    var response = Run(() => GetHistory(scope));
-                    if (response.IsSuccess)
-                    {
-                        return response.Value;
-                    }
-
-                    return new List<InvocationInfo>();
-                });
-
-                var dbRecords = shouldContainsMinimumOneItem(getItems()).ToList();
-                if (HasAlreadyHistories)
+                
+                var dbRecords = SafeRun(() => GetHistory(scope))
+                                .IfNull(() => new List<InvocationInfo>())
+                                .AddNewOneItemIfListIsEmpty(CreateNewInvocationInfo)
+                                .ToList();
+                
+                var hasAlreadyHistories = scope.Contains(HistoryItems);
+                if (hasAlreadyHistories)
                 {
                     var selectedItem = (InvocationInfo) historyListBox.SelectedItem;
                     if (selectedItem != null)
@@ -219,6 +179,18 @@ namespace ApiInspector.History
 
                 UserVisibleTrace("History is loaded.");
             });
+        }
+
+        void OnHistoryItemsUpdated(IReadOnlyList<InvocationInfo> items)
+        {
+            // update source
+            historyListBox.ItemsSource = items;
+
+            // trySelectFirstItem
+            historyListBox.SelectedItem = items.FirstOrDefault();
+
+            // reAssignCollectionFilter
+            ((CollectionView) CollectionViewSource.GetDefaultView(historyListBox.ItemsSource)).Filter = x => HistoryFilter(x, historyFilterTextBox.Text);
         }
         #endregion
     }

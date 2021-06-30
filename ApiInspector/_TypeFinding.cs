@@ -146,10 +146,10 @@ namespace ApiInspector
 
             trace($"Trying to find assembly: {assemblyFileNameWithoutExtension}");
 
-            if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
-            {
-                assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
-            }
+            //if (assemblyFileNameWithoutExtension == "BOA.Integration.Connector")
+            //{
+            //    assemblyFileNameWithoutExtension += ".ModifiedVersionForApiInspector";
+            //}
 
             foreach (var searchDirectory in searchDirectories)
             {

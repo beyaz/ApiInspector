@@ -369,7 +369,8 @@ namespace ApiInspector.InvocationInfoEditor
             assemblySearchDirectoryIntellisenseTextBox.Suggestions = new List<string>
             {
                 CommonAssemblySearchDirectories.serverBin,
-                CommonAssemblySearchDirectories.clientBin
+                CommonAssemblySearchDirectories.clientBin,
+                CommonAssemblySearchDirectories.IntegrationServerBin
             };
         }
         #endregion
