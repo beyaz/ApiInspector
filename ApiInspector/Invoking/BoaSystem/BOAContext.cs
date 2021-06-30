@@ -41,21 +41,21 @@ namespace ApiInspector.Invoking.BoaSystem
 
         public BOAContextData WithAuthenticationResponse(AuthenticationResponse response)
         {
-            this.authenticationResponse = response;
+            authenticationResponse = response;
 
             return this;
         }
 
         public BOAContextData WithExecutionDataContext(ExecutionDataContext value)
         {
-            this.context = value;
+            context = value;
 
             return this;
         }
 
         public BOAContextData WithObjectHelper(ObjectHelper value)
         {
-            this.objectHelper = value;
+            objectHelper = value;
 
             return this;
         }
