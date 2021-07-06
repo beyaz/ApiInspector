@@ -1,7 +1,6 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using ApiInspector.DataAccess;
@@ -31,10 +30,21 @@ namespace ApiInspector.Invoking.Invokers
             var serviceInterface = targetType.GetInterfaces().FirstOrDefault(i => i.Name.EndsWith("Service"));
             if (serviceInterface == null)
             {
-                throw new ArgumentNullException(nameof(serviceInterface));
+                // find service implementation and find interface by using it
+                serviceInterface = targetType.Assembly.GetTypes().FirstOrDefault(i => i.Name.EndsWith("Service"));
+                if (serviceInterface == null)
+                {
+                    throw new ArgumentNullException(nameof(serviceInterface));    
+                }
+
+                serviceInterface = serviceInterface.GetInterfaces().FirstOrDefault(i => i.Name.EndsWith("Service"));
+                if (serviceInterface == null)
+                {
+                    throw new ArgumentNullException(nameof(serviceInterface));    
+                }
             }
 
-            var serviceProjectName = Path.GetFileNameWithoutExtension(targetType.Assembly.CodeBase);
+            
 
             var configFilePath = GetWebConfigFilePath(serviceInterface.AssemblyQualifiedName, environment);
 
@@ -55,19 +65,46 @@ namespace ApiInspector.Invoking.Invokers
             var parameterCallPart       = string.Empty;
 
             var parameterInfoList = method.GetParameters();
-            if (parameterInfoList.Length>0)
+            if (parameterInfoList.Length > 0)
             {
                 parameterDefinitionPart = string.Join(" ,", parameterInfoList.Select(p => $"{p.ParameterType.FullName} {p.Name}"));
                 parameterCallPart       = string.Join(" ,", parameterInfoList.Select(p => $"{p.Name}"));
             }
 
-            string getCSharpCode()
+            const string location = @"d:\boa\server\bin\";
+
+            var referencedAssemblies = new List<string>
             {
+                "System.Core.dll",
+                "mscorlib.dll",
+                "System.dll",
+
+                $"{location}BOA.Card.Core.dll",
+                $"{location}BOA.Card.Contracts.dll",
+                $"{location}BOA.Card.Contracts.Online.dll",
+                $"{location}BOA.Card.Definitions.dll",
+                $"{location}SimpleInjector.dll",
+                $"{location}BOA.Card.Services.Batch.dll"
+            };
+
+           
 
                 var environmentInfo = EnvironmentInfo.Parse(environment);
+
+                var requestedType = serviceInterface.FullName;
+                if (targetType.IsGenericType) // maybe job definition
+                {
+                    requestedType = $"{targetType.FullName.RemoveFromEnd("`1")}<{requestedType}>";
+                    
+                    referencedAssemblies.Add($"{location}{targetType.Assembly.GetName().Name}.dll");
+                }
+
+                var sourceCode = string.Empty;
+
+
                 if (method.ReturnType.FullName == "System.Void")
                 {
-                    return @"
+                    sourceCode = @"
 
 using BOA.Card.Core.ServiceBus;
 
@@ -83,7 +120,7 @@ namespace ApiInspector.Invoking.Dynamic
 
             using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
             {
-                var service = EverestContext.Current.GetService<" + serviceInterface.FullName + @">();
+                var service = EverestContext.Current.GetService<" + requestedType + @">();
 
                 service." + methodName + @"(" + parameterCallPart + @");
 
@@ -100,8 +137,10 @@ namespace ApiInspector.Invoking.Dynamic
 
 ";
                 }
-
-                return @"
+                else
+                {
+                    
+                    sourceCode = @"
 
 using BOA.Card.Core.ServiceBus;
 
@@ -117,7 +156,7 @@ namespace ApiInspector.Invoking.Dynamic
 
             using (BOA.Card.Core.ServiceBus.EverestContext.Current.BeginScope())
             {
-                var service = EverestContext.Current.GetService<" + serviceInterface.FullName + @">();
+                var service = EverestContext.Current.GetService<" + requestedType + @">();
 
                 var output = service." + methodName + @"(" + parameterCallPart + @");
 
@@ -137,20 +176,9 @@ namespace ApiInspector.Invoking.Dynamic
 ";
             }
 
-            const string location = @"d:\boa\server\bin\";
+         
 
-            var referencedAssemblies = new List<string>
-            {
-                "System.Core.dll",
-                "mscorlib.dll",
-                "System.dll",
-
-                $"{location}BOA.Card.Core.dll",
-                $"{location}BOA.Card.Contracts.dll",
-                $"{location}BOA.Card.Contracts.Online.dll",
-                $"{location}BOA.Card.Definitions.dll",
-                $"{location}SimpleInjector.dll"
-            };
+            
 
             var compilerParams = new CompilerParameters(referencedAssemblies.ToArray())
             {
@@ -161,7 +189,7 @@ namespace ApiInspector.Invoking.Dynamic
             };
 
             trace("Started to compile...");
-            var results = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(compilerParams, getCSharpCode());
+            var results = CodeDomProvider.CreateProvider("CSharp").CompileAssemblyFromSource(compilerParams, sourceCode);
             if (results.Errors.Count > 0)
             {
                 trace("Compile fail.");
