@@ -17,6 +17,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Include="..\ApiInspector\FileHelper.cs" Link="FileHelper.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <EmbeddedResource Include="Resources\Class.svg" />
       <EmbeddedResource Include="Resources\dll.svg" />
       <EmbeddedResource Include="Resources\Folder.svg" />

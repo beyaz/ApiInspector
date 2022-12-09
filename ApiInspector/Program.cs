@@ -21,14 +21,9 @@ internal class Program
                 throw new Exception("CommandLine arguments cannot be empty.");
             }
 
-            var arr = (args[0] + string.Empty).Split('|');
-            if (arr.Length != 2)
-            {
-                throw new Exception($"CommandLine argument invalid. @argument: {arr[0]}");
-            }
-
-            var methodName = arr[0];
-            var parameter  = arr[1];
+            
+            var methodName = args[0];
+            
 
             var methodInfo = typeof(Program).GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo == null)
@@ -36,7 +31,13 @@ internal class Program
                 throw new Exception($"CommandLine argument invalid.Method not found. @methodName: {methodName}");
             }
 
-            var response = methodInfo.Invoke(null, new object[] { parameter });
+            var parameters = new object[] {  };
+            if (methodInfo.GetParameters().Length == 1)
+            {
+                parameters = new []{ FileHelper.ReadInput(methodInfo.GetParameters()[0].ParameterType) };
+            }
+            
+            var response = methodInfo.Invoke(null, parameters);
 
             var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings
             {
