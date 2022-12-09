@@ -14,6 +14,9 @@ class MetadataNode : TreeNode
     public string NamespaceReference { get; set; }
     public MethodReference MethodReference { get; set; }
     public TypeReference TypeReference { get; set; }
+
+   
+
 }
 
 class MethodSelectionModel
@@ -156,11 +159,17 @@ background:#c8d3db !important;
         return new div();
     }
 
+  
+
+
     IEnumerable<MetadataNode> GetNodes()
     {
+
+
+        
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
-            return MetadataHelper.GetMetadataNodes(AssemblyFilePath);
+            return External.GetMetadataNodes(AssemblyFilePath);
         }
 
         return new List<MetadataNode>();

@@ -1,20 +1,26 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using Newtonsoft.Json;
+using ReactWithDotNet.PrimeReact;
+using JsonConverter = Newtonsoft.Json.JsonConverter;
 
 namespace ApiInspector.WebUI;
 
 static class External
 {
-    
-    
+    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath)
+    {
+        return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), assemblyFilePath).Unwrap();
+    }
     public static string GetAssemblyModel()
     {
         return Execute<string>(nameof(GetAssemblyModel), "abc").Unwrap();
     }
 
-    public static TResponse Unwrap<TResponse>(this (TResponse response, Exception exception) tuple)
+    static TResponse Unwrap<TResponse>(this (TResponse response, Exception exception) tuple)
     {
         if (tuple.exception != null)
         {
@@ -95,7 +101,7 @@ static class External
     {
         Process process = new Process();
         process.StartInfo.FileName  = @"D:\work\git\ApiInspector\ApiInspector\bin\Debug\ApiInspector.exe";
-        process.StartInfo.Arguments = $"{methodName}:{parameter}";
+        process.StartInfo.Arguments = $"{methodName}|{parameter}";
         process.Start();
         process.WaitForExit();
         

@@ -9,6 +9,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        //args = new[] { @"GetMetadataNodes|d:\boa\server\bin\BOA.Types.ERP.PersonRelation.dll" };
         try
         {
             if (args == null)
@@ -23,7 +24,7 @@ internal class Program
                 
             }
 
-            var arr = (args[0] + string.Empty).Split(':');
+            var arr = (args[0] + string.Empty).Split('|');
             if (arr.Length != 2)
             {
                 throw new Exception($"CommandLine argument invalid. @argument: {arr[0]}");
@@ -43,7 +44,13 @@ internal class Program
         
             var response = methodInfo.Invoke(null, new object[] { parameter });
 
-            var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            
+            var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                //TypeNameHandling = TypeNameHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
 
             File.WriteAllText(@"c:\ApiInspector.Response.json", responseAsJson);
 
@@ -68,6 +75,16 @@ internal class Program
             throw new FileNotFoundException(assemblyFileFullPath);
         }
 
+        AppDomain.CurrentDomain.AssemblyResolve+=(s,e)=>
+        {
+            if (File.Exists(@"d:\boa\server\bin\"+ e.Name))
+            {
+                return Assembly.LoadFile(@"d:\boa\server\bin\" + e.Name);
+            }
+
+            return null;
+        };
+
         var assembly = Assembly.LoadFile(assemblyFileFullPath);
 
         var types   = new List<TypeReference>();
@@ -85,6 +102,25 @@ internal class Program
         
 
         return (types,methods);
+    }
+
+   
+
+    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath)
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
+        {
+            var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
+            
+            if (File.Exists(@"d:\boa\server\bin\" + fileNameWithoutExtension + ".dll"))
+            {
+                return Assembly.LoadFile(@"d:\boa\server\bin\" + fileNameWithoutExtension + ".dll");
+            }
+
+            return null;
+        };
+        
+        return MetadataHelper.GetMetadataNodes(assemblyFilePath);
     }
 
 }
