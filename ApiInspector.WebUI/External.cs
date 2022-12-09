@@ -34,7 +34,7 @@ static class External
         var exitCode = RunProcess(methodName, parameter);
         if (exitCode == 1) 
         {
-            return (JsonConvert.DeserializeObject<TResponse>(ReadResponse()), null);
+            return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
         }
 
         const string error = @"c:\ApiInspector.Response.Error.json";
@@ -50,49 +50,7 @@ static class External
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
 
-    public static string ReadResponse()
-    {
-        const string filePath = @"c:\ApiInspector.Response.json";
 
-        while (true)
-        {
-            if (File.Exists(filePath))
-            {
-                if (!IsFileLocked(filePath))
-                {
-                    var response = File.ReadAllText(filePath);
-                    
-                    File.Delete(filePath);
-
-                    return response;
-                }
-            }
-            
-            Thread.Sleep(100);
-        }
-
-        static bool IsFileLocked(string path)
-        {
-            FileStream stream = null;
-            try
-            {
-                FileInfo file = new FileInfo(path);
-                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-            }
-            catch (IOException)
-            {
-                return true;
-            }
-            finally
-            {
-                if (stream != null)
-                {
-                    stream.Close();
-                }
-            }
-            return false;
-        }
-    }
     
     
 
@@ -109,3 +67,5 @@ static class External
         
     }
 }
+
+

@@ -44,7 +44,7 @@ internal class Program
                 PreserveReferencesHandling = PreserveReferencesHandling.Objects
             });
 
-            FileHelper.WriteSuccess(responseAsJson);
+            FileHelper.WriteSuccessResponse(responseAsJson);
 
             Environment.Exit(1);
         }

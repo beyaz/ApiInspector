@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Threading;
+using Newtonsoft.Json;
 
 namespace ApiInspector;
 
@@ -20,13 +22,81 @@ static class FileHelper
         }
     }
 
-    public static void WriteFail(Exception exception)
+    public static T ReadInput<T>()
     {
-        File.WriteAllText(WorkingDirectory + @"ApiInspector.Response.Error.json", exception.ToString());
+        var inputAsJson = File.ReadAllText(FilePath.Input);
+
+        File.Delete(FilePath.Input);
+
+        return JsonConvert.DeserializeObject<T>(inputAsJson);
     }
 
-    public static void WriteSuccess(string responseAsJson)
+    public static string ReadResponse()
     {
-        File.WriteAllText(WorkingDirectory + @"ApiInspector.Response.json", responseAsJson);
+        var filePath = FilePath.ResponseSuccess;
+
+        while (true)
+        {
+            if (File.Exists(filePath))
+            {
+                if (!IsFileLocked(filePath))
+                {
+                    var response = File.ReadAllText(filePath);
+
+                    File.Delete(filePath);
+
+                    return response;
+                }
+            }
+
+            Thread.Sleep(100);
+        }
+
+        static bool IsFileLocked(string path)
+        {
+            FileStream stream = null;
+            try
+            {
+                var file = new FileInfo(path);
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public static void WriteFail(Exception exception)
+    {
+        File.WriteAllText(FilePath.ResponseFail, exception.ToString());
+    }
+
+    public static void WriteInput(string inputAsJson)
+    {
+        File.WriteAllText(FilePath.Input, inputAsJson);
+    }
+
+    public static void WriteSuccessResponse(string responseAsJson)
+    {
+        File.WriteAllText(FilePath.ResponseSuccess, responseAsJson);
+    }
+
+    static class FilePath
+    {
+        public static string ResponseFail => WorkingDirectory + @"ApiInspector.ResponseFail.json";
+        
+        public static string Input => WorkingDirectory + @"ApiInspector.Input.json";
+
+        public static string ResponseSuccess => WorkingDirectory + @"ApiInspector.ResponseSuccess.json";
     }
 }
