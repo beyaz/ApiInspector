@@ -1,64 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace ApiInspector
+namespace ApiInspector;
+
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        try
         {
             if (args == null)
             { 
-                Console.WriteLine("CommandLine arguments cannot be null.");
-                Console.Read();
-                return;
+                throw new Exception("CommandLine arguments cannot be null.");
+                
             }
 
             if (args.Length == 0)
             {
-                Console.WriteLine("CommandLine arguments cannot be empty.");
-                Console.Read();
-                return;
+                throw new Exception("CommandLine arguments cannot be empty.");
+                
             }
 
             var arr = (args[0] + string.Empty).Split(':');
             if (arr.Length != 2)
             {
-                Console.WriteLine($"CommandLine argument invalid. @argument: {arr[0]}");
-                Console.Read();
-                return;
+                throw new Exception($"CommandLine argument invalid. @argument: {arr[0]}");
+               
             }
 
             var methodName = arr[0];
-            var parameter = arr[1];
+            var parameter  = arr[1];
 
             var methodInfo = typeof(Program).GetMethod(methodName, BindingFlags.Static| BindingFlags.Public| BindingFlags.NonPublic);
             if (methodInfo == null)
             {
-                Console.WriteLine($"CommandLine argument invalid.Method not found. @methodName: {methodName}");
-                Console.Read();
-                return;
+                throw new Exception($"CommandLine argument invalid.Method not found. @methodName: {methodName}");
+                
             }
 
+        
             var response = methodInfo.Invoke(null, new object[] { parameter });
 
-            var responseAsJson = JsonConvert.SerializeObject(response,new JsonSerializerSettings{Formatting = Formatting.Indented});
-            
+            var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
+
             File.WriteAllText(@"c:\ApiInspector.Response.json", responseAsJson);
 
+            Environment.Exit(1);
         }
-
-        static string GetAssemblyModel(string assemblyFileFullPath)
+        catch (Exception exception)
         {
-            return "HelloWorld: " + assemblyFileFullPath;
+            File.WriteAllText(@"c:\ApiInspector.Response.Error.json", exception.ToString());
+            Environment.Exit(0);
         }
-        
-        
     }
+
+    public static string GetAssemblyModel(string assemblyFileFullPath)
+    {
+        return "HelloWorld: " + assemblyFileFullPath;
+    }
+
 }
