@@ -56,9 +56,35 @@ internal class Program
         }
     }
 
-    public static string GetAssemblyModel(string assemblyFileFullPath)
+    public static (IReadOnlyList<TypeReference> types, IReadOnlyList<MethodReference> methods) GetAssemblyModel(string assemblyFileFullPath)
     {
-        return "HelloWorld: " + assemblyFileFullPath;
+        if (assemblyFileFullPath == null)
+        {
+            throw new ArgumentNullException(nameof(assemblyFileFullPath));
+        }
+
+        if (!File.Exists(assemblyFileFullPath))
+        {
+            throw new FileNotFoundException(assemblyFileFullPath);
+        }
+
+        var assembly = Assembly.LoadFile(assemblyFileFullPath);
+
+        var types   = new List<TypeReference>();
+        var methods = new List<MethodReference>();
+
+        assembly.VisitTypes(t=>
+        {
+            types.Add(t.AsReference());
+            
+            t.VisitMethods(m=>methods.Add(m.AsReference()));
+        });
+
+        
+        
+        
+
+        return (types,methods);
     }
 
 }

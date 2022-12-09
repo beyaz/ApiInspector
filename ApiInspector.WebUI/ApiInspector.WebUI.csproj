@@ -8,6 +8,22 @@
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\Class.svg" />
+      <None Remove="Resources\dll.svg" />
+      <None Remove="Resources\Folder.svg" />
+      <None Remove="Resources\Method.svg" />
+      <None Remove="Resources\Namespace.svg" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Class.svg" />
+      <EmbeddedResource Include="Resources\dll.svg" />
+      <EmbeddedResource Include="Resources\Folder.svg" />
+      <EmbeddedResource Include="Resources\Method.svg" />
+      <EmbeddedResource Include="Resources\Namespace.svg" />
+    </ItemGroup>
+
 
     <ItemGroup>
         <Reference Include="ReactWithDotNet">
