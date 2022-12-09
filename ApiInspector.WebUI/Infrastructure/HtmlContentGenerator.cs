@@ -24,7 +24,7 @@ sealed class HtmlContentGenerator
             "    <meta http-equiv='Pragma' content='no-cache' />",
             "    <meta http-equiv='Expires' content='0' />",
 
-            "    <title>Quran Analyzer</title>",
+            "    <title>Api Inspector</title>",
 
             "    <!-- Font -->",
             "    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap' media='all'>",
