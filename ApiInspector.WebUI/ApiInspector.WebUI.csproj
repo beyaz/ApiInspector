@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <Reference Include="ReactWithDotNet">
+            <HintPath>Libs\ReactWithDotNet.dll</HintPath>
+        </Reference>
+        <Reference Include="ReactWithDotNet.Libraries">
+            <HintPath>Libs\ReactWithDotNet.Libraries.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Properties\" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    </ItemGroup>
+
+</Project>

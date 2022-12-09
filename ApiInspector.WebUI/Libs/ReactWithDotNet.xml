@@ -1,0 +1,1356 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ReactWithDotNet</name>
+    </assembly>
+    <members>
+        <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
+            <summary>
+                <para>style.alignItems = "center"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ColorWhite">
+            <summary>
+                style.color = 'white'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DirectionLtr">
+            <summary>
+                style.direction = "ltr"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DirectionRtl">
+            <summary>
+                style.direction = "rtl"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayBlock">
+            <summary>
+                style.display = 'block'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlex">
+            <summary>
+                style.display = 'flex'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayNone">
+            <summary>
+                style.display = "none"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FlexDirectionColumnReverse">
+            <summary>
+                style.flexDirection = "column-reverse"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FlexDirectionRow">
+            <summary>
+                flexDirection = "row"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FlexDirectionRowReverse">
+            <summary>
+                flexDirection = "row-reverse"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FontWeightExtraBold">
+            <summary>
+                style.fontWeight = '800'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FontWeightMedium">
+            <summary>
+                style.fontWeight = '500'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FontWeightSemiBold">
+            <summary>
+                style.fontWeight = '600'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.Height100vh">
+            <summary>
+            style.height = "100vh"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.Width100vw">
+            <summary>
+            style.width = "100vw"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.HeightAuto">
+            <summary>
+                style.height = "auto"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentCenter">
+            <summary>
+                <para>justifyContent = "center"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentFlexEnd">
+            <summary>
+                <para>style.justifyContent = "flex-end"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentFlexStart">
+            <summary>
+                <para>style.justifyContent = "flex-start"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentSpaceAround">
+            <summary>
+                <para>style.justifyContent = "space-around"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentSpaceBetween">
+            <summary>
+                <para>style.justifyContent = "space-between"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentSpaceEvenly">
+            <summary>
+                <para>style.justifyContent = "space-evenly"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.HeightMaximized">
+            <summary>
+                height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WidthMaximized">
+            <summary>
+                width: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WidthHeightMaximized">
+            <summary>
+                width: 100%
+                <br />
+                height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowHidden">
+            <summary>
+                overflow = "hidden"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowScroll">
+            <summary>
+                overflow = "scroll"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowYAuto">
+            <summary>
+            overflowY: auto
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.StretchWidthHeight">
+            <summary>
+                width = '100%' , height = '100%'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextDecorationLineThrough">
+            <summary>
+                textDecoration = 'line-through'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextDecorationOverline">
+            <summary>
+                textDecoration = "overline"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextDecorationUnderline">
+            <summary>
+                textDecoration = "underline"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextTransformCapitalize">
+            <summary>
+                style.textTransform = 'capitalize'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextTransformLowerCase">
+            <summary>
+                style.textTransform = 'lowercase'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextTransformUpperCase">
+            <summary>
+                style.textTransform = 'uppercase'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Children(System.Collections.Generic.IEnumerable{ReactWithDotNet.Element})">
+            <summary>
+                Adds elements to children
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Content(System.String)">
+            <summary>
+                style.content = <paramref name="content" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.Double)">
+            <summary>
+                style.flexGrow = <paramref name="growValue" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
+            <summary>
+                style.fontFamily = fontFamily
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Href(System.String)">
+            <summary>
+                a.href = <paramref name="href" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Id(System.String)">
+            <summary>
+                initialize id attribute of html element
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Id(System.Int32)">
+            <summary>
+                initialize id attribute of html element
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OnScroll(System.String)">
+            <summary>
+            Handler <paramref name="jsMethodName"/> should be in client js codes.<br/>
+            <br/>
+            Sample Usage:<br/>
+            <br/>
+            ReactWithDotNet.RegisterExternalJsObject(<paramref name="jsMethodName"/>, function(e){<br/>
+            ...<br/>
+            ...<br/>
+            });
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Id(System.Int64)">
+            <summary>
+                initialize id attribute of html element
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LeftRight(System.Double)">
+            <summary>
+                style.left = <paramref name="pixelValue" /> + 'px'
+                <br />
+                style.right = <paramref name="pixelValue" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyle(System.String)">
+            <summary>
+                style.listStyle = <paramref name="listStyle" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyleInside">
+            <summary>
+                style.listStyle = 'inside'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyleNone">
+            <summary>
+                style.listStyle = 'none'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyleSquare">
+            <summary>
+                style.listStyle = 'square'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxHeight(System.String)">
+            <summary>
+                style.maxHeight = <paramref name="maxHeight" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxHeight(System.Double)">
+            <summary>
+                style.maxHeight = <paramref name="maxHeight" /> + "px"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxWidth(System.String)">
+            <summary>
+                style.maxWidth = <paramref name="maxWidth" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxWidth(System.Double)">
+            <summary>
+                style.maxWidth = <paramref name="maxWidth" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 1024px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 1024px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.Style)">
+            <summary>
+                max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 768px and max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 768px and max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinHeight(System.String)">
+            <summary>
+                style.minHeight = <paramref name="minHeight" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinHeight(System.Double)">
+            <summary>
+                style.minHeight = <paramref name="minHeight" /> + "px"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinWidth(System.String)">
+            <summary>
+                style.minWidth = minWidth
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinWidth(System.Double)">
+            <summary>
+                style.minWidth = minWidth + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Opacity(System.String)">
+            <summary>
+                style.opacity = <paramref name="opacity" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Opacity(System.Double)">
+            <summary>
+                style.opacity = <paramref name="opacity" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Right(System.String)">
+            <summary>
+                style.right = right
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Right(System.Double)">
+            <summary>
+                style.right = right + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Solid_1px_(System.String)">
+            <summary>
+                Returns a string value like "1px solid <paramref name="color" />"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Space(System.String)">
+            <summary>
+                <br>if parent is display='flex' and flexDirection = 'row' then create empty div element with style.width = value</br>
+                <br>
+                    if parent is display='flex' and flexDirection = 'column' then create empty div element with style.height =
+                    value
+                </br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Space(System.Double)">
+            <summary>
+                <br>
+                    if parent is display='flex' and flexDirection = 'row' then create empty div element with style.width = value +
+                    'px'
+                </br>
+                <br>
+                    if parent is display='flex' and flexDirection = 'column' then create empty div element with style.height =
+                    value + 'px'
+                </br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Src(System.String)">
+            <summary>
+                img.src = <paramref name="src" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
+            <summary>
+                style.textTransform = <paramref name="textTransform" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TopBottom(System.Double)">
+            <summary>
+                style.top = <paramref name="pixelValue" /> + 'px'
+                <br />
+                style.bottom = <paramref name="pixelValue" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transform(System.String)">
+            <summary>
+                style.transform = <paramref name="transform" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String)">
+            <summary>
+                style.transition = <paramref name="transition" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.wh(System.Double)">
+            <summary>
+                style.width = <paramref name="pixelValue" /> + 'px'
+                <br />
+                style.height = <paramref name="pixelValue" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Apply given modifiers when condition is true
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,ReactWithDotNet.Element)">
+            <summary>
+                Returns given <paramref name="element" /> when condition is true otherwise returns null
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,System.Func{ReactWithDotNet.Element})">
+            <summary>
+                Calls given <paramref name="elementFunc" /> when condition is true otherwise returns null
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.m(System.Double)">
+            <summary>
+                style.margin = <paramref name="margin" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.m(System.String)">
+            <summary>
+                style.margin = <paramref name="margin" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mr(System.Double)">
+            <summary>
+                style.marginRight = <paramref name="marginRight" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mr(System.String)">
+            <summary>
+                style.marginRight = <paramref name="marginRight" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ml(System.Double)">
+            <summary>
+                style.marginLeft = <paramref name="marginLeft" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ml(System.String)">
+            <summary>
+                style.marginLeft = <paramref name="marginLeft" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mt(System.Double)">
+            <summary>
+                style.marginTop = <paramref name="marginTop" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mt(System.String)">
+            <summary>
+                style.marginTop = <paramref name="marginTop" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mb(System.Double)">
+            <summary>
+                style.marginBottom = <paramref name="marginBottom" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mb(System.String)">
+            <summary>
+                style.marginBottom = <paramref name="marginBottom" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mx(System.Double)">
+            <summary>
+                style.marginLeft = <paramref name="value" /> + 'px'
+                <br />
+                style.marginRight = <paramref name="value" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.mx(System.String)">
+            <summary>
+                style.marginLeft = <paramref name="value" />
+                <br />
+                style.marginRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.my(System.Double)">
+            <summary>
+                style.marginTop = <paramref name="value" /> + 'px'
+                <br />
+                style.marginBottom = <paramref name="value" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.my(System.String)">
+            <summary>
+                style.marginTop = <paramref name="value" />
+                <br />
+                style.marginBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.p(System.Double)">
+            <summary>
+                style.padding = <paramref name="padding" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.p(System.String)">
+            <summary>
+                style.padding = <paramref name="padding" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pr(System.Double)">
+            <summary>
+                style.paddingRight = <paramref name="paddingRight" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pr(System.String)">
+            <summary>
+                style.paddingRight = <paramref name="paddingRight" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pl(System.Double)">
+            <summary>
+                style.paddingLeft = <paramref name="paddingLeft" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pl(System.String)">
+            <summary>
+                style.paddingLeft = <paramref name="paddingLeft" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pt(System.Double)">
+            <summary>
+                style.paddingTop = <paramref name="paddingTop" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pt(System.String)">
+            <summary>
+                style.paddingTop = <paramref name="paddingTop" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pb(System.Double)">
+            <summary>
+                style.paddingBottom = <paramref name="paddingBottom" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.pb(System.String)">
+            <summary>
+                style.paddingBottom = <paramref name="paddingBottom" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.px(System.Double)">
+            <summary>
+                style.paddingLeft = <paramref name="value" /> + 'px'
+                <br />
+                style.paddingRight = <paramref name="value" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.px(System.String)">
+            <summary>
+                style.paddingLeft = <paramref name="value" />
+                <br />
+                style.paddingRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.py(System.Double)">
+            <summary>
+                style.paddingTop = <paramref name="value" /> + 'px'
+                <br />
+                style.paddingBottom = <paramref name="value" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.py(System.String)">
+            <summary>
+                style.paddingTop = <paramref name="value" />
+                <br />
+                style.paddingBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.article">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(System.String)">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.op_Implicit(System.String)~ReactWithDotNet.article">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.p">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor(System.String)">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.op_Implicit(System.String)~ReactWithDotNet.p">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.pre">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(System.String)">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.op_Implicit(System.String)~ReactWithDotNet.pre">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ol">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(System.String)">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.op_Implicit(System.String)~ReactWithDotNet.ol">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ul">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(System.String)">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.op_Implicit(System.String)~ReactWithDotNet.ul">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.li">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(System.String)">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.op_Implicit(System.String)~ReactWithDotNet.li">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.span">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(System.String)">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.op_Implicit(System.String)~ReactWithDotNet.span">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.sup">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(System.String)">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.op_Implicit(System.String)~ReactWithDotNet.sup">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.sub">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(System.String)">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.op_Implicit(System.String)~ReactWithDotNet.sub">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ins">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(System.String)">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.op_Implicit(System.String)~ReactWithDotNet.ins">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.del">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(System.String)">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.op_Implicit(System.String)~ReactWithDotNet.del">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.small">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(System.String)">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.op_Implicit(System.String)~ReactWithDotNet.small">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.mark">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(System.String)">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.op_Implicit(System.String)~ReactWithDotNet.mark">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.em">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(System.String)">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.op_Implicit(System.String)~ReactWithDotNet.em">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.b">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(System.String)">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.op_Implicit(System.String)~ReactWithDotNet.b">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.i">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(System.String)">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.op_Implicit(System.String)~ReactWithDotNet.i">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.strong">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(System.String)">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.op_Implicit(System.String)~ReactWithDotNet.strong">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.section">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Element">
+            <summary>
+                The element
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Element.children">
+            <summary>
+                The children
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Element.key">
+            <summary>
+                Gets or sets the key.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Element.Add(ReactWithDotNet.Element)">
+            <summary>
+                Adds the specified element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Element.GetEnumerator">
+            <summary>
+                Gets the enumerator.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Element.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+                Gets the enumerator.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Extensions.RemoveFromEnd(System.String,System.String)">
+            <summary>
+                Removes value from end of str
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Extensions.RemoveFromEnd(System.String,System.String,System.StringComparison)">
+            <summary>
+                Removes from end.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Extensions.RemoveFromStart(System.String,System.String)">
+            <summary>
+                Removes value from start of str
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Extensions.RemoveFromStart(System.String,System.String,System.StringComparison)">
+            <summary>
+                Removes value from start of str
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.FlexRowCentered">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexRowCentered.#ctor">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexRowCentered.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.className">
+            <summary>
+                Gets or sets the name of the class.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.accesskey">
+            <summary>
+            Provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.translate">
+            <summary>
+            An enumerated attribute that is used to specify whether an element's attribute values and the values of its Text node children are to be translated when the page is localized, or whether to leave them unchanged. It can have the following values:
+            <br/>
+            empty string or yes, which indicates that the element will be translated.
+            <br/>
+            no, which indicates that the element will not be translated.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.part">
+            <summary>
+            A space-separated list of the part names of the element. Part names allows CSS to select and style specific elements in a shadow tree via the ::part pseudo-element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.lang">
+            <summary>
+            Helps define the language of an element: the language that non-editable elements are in, or the language that editable elements should be written in by the user. The attribute contains one "language tag" (made of hyphen-separated "language subtags") in the format defined in RFC 5646: Tags for Identifying Languages (also known as BCP 47). xml:lang has priority over it.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.spellcheck">
+            <summary>
+            An enumerated attribute defines whether the element may be checked for spelling errors. It may have the following values:<br/>
+            empty string or true, which indicates that the element should be, if possible, checked for spelling errors;<br/>
+            false, which indicates that the element should not be checked for spelling errors.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.innerText">
+            <summary>
+                'innerText' property of element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.onClick">
+            <summary>
+                Gets or sets the on click.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.onScroll">
+            <summary>
+            Handler <paramref name="value"/> should be in client js codes.<br/>
+            <br/>
+            Sample Usage:<br/>
+            <br/>
+            ReactWithDotNet.RegisterExternalJsObject(<paramref name="value"/>, function(e){<br/>
+            ...<br/>
+            ...<br/>
+            });
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.style">
+            <summary>
+                Gets the style.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.Style">
+            <summary>
+                Imports filled values given style
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.text">
+            <summary>
+                'innerText' property of element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.HtmlElement.AddClass(System.String)">
+            <summary>
+                Adds given cssClassName ot class attribute of html element
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.onBlur">
+            <summary>
+                Occurs when an element loses focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.onFocus">
+            <summary>
+                occurs when an element gets focus.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+            <summary>
+                Sample event decleration <br />
+                [ReactCustomEvent] public Action OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged);
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Action{``0}}},``0)">
+            <summary>
+                Sample event decleration <br />
+                [ReactCustomEvent] public Action&lt;UserInfo&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo);
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1)">
+            <summary>
+                Sample event decleration <br />
+                [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo);
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1,``2)">
+            <summary>
+                Sample event decleration <br />
+                [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo,CommissionInfo&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo, state.SelectedCommissionInfo);
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.VSpace">
+            <summary>
+                Verticle Space
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Style.alignItems">
+            <summary>
+            |˂-?-˃| center flex-start flex-end stretch baseline
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Style.boxSizing">
+            <summary>
+            Allows us to include the padding and border in an element's total width and height.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.MediaQuery">
+            <summary>
+            Example:
+            <br/>
+            new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.MediaQuery.#ctor(System.String,ReactWithDotNet.Style)">
+            <summary>
+            Example:
+            <br/>
+            new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">
+            <summary>
+                this is the id of first element id which is 'has id value'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyReactComponent.style">
+            <summary>
+                Gets the style.
+            </summary>
+        </member>
+    </members>
+</doc>

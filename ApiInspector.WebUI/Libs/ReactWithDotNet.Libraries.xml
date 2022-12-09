@@ -1,0 +1,744 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ReactWithDotNet.Libraries</name>
+    </assembly>
+    <members>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.BlockUI.blocked">
+            <summary>
+            Controls the blocked state.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Button.label">
+            <summary>
+                Text of the button.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Button.iconPos">
+            <summary>
+            Position of the icon, valid values are "left", "right", "top" and "bottom".
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Button.loading">
+             <summary>
+            Display loading icon of the button
+             </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Button.loadingIcon">
+            <summary>
+            Name of the loading icon or JSX.Element for loading icon.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.visible">
+            <summary>
+            Specifies the visibility of the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.modal">
+            <summary>
+            Defines if background should be blocked when dialog is displayed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.footer">
+            <summary>
+            Footer content of the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.header">
+            <summary>
+            Title content of the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.closable">
+            <summary>
+            Adds a close icon to the header to hide the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.onShow">
+            <summary>
+            Callback to invoke when dialog is showed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dialog.onHide">
+            <summary>
+            Callback to invoke when dialog is hidden (Required).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Checkbox.value">
+            <summary>
+            Value of the checkbox.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Checkbox.checked">
+            <summary>
+               Specifies whether a checkbox should be checked or not.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Checkbox.disabled">
+            <summary>
+            When present, it specifies that the element value cannot be altered.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Checkbox.onChange">
+            <summary>
+            Callback to invoke on value change
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dropdown.filterBy">
+            <summary>
+            When filtering is enabled, filterBy decides which field or fields (comma separated) to search against.
+            <para>Default: label</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dropdown.showClear">
+            <summary>
+            When enabled, a clear icon is displayed to clear the value.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Dropdown.filter">
+            <summary>
+            When specified, displays an input field to filter the items on keyup.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputMask.mask">
+            <summary>
+                Mask pattern.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputMask.placeholder">
+            <summary>
+                Advisory information to display on input.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputMask.maxlength">
+            <summary>
+                Maximum number of character allows in the input field.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputSwitch.checked">
+            <summary>
+                Specifies whether a inputswitch should be checked or not.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputSwitch.disabled">
+            <summary>
+                When present, it specifies that the component should be disabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputSwitch.onChange">
+            <summary>
+                Callback to invoke on value change
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputText.keyfilter">
+            <summary>
+            Format definition of the keys to block.
+            <para>Default: null</para>
+            <para>Type: string/regex</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputTextarea.autoResize">
+             <summary>
+            When present, height of textarea changes as being typed.
+             <para>Default: false</para>
+             </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.filter">
+            <summary>
+                When specified, displays a filter input at header.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.filterPlaceholder">
+            <summary>
+            Placeholder text to show when filter input is empty.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.listStyle">
+            <summary>
+                Inline style of inner list element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.optionLabel">
+            <summary>
+                Name of the label field of an option when an arbitrary objects instead of SelectItems are used as options.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.options">
+            <summary>
+                An array of objects to display as the available options.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.optionValue">
+            <summary>
+                Name of the value field of an option when arbitrary objects are used as options instead of SelectItems.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ListBoxSingleSelection`1.value">
+            <summary>
+                Selected value to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Message.text">
+            <summary>
+                Text of the message.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Message.severity">
+            <summary>
+            Severity level of the message.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Panel.collapsed">
+            <summary>
+                	Defines the initial state of panel content, supports one or two-way binding as well.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Panel.toggleable">
+            <summary>
+                Defines if content of panel can be expanded and collapsed.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Panel.header">
+            <summary>
+            Custom header template of the panel.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Panel.headerTemplate">
+            <summary>
+               Header template of the panel to customize more.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Panel.onToggle">
+            <summary>
+                Callback to invoke when a tab gets expanded.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ProgressSpinner.strokeWidth">
+            <summary>
+                Width of the circle stroke.
+                <para>default: 2</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ProgressSpinner.fill">
+            <summary>
+               Color for the background of the circle.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.ProgressSpinner.animationDuration">
+            <summary>
+                Duration of the rotate animation.
+                <para>default: 2s</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.RadioButton.value">
+            <summary>
+            Value of the radiobutton.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.RadioButton.checked">
+            <summary>
+                Specifies whether a radiobutton should be checked or not.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.RadioButton.disabled">
+            <summary>
+            When present, it specifies that the element value cannot be altered.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.RadioButton.onChange">
+            <summary>
+            Callback to invoke on radio button click.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Divider.layout">
+            <summary>
+                Specifies the orientation, valid values are "horizontal" and "vertical".
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Divider.align">
+            <summary>
+                Alignment of the content, options are "left", "center", "right" for horizontal layout and "top", "center", "bottom" for vertical.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Divider.type">
+            <summary>
+            Border style type, default is "solid" and other options are "dashed" and "dotted".
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.PrimeReact.ScrollPanel">
+            <summary>
+                ScrollPanel is defined using dimensions for the scrollable viewport.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.PrimeReact.Slider">
+            <summary>
+                Slider is a component to provide input using dragging of a handle.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.value">
+            <summary>
+                Value of the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.valueBind">
+            <summary>
+                Value of the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.min">
+            <summary>
+                Mininum boundary value.
+                <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.max">
+            <summary>
+                Maximum boundary value.
+                <para>Default: 100</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.step">
+            <summary>
+                Step factor to increment/decrement the value.
+                <para>Default: 1</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.orientation">
+            <summary>
+                Orientation of the slider, valid values are horizontal and vertical.
+                <para>Default: horizontal</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.onChange">
+            <summary>
+            Callback to invoke on value change via slide.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Slider.onSlideEnd">
+            <summary>
+            Callback to invoke when slide ends.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.PrimeReact.Splitter">
+            <summary>
+            Splitter is utilized to separate and resize panels.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Splitter.layout">
+            <summary>
+            Orientation of the panels, valid values are "horizontal" and "vertical".
+            <para>Default: horizontal</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Splitter.gutterSize">
+            <summary>
+            	Size of the divider in pixels.
+            <para>Default: 4</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabView.activeIndex">
+            <summary>
+                Active index of the TabView.
+                <para>default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabView.renderActiveOnly">
+            <summary>
+                Whether to render the contents of the selected tab or all tabs.
+                <para>default: true</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabView.scrollable">
+            <summary>
+                When enabled displays buttons at each side of the tab headers to scroll the tab list.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabView.onTabChange">
+            <summary>
+                Callback to invoke when an active tab is changed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.header">
+            <summary>
+                Orientation of tab headers.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.leftIcon">
+            <summary>
+                Icons can be placed at left of a header.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.rightIcon">
+            <summary>
+                Icons can be placed at right of a header.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.disabled">
+            <summary>
+                Whether the tab is disabled.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.closable">
+            <summary>
+                Defines if tab can be removed.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.headerClassName">
+            <summary>
+                Style class of the tab header.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.headerStyle">
+            <summary>
+            Inline style of the tab header.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.contentClassName">
+            <summary>
+                Style class of the tab content.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TabPanel.contentStyle">
+            <summary>
+                Inline style of the tab content.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Tooltip.position">
+            <summary>
+            Position of the tooltip, valid values are right, left, top and bottom.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Tooltip.target">
+            <summary>
+            Target element on global tooltip option.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Tooltip.showDelay">
+            <summary>
+            Delay to show the tooltip in milliseconds.
+            <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Tooltip.updateDelay">
+            <summary>
+            	Delay to update the tooltip in milliseconds.
+            <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.Tooltip.hideDelay">
+            <summary>
+            Delay to hide the tooltip in milliseconds.
+            <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.PrimeReact.TooltipPositionType">
+            <summary>
+                The tooltip position type
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipPositionType.top">
+            <summary>
+                The top
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipPositionType.bottom">
+            <summary>
+                The bottom
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipPositionType.left">
+            <summary>
+                The left
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipPositionType.right">
+            <summary>
+                The right
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.PrimeReact.TooltipEventType">
+            <summary>
+                The tooltip event type
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipEventType.hover">
+            <summary>
+                The hover
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipEventType.focus">
+            <summary>
+                The focus
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions">
+            <summary>
+                The tooltip options
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.className">
+            <summary>
+                Style class of the tooltip.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.position">
+            <summary>
+                Position of the tooltip, valid values are right, left, top and bottom.
+                <para>Default: right</para>
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.style">
+            <summary>
+                Style of the tooltip.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.my">
+            <summary>
+                Defines which position on the tooltip being positioned to align with the target element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.at">
+            <summary>
+                Defines which position on the target element to align the positioned tooltip.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.event">
+            <summary>
+                Event to show the tooltip, valid values are hover and focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.showEvent">
+            <summary>
+                Event to show the tooltip if the event property is empty.
+                <para>Default mouseenter</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.hideEvent">
+            <summary>
+                Event to hide the tooltip if the event property is empty.
+                <para>Default mouseleave</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.autoZIndex">
+            <summary>
+                Whether to automatically manage layering.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.baseZIndex">
+            <summary>
+                Base zIndex value to use in layering.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.mouseTrack">
+            <summary>
+                Whether the tooltip will follow the mouse.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.mouseTrackTop">
+            <summary>
+                Defines top position of the tooltip in relation to the mouse when the mouseTrack is enabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.mouseTrackLeft">
+            <summary>
+                Defines top position of the tooltip in relation to the mouse when the mouseTrack is enabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.showDelay">
+            <summary>
+                Delay to show the tooltip in milliseconds.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.updateDelay">
+            <summary>
+                Delay to update the tooltip in milliseconds.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.hideDelay">
+            <summary>
+                Delay to hide the tooltip in milliseconds.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.autoHide">
+            <summary>
+                Whether to hide tooltip when hovering over tooltip content.
+            <para>Default true</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.disabled">
+            <summary>
+                Gets or sets a value indicating whether this <see cref="T:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions" /> is disabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.TooltipOptions.showOnDisabled">
+            <summary>
+                Gets or sets a value indicating whether [show on disabled].
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.SingleSelectionTree`1.value">
+            <summary>
+                Selected value to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.SingleSelectionTree`1.filter">
+            <summary>
+                When specified, displays an input field to filter the items.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.SingleSelectionTree`1.filterValue">
+            <summary>
+                When filtering is enabled, the value of input field.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.SingleSelectionTree`1.filterPlaceholder">
+            <summary>
+                Placeholder text to show when filter input is empty.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.SingleSelectionTree`1.filterBy">
+            <summary>
+                When filtering is enabled, filterBy decides which field or fields (comma separated) to search against.
+                <para>Default: label</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.SingleSelectionTree`1.expandedKeys">
+            <summary>
+            An array of keys to represent the state of the tree expansion state in controlled mode.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.react_datepicker.DatePicker">
+            <summary>
+                https://github.com/Hacker0x01/react-datepicker/blob/master/src/index.jsx
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar">
+            <summary>
+            https://www.npmjs.com/package/react-free-scrollbar
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.fixed">
+            <summary>
+            You can pass fixed to decide if handler's position: fixed or static. If fixed equals true, then the handler will overlap the content inside the scroller.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.autohide">
+            <summary>
+            Set true if you want a macOS style auto-hide scroller.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.timeout">
+            <summary>
+            The time length of the handler disappears. Default: 2000
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.tracksize">
+            <summary>
+            The width of the vertical handler or the height of the horizontal handler. Default: 10px
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.start">
+            <summary>
+            The starting position of the scroll area, can be descriptive string or an object.
+            <br/>
+            Options: "bottom", "bottom right", "top right", "right", {top: 20, left: 30}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.browserOffset">
+            <summary>
+            The browser scroll bar width. Default: "17px". It should fit for most browsers.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_free_scrollbar.FreeScrollBar.onScrollbarScrollTimeout">
+            <summary>
+            This timeout adds a throttle for onScrollbarScroll. Default is 300. Set to 0 to remove throttle.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_simple_code_editor.Editor.highlight">
+            <summary>
+            json, js ...
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.start">
+            <summary>
+                required
+                can be a reference to a react ref to html element or string - an id of a DOM element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.end">
+            <summary>
+                required
+                can be a reference to a react ref to html element or string - an id of a DOM element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.startAnchor">
+            <summary>
+                "auto" | "middle" | "left" | "right" | "top" | "bottom"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.endAnchor">
+            <summary>
+                "auto" | "middle" | "left" | "right" | "top" | "bottom"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.color">
+            <summary>
+                defines color to the entire arrow. lineColor,headColor and tailColor will override color specifically for line,tail
+                or head
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.strokeWidth">
+            <summary>
+                defines the thickness of the entire arrow. headSize and tailSize defines how big will be the head or tail relative
+                to the strokeWidth
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.path">
+            <summary>
+                can be one of: "smooth" | "grid" | "straight", and it controls the path arrow is drawn, exactly how their name
+                suggest
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.curveness">
+            <summary>
+                defines how much the lines curve. makes a difference only in path='smooth'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.dashness">
+            <summary>
+                can make the arrow dashed and can even animate. if true default values(for dashness) are chosen. if object is passed then default values are chosen except what passed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.animateDrawing">
+            <summary>
+                can animate the drawing of the arrow using svg animation. type: boolean|number. if true animation duration is 1s.
+                if number is passed then animation duration is number's value in seconds
+                <example>animateDrawing={0.1} will animate the drawing of the arrow in 100 milliseconds.</example>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.headShape">
+            <summary>
+            you can customize the svg edges (head or tail) of the arrow. you can use predefined svg by passing string,one of "arrow1" | "circle" | "heart"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.react_xarrows.Xarrow.tailShape">
+            <summary>
+            you can customize the svg edges (head or tail) of the arrow. you can use predefined svg by passing string,one of "arrow1" | "circle" | "heart"
+            </summary>
+        </member>
+    </members>
+</doc>

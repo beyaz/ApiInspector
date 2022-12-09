@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/ApiInspector.WebUI/wwwroot/package-lock.json
+/ApiInspector.WebUI/wwwroot/index.js
