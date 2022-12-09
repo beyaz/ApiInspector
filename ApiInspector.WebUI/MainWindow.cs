@@ -84,6 +84,6 @@ class MainWindow: ReactComponent<MainWindowModel>
 
     void OnElementSelected((string value, string filter) obj)
     {
-        throw new NotImplementedException();
+        
     }
 }
