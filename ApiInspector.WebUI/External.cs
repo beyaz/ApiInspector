@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using Newtonsoft.Json;
-using ReactWithDotNet.PrimeReact;
 using JsonConverter = Newtonsoft.Json.JsonConverter;
 
 namespace ApiInspector.WebUI;

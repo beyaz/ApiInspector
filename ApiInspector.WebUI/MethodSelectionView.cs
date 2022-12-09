@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using ReactWithDotNet.Libraries.PrimeReact;
-using ReactWithDotNet.PrimeReact;
 
 
 namespace ApiInspector.WebUI;
@@ -49,20 +48,9 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
             return null;
         }
 
-        var nodes = MetadataHelper.GetMetadataNodes(AssemblyFilePath).ToArray();
+        var nodes = External.GetMetadataNodes(AssemblyFilePath).ToArray();
 
-        MetadataNode current = null;
-        foreach (var index in treeNodeKey.Split('|').Select(int.Parse))
-        {
-            if (nodes.Length <= index)
-            {
-                return null;
-            }
-            current = nodes[index];
-            nodes   = current.children.Select(x => (MetadataNode)x).ToArray();
-        }
-
-        return current;
+        return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }
 
     protected override void constructor()

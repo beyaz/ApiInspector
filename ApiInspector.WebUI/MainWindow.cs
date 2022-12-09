@@ -12,6 +12,11 @@ class MainWindowModel
 
     public string SelectedMethodTreeNodeKey { get; set; }
 
+    public string JsonTextForDotNetInstanceProperties { get; set; }
+
+    public string JsonTextForDotNetMethodParameters { get; set; }
+    public MethodReference SelectedMethod { get; set; }
+    public bool IsInstanceEditorActive { get; set; }
 }
 class MainWindow: ReactComponent<MainWindowModel>
 {
@@ -82,8 +87,89 @@ class MainWindow: ReactComponent<MainWindowModel>
         };
     }
 
-    void OnElementSelected((string value, string filter) obj)
+    void OnElementSelected((string value, string filter) e)
+    {
+        SaveState();
+
+        state.SelectedMethod = null;
+
+        state.JsonTextForDotNetInstanceProperties = null;
+        state.JsonTextForDotNetMethodParameters = null;
+
+        state.SelectedMethodTreeNodeKey = e.value;
+        state.SelectedMethodTreeFilter = e.filter;
+
+        var fullAssemblyPath = state.AssemblyDirectory + state.AssemblyFileName;
+
+        var node = MethodSelectionView.FindTreeNode(fullAssemblyPath, state.SelectedMethodTreeNodeKey);
+        if (node is not null)
+        {
+            if (node.IsMethod)
+            {
+                state.SelectedMethod = node.MethodReference;
+
+                //state = StateCache.TryRead(state.SelectedMethod) ?? state;
+            }
+        }
+
+        if (canShowInstanceEditor() && canShowParametersEditor() == false)
+        {
+            state.IsInstanceEditorActive = true;
+        }
+
+        if (canShowParametersEditor() && canShowInstanceEditor() == false)
+        {
+            state.IsInstanceEditorActive = false;
+        }
+
+        if (canShowInstanceEditor())
+        {
+            initializeInstanceJson();
+        }
+
+        if (canShowParametersEditor())
+        {
+            initializeParametersJson();
+        }
+
+        void initializeInstanceJson()
+        {
+
+            // state.JsonTextForDotNetInstanceProperties
+            // state.JsonTextForDotNetMethodParameters
+
+           
+        }
+
+        void initializeParametersJson()
+        {
+           
+        }
+    }
+
+
+    void SaveState()
     {
         
+    }
+
+    bool canShowInstanceEditor()
+    {
+        if (state.SelectedMethod?.IsStatic == true)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool canShowParametersEditor()
+    {
+        if (state.SelectedMethod?.Parameters.Count > 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
