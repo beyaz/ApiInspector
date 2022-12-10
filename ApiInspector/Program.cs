@@ -3,11 +3,18 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ApiInspector;
 
 internal class Program
 {
+    static string Aloha(string a, int b)
+    {
+        return "Aloha" + a + b;
+    }
+    
+    
     public static void Main(string[] args)
     {
         //WaitForDebuggerAttach();
@@ -90,6 +97,54 @@ internal class Program
         return MetadataHelper.GetMetadataNodes(assemblyFilePath);
     }
 
+    public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
+    {
+        var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
+
+        var assembly = MetadataHelper.LoadAssembly(fullAssemblyPath);
+        
+        var methodInfo   = assembly.TryLoadFrom(methodReference);
+        if (methodInfo == null)
+        {
+            throw new MissingMemberException(methodReference.FullNameWithoutReturnType);
+        }
+
+        object instance = null;
+        if (!methodInfo.IsStatic)
+        {
+            var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
+
+            instance = Newtonsoft.Json.JsonConvert.DeserializeObject(jsonForInstance, declaringType);
+        }
+
+        var invocationParameters = new List<object>();
+        
+        var map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject));
+
+        foreach (var parameterInfo in methodInfo.GetParameters())
+        {
+            if (map.ContainsKey(parameterInfo.Name))
+            {
+                invocationParameters.Add(map[parameterInfo.Name].ToObject(parameterInfo.ParameterType));
+                continue;
+            }
+
+            if (parameterInfo.ParameterType.IsValueType)
+            {
+                invocationParameters.Add(Activator.CreateInstance(parameterInfo.ParameterType));
+            }
+            else
+            {
+                invocationParameters.Add(null);
+            }
+        }
+
+        var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+
+        return JsonConvert.SerializeObject(response);
+
+
+    }
 
     public static (string jsonForInstance, string jsonForParameters) GetEditorTexts((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance, string jsonForParameters) state)
     {

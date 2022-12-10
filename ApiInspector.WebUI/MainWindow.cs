@@ -8,8 +8,8 @@ namespace ApiInspector.WebUI;
 
 class MainWindowModel
 {
-    public string AssemblyDirectory { get; set; } = @"d:\boa\server\bin\";
-    public string AssemblyFileName { get; set; } = @"BOA.Process.Kernel.DebitCard.dll";
+    public string AssemblyDirectory { get; set; } = @"D:\work\git\ApiInspector\ApiInspector\bin\Debug\";
+    public string AssemblyFileName { get; set; } = @"ApiInspector.exe";
 
     public string SelectedMethodTreeFilter { get; set; }
 
@@ -184,8 +184,8 @@ class MainWindow: ReactComponent<MainWindowModel>
                             {
                                 new FlexRow(Height(50), Gap(30))
                                 {
-                                    new ExecuteButton(),
-                                    new DebugButton(),
+                                    new ExecuteButton{Click = OnExecuteClicked},
+                                    new DebugButton{Click   = OnDebugClicked},
                                 },
 
                                new FlexColumn(WidthHeightMaximized)
@@ -226,6 +226,20 @@ class MainWindow: ReactComponent<MainWindowModel>
             }
         };
         
+    }
+
+    void OnExecuteClicked()
+    {
+        var fullAssemblyPath = state.AssemblyDirectory + state.AssemblyFileName;
+        
+        state.ResponseAsJson = External.InvokeMethod(fullAssemblyPath,state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
+    }
+
+    void OnDebugClicked()
+    {
+        var fullAssemblyPath = state.AssemblyDirectory + state.AssemblyFileName;
+
+        state.ResponseAsJson = External.InvokeMethod(fullAssemblyPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters,true);
     }
 
     void OnElementSelected((string value, string filter) e)
