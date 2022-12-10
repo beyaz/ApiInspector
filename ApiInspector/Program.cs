@@ -27,9 +27,20 @@ internal class Program
                 throw new Exception("CommandLine arguments cannot be empty.");
             }
 
+            var arr = args[0].Split('|');
+            if (arr.Length is not 2)
+            {
+                throw new Exception($"CommandLine arguments are invalid. @arguments: {args[0]}");
+            }
+
+            var waitForDebugger = arr[0];
             
-            var methodName = args[0];
-            
+            var methodName = arr[1];
+
+            if (waitForDebugger == "1")
+            {
+                WaitForDebuggerAttach();
+            }
 
             var methodInfo = typeof(Program).GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo == null)

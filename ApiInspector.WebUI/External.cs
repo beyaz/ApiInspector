@@ -15,11 +15,11 @@ static class External
         return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), assemblyFilePath).Unwrap();
     }
 
-    static (TResponse response, Exception exception) Execute<TResponse>(string methodName, object parameter)
+    static (TResponse response, Exception exception) Execute<TResponse>(string methodName, object parameter, bool waitForDebugger=false)
     {
         FileHelper.WriteInput(JsonConvert.SerializeObject(parameter));
 
-        var exitCode = RunProcess(methodName);
+        var exitCode = RunProcess(methodName, waitForDebugger);
         if (exitCode == 1)
         {
             return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
@@ -33,11 +33,11 @@ static class External
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
 
-    static int RunProcess(string methodName)
+    static int RunProcess(string methodName, bool waitForDebugger)
     {
         var process = new Process();
         process.StartInfo.FileName  = @"D:\work\git\ApiInspector\ApiInspector\bin\Debug\ApiInspector.exe";
-        process.StartInfo.Arguments = $"{methodName}";
+        process.StartInfo.Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}";
         process.Start();
         process.WaitForExit();
 
