@@ -9,11 +9,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resources\bug.svg" />
       <None Remove="Resources\Class.svg" />
       <None Remove="Resources\dll.svg" />
       <None Remove="Resources\Folder.svg" />
       <None Remove="Resources\Method.svg" />
       <None Remove="Resources\Namespace.svg" />
+      <None Remove="Resources\play.svg" />
+      <None Remove="Resources\refresh.svg" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,11 +24,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Resources\bug.svg" />
       <EmbeddedResource Include="Resources\Class.svg" />
       <EmbeddedResource Include="Resources\dll.svg" />
       <EmbeddedResource Include="Resources\Folder.svg" />
       <EmbeddedResource Include="Resources\Method.svg" />
       <EmbeddedResource Include="Resources\Namespace.svg" />
+      <EmbeddedResource Include="Resources\play.svg" />
+      <EmbeddedResource Include="Resources\refresh.svg" />
     </ItemGroup>
 
 

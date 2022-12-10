@@ -1,4 +1,6 @@
-﻿using ReactWithDotNet.Libraries.PrimeReact;
+﻿using ApiInspector.WebUI.Components;
+using ReactWithDotNet.Libraries.PrimeReact;
+using ReactWithDotNet.Libraries.react_free_scrollbar;
 using ReactWithDotNet.Libraries.ReactSuite;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
 
@@ -14,6 +16,8 @@ class MainWindowModel
     public string SelectedMethodTreeNodeKey { get; set; }
 
     public string JsonTextForDotNetInstanceProperties { get; set; }
+
+    public string ResponseAsJson { get; set; }
 
     public string JsonTextForDotNetMethodParameters { get; set; }
     public MethodReference SelectedMethod { get; set; }
@@ -47,7 +51,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                    
                    new FlexRow(HeightMaximized,BorderRight($"1px solid {borderColor}"))
                    {
-                       new FlexColumn(Width(300), HeightMaximized)
+                       new FlexColumn(Width(700), HeightMaximized)
                        {
                            "LeftMenu",
                            new FlexColumn
@@ -67,14 +71,15 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                            new MethodSelectionView
                            {
+                               
                                Filter                    = state.SelectedMethodTreeFilter,
                                SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                                SelectionChanged          = OnElementSelected,
                                AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
-                               Width                     = width
-                           }
+                               //Width                     = width
+                           } + HeightMaximized + OverflowYAuto
 
-                           
+
                        },
                        
                        new FlexColumn(FlexGrow(1))
@@ -104,47 +109,103 @@ class MainWindow: ReactComponent<MainWindowModel>
                                // c o n t e n t
                                new FlexRow(WidthHeightMaximized, Gap(5))
                                {
-                                   new CodeMirror
+                                   new FreeScrollBar
                                    {
-                                       extensions = { "json", "githubLight" },
-                                       valueBind  = () => state.JsonTextForDotNetInstanceProperties,
-                                       basicSetup =
+                                       Height(200), PaddingBottom(10),
+                                       Border("1px solid #d9d9d9"),
+                                       BorderRadius(3),
+                                       WidthMaximized,
+                                       FlexGrow(1),
+                                       new CodeMirror
                                        {
-                                           highlightActiveLine       = false,
-                                           highlightActiveLineGutter = false,
-                                       },
-                                       style =
-                                       {
-                                           BorderRadius(3),
-                                           Border("1px solid #d9d9d9"),
-                                           FontSize11,
-                                           WidthMaximized
+                                           extensions = { "json", "githubLight" },
+                                           valueBind  = () => state.JsonTextForDotNetInstanceProperties,
+                                           basicSetup =
+                                           {
+                                               highlightActiveLine       = false,
+                                               highlightActiveLineGutter = false,
+                                           },
+                                           style =
+                                           {
+                                               BorderRadius(3),
+                                               Border("1px solid #d9d9d9"),
+                                               FontSize11,
+                                               WidthMaximized
+                                           }
                                        }
-                                   },
-                                   new CodeMirror
+
+                                       },
+
+                                   new FreeScrollBar
                                    {
-                                       extensions = { "json", "githubLight" },
-                                       valueBind  = () => state.JsonTextForDotNetMethodParameters,
-                                       basicSetup =
+                                       Height(200), PaddingBottom(10),
+                                       Border("1px solid #d9d9d9"),
+                                       BorderRadius(3),
+                                       WidthMaximized,
+                                       FlexGrow(1),
+                                       
+                                       new CodeMirror
                                        {
-                                           highlightActiveLine       = false,
-                                           highlightActiveLineGutter = false,
-                                       },
-                                       style =
-                                       {
-                                           BorderRadius(3),
-                                           Border("1px solid #d9d9d9"),
-                                           FontSize11,
-                                           WidthMaximized
+                                           extensions = { "json", "githubLight" },
+                                           valueBind  = () => state.JsonTextForDotNetMethodParameters,
+                                           basicSetup =
+                                           {
+                                               highlightActiveLine       = false,
+                                               highlightActiveLineGutter = false,
+                                           },
+                                           style =
+                                           {
+                                               BorderRadius(3),
+                                               Border("1px solid #d9d9d9"),
+                                               FontSize11,
+                                               WidthMaximized
+                                           }
                                        }
-                                   }
+                                       
+                                       }
+                                   
+                                  
                                }
                                
                            }
                            
-                           ,new FlexRowCentered(FlexGrow(1))
+                           ,new FlexColumn(FlexGrow(1))
                             {
-                                "response"
+                                new FlexRow(Height(100), Gap(30))
+                                {
+                                    new ActionButton{Label = "Debug", SvgFileName = "bug"},
+                                    new ActionButton{Label = "Run", SvgFileName = "play"}
+                                },
+
+                               new FlexColumn(WidthHeightMaximized)
+                               {
+                                   (span)"Response as Json",
+
+                                   new FreeScrollBar
+                                   {
+                                        Height(200), PaddingBottom(10),
+                                        Border("1px solid #d9d9d9"),
+                                        BorderRadius(3),
+                                        WidthMaximized,
+                                        
+                                        new CodeMirror
+                                        {
+                                            extensions = { "json", "githubLight" },
+                                            valueBind  = () => state.ResponseAsJson,
+                                            basicSetup =
+                                            {
+                                                highlightActiveLine       = false,
+                                                highlightActiveLineGutter = false,
+                                            },
+                                            style =
+                                            {
+                                                FontSize11
+                                                
+                                            }
+                                        }
+
+                                   }
+                               }
                             }
                        }
                        
