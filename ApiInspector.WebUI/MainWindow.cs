@@ -6,7 +6,7 @@ namespace ApiInspector.WebUI;
 class MainWindowModel
 {
     public string AssemblyDirectory { get; set; } = @"d:\boa\server\bin\";
-    public string AssemblyFileName { get; set; } = @"BOA.Types.ERP.PersonRelation.dll";
+    public string AssemblyFileName { get; set; } = @"BOA.Process.Kernel.Card.Internal.dll";
 
     public string SelectedMethodTreeFilter { get; set; }
 
@@ -122,29 +122,15 @@ class MainWindow: ReactComponent<MainWindowModel>
             state.IsInstanceEditorActive = false;
         }
 
-        if (canShowInstanceEditor())
+        if (state.SelectedMethod != null)
         {
-            initializeInstanceJson();
+            var (jsonForInstance, jsonForParameters) = External.GetEditorTexts(fullAssemblyPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters);
+
+            state.JsonTextForDotNetInstanceProperties = jsonForInstance;
+            state.JsonTextForDotNetMethodParameters   = jsonForParameters;
         }
-
-        if (canShowParametersEditor())
-        {
-            initializeParametersJson();
-        }
-
-        void initializeInstanceJson()
-        {
-
-            // state.JsonTextForDotNetInstanceProperties
-            // state.JsonTextForDotNetMethodParameters
-
-           
-        }
-
-        void initializeParametersJson()
-        {
-           
-        }
+        
+        
     }
 
 

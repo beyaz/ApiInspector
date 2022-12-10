@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Threading;
 using Newtonsoft.Json;
 
 namespace ApiInspector;
@@ -8,6 +10,10 @@ internal class Program
 {
     public static void Main(string[] args)
     {
+        //WaitForDebuggerAttach();
+
+        KillAllNamedProcess(nameof(ApiInspector));
+
         //args = new[] { @"GetMetadataNodes|d:\boa\server\bin\BOA.Types.ERP.PersonRelation.dll" };
         try
         {
@@ -71,5 +77,147 @@ internal class Program
         };
 
         return MetadataHelper.GetMetadataNodes(assemblyFilePath);
+    }
+
+
+    public static (string jsonForInstance, string jsonForParameters) GetEditorTexts((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance, string jsonForParameters) state)
+    {
+        var(fullAssemblyPath, methodReference,  jsonForInstance,  jsonForParameters) = state;
+
+
+        if (canShowInstanceEditor())
+        {
+            initializeInstanceJson();
+        }
+
+        if (canShowParametersEditor())
+        {
+            initializeParametersJson();
+        }
+
+        return (jsonForInstance, jsonForParameters);
+
+        bool canShowInstanceEditor()
+        {
+            if (methodReference?.IsStatic == true)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        bool canShowParametersEditor()
+        {
+            if (methodReference?.Parameters.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        
+        void initializeInstanceJson()
+        {
+            var typeOfInstance = methodReference.DeclaringType;
+          
+            if (typeOfInstance == null)
+            {
+                return;
+            }
+
+            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
+            if (map == null)
+            {
+                map = new Dictionary<string, object>();
+            }
+
+            foreach (var propertyInfo in MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(typeOfInstance)?.GetProperties(BindingFlags.Instance | BindingFlags.Public) ?? new PropertyInfo[] { })
+            {
+                var name = propertyInfo.Name;
+                var propertyType = propertyInfo.PropertyType;
+
+                if (name is "state")
+                {
+                    if (propertyType.Name == "EmptyState")
+                    {
+                        continue;
+                    }
+
+                    if (!map.ContainsKey(name))
+                    {
+                        map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
+                        continue;
+                    }
+                }
+
+                if (propertyInfo.DeclaringType?.IsAbstract == true)
+                {
+                    continue;
+                }
+
+                if (propertyType.BaseType == typeof(MulticastDelegate))
+                {
+                    continue;
+                }
+
+                if (!map.ContainsKey(name))
+                {
+                    map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
+                }
+            }
+
+            jsonForInstance = JsonConvert.SerializeObject(map, new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Include,
+                Formatting = Formatting.Indented
+            });
+        }
+
+        void initializeParametersJson()
+        {
+            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.jsonForParameters ?? string.Empty);
+            if (map == null)
+            {
+                map = new Dictionary<string, object>();
+            }
+
+            foreach (var parameterInfo in MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
+            {
+                var name = parameterInfo.Name;
+                if (name == null || map.ContainsKey(name))
+                {
+                    continue;
+                }
+
+                map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
+            }
+
+            jsonForParameters = JsonConvert.SerializeObject(map, new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Include,
+                Formatting = Formatting.Indented
+            });
+        }
+    }
+
+
+    static void WaitForDebuggerAttach()
+    {
+        while (!Debugger.IsAttached)
+        {
+            Thread.Sleep(100);
+        }
+    }
+
+    public static void KillAllNamedProcess(string processName)
+    {
+        foreach (var process in Process.GetProcessesByName(processName))
+        {
+            if (Process.GetCurrentProcess().Id != process.Id)
+            {
+                process.Kill();
+            }
+        }
     }
 }

@@ -90,10 +90,17 @@ static class MetadataHelper
 
     public static Assembly LoadAssembly(string assemblyFilePath)
     {
-        if (Assembly.GetEntryAssembly()?.Location == assemblyFilePath)
+        AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
         {
-            return Assembly.GetEntryAssembly();
-        }
+            var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
+
+            if (File.Exists(@"d:\boa\server\bin\" + fileNameWithoutExtension + ".dll"))
+            {
+                return Assembly.LoadFile(@"d:\boa\server\bin\" + fileNameWithoutExtension + ".dll");
+            }
+
+            return null;
+        };
         return Assembly.LoadFile(assemblyFilePath);
     }
 
