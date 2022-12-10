@@ -54,6 +54,23 @@
                 flexDirection = "row-reverse"
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.FontSizeSmall">
+            <summary>
+            style.fontSize = 'small'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FontSizeLarge">
+            <summary>
+            style.fontSize = 'large'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FontSizeLarger">
+            <summary>
+            style.fontSize = 'larger'
+            <br/>
+            Sets the font-size to a larger size than the parent element
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.FontWeightExtraBold">
             <summary>
                 style.fontWeight = '800'

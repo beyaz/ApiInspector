@@ -27,12 +27,21 @@ class MainWindow: ReactComponent<MainWindowModel>
 {
     protected override Element render()
     {
+        ArrangeEditors();
+        
         const int width = 500;
 
         var borderColor = "#d5d5d8";
         
         return new FlexRow(Padding(10), PositionAbsolute, Top(0),Bottom(0),Left(0),Right(0), Background("#eff3f8"))
         {
+            new style
+            {
+                @"
+.ͼ1.cm-editor.cm-focused {
+    outline: none;
+}"
+            },
             new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"))
             {
                 new link { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/themes/saga-blue/theme.css" },
@@ -51,21 +60,23 @@ class MainWindow: ReactComponent<MainWindowModel>
                    
                    new FlexRow(HeightMaximized,BorderRight($"1px solid {borderColor}"))
                    {
-                       new FlexColumn(Width(700), HeightMaximized)
+                       new FlexColumn(Width(700),Gap(10), HeightMaximized, Margin(10),MarginTop(20))
                        {
-                           "LeftMenu",
-                           new FlexColumn
+                           new FlexColumn(MarginLeftRight(3))
                            {
-                               "Assembly Directory",
-                               new InputText{ valueBind = ()=>state.AssemblyDirectory}
+                               new div{FontSizeSmall, FontWeight600,"Assembly Directory"},
+                               new InputText{ valueBind = ()=>state.AssemblyDirectory} 
                            },
 
-                           new FlexColumn
+                           new FlexColumn(PaddingLeftRight(3))
                            {
-                               "Assembly",
-                               new FlexRow
+                               new div{FontSizeSmall, FontWeight600,"Assembly"},
+                               
+                               new FlexRow(WidthMaximized, Gap(3))
                                {
-                                   new InputText{ valueBind = ()=>state.AssemblyFileName, style = { FlexGrow(1)}}, new Button{label = "Refresh"}
+                                   new InputText{ valueBind = ()=>state.AssemblyFileName, style = { FlexGrow(1) }},
+
+                                   new RefreshButton{  }
                                }
                            },
 
@@ -84,7 +95,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                        
                        new FlexColumn(FlexGrow(1))
                        {
-                           new FlexColumn(FlexGrow(1), BorderBottom($"1px solid {borderColor}"))
+                           new FlexColumn(FlexGrow(1))
                            {
                                // h e a d e r
                                new FlexRow(Color("#6c757d"), CursorPointer, TextAlignCenter)
@@ -111,7 +122,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                {
                                    new FreeScrollBar
                                    {
-                                       Height(200), PaddingBottom(10),
+                                       Height(300), PaddingBottom(10),
                                        Border("1px solid #d9d9d9"),
                                        BorderRadius(3),
                                        WidthMaximized,
@@ -128,7 +139,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                            style =
                                            {
                                                BorderRadius(3),
-                                               Border("1px solid #d9d9d9"),
+                                               //Border("1px solid #d9d9d9"),
                                                FontSize11,
                                                WidthMaximized
                                            }
@@ -138,7 +149,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                                    new FreeScrollBar
                                    {
-                                       Height(200), PaddingBottom(10),
+                                       Height(300), PaddingBottom(10),
                                        Border("1px solid #d9d9d9"),
                                        BorderRadius(3),
                                        WidthMaximized,
@@ -156,7 +167,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                            style =
                                            {
                                                BorderRadius(3),
-                                               Border("1px solid #d9d9d9"),
+                                               //Border("1px solid #d9d9d9"),
                                                FontSize11,
                                                WidthMaximized
                                            }
@@ -169,17 +180,19 @@ class MainWindow: ReactComponent<MainWindowModel>
                                
                            }
                            
-                           ,new FlexColumn(FlexGrow(1))
+                           ,new FlexColumn(FlexGrow(1), Gap(10))
                             {
-                                new FlexRow(Height(100), Gap(30))
+                                new FlexRow(Height(50), Gap(30))
                                 {
-                                    new ActionButton{Label = "Debug", SvgFileName = "bug"},
-                                    new ActionButton{Label = "Run", SvgFileName = "play"}
+                                    new ExecuteButton(),
+                                    new DebugButton(),
                                 },
 
                                new FlexColumn(WidthHeightMaximized)
                                {
-                                   (span)"Response as Json",
+                                   new div{FontSizeSmall, FontWeight600,"Response as json"},
+                                   
+                                  
 
                                    new FreeScrollBar
                                    {
@@ -256,11 +269,35 @@ class MainWindow: ReactComponent<MainWindowModel>
 
             state.JsonTextForDotNetInstanceProperties = jsonForInstance;
             state.JsonTextForDotNetMethodParameters   = jsonForParameters;
+
+            ArrangeEditors();
         }
         
         
     }
 
+    void ArrangeEditors()
+    {
+        var lines            = (state.JsonTextForDotNetInstanceProperties + string.Empty).Split(Environment.NewLine);
+        
+        var optimumLineCount = 19;
+        if (lines.Length < optimumLineCount)
+        {
+            state.JsonTextForDotNetInstanceProperties += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(x => string.Empty));
+        }
+
+        lines = (state.JsonTextForDotNetMethodParameters + string.Empty).Split(Environment.NewLine);
+        if (lines.Length < optimumLineCount)
+        {
+            state.JsonTextForDotNetMethodParameters += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(x => string.Empty));
+        }
+
+        lines = (state.ResponseAsJson + string.Empty).Split(Environment.NewLine);
+        if (lines.Length < 13)
+        {
+            state.ResponseAsJson += string.Join(Environment.NewLine, Enumerable.Range(0, 13 - lines.Length).Select(x => string.Empty));
+        }
+    }
 
     void SaveState()
     {

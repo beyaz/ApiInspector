@@ -90,6 +90,7 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
 .p-tree-filter.p-inputtext.p-component{{ {new Style { Padding(5) }}  }}
 .p-tree-filter-icon.pi.pi-search{{ {new Style { FontSize(15) }}  }}
 
+
 .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {{
   box-shadow: none;
 }}
@@ -97,6 +98,8 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
 .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight{{
 background:#c8d3db !important;
 }}
+
+.p-scrollpanel-content{{ {new Style { PaddingRight(3) }}  }}
 
 ")
         };
