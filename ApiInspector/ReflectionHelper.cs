@@ -38,10 +38,28 @@ static class ReflectionHelper
             }
         }
 
-        var instance = Activator.CreateInstance(type);
+
+        object instance;
+        try
+        {
+            instance = Activator.CreateInstance(type);
+            if (instance == null)
+            {
+                return null;
+            }
+        }
+        catch (Exception)
+        {
+            return null;
+        }
 
         foreach (var propertyInfo in type.GetProperties())
         {
+            if (propertyInfo.GetIndexParameters().Length >0)
+            {
+                continue;
+            }
+            
             var existingValue = propertyInfo.GetValue(instance);
             if (existingValue == null)
             {

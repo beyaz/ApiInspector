@@ -1,12 +1,13 @@
 ﻿using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.ReactSuite;
+using ReactWithDotNet.Libraries.uiw.react_codemirror;
 
 namespace ApiInspector.WebUI;
 
 class MainWindowModel
 {
     public string AssemblyDirectory { get; set; } = @"d:\boa\server\bin\";
-    public string AssemblyFileName { get; set; } = @"BOA.Process.Kernel.Card.Internal.dll";
+    public string AssemblyFileName { get; set; } = @"BOA.Process.Kernel.DebitCard.dll";
 
     public string SelectedMethodTreeFilter { get; set; }
 
@@ -44,7 +45,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                        }
                    } ,
                    
-                   new FlexRow(HeightMaximized)
+                   new FlexRow(HeightMaximized,BorderRight($"1px solid {borderColor}"))
                    {
                        new FlexColumn(Width(300), HeightMaximized)
                        {
@@ -64,27 +65,93 @@ class MainWindow: ReactComponent<MainWindowModel>
                                }
                            },
 
-                             new MethodSelectionView
-                             {
-                                 Filter                    = state.SelectedMethodTreeFilter,
-                                 SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
-                                 SelectionChanged          = OnElementSelected,
-                                 AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
-                                 Width                     = width
-                             },
+                           new MethodSelectionView
+                           {
+                               Filter                    = state.SelectedMethodTreeFilter,
+                               SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
+                               SelectionChanged          = OnElementSelected,
+                               AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
+                               Width                     = width
+                           }
 
-                           BorderRight($"1px solid {borderColor}")
+                           
                        },
                        
-                       new FlexRowCentered
+                       new FlexColumn(FlexGrow(1))
                        {
-                           "Aloha",
-                           FlexGrow(1)
+                           new FlexColumn(FlexGrow(1), BorderBottom($"1px solid {borderColor}"))
+                           {
+                               // h e a d e r
+                               new FlexRow(Color("#6c757d"), CursorPointer, TextAlignCenter)
+                               {
+                                   new div(Text("Instance json"))
+                                   {
+                                       FontWeight600,
+                                       Padding(10),
+                                       FlexGrow(1),
+                                       FontSize13
+                                   },
+
+                                   new div(Text("Parameters json"))
+                                   {
+                                       FontWeight600,
+                                       Padding(10),
+                                       FlexGrow(1),
+                                       FontSize13
+                                   }
+                               },
+                
+                               // c o n t e n t
+                               new FlexRow(WidthHeightMaximized, Gap(5))
+                               {
+                                   new CodeMirror
+                                   {
+                                       extensions = { "json", "githubLight" },
+                                       valueBind  = () => state.JsonTextForDotNetInstanceProperties,
+                                       basicSetup =
+                                       {
+                                           highlightActiveLine       = false,
+                                           highlightActiveLineGutter = false,
+                                       },
+                                       style =
+                                       {
+                                           BorderRadius(3),
+                                           Border("1px solid #d9d9d9"),
+                                           FontSize11,
+                                           WidthMaximized
+                                       }
+                                   },
+                                   new CodeMirror
+                                   {
+                                       extensions = { "json", "githubLight" },
+                                       valueBind  = () => state.JsonTextForDotNetMethodParameters,
+                                       basicSetup =
+                                       {
+                                           highlightActiveLine       = false,
+                                           highlightActiveLineGutter = false,
+                                       },
+                                       style =
+                                       {
+                                           BorderRadius(3),
+                                           Border("1px solid #d9d9d9"),
+                                           FontSize11,
+                                           WidthMaximized
+                                       }
+                                   }
+                               }
+                               
+                           }
+                           
+                           ,new FlexRowCentered(FlexGrow(1))
+                            {
+                                "response"
+                            }
                        }
                        
                    }
             }
         };
+        
     }
 
     void OnElementSelected((string value, string filter) e)
