@@ -61,7 +61,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                    
                    new FlexRow(HeightMaximized,BorderRight($"1px solid {borderColor}"))
                    {
-                       new FlexColumn(Width(700),Gap(10), HeightMaximized, Margin(10),MarginTop(20))
+                       new FlexColumn(Width(600),Gap(10), HeightMaximized, Margin(10),MarginTop(20))
                        {
                            new FlexColumn(MarginLeftRight(3))
                            {
