@@ -117,7 +117,7 @@ internal class Program
                     continue;
                 }
 
-                var (isSuccessfullyCreated, instance) = tryCreateFromPlugins(parameterInfo.ParameterType);
+                var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(parameterInfo.ParameterType);
                 if (isSuccessfullyCreated)
                 {
                     map.Add(name, instance);
@@ -133,24 +133,7 @@ internal class Program
                 Formatting           = Formatting.Indented
             });
 
-            (bool isSuccessfullyCreated, object instance) tryCreateFromPlugins(Type type)
-            {
-                var assembly = Assembly.LoadFile(@"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll");
-
-                var helperType = assembly.GetType("BOA.Orchestration.Card.CCO.TestHelper");
-
-                var methodInfo = helperType.GetMethod("GetDefaultValueForJson", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                if (methodInfo is not null)
-                {
-                    var response = ((bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[] { type });
-                    if (response.isSuccessfullyCreated)
-                    {
-                        return response;
-                    }
-                }
-
-                return (false, null);
-            }
+            
         }
     }
 
@@ -190,7 +173,7 @@ internal class Program
                 var jToken = map[parameterInfo.Name];
                 if (jToken != null)
                 {
-                    var (isSuccessfullyCreated, parameterInstance) = TryCreateFromPlugins(parameterInfo.ParameterType, jToken);
+                    var (isSuccessfullyCreated, parameterInstance) = Plugins.TryCreateInstance(parameterInfo.ParameterType, jToken);
                     if (isSuccessfullyCreated)
                     {
                         invocationParameters.Add(parameterInstance);
@@ -212,17 +195,27 @@ internal class Program
             }
         }
 
+        var hasNoError = false;
+
         try
         {
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
-            return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
+            hasNoError = true;
+            
+            return JsonConvert.SerializeObject(response, new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented, 
+                DefaultValueHandling = DefaultValueHandling.Ignore
+            });
         }
         finally
         {
+            Plugins.TryDisposeInstance(hasNoError, instance);
+            
             foreach (var invocationParameter in invocationParameters)
             {
-                
+                Plugins.TryDisposeInstance(hasNoError, invocationParameter);
             }
             
         }
@@ -312,24 +305,7 @@ internal class Program
         return MetadataHelper.GetMetadataNodes(assemblyFilePath);
     }
 
-    static (bool isSuccessfullyCreated, object instance) TryCreateFromPlugins(Type type, JToken jToken)
-    {
-        var assembly = Assembly.LoadFile(@"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll");
-
-        var helperType = assembly.GetType("BOA.Orchestration.Card.CCO.TestHelper");
-
-        var methodInfo = helperType.GetMethod("TryCreateInstance", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-        if (methodInfo is not null)
-        {
-            var response = ((bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[] { type, jToken });
-            if (response.isSuccessfullyCreated)
-            {
-                return response;
-            }
-        }
-
-        return (false, null);
-    }
+   
 
     static void WaitForDebuggerAttach()
     {
@@ -338,6 +314,4 @@ internal class Program
             Thread.Sleep(100);
         }
     }
-
-    
 }
