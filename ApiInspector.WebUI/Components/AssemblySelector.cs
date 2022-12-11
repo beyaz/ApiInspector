@@ -22,8 +22,10 @@ public class AssemblySelector : ReactComponent
 
             suggestions    = Directory.GetFiles(AssemblyDirectoryPath).Where(x=>Path.GetExtension(x) ==".dll"|| Path.GetExtension(x) == ".exe").Select(Path.GetFileName),
             completeMethod = _ => Query = _.query,
-            onChange       = OnChange
-        };
+            onChange       = OnChange,
+            inputStyle = { WidthMaximized}
+        } 
+        + FlexGrow(1);
     }
 
     void OnChange(AutoCompleteChangeParams<string> e)
