@@ -193,7 +193,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                                    new FreeScrollBar
                                    {
-                                        Height(220), PaddingBottom(10),
+                                        Height("calc(100vh - 515px)"), PaddingBottom(10),
                                         Border("1px solid #d9d9d9"),
                                         BorderRadius(3),
                                         WidthMaximized,
