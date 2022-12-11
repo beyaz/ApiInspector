@@ -1,9 +1,17 @@
 ﻿using System.Collections;
+using System.IO;
+using System.Reflection;
 
 namespace ApiInspector;
 
 static class ReflectionHelper
 {
+    public static void AttachAssemblyResolver()
+    {
+        AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssemblyInSameFolder;
+        AppDomain.CurrentDomain.AssemblyResolve += ResolveAssemblyInSameFolder;
+    }
+
     public static object CreateDefaultValue(Type type)
     {
         if (type == typeof(string))
@@ -38,7 +46,6 @@ static class ReflectionHelper
             }
         }
 
-
         object instance;
         try
         {
@@ -55,22 +62,38 @@ static class ReflectionHelper
 
         foreach (var propertyInfo in type.GetProperties())
         {
-            if (propertyInfo.GetIndexParameters().Length >0)
+            if (propertyInfo.GetIndexParameters().Length > 0)
             {
                 continue;
             }
-            
+
             var existingValue = propertyInfo.GetValue(instance);
             if (existingValue == null)
             {
                 propertyInfo.SetValue(instance, CreateDefaultValue(propertyInfo.PropertyType));
             }
-            
         }
 
         return instance;
     }
 
+    static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
+    {
+        var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
 
-  
+        var directoryName = Path.GetDirectoryName(e.RequestingAssembly?.Location);
+        if (directoryName != null)
+        {
+            foreach (var fileExtension in new[] { ".dll", ".exe" })
+            {
+                var filePath = Path.Combine(directoryName, fileNameWithoutExtension + fileExtension);
+                if (File.Exists(filePath))
+                {
+                    return Assembly.LoadFile(filePath);
+                }
+            }
+        }
+
+        return null;
+    }
 }

@@ -8,8 +8,8 @@ namespace ApiInspector.WebUI;
 
 class MainWindowModel
 {
-    public string AssemblyDirectory { get; set; } = @"D:\work\git\ApiInspector\ApiInspector\bin\Debug\";
-    public string AssemblyFileName { get; set; } = @"ApiInspector.exe";
+    public string AssemblyDirectory { get; set; } = @"d:\boa\server\bin\";
+    public string AssemblyFileName { get; set; } = @"BOA.Process.Kernel.DebitCard.dll";
 
     public string SelectedMethodTreeFilter { get; set; }
 
@@ -188,7 +188,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                             {
                                 new FlexRow(Height(50), Gap(30))
                                 {
-                                    new ExecuteButton{Click = OnExecuteClicked},
+                                    new ExecuteButton{Click = OnExecuteClicked, IsProcessing = IsInvocationStarted},
                                     new DebugButton{Click   = OnDebugClicked},
                                 },
 
@@ -232,11 +232,23 @@ class MainWindow: ReactComponent<MainWindowModel>
         
     }
 
+    public bool IsInvocationStarted { get; set; }
     void OnExecuteClicked()
     {
-        var fullAssemblyPath = state.AssemblyDirectory + state.AssemblyFileName;
+        if (IsInvocationStarted)
+        {
+            IsInvocationStarted = false;
+            
+            var fullAssemblyPath = state.AssemblyDirectory + state.AssemblyFileName;
+
+            state.ResponseAsJson = External.InvokeMethod(fullAssemblyPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
+        }
+        else
+        {
+            IsInvocationStarted = true;
+            Client.GotoMethod(100, OnExecuteClicked);
+        }
         
-        state.ResponseAsJson = External.InvokeMethod(fullAssemblyPath,state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
     }
 
     void OnDebugClicked()

@@ -90,21 +90,11 @@ static class MetadataHelper
 
     public static Assembly LoadAssembly(string assemblyFilePath)
     {
-        AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
-        {
-            var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
-
-            if (File.Exists(@"d:\boa\server\bin\" + fileNameWithoutExtension + ".dll"))
-            {
-                return Assembly.LoadFile(@"d:\boa\server\bin\" + fileNameWithoutExtension + ".dll");
-            }
-
-            return null;
-        };
+        ReflectionHelper.AttachAssemblyResolver();
         return Assembly.LoadFile(assemblyFilePath);
     }
 
-
+   
 
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)
     {
