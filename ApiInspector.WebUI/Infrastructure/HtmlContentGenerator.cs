@@ -53,7 +53,7 @@ sealed class HtmlContentGenerator
                        height: 100vh;
                        margin: 0;
                        font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                       font-size: 16px;
+                       font-size: 13px;
                        color: rgb(51, 51, 51);
                    }
                    

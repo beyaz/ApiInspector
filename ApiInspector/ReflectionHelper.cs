@@ -79,14 +79,29 @@ static class ReflectionHelper
 
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
+        var searchDirectories = new List<string>();
+
+        foreach (var plugin in Plugins.ListOfPlugins)
+        {
+            if (plugin.AssemblySearchDirectories != null)
+            {
+                searchDirectories.AddRange(plugin.AssemblySearchDirectories);
+            }
+        }
+
         var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
 
         var directoryName = Path.GetDirectoryName(e.RequestingAssembly?.Location);
         if (directoryName != null)
         {
+            searchDirectories.Insert(0, directoryName);
+        }
+
+        foreach (var searchDirectory in searchDirectories)
+        {
             foreach (var fileExtension in new[] { ".dll", ".exe" })
             {
-                var filePath = Path.Combine(directoryName, fileNameWithoutExtension + fileExtension);
+                var filePath = Path.Combine(searchDirectory, fileNameWithoutExtension + fileExtension);
                 if (File.Exists(filePath))
                 {
                     return Assembly.LoadFile(filePath);

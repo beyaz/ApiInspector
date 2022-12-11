@@ -14,11 +14,13 @@ static class External
     {
         return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), assemblyFilePath).Unwrap();
     }
-    public static string InvokeMethod(string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters,bool waitForDebugger)
+
+    public static string InvokeMethod(string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
     {
-        return Execute<string>(nameof(InvokeMethod), (fullAssemblyPath,methodReference, stateJsonTextForDotNetInstanceProperties,stateJsonTextForDotNetMethodParameters),waitForDebugger).Unwrap();
+        return Execute<string>(nameof(InvokeMethod), (fullAssemblyPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters), waitForDebugger).Unwrap();
     }
-    static (TResponse response, Exception exception) Execute<TResponse>(string methodName, object parameter, bool waitForDebugger=false)
+
+    static (TResponse response, Exception exception) Execute<TResponse>(string methodName, object parameter, bool waitForDebugger = false)
     {
         FileHelper.WriteInput(JsonConvert.SerializeObject(parameter));
 
@@ -56,8 +58,6 @@ static class External
 
         return tuple.response;
     }
-
-    
 }
 
 

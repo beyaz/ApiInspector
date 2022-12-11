@@ -1,7 +1,6 @@
 ﻿using ApiInspector.WebUI.Components;
 using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.react_free_scrollbar;
-using ReactWithDotNet.Libraries.ReactSuite;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
 
 namespace ApiInspector.WebUI;
@@ -29,8 +28,6 @@ class MainWindow: ReactComponent<MainWindowModel>
     protected override Element render()
     {
         ArrangeEditors();
-        
-        const int width = 500;
 
         var borderColor = "#d5d5d8";
         
@@ -75,8 +72,6 @@ class MainWindow: ReactComponent<MainWindowModel>
                                
                                new FlexRow(WidthMaximized, Gap(3))
                                {
-                                   // new InputText{ valueBind = ()=>state.AssemblyFileName, style = { FlexGrow(1) }},
-                                   
                                    new AssemblySelector
                                    {
                                        AssemblyDirectoryPath = state.AssemblyDirectory,
@@ -84,7 +79,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                        SelectionChanged = x=>state.AssemblyFileName=x
                                    },
 
-                                   new RefreshButton{  }
+                                   new RefreshButton()
                                }
                            },
 
@@ -95,7 +90,6 @@ class MainWindow: ReactComponent<MainWindowModel>
                                SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                                SelectionChanged          = OnElementSelected,
                                AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
-                               //Width                     = width
                            } + HeightMaximized + OverflowYAuto + MarginBottom(10)
 
 
@@ -322,19 +316,19 @@ class MainWindow: ReactComponent<MainWindowModel>
         var optimumLineCount = 19;
         if (lines.Length < optimumLineCount)
         {
-            state.JsonTextForDotNetInstanceProperties += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(x => string.Empty));
+            state.JsonTextForDotNetInstanceProperties += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(_ => string.Empty));
         }
 
         lines = (state.JsonTextForDotNetMethodParameters + string.Empty).Split(Environment.NewLine);
         if (lines.Length < optimumLineCount)
         {
-            state.JsonTextForDotNetMethodParameters += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(x => string.Empty));
+            state.JsonTextForDotNetMethodParameters += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(_ => string.Empty));
         }
 
         lines = (state.ResponseAsJson + string.Empty).Split(Environment.NewLine);
         if (lines.Length < 13)
         {
-            state.ResponseAsJson += string.Join(Environment.NewLine, Enumerable.Range(0, 13 - lines.Length).Select(x => string.Empty));
+            state.ResponseAsJson += string.Join(Environment.NewLine, Enumerable.Range(0, 13 - lines.Length).Select(_ => string.Empty));
         }
     }
 

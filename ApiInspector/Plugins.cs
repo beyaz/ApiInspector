@@ -6,13 +6,14 @@ namespace ApiInspector;
 
 static class Plugins
 {
-    static readonly IReadOnlyList<PluginInfo> ListOfPlugins = new[]
+    public static readonly IReadOnlyList<PluginInfo> ListOfPlugins = new[]
     {
         new PluginInfo
         {
-            FullFilePathOfAssembly = @"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll",
-            FullClassName          = "BOA.Orchestration.Card.CCO.TestHelper",
-            SupportedMethods       = new[] {  "GetDefaultValueForJson","TryCreateInstance", "TryDisposeInstance" }
+            FullFilePathOfAssembly    = @"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll",
+            FullClassName             = "BOA.Orchestration.Card.CCO.TestHelper",
+            SupportedMethods          = new[] { "GetDefaultValueForJson", "TryCreateInstance", "TryDisposeInstance" },
+            AssemblySearchDirectories = new[] { @"d:\boa\server\bin\" }
         }
     };
 
@@ -136,11 +137,12 @@ static class Plugins
 
         return false;
     }
+}
 
-    class PluginInfo
-    {
-        public string FullClassName { get; set; }
-        public string FullFilePathOfAssembly { get; set; }
-        public IReadOnlyList<string> SupportedMethods { get; set; }
-    }
+public sealed class PluginInfo
+{
+    public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
+    public string FullClassName { get; set; }
+    public string FullFilePathOfAssembly { get; set; }
+    public IReadOnlyList<string> SupportedMethods { get; set; }
 }
