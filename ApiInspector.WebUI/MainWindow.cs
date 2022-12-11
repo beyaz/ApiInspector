@@ -64,13 +64,13 @@ class MainWindow: ReactComponent<MainWindowModel>
                        {
                            new FlexColumn(MarginLeftRight(3))
                            {
-                               new div{FontSizeSmall, FontWeight600,"Assembly Directory"},
+                               new Label{Text           ="Assembly Directory"},
                                new InputText{ valueBind = ()=>state.AssemblyDirectory} 
                            },
 
                            new FlexColumn(PaddingLeftRight(3))
                            {
-                               new div{FontSizeSmall, FontWeight600,"Assembly"},
+                               new Label{Text="Assembly"},
                                
                                new FlexRow(WidthMaximized, Gap(3))
                                {
@@ -98,23 +98,19 @@ class MainWindow: ReactComponent<MainWindowModel>
                            new FlexColumn(FlexGrow(1))
                            {
                                // h e a d e r
-                               new FlexRow(Color("#6c757d"), CursorPointer, TextAlignCenter)
+                               new FlexRow(CursorPointer, TextAlignCenter)
                                {
-                                   new div(Text("Instance json"))
+                                   new Label{Text ="Instance json",style =
                                    {
-                                       FontWeight600,
                                        Padding(10),
-                                       FlexGrow(1),
-                                       FontSize13
-                                   },
+                                       FlexGrow(1)
+                                   }},
 
-                                   new div(Text("Parameters json"))
+                                   new Label{Text ="Parameters json",style =
                                    {
-                                       FontWeight600,
                                        Padding(10),
-                                       FlexGrow(1),
-                                       FontSize13
-                                   }
+                                       FlexGrow(1)
+                                   }}
                                },
                 
                                // c o n t e n t
@@ -190,7 +186,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                                new FlexColumn(WidthHeightMaximized)
                                {
-                                   new div{FontSizeSmall, FontWeight600,"Response as json"},
+                                   new Label{Text ="Response as json"},
                                    
                                   
 
