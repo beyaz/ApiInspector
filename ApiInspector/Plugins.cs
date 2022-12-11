@@ -12,7 +12,7 @@ static class Plugins
         {
             FullFilePathOfAssembly = @"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll",
             FullClassName          = "BOA.Orchestration.Card.CCO.TestHelper",
-            SupportedMethods       = new[] { "TryCreateInstance", "GetDefaultValueForJson" }
+            SupportedMethods       = new[] {  "GetDefaultValueForJson","TryCreateInstance", "TryDisposeInstance" }
         }
     };
 

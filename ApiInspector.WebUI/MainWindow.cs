@@ -295,11 +295,20 @@ class MainWindow: ReactComponent<MainWindowModel>
 
         if (state.SelectedMethod != null)
         {
-            var (jsonForInstance, jsonForParameters) = External.GetEditorTexts(fullAssemblyPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters);
+            try
+            {
 
-            state.JsonTextForDotNetInstanceProperties = jsonForInstance;
-            state.JsonTextForDotNetMethodParameters   = jsonForParameters;
+                var (jsonForInstance, jsonForParameters) = External.GetEditorTexts(fullAssemblyPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters);
 
+                state.JsonTextForDotNetInstanceProperties = jsonForInstance;
+                state.JsonTextForDotNetMethodParameters   = jsonForParameters;
+
+            }
+            catch (Exception exception)
+            {
+                state.ResponseAsJson = exception.ToString();
+            }
+            
             ArrangeEditors();
         }
         
