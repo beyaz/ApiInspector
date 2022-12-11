@@ -56,7 +56,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                        }
                    } ,
                    
-                   new FlexRow(HeightMaximized,BorderRight($"1px solid {borderColor}"))
+                   new FlexRow(HeightMaximized)
                    {
                        new FlexColumn(Width(600),Gap(10), HeightMaximized, Margin(10),MarginTop(20))
                        {
@@ -95,7 +95,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                        },
                        
-                       new FlexColumn(FlexGrow(1))
+                       new FlexColumn(FlexGrow(1),Gap(10), MarginRight(10))
                        {
                            new FlexColumn(FlexGrow(1))
                            {
@@ -176,9 +176,8 @@ class MainWindow: ReactComponent<MainWindowModel>
                                   
                                }
                                
-                           }
-                           
-                           ,new FlexColumn(FlexGrow(1), Gap(10))
+                           },
+                           new FlexColumn(FlexGrow(1), Gap(10))
                             {
                                 new FlexRow(Height(50), Gap(30))
                                 {
@@ -194,7 +193,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                                    new FreeScrollBar
                                    {
-                                        Height(210), PaddingBottom(10),
+                                        Height(220), PaddingBottom(10),
                                         Border("1px solid #d9d9d9"),
                                         BorderRadius(3),
                                         WidthMaximized,

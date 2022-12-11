@@ -53,29 +53,42 @@ internal class Program
                 return;
             }
 
+            var declaringType = MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(typeOfInstance);
+            if (declaringType == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(jsonForInstance) ||
+                string.IsNullOrWhiteSpace(jsonForInstance.Replace("{", string.Empty).Replace("}", string.Empty)))
+            {
+                var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(declaringType);
+                if (isSuccessfullyCreated)
+                {
+                    jsonForInstance = JsonConvert.SerializeObject(instance, new JsonSerializerSettings
+                    {
+                        DefaultValueHandling = DefaultValueHandling.Include,
+                        Formatting           = Formatting.Indented
+                    });
+
+                    return;
+                }
+            }
+
             var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
             if (map == null)
             {
                 map = new Dictionary<string, object>();
             }
 
-            foreach (var propertyInfo in MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(typeOfInstance)?.GetProperties(BindingFlags.Instance | BindingFlags.Public) ?? new PropertyInfo[] { })
+            foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 var name         = propertyInfo.Name;
                 var propertyType = propertyInfo.PropertyType;
 
-                if (name is "state")
+                if (map.ContainsKey(name))
                 {
-                    if (propertyType.Name == "EmptyState")
-                    {
-                        continue;
-                    }
-
-                    if (!map.ContainsKey(name))
-                    {
-                        map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
-                        continue;
-                    }
+                    continue;
                 }
 
                 if (propertyInfo.DeclaringType?.IsAbstract == true)
@@ -88,10 +101,14 @@ internal class Program
                     continue;
                 }
 
-                if (!map.ContainsKey(name))
+                var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(propertyType);
+                if (isSuccessfullyCreated)
                 {
-                    map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
+                    map.Add(name, instance);
+                    continue;
                 }
+
+                map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
             }
 
             jsonForInstance = JsonConvert.SerializeObject(map, new JsonSerializerSettings
@@ -132,8 +149,6 @@ internal class Program
                 DefaultValueHandling = DefaultValueHandling.Include,
                 Formatting           = Formatting.Indented
             });
-
-            
         }
     }
 
@@ -159,7 +174,27 @@ internal class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
-            instance = JsonConvert.DeserializeObject(jsonForInstance, declaringType);
+            if (string.IsNullOrWhiteSpace(jsonForInstance) ||
+                string.IsNullOrWhiteSpace(jsonForInstance.Replace("{", string.Empty).Replace("}", string.Empty)))
+            {
+                var (isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, null);
+                if (isSuccessfullyCreated)
+                {
+                    instance = createdInstance;
+                }
+            }
+
+            if (instance == null)
+            {
+                if (!string.IsNullOrWhiteSpace(jsonForInstance))
+                {
+                    instance = JsonConvert.DeserializeObject(jsonForInstance, declaringType);
+                }
+                else
+                {
+                    instance = Activator.CreateInstance(declaringType);
+                }
+            }
         }
 
         var invocationParameters = new List<object>();
@@ -202,24 +237,22 @@ internal class Program
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
             hasNoError = true;
-            
+
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings
             {
-                Formatting = Formatting.Indented, 
+                Formatting           = Formatting.Indented,
                 DefaultValueHandling = DefaultValueHandling.Ignore
             });
         }
         finally
         {
             Plugins.TryDisposeInstance(hasNoError, instance);
-            
+
             foreach (var invocationParameter in invocationParameters)
             {
                 Plugins.TryDisposeInstance(hasNoError, invocationParameter);
             }
-            
         }
-        
     }
 
     public static void KillAllNamedProcess(string processName)
@@ -304,8 +337,6 @@ internal class Program
     {
         return MetadataHelper.GetMetadataNodes(assemblyFilePath);
     }
-
-   
 
     static void WaitForDebuggerAttach()
     {
