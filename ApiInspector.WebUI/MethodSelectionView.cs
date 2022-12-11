@@ -110,7 +110,8 @@ background:#c8d3db !important;
             className = "custom",
             style =
             {
-                Padding(3)
+                Padding(3),
+                Height("calc(100vh - 220px)")
             },
             children = { tree, csscustomizeForTree }
         };

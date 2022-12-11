@@ -90,7 +90,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                                SelectionChanged          = OnElementSelected,
                                AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
-                           } + HeightMaximized + OverflowYAuto + MarginBottom(10)
+                           } + MarginBottom(10)
 
 
                        },
@@ -193,7 +193,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                                    new FreeScrollBar
                                    {
-                                        Height("calc(100vh - 515px)"), PaddingBottom(10),
+                                        Height("calc(100vh - 540px)"), PaddingBottom(10),
                                         Border("1px solid #d9d9d9"),
                                         BorderRadius(3),
                                         WidthMaximized,
