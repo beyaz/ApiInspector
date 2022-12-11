@@ -22,6 +22,7 @@ class MainWindowModel
     public string JsonTextForDotNetMethodParameters { get; set; }
     public MethodReference SelectedMethod { get; set; }
     public bool IsInstanceEditorActive { get; set; }
+    public string AAA { get; set; }
 }
 class MainWindow: ReactComponent<MainWindowModel>
 {
@@ -74,7 +75,14 @@ class MainWindow: ReactComponent<MainWindowModel>
                                
                                new FlexRow(WidthMaximized, Gap(3))
                                {
-                                   new InputText{ valueBind = ()=>state.AssemblyFileName, style = { FlexGrow(1) }},
+                                   // new InputText{ valueBind = ()=>state.AssemblyFileName, style = { FlexGrow(1) }},
+                                   
+                                   new AssemblySelector
+                                   {
+                                       AssemblyDirectoryPath = state.AssemblyDirectory,
+                                       AssemblyFileName = state.AssemblyFileName,
+                                       SelectionChanged = x=>state.AssemblyFileName=x
+                                   }+FlexGrow(1),
 
                                    new RefreshButton{  }
                                }

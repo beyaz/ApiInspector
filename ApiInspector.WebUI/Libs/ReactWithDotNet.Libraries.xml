@@ -4,6 +4,42 @@
         <name>ReactWithDotNet.Libraries</name>
     </assembly>
     <members>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.delay">
+            <summary>
+            Delay between keystrokes to wait before sending a query.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.suggestions">
+            <summary>
+                An array of suggestions to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.onChange">
+            <summary>
+                Callback to invoke when autocomplete value changes.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.completeMethod">
+            <summary>
+                Callback to invoke to search for suggestions.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.field">
+            <summary>
+                Field of a suggested object to resolve and display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.forceSelection">
+            <summary>
+                When present, autocomplete clears the manual input if it does not match of the suggestions to force only accepting
+                values from the suggestions.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.dropdown">
+            <summary>
+            Displays a button next to the input field when enabled.
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Libraries.PrimeReact.BlockUI.blocked">
             <summary>
             Controls the blocked state.
