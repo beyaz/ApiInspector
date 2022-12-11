@@ -88,7 +88,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                SelectionChanged          = OnElementSelected,
                                AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
                                //Width                     = width
-                           } + HeightMaximized + OverflowYAuto
+                           } + HeightMaximized + OverflowYAuto + MarginBottom(10)
 
 
                        },
@@ -192,7 +192,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
                                    new FreeScrollBar
                                    {
-                                        Height(200), PaddingBottom(10),
+                                        Height(210), PaddingBottom(10),
                                         Border("1px solid #d9d9d9"),
                                         BorderRadius(3),
                                         WidthMaximized,
