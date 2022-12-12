@@ -26,7 +26,8 @@ class MainWindowModel
 
 class MainWindow : ReactComponent<MainWindowModel>
 {
-    public bool IsInvocationStarted { get; set; }
+    public bool IsExecutionStarted { get; set; }
+    public bool IsDebugStarted { get; set; }
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
@@ -193,8 +194,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                         {
                             new FlexRow(Height(50), Gap(30))
                             {
-                                new ExecuteButton { Click = OnExecuteClicked, IsProcessing = IsInvocationStarted },
-                                new DebugButton { Click   = OnDebugClicked, IsProcessing   = IsInvocationStarted }
+                                new ExecuteButton { Click = OnExecuteClicked, IsProcessing = IsExecutionStarted },
+                                new DebugButton { Click   = OnDebugClicked, IsProcessing   = IsDebugStarted }
                             },
 
                             new FlexColumn(WidthHeightMaximized)
@@ -258,15 +259,15 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
-        if (IsInvocationStarted)
+        if (IsDebugStarted)
         {
-            IsInvocationStarted = false;
+            IsDebugStarted = false;
 
             state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, true);
         }
         else
         {
-            IsInvocationStarted = true;
+            IsDebugStarted = true;
             Client.GotoMethod(100, OnDebugClicked);
         }
     }
@@ -316,15 +317,15 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
-        if (IsInvocationStarted)
+        if (IsExecutionStarted)
         {
-            IsInvocationStarted = false;
+            IsExecutionStarted = false;
 
             state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
         }
         else
         {
-            IsInvocationStarted = true;
+            IsExecutionStarted = true;
             Client.GotoMethod(100, OnExecuteClicked);
         }
     }
