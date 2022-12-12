@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using ApiInspector.WebUI.Components;
-using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.react_free_scrollbar;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
 
@@ -29,7 +28,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 {
     public bool IsInvocationStarted { get; set; }
 
-    string AssemblyFileFullPath => state.AssemblyDirectory + state.AssemblyFileName;
+    string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
     protected override void constructor()
     {
@@ -78,21 +77,23 @@ class MainWindow : ReactComponent<MainWindowModel>
                         new FlexColumn(MarginLeftRight(3))
                         {
                             new Label { Text          = "Assembly Directory" },
-                            new InputText { valueBind = () => state.AssemblyDirectory }
+
+                            new DirectorySelector
+                            {
+                                DirectoryPath    = state.AssemblyDirectory,
+                                SelectionChanged = x => state.AssemblyDirectory = x
+                            }
                         },
 
                         new FlexColumn(PaddingLeftRight(3))
                         {
                             new Label { Text = "Assembly" },
 
-                            new FlexRow(WidthMaximized, Gap(3))
+                            new AssemblySelector
                             {
-                                new AssemblySelector
-                                {
-                                    AssemblyDirectoryPath = state.AssemblyDirectory,
-                                    AssemblyFileName      = state.AssemblyFileName,
-                                    SelectionChanged      = x => state.AssemblyFileName = x
-                                }
+                                AssemblyDirectoryPath = state.AssemblyDirectory,
+                                AssemblyFileName      = state.AssemblyFileName,
+                                SelectionChanged      = x => state.AssemblyFileName = x
                             }
                         },
 
