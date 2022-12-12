@@ -70,12 +70,10 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
             value             = GetNodes(),
             onSelectionChange = OnSelectionChanged,
             selectionKeys     = SelectedMethodTreeNodeKey,
-            style             = { PrimaryBackground, WidthMaximized },
+            style             = { PrimaryBackground, WidthMaximized , HeightMaximized }
         };
 
-  
-
-        return tree + HeightMaximized;
+        return tree;
     }
 
     static Element nodeTemplate(MetadataNode node)
