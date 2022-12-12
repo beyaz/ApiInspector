@@ -32,7 +32,7 @@ public class AssemblySelector : ReactComponent
     {
         AssemblyFileName = e.value;
 
-        if (File.Exists(AssemblyDirectoryPath + AssemblyFileName))
+        if (File.Exists(Path.Combine(AssemblyDirectoryPath , AssemblyFileName)))
         {
             DispatchEvent(() => SelectionChanged, AssemblyFileName);
         }

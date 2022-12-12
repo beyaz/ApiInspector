@@ -124,7 +124,7 @@ static class MetadataHelper
             return false;
         }
 
-        if ( /*methodInfo.Name.Contains("|") ||*/ methodInfo.Name.StartsWith("set_"))
+        if (methodInfo.Name.StartsWith("get_") || methodInfo.Name.StartsWith("set_"))
         {
             return false;
         }

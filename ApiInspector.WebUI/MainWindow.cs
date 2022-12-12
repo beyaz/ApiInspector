@@ -93,7 +93,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 AssemblyDirectoryPath = state.AssemblyDirectory,
                                 AssemblyFileName      = state.AssemblyFileName,
-                                SelectionChanged      = x => state.AssemblyFileName = x
+                                SelectionChanged      = x => { state.AssemblyFileName = x; SaveState();}
                             }
                         },
 
