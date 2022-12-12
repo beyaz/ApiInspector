@@ -37,7 +37,7 @@ class MainWindow : ReactComponent<MainWindowModel>
         {
             AssemblyDirectory        = Path.GetDirectoryName(External.DotNetFrameworkInvokerExePath) + Path.DirectorySeparatorChar,
             AssemblyFileName         = "ApiInspector.exe",
-            SelectedMethodTreeFilter = "HelloWorld"
+            SelectedMethodTreeFilter = "GetHelpMessage"
         };
     }
 
