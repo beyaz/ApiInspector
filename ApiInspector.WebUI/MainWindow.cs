@@ -58,7 +58,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                    
                    new FlexRow(HeightMaximized)
                    {
-                       new FlexColumn(Width(600),Gap(10), Margin(10),MarginTop(20))
+                       new FlexColumn(Width(500),Gap(10), Margin(10),MarginTop(20))
                        {
                            new FlexColumn(MarginLeftRight(3))
                            {
@@ -77,9 +77,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                                        AssemblyDirectoryPath = state.AssemblyDirectory,
                                        AssemblyFileName = state.AssemblyFileName,
                                        SelectionChanged = x=>state.AssemblyFileName=x
-                                   },
-
-                                   new RefreshButton()
+                                   }
                                }
                            },
 
@@ -323,9 +321,9 @@ class MainWindow: ReactComponent<MainWindowModel>
         }
 
         lines = (state.ResponseAsJson + string.Empty).Split(Environment.NewLine);
-        if (lines.Length < 13)
+        if (lines.Length < optimumLineCount)
         {
-            state.ResponseAsJson += string.Join(Environment.NewLine, Enumerable.Range(0, 13 - lines.Length).Select(_ => string.Empty));
+            state.ResponseAsJson += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(_ => string.Empty));
         }
     }
 

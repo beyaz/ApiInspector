@@ -10,7 +10,7 @@ class DebugButton: ReactComponent
     }
 }
 
-class RefreshButton : ReactComponent
+class RefreshButton : ReactComponent // TODO: remove
 {
     public Action Click { get; set; }
 
