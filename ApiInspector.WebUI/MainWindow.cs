@@ -8,6 +8,7 @@ namespace ApiInspector.WebUI;
 class MainWindowModel
 {
     public string AssemblyDirectory { get; set; } = @"d:\boa\server\bin\";
+    
     public string AssemblyFileName { get; set; } = @"BOA.Process.Kernel.DebitCard.dll";
 
     public string SelectedMethodTreeFilter { get; set; }
@@ -19,12 +20,16 @@ class MainWindowModel
     public string ResponseAsJson { get; set; }
 
     public string JsonTextForDotNetMethodParameters { get; set; }
+    
     public MethodReference SelectedMethod { get; set; }
-    public bool IsInstanceEditorActive { get; set; }
-    public string AAA { get; set; }
 }
 class MainWindow: ReactComponent<MainWindowModel>
 {
+    protected override void constructor()
+    {
+        state = StateCache.ReadState() ?? new MainWindowModel();
+    }
+
     protected override Element render()
     {
         ArrangeEditors();
@@ -268,19 +273,10 @@ class MainWindow: ReactComponent<MainWindowModel>
             {
                 state.SelectedMethod = node.MethodReference;
 
-                //state = StateCache.TryRead(state.SelectedMethod) ?? state;
+                state = StateCache.TryRead(state.SelectedMethod) ?? state;
             }
         }
 
-        if (canShowInstanceEditor() && canShowParametersEditor() == false)
-        {
-            state.IsInstanceEditorActive = true;
-        }
-
-        if (canShowParametersEditor() && canShowInstanceEditor() == false)
-        {
-            state.IsInstanceEditorActive = false;
-        }
 
         if (state.SelectedMethod != null)
         {
@@ -329,26 +325,6 @@ class MainWindow: ReactComponent<MainWindowModel>
 
     void SaveState()
     {
-        
-    }
-
-    bool canShowInstanceEditor()
-    {
-        if (state.SelectedMethod?.IsStatic == true)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    bool canShowParametersEditor()
-    {
-        if (state.SelectedMethod?.Parameters.Count > 0)
-        {
-            return true;
-        }
-
-        return false;
+        StateCache.Save(state);
     }
 }
