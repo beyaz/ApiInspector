@@ -90,14 +90,14 @@ class MainWindow: ReactComponent<MainWindowModel>
                                SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                                SelectionChanged          = OnElementSelected,
                                AssemblyFilePath          = state.AssemblyDirectory+state.AssemblyFileName,
-                           } + MarginBottom(10)
+                           }
 
 
                        },
                        
                        new FlexColumn(FlexGrow(1),Gap(10), MarginRight(10))
                        {
-                           new FlexColumn(FlexGrow(1))
+                           new FlexColumn
                            {
                                // h e a d e r
                                new FlexRow(CursorPointer, TextAlignCenter)
@@ -189,11 +189,9 @@ class MainWindow: ReactComponent<MainWindowModel>
                                {
                                    new Label{Text ="Response as json"},
                                    
-                                  
-
                                    new FreeScrollBar
                                    {
-                                        Height("calc(100vh - 540px)"), PaddingBottom(10),
+                                        Height("calc(100% - 28px)"), PaddingBottom(10),
                                         Border("1px solid #d9d9d9"),
                                         BorderRadius(3),
                                         WidthMaximized,
