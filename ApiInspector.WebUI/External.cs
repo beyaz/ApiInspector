@@ -38,10 +38,11 @@ static class External
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
 
+    public static string DotNetFrameworkInvokerExePath => @"D:\work\git\ApiInspector\ApiInspector\bin\Debug\ApiInspector.exe";
     static int RunProcess(string methodName, bool waitForDebugger)
     {
         var process = new Process();
-        process.StartInfo.FileName  = @"D:\work\git\ApiInspector\ApiInspector\bin\Debug\ApiInspector.exe";
+        process.StartInfo.FileName  = DotNetFrameworkInvokerExePath;
         process.StartInfo.Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}";
         process.Start();
         process.WaitForExit();

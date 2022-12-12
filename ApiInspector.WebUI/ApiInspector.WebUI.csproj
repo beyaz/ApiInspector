@@ -16,7 +16,6 @@
       <None Remove="Resources\Method.svg" />
       <None Remove="Resources\Namespace.svg" />
       <None Remove="Resources\play.svg" />
-      <None Remove="Resources\refresh.svg" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,7 +30,6 @@
       <EmbeddedResource Include="Resources\Method.svg" />
       <EmbeddedResource Include="Resources\Namespace.svg" />
       <EmbeddedResource Include="Resources\play.svg" />
-      <EmbeddedResource Include="Resources\refresh.svg" />
     </ItemGroup>
 
 
