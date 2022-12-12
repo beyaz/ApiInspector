@@ -31,7 +31,7 @@ class MainWindow: ReactComponent<MainWindowModel>
 
         var borderColor = "#d5d5d8";
         
-        return new FlexRow(Padding(10), PositionAbsolute, Top(0),Bottom(0),Left(0),Right(0), Background("#eff3f8"))
+        return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
             new style
             {
@@ -58,7 +58,7 @@ class MainWindow: ReactComponent<MainWindowModel>
                    
                    new FlexRow(HeightMaximized)
                    {
-                       new FlexColumn(Width(600),Gap(10), HeightMaximized, Margin(10),MarginTop(20))
+                       new FlexColumn(Width(600),Gap(10), Margin(10),MarginTop(20))
                        {
                            new FlexColumn(MarginLeftRight(3))
                            {

@@ -70,7 +70,7 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
             value             = GetNodes(),
             onSelectionChange = OnSelectionChanged,
             selectionKeys     = SelectedMethodTreeNodeKey,
-            style             = { PrimaryBackground, WidthMaximized, HeightMaximized },
+            style             = { PrimaryBackground, WidthMaximized },
         };
 
         var csscustomizeForTree = new style
@@ -104,17 +104,7 @@ background:#c8d3db !important;
 ")
         };
 
-        //return tree + Padding(5);
-        return new ScrollPanel
-        {
-            className = "custom",
-            style =
-            {
-                Padding(3),
-                Height("calc(100vh - 220px)")
-            },
-            children = { tree, csscustomizeForTree }
-        };
+        return tree + HeightMaximized;
     }
 
     static Element nodeTemplate(MetadataNode node)
