@@ -71,6 +71,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                     }
                 },
 
+               
                 new FlexRow(HeightMaximized)
                 {
                     new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20))
@@ -106,8 +107,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                             AssemblyFilePath          = AssemblyFileFullPath
                         }
                     },
-
-                    new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
+                    When(IsInitializingSelectedMethod,new FlexRowCentered(FlexGrow(1))
+                    {
+                        new LoadingIcon{ wh(100) }
+                    }),
+                    When(!IsInitializingSelectedMethod,()=> new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
                     {
                         new FlexColumn
                         {
@@ -226,7 +230,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 }
                             }
                         }
-                    }
+                    })
                 }
             }
         };
@@ -276,13 +280,25 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
-        state.SelectedMethod = null;
+        state.SelectedMethodTreeNodeKey = e.value;
+        state.SelectedMethodTreeFilter  = e.filter;
+
+        IsInitializingSelectedMethod = true;
+        
+        Client.GotoMethod(OnElementSelected2);
+    }
+
+    public bool IsInitializingSelectedMethod { get; set; }
+    
+    void OnElementSelected2()
+    {
+        IsInitializingSelectedMethod = false;
+        
+        state.SelectedMethod         = null;
 
         state.JsonTextForDotNetInstanceProperties = null;
         state.JsonTextForDotNetMethodParameters   = null;
-
-        state.SelectedMethodTreeNodeKey = e.value;
-        state.SelectedMethodTreeFilter  = e.filter;
+        
 
         var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey);
         if (node is not null)
@@ -333,5 +349,10 @@ class MainWindow : ReactComponent<MainWindowModel>
     void SaveState()
     {
         StateCache.Save(state);
+
+        if (state.SelectedMethod is not null)
+        {
+            StateCache.Save(state.SelectedMethod, state);
+        }
     }
 }
