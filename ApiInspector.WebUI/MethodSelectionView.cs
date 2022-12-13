@@ -70,7 +70,7 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
             value             = GetNodes(),
             onSelectionChange = OnSelectionChanged,
             selectionKeys     = SelectedMethodTreeNodeKey,
-            style             = { PrimaryBackground, WidthMaximized , HeightMaximized }
+            style             = {  WidthMaximized , HeightMaximized }
         };
 
         return tree;
