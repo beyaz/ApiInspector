@@ -265,7 +265,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
-        state.ResponseAsJson = "Attach to 'ApiInspector' process by visual studio or any other ide.";
+        state.ResponseAsJson = null;
         
         if (IsDebugStarted)
         {
@@ -334,7 +334,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
-        state.ResponseAsJson = "Waiting...";
+        state.ResponseAsJson = null;
         
         if (IsExecutionStarted)
         {
