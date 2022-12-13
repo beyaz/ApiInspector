@@ -26,8 +26,10 @@ class MainWindowModel
 
 class MainWindow : ReactComponent<MainWindowModel>
 {
-    public bool IsExecutionStarted { get; set; }
     public bool IsDebugStarted { get; set; }
+    public bool IsExecutionStarted { get; set; }
+
+    public bool IsInitializingSelectedMethod { get; set; }
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
@@ -71,14 +73,13 @@ class MainWindow : ReactComponent<MainWindowModel>
                     }
                 },
 
-               
                 new FlexRow(HeightMaximized)
                 {
                     new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20))
                     {
                         new FlexColumn(MarginLeftRight(3))
                         {
-                            new Label { Text          = "Assembly Directory" },
+                            new Label { Text = "Assembly Directory" },
 
                             new DirectorySelector
                             {
@@ -95,7 +96,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 AssemblyDirectoryPath = state.AssemblyDirectory,
                                 AssemblyFileName      = state.AssemblyFileName,
-                                SelectionChanged      = x => { state.AssemblyFileName = x; SaveState();}
+                                SelectionChanged = x =>
+                                {
+                                    state.AssemblyFileName = x;
+                                    SaveState();
+                                }
                             }
                         },
 
@@ -107,11 +112,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                             AssemblyFilePath          = AssemblyFileFullPath
                         }
                     },
-                    When(IsInitializingSelectedMethod,new FlexRowCentered(FlexGrow(1))
+                    When(IsInitializingSelectedMethod, new FlexRowCentered(FlexGrow(1))
                     {
-                        new LoadingIcon{ wh(100) }
+                        new LoadingIcon { wh(100) }
                     }),
-                    When(!IsInitializingSelectedMethod,()=> new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
+                    When(!IsInitializingSelectedMethod, () => new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
                     {
                         new FlexColumn
                         {
@@ -284,21 +289,18 @@ class MainWindow : ReactComponent<MainWindowModel>
         state.SelectedMethodTreeFilter  = e.filter;
 
         IsInitializingSelectedMethod = true;
-        
-        Client.GotoMethod(OnElementSelected2);
+
+        Client.GotoMethod(OnElementSelected);
     }
 
-    public bool IsInitializingSelectedMethod { get; set; }
-    
-    void OnElementSelected2()
+    void OnElementSelected()
     {
         IsInitializingSelectedMethod = false;
-        
-        state.SelectedMethod         = null;
+
+        state.SelectedMethod = null;
 
         state.JsonTextForDotNetInstanceProperties = null;
         state.JsonTextForDotNetMethodParameters   = null;
-        
 
         var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey);
         if (node is not null)
