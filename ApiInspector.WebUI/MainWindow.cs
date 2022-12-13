@@ -293,7 +293,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         state.ResponseAsJson = null;
 
-        DebugButtonStatusIsSuccess = DebugButtonStatusIsFail = false;
+        ClearActionButtonStates();
 
 
         if (IsDebugStarted)
@@ -312,6 +312,8 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                 state.ResponseAsJson = exception.ToString();
             }
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
         }
         else
         {
@@ -378,14 +380,22 @@ class MainWindow : ReactComponent<MainWindowModel>
     public bool ExecuteButtonStatusIsSuccess { get; set; }
     public bool ExecuteButtonStatusIsFail { get; set; }
 
+    void ClearActionButtonStates()
+    {
+        DebugButtonStatusIsFail    = false;
+        DebugButtonStatusIsSuccess = false;
+
+        ExecuteButtonStatusIsFail    = false;
+        ExecuteButtonStatusIsSuccess = false;
+    }
+    
     void OnExecuteClicked()
     {
         SaveState();
 
         state.ResponseAsJson = null;
 
-        ExecuteButtonStatusIsFail    = 
-        ExecuteButtonStatusIsSuccess = false;
+        ClearActionButtonStates();
 
         if (IsExecutionStarted)
         {
@@ -403,6 +413,8 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                 ExecuteButtonStatusIsFail    = true;
             }
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
         }
         else
         {
