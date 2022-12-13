@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace ApiInspector.WebUI;
 
-static class Extensions
+static partial class Extensions
 {
     public static string BluePrimary => "#1976d2";
     

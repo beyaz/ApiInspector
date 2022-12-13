@@ -9,6 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="ApiInspector.WebUI.Config.json" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Remove="Resources\bug.svg" />
       <None Remove="Resources\Class.svg" />
       <None Remove="Resources\dll.svg" />
@@ -20,6 +24,9 @@
 
     <ItemGroup>
       <Compile Include="..\ApiInspector\FileHelper.cs" Link="FileHelper.cs" />
+      <None Include="ApiInspector.WebUI.Config.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -51,5 +58,8 @@
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     </ItemGroup>
+
+
+    <ProjectExtensions><VisualStudio><UserProperties config_1json__JsonSchema="https://json.schemastore.org/BizTalkServerApplicationSchema.json" /></VisualStudio></ProjectExtensions>
 
 </Project>
