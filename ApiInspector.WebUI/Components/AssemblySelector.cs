@@ -16,11 +16,17 @@ public class AssemblySelector : ReactComponent
 
     protected override Element render()
     {
+        var suggestions = Enumerable.Empty<string>();
+        
+        if (Directory.Exists(AssemblyDirectoryPath))
+        {
+            suggestions= Directory.GetFiles(AssemblyDirectoryPath).Where(x => Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe").Where(x => x?.Contains(Query ?? String.Empty, StringComparison.OrdinalIgnoreCase) == true).Select(Path.GetFileName).Take(7);
+        }
         return new AutoComplete<string>
         {
             value = AssemblyFileName,
 
-            suggestions    = Directory.GetFiles(AssemblyDirectoryPath).Where(x=>Path.GetExtension(x) ==".dll"|| Path.GetExtension(x) == ".exe").Where(x=>x?.Contains(Query??String.Empty,StringComparison.OrdinalIgnoreCase)==true).Select(Path.GetFileName).Take(7),
+            suggestions    = suggestions,
             completeMethod = _ => Query = _.query,
             onChange       = OnChange,
             inputStyle     = { WidthMaximized}
