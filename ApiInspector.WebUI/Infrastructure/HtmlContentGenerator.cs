@@ -28,6 +28,12 @@ sealed class HtmlContentGenerator
 
             "    <!-- Font -->",
             "    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap' media='all'>",
+
+            "    <!-- Styles -->",
+            "    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/primereact.min.css'>",
+            "    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/primeicons@5.0.0/primeicons.css'>",
+            "    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/themes/saga-blue/theme.css'>",
+            
             "</head>",
 
             "<body>",

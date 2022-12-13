@@ -47,7 +47,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         ArrangeEditors();
 
-        var borderColor = "#d5d5d8";
+        const string borderColor = "#d5d5d8";
 
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
@@ -60,10 +60,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             },
             new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"))
             {
-                new link { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/themes/saga-blue/theme.css" },
-                new link { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/primereact.min.css" },
-                new link { rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/primeicons@5.0.0/primeicons.css" },
-
+               
                 new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom($"1px solid {borderColor}"))
                 {
                     new FlexRow(Gap(5))
@@ -268,6 +265,8 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
+        state.ResponseAsJson = "Attach to 'ApiInspector' process by visual studio or any other ide.";
+        
         if (IsDebugStarted)
         {
             IsDebugStarted = false;
@@ -335,6 +334,8 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         SaveState();
 
+        state.ResponseAsJson = "Waiting...";
+        
         if (IsExecutionStarted)
         {
             IsExecutionStarted = false;
