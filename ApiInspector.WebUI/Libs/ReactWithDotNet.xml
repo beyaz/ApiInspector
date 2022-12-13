@@ -54,21 +54,21 @@
                 flexDirection = "row-reverse"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.FontSizeSmall">
-            <summary>
-            style.fontSize = 'small'
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.FontSizeLarge">
             <summary>
-            style.fontSize = 'large'
+                style.fontSize = 'large'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.FontSizeLarger">
             <summary>
-            style.fontSize = 'larger'
-            <br/>
-            Sets the font-size to a larger size than the parent element
+                style.fontSize = 'larger'
+                <br />
+                Sets the font-size to a larger size than the parent element
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FontSizeSmall">
+            <summary>
+                style.fontSize = 'small'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.FontWeightExtraBold">
@@ -88,17 +88,17 @@
         </member>
         <member name="P:ReactWithDotNet.Mixin.Height100vh">
             <summary>
-            style.height = "100vh"
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.Width100vw">
-            <summary>
-            style.width = "100vw"
+                style.height = "100vh"
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.HeightAuto">
             <summary>
                 style.height = "auto"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.HeightMaximized">
+            <summary>
+                height: 100%
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.JustifyContentCenter">
@@ -131,23 +131,6 @@
                 <para>style.justifyContent = "space-evenly"</para>
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.HeightMaximized">
-            <summary>
-                height: 100%
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.WidthMaximized">
-            <summary>
-                width: 100%
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.WidthHeightMaximized">
-            <summary>
-                width: 100%
-                <br />
-                height: 100%
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowHidden">
             <summary>
                 overflow = "hidden"
@@ -160,7 +143,7 @@
         </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowYAuto">
             <summary>
-            overflowY: auto
+                overflowY: auto
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.StretchWidthHeight">
@@ -198,6 +181,23 @@
                 style.textTransform = 'uppercase'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.Width100vw">
+            <summary>
+                style.width = "100vw"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WidthHeightMaximized">
+            <summary>
+                width: 100%
+                <br />
+                height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WidthMaximized">
+            <summary>
+                width: 100%
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Children(System.Collections.Generic.IEnumerable{ReactWithDotNet.Element})">
             <summary>
                 Adds elements to children
@@ -231,18 +231,6 @@
         <member name="M:ReactWithDotNet.Mixin.Id(System.Int32)">
             <summary>
                 initialize id attribute of html element
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.OnScroll(System.String)">
-            <summary>
-            Handler <paramref name="jsMethodName"/> should be in client js codes.<br/>
-            <br/>
-            Sample Usage:<br/>
-            <br/>
-            ReactWithDotNet.RegisterExternalJsObject(<paramref name="jsMethodName"/>, function(e){<br/>
-            ...<br/>
-            ...<br/>
-            });
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Id(System.Int64)">
@@ -347,6 +335,18 @@
                 style.minWidth = minWidth + 'px'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.OnScroll(System.String)">
+            <summary>
+                Handler <paramref name="jsMethodName" /> should be in client js codes.<br />
+                <br />
+                Sample Usage:<br />
+                <br />
+                ReactWithDotNet.RegisterExternalJsObject(<paramref name="jsMethodName" />, function(e){<br />
+                ...<br />
+                ...<br />
+                });
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Opacity(System.String)">
             <summary>
                 style.opacity = <paramref name="opacity" />
@@ -401,6 +401,11 @@
         <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
             <summary>
                 style.textTransform = <paramref name="textTransform" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Title(System.String)">
+            <summary>
+                element.title = title
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.TopBottom(System.Double)">

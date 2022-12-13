@@ -2,6 +2,8 @@
 
 public class ActionButton : ReactComponent
 {
+    public string Title { get; set; }
+    
     public string Label { get; set; }
 
     public bool IsProcessing { get; set; }
@@ -10,7 +12,7 @@ public class ActionButton : ReactComponent
 
     protected override Element render()
     {
-        return new FlexRowCentered
+        return new FlexRowCentered(When(Title.HasValue(),Title(Title)))
         {
             children =
             {
