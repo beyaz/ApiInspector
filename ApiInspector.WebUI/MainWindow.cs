@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ApiInspector.WebUI.Components;
+using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.react_free_scrollbar;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
 
@@ -115,87 +116,97 @@ class MainWindow : ReactComponent<MainWindowModel>
                     }),
                     When(!IsInitializingSelectedMethod, () => new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
                     {
-                        new FlexColumn
+                        new style
                         {
-                            // h e a d e r
-                            new FlexRow(CursorPointer, TextAlignCenter)
-                            {
-                                new Label
-                                {
-                                    Text = "Instance json", style =
-                                    {
-                                        Padding(10),
-                                        FlexGrow(1)
-                                    }
-                                },
 
-                                new Label
-                                {
-                                    Text = "Parameters json", style =
-                                    {
-                                        Padding(10),
-                                        FlexGrow(1)
-                                    }
-                                }
-                            },
-
-                            // c o n t e n t
-                            new FlexRow(WidthHeightMaximized, Gap(5))
-                            {
-                                new FreeScrollBar
-                                {
-                                    Height(300), PaddingBottom(10),
-                                    Border("1px solid #d9d9d9"),
-                                    BorderRadius(3),
-                                    WidthMaximized,
-                                    FlexGrow(1),
-                                    new CodeMirror
-                                    {
-                                        extensions = { "json", "githubLight" },
-                                        valueBind  = () => state.JsonTextForDotNetInstanceProperties,
-                                        basicSetup =
-                                        {
-                                            highlightActiveLine       = false,
-                                            highlightActiveLineGutter = false,
-                                        },
-                                        style =
-                                        {
-                                            BorderRadius(3),
-                                            //Border("1px solid #d9d9d9"),
-                                            FontSize11,
-                                            WidthMaximized
-                                        }
-                                    }
-                                },
-
-                                new FreeScrollBar
-                                {
-                                    Height(300), PaddingBottom(10),
-                                    Border("1px solid #d9d9d9"),
-                                    BorderRadius(3),
-                                    WidthMaximized,
-                                    FlexGrow(1),
-
-                                    new CodeMirror
-                                    {
-                                        extensions = { "json", "githubLight" },
-                                        valueBind  = () => state.JsonTextForDotNetMethodParameters,
-                                        basicSetup =
-                                        {
-                                            highlightActiveLine       = false,
-                                            highlightActiveLineGutter = false,
-                                        },
-                                        style =
-                                        {
-                                            BorderRadius(3),
-                                            //Border("1px solid #d9d9d9"),
-                                            FontSize11,
-                                            WidthMaximized
-                                        }
-                                    }
-                                }
-                            }
+                            text = ".p-splitter-gutter{z-index:9;}"
                         },
+                        new Splitter
+                            {
+                               
+                             new SplitterPanel(PaddingRight(3))
+                             {
+                                    new FlexColumn(AlignItemsCenter)
+                                {
+                                    new Label
+                                    {
+                                        Text = "Instance json", style =
+                                        {
+                                            Padding(10),
+                                            FlexGrow(1)
+                                        }
+                                    },
+                                    new FreeScrollBar
+                                    {
+                                        Height(300), PaddingBottom(10),
+                                        Border("1px solid #d9d9d9"),
+                                        BorderRadius(3),
+                                        WidthMaximized,
+                                        FlexGrow(1),
+                                        new CodeMirror
+                                        {
+                                            extensions = { "json", "githubLight" },
+                                            valueBind  = () => state.JsonTextForDotNetInstanceProperties,
+                                            basicSetup =
+                                            {
+                                                highlightActiveLine       = false,
+                                                highlightActiveLineGutter = false,
+                                            },
+                                            style =
+                                            {
+                                                BorderRadius(3),
+                                                //Border("1px solid #d9d9d9"),
+                                                FontSize11,
+                                                WidthMaximized
+                                            }
+                                        }
+                                    }
+                                },
+                             },
+
+
+                              new SplitterPanel(PaddingLeft(3))
+                              {
+                                  new FlexColumn(AlignItemsCenter)
+                                {
+
+                                    new Label
+                                    {
+                                        Text = "Parameters json", style =
+                                        {
+                                            Padding(10),
+                                            FlexGrow(1)
+                                        }
+                                    },
+                                    new FreeScrollBar
+                                    {
+                                        Height(300), PaddingBottom(10),
+                                        Border("1px solid #d9d9d9"),
+                                        BorderRadius(3),
+                                        WidthMaximized,
+                                        FlexGrow(1),
+
+                                        new CodeMirror
+                                        {
+                                            extensions = { "json", "githubLight" },
+                                            valueBind  = () => state.JsonTextForDotNetMethodParameters,
+                                            basicSetup =
+                                            {
+                                                highlightActiveLine       = false,
+                                                highlightActiveLineGutter = false,
+                                            },
+                                            style =
+                                            {
+                                                BorderRadius(3),
+                                                //Border("1px solid #d9d9d9"),
+                                                FontSize11,
+                                                WidthMaximized
+                                            }
+                                        }
+                                    }
+                                }
+                              }
+                            },
                         new FlexColumn(FlexGrow(1), Gap(10))
                         {
                             new FlexRow(Height(50), Gap(30))
