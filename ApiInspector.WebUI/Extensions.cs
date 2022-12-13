@@ -1,6 +1,4 @@
-﻿
-
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 
 namespace ApiInspector.WebUI;
@@ -8,7 +6,7 @@ namespace ApiInspector.WebUI;
 static partial class Extensions
 {
     public static string BluePrimary => "#1976d2";
-    
+
     public static StyleModifier PrimaryBackground => Background("rgb(249, 249, 249");
 
     public static string GetSvgUrl(string svgFileName)
@@ -41,6 +39,8 @@ static partial class Extensions
             return memoryStream.ToArray();
         }
     }
+
+    public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
 
     public static bool HasValue(this string value) => !string.IsNullOrWhiteSpace(value);
 
