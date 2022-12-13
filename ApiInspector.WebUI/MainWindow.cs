@@ -200,8 +200,20 @@ class MainWindow : ReactComponent<MainWindowModel>
                         {
                             new FlexRow(Height(50), Gap(30))
                             {
-                                new ExecuteButton { Click = OnExecuteClicked, IsProcessing = IsExecutionStarted },
-                                new DebugButton { Click   = OnDebugClicked, IsProcessing   = IsDebugStarted }
+                                new ExecuteButton
+                                {
+                                    Click = OnExecuteClicked, 
+                                    IsProcessing = IsExecutionStarted,
+                                    ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
+                                    ShowStatusAsFail = ExecuteButtonStatusIsFail
+                                },
+                                new DebugButton
+                                {
+                                    Click               = OnDebugClicked, 
+                                    IsProcessing        = IsDebugStarted,
+                                    ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
+                                    ShowStatusAsFail    = DebugButtonStatusIsFail
+                                }
                             },
 
                             new FlexColumn(WidthHeightMaximized)
@@ -261,17 +273,34 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
+    public bool DebugButtonStatusIsSuccess { get; set; }
+    public bool DebugButtonStatusIsFail { get; set; }
+    
     void OnDebugClicked()
     {
         SaveState();
 
         state.ResponseAsJson = null;
-        
+
+        DebugButtonStatusIsSuccess = DebugButtonStatusIsFail = false;
+
+
         if (IsDebugStarted)
         {
             IsDebugStarted = false;
 
-            state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, true);
+            try
+            {
+                state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, true);
+
+                DebugButtonStatusIsSuccess = true;
+            }
+            catch (Exception exception)
+            {
+                DebugButtonStatusIsFail = true;
+
+                state.ResponseAsJson = exception.ToString();
+            }
         }
         else
         {
@@ -330,17 +359,34 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
+    public bool ExecuteButtonStatusIsSuccess { get; set; }
+    public bool ExecuteButtonStatusIsFail { get; set; }
+
     void OnExecuteClicked()
     {
         SaveState();
 
         state.ResponseAsJson = null;
-        
+
+        ExecuteButtonStatusIsFail    = 
+        ExecuteButtonStatusIsSuccess = false;
+
         if (IsExecutionStarted)
         {
             IsExecutionStarted = false;
 
-            state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
+            try
+            {
+                state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
+                
+                ExecuteButtonStatusIsSuccess = true;
+            }
+            catch (Exception exception)
+            {
+                state.ResponseAsJson = exception.ToString();
+
+                ExecuteButtonStatusIsFail    = true;
+            }
         }
         else
         {

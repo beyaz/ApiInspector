@@ -6,8 +6,24 @@ class ExecuteButton : ReactComponent
 
     public bool IsProcessing { get; set; }
 
+    public bool ShowStatusAsFail { get; set; }
+
+    public bool ShowStatusAsSuccess { get; set; }
+
     protected override Element render()
     {
-        return new ActionButton { Label = "Execute", SvgFileName = "play", OnClick = Click, IsProcessing = IsProcessing };
+        var svgFileName = "play";
+
+        if (ShowStatusAsSuccess)
+        {
+            svgFileName = "success";
+        }
+
+        if (ShowStatusAsFail)
+        {
+            svgFileName = "fail";
+        }
+
+        return new ActionButton { Label = "Execute", SvgFileName = svgFileName, OnClick = Click, IsProcessing = IsProcessing };
     }
 }
