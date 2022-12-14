@@ -180,14 +180,10 @@ internal class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
-            if (string.IsNullOrWhiteSpace(jsonForInstance) ||
-                string.IsNullOrWhiteSpace(jsonForInstance.Replace("{", string.Empty).Replace("}", string.Empty)))
+            var (isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, string.IsNullOrWhiteSpace(jsonForInstance) ? null : JToken.Parse(jsonForInstance));
+            if (isSuccessfullyCreated)
             {
-                var (isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, null);
-                if (isSuccessfullyCreated)
-                {
-                    instance = createdInstance;
-                }
+                instance = createdInstance;
             }
 
             if (instance == null)
@@ -242,7 +238,25 @@ internal class Program
         {
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
-            hasNoError = true;
+            var (isProcessed, isSuccess, processedVersionOfInstance) = Plugins.UnwrapResponse(response);
+            if (isProcessed)
+            {
+                response = processedVersionOfInstance;
+                
+                if (isSuccess == null)
+                {
+                    throw new Exception("UnwrapResponse 'isSuccess' return value cannot be null");
+                }
+
+                if (isSuccess == true)
+                {
+                    hasNoError = true;
+                }
+            }
+            else
+            {
+                hasNoError = true;
+            }
 
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings
             {

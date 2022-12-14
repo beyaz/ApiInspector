@@ -12,11 +12,52 @@ static class Plugins
         {
             FullFilePathOfAssembly    = @"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll",
             FullClassName             = "BOA.Orchestration.Card.CCO.TestHelper",
-            SupportedMethods          = new[] { "GetDefaultValueForJson", "TryCreateInstance", "TryDisposeInstance" },
+            SupportedMethods          = new[] { "GetDefaultValueForJson", "TryCreateInstance", "TryDisposeInstance","UnwrapResponse" },
             AssemblySearchDirectories = new[] { @"d:\boa\server\bin\" }
         }
     };
 
+    public static (bool isProcessed, bool? isSuccess, object processedVersionOfInstance) UnwrapResponse(object responseInstance)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
+            {
+                continue;
+            }
+
+            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            if (!plugin.SupportedMethods.Contains(nameof(UnwrapResponse)))
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(UnwrapResponse), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            var response = ((bool isProcessed, bool? isSuccess, object processedVersionOfInstance))methodInfo.Invoke(null, new object[]
+            {
+                responseInstance
+            });
+            if (response.isProcessed)
+            {
+                return response;
+            }
+        }
+
+        return (false, null,null);
+    }
+    
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
         foreach (var plugin in ListOfPlugins)
