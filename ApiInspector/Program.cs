@@ -242,7 +242,7 @@ internal class Program
             if (isProcessed)
             {
                 response = processedVersionOfInstance;
-                
+
                 if (isSuccess == null)
                 {
                     throw new Exception("UnwrapResponse 'isSuccess' return value cannot be null");
@@ -355,7 +355,7 @@ internal class Program
 
     internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
     {
-        return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter,prm.methodFilter);
+        return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
     }
 
     static void WaitForDebuggerAttach()

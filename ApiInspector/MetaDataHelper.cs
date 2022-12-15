@@ -1,21 +1,18 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
+﻿using System.Reflection;
 
 namespace ApiInspector;
 
-class MetadataNode 
+class MetadataNode
 {
-    public string label { get; set; }
+    public List<MetadataNode> children { get; } = new();
     public bool IsClass { get; set; }
     public bool IsMethod { get; set; }
     public bool IsNamespace { get; set; }
+    public string label { get; set; }
+    public MethodReference MethodReference { get; set; }
 
     public string NamespaceReference { get; set; }
-    public MethodReference MethodReference { get; set; }
     public TypeReference TypeReference { get; set; }
-
-    public List<MetadataNode> children { get; } = new();
 }
 
 static class MetadataHelper
@@ -71,7 +68,6 @@ static class MetadataHelper
             }
 
             return items.Take(5).ToList();
-
         }
 
         MetadataNode classToMetaData(Type x)
@@ -94,10 +90,10 @@ static class MetadataHelper
                             classNode.children.Add(ConvertToMetadataNode(m));
                         }
                     }
-                    
+
                     return;
                 }
-                
+
                 classNode.children.Add(ConvertToMetadataNode(m));
             });
 
@@ -110,8 +106,6 @@ static class MetadataHelper
         ReflectionHelper.AttachAssemblyResolver();
         return Assembly.LoadFile(assemblyFilePath);
     }
-
-   
 
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)
     {
@@ -138,18 +132,16 @@ static class MetadataHelper
                         types.Add(type);
                     }
                 }
-                
+
                 return;
             }
+
             types.Add(type);
         }
 
         VisitTypes(assembly, visit);
 
-        
-
         return types;
-
     }
 
     static bool IsValidForExport(MethodInfo methodInfo)
