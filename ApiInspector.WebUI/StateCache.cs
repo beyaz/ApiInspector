@@ -1,11 +1,15 @@
 ﻿using System.IO;
 using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ApiInspector.WebUI;
 
 class StateCache
 {
-    static readonly string CacheDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), nameof(ApiInspector)) +
+   
+    
+
+    public static readonly string CacheDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), nameof(ApiInspector)) +
                                             Path.DirectorySeparatorChar +
                                             "Cache" +
                                             Path.DirectorySeparatorChar;
@@ -97,7 +101,7 @@ class StateCache
 
     static string GetFileName(MethodReference methodReference) => methodReference.ToString().GetHashCode().ToString();
 
-    static void WriteAllText(string path, string contents)
+    public static void WriteAllText(string path, string contents)
     {
         if (!Directory.Exists(Path.GetDirectoryName(path)))
         {

@@ -64,6 +64,5 @@
     </ItemGroup>
 
 
-    <ProjectExtensions><VisualStudio><UserProperties config_1json__JsonSchema="https://json.schemastore.org/BizTalkServerApplicationSchema.json" /></VisualStudio></ProjectExtensions>
-
+   
 </Project>
