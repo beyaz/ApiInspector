@@ -1,22 +1,13 @@
 ﻿using System.IO;
 using System.Text.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ApiInspector.WebUI;
 
 class StateCache
 {
-   
-    
-
-    public static readonly string CacheDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), nameof(ApiInspector)) +
-                                            Path.DirectorySeparatorChar +
-                                            "Cache" +
-                                            Path.DirectorySeparatorChar;
-
     static readonly object fileLock = new();
 
-    static string StateFilePath => Path.Combine(CacheDirectory, @"LastState.json");
+    static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, @"LastState.json");
 
     public static MainWindowModel ReadState()
     {
@@ -56,7 +47,7 @@ class StateCache
                 IgnoreNullValues = true
             });
 
-            WriteAllText(StateFilePath, jsonContent);
+            CacheDirectory.WriteAllText(StateFilePath, jsonContent);
         }
     }
 
@@ -75,7 +66,7 @@ class StateCache
     {
         lock (fileLock)
         {
-            WriteAllText(GetCacheFilePath(fileNameWithoutExtension), jsonContent);
+            CacheDirectory.WriteAllText(GetCacheFilePath(fileNameWithoutExtension), jsonContent);
         }
     }
 
@@ -97,17 +88,7 @@ class StateCache
         }
     }
 
-    static string GetCacheFilePath(string type) => $@"{CacheDirectory}{type}.json";
+    static string GetCacheFilePath(string type) => $@"{CacheDirectory.CacheDirectoryPath}{type}.json";
 
     static string GetFileName(MethodReference methodReference) => methodReference.ToString().GetHashCode().ToString();
-
-    public static void WriteAllText(string path, string contents)
-    {
-        if (!Directory.Exists(Path.GetDirectoryName(path)))
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-        }
-
-        File.WriteAllText(path, contents);
-    }
 }

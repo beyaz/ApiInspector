@@ -5,7 +5,7 @@ namespace ApiInspector.WebUI;
 
 static class HistoryOfSearchDirectories
 {
-    static readonly string filePath = Path.Combine(StateCache.CacheDirectory, $"{nameof(HistoryOfSearchDirectories)}.json");
+    static readonly string filePath = Path.Combine(CacheDirectory.CacheDirectoryPath, $"{nameof(HistoryOfSearchDirectories)}.json");
 
     static readonly List<string> value;
 
@@ -32,7 +32,7 @@ static class HistoryOfSearchDirectories
         
         value.Add(path);
 
-        StateCache.WriteAllText(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
+        CacheDirectory.WriteAllText(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         }));
