@@ -1,63 +1,33 @@
 ﻿using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ApiInspector;
 
+class ConfigInfo
+{
+    public static ConfigInfo Instance
+    {
+        get
+        {
+            const string path = "ApiInspector.Config.json";
+            if (File.Exists(path))
+            {
+                return JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(path));
+            }
+
+            return null;
+        }
+    }
+
+    public IReadOnlyList<PluginInfo> ListOfPlugins { get; set; }
+}
+
 static class Plugins
 {
-    public static readonly IReadOnlyList<PluginInfo> ListOfPlugins = new[]
-    {
-        new PluginInfo
-        {
-            FullFilePathOfAssembly    = @"d:\boa\server\bin\BOA.Orchestration.Card.CCO.dll",
-            FullClassName             = "BOA.Orchestration.Card.CCO.TestHelper",
-            SupportedMethods          = new[] { "GetDefaultValueForJson", "TryCreateInstance", "TryDisposeInstance","UnwrapResponse" },
-            AssemblySearchDirectories = new[] { @"d:\boa\server\bin\" }
-        }
-    };
+    public static readonly IReadOnlyList<PluginInfo> ListOfPlugins = ConfigInfo.Instance?.ListOfPlugins ?? new PluginInfo[] { };
 
-    public static (bool isProcessed, bool? isSuccess, object processedVersionOfInstance) UnwrapResponse(object responseInstance)
-    {
-        foreach (var plugin in ListOfPlugins)
-        {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            if (!plugin.SupportedMethods.Contains(nameof(UnwrapResponse)))
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(UnwrapResponse), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var response = ((bool isProcessed, bool? isSuccess, object processedVersionOfInstance))methodInfo.Invoke(null, new[]
-            {
-                responseInstance
-            });
-            if (response.isProcessed)
-            {
-                return response;
-            }
-        }
-
-        return (false, null,null);
-    }
-    
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
         foreach (var plugin in ListOfPlugins)
@@ -71,11 +41,6 @@ static class Plugins
 
             var helperType = assembly.GetType(plugin.FullClassName);
             if (helperType is null)
-            {
-                continue;
-            }
-
-            if (!plugin.SupportedMethods.Contains(nameof(GetDefaultValueForJson)))
             {
                 continue;
             }
@@ -116,11 +81,6 @@ static class Plugins
                 continue;
             }
 
-            if (!plugin.SupportedMethods.Contains(nameof(TryCreateInstance)))
-            {
-                continue;
-            }
-
             var methodInfo = helperType.GetMethod(nameof(TryCreateInstance), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo is null)
             {
@@ -154,11 +114,6 @@ static class Plugins
                 continue;
             }
 
-            if (!plugin.SupportedMethods.Contains(nameof(TryDisposeInstance)))
-            {
-                continue;
-            }
-
             var methodInfo = helperType.GetMethod(nameof(TryDisposeInstance), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo is null)
             {
@@ -178,6 +133,42 @@ static class Plugins
 
         return false;
     }
+
+    public static (bool isProcessed, bool? isSuccess, object processedVersionOfInstance) UnwrapResponse(object responseInstance)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
+            {
+                continue;
+            }
+
+            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(UnwrapResponse), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            var response = ((bool isProcessed, bool? isSuccess, object processedVersionOfInstance))methodInfo.Invoke(null, new[]
+            {
+                responseInstance
+            });
+            if (response.isProcessed)
+            {
+                return response;
+            }
+        }
+
+        return (false, null, null);
+    }
 }
 
 public sealed class PluginInfo
@@ -185,5 +176,4 @@ public sealed class PluginInfo
     public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
     public string FullClassName { get; set; }
     public string FullFilePathOfAssembly { get; set; }
-    public IReadOnlyList<string> SupportedMethods { get; set; }
 }

@@ -1,0 +1,11 @@
+﻿{
+    "ListOfPlugins": [
+        {
+            "FullFilePathOfAssembly": "d:\\boa\\server\\bin\\BOA.Orchestration.Card.CCO.dll",
+            "FullClassName": "BOA.Orchestration.Card.CCO.TestHelper",
+            "AssemblySearchDirectories": [
+                "d:\\boa\\server\\bin\\"
+            ]
+        }
+    ]
+}
