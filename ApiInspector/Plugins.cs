@@ -45,7 +45,7 @@ static class Plugins
                 continue;
             }
 
-            var response = ((bool isProcessed, bool? isSuccess, object processedVersionOfInstance))methodInfo.Invoke(null, new object[]
+            var response = ((bool isProcessed, bool? isSuccess, object processedVersionOfInstance))methodInfo.Invoke(null, new[]
             {
                 responseInstance
             });
