@@ -11,7 +11,7 @@ class DebugButton : ReactComponent
     public bool ShowStatusAsFail { get; set; }
 
     public bool ShowStatusAsSuccess { get; set; }
-    
+
     protected override Element render()
     {
         var svgFileName = "bug";

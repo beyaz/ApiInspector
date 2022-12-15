@@ -103,10 +103,10 @@ static class AssemblyModelHelper
     {
         return new TypeReference
         {
-            FullName = x.FullName,
-            Name = GetName(x),
+            FullName      = x.FullName,
+            Name          = GetName(x),
             NamespaceName = x.Namespace,
-            Assembly = x.Assembly.AsReference()
+            Assembly      = x.Assembly.AsReference()
         };
 
         static string GetName(Type x)
@@ -122,11 +122,9 @@ static class AssemblyModelHelper
 
     public static MethodReference AsReference(this MethodInfo methodInfo)
     {
-
-
         return new MethodReference
         {
-            Name = methodInfo.Name,
+            Name     = methodInfo.Name,
             IsStatic = methodInfo.IsStatic,
             FullNameWithoutReturnType = string.Join(string.Empty, new List<string>
             {
@@ -138,16 +136,15 @@ static class AssemblyModelHelper
             MetadataToken = methodInfo.MetadataToken,
 
             DeclaringType = methodInfo.DeclaringType.AsReference(),
-            Parameters = methodInfo.GetParameters().Select(AsReference).ToList()
+            Parameters    = methodInfo.GetParameters().Select(AsReference).ToList()
         };
-
     }
 
     public static ParameterReference AsReference(this ParameterInfo parameterInfo)
     {
         return new ParameterReference
         {
-            Name = parameterInfo.Name,
+            Name          = parameterInfo.Name,
             ParameterType = parameterInfo.ParameterType.AsReference()
         };
     }

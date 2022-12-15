@@ -28,7 +28,29 @@ static class FileHelper
 
         File.Delete(FilePath.Input);
 
-        return JsonConvert.DeserializeObject(inputAsJson,type);
+        return JsonConvert.DeserializeObject(inputAsJson, type);
+    }
+
+    public static string ReadResponse()
+    {
+        var filePath = FilePath.ResponseSuccess;
+
+        while (true)
+        {
+            if (File.Exists(filePath))
+            {
+                if (!IsFileLocked(filePath))
+                {
+                    var response = File.ReadAllText(filePath);
+
+                    File.Delete(filePath);
+
+                    return response;
+                }
+            }
+
+            Thread.Sleep(100);
+        }
     }
 
     public static string TakeResponseAsFail()
@@ -51,7 +73,21 @@ static class FileHelper
 
             Thread.Sleep(100);
         }
+    }
 
+    public static void WriteFail(Exception exception)
+    {
+        File.WriteAllText(FilePath.ResponseFail, exception.ToString());
+    }
+
+    public static void WriteInput(string inputAsJson)
+    {
+        File.WriteAllText(FilePath.Input, inputAsJson);
+    }
+
+    public static void WriteSuccessResponse(string responseAsJson)
+    {
+        File.WriteAllText(FilePath.ResponseSuccess, responseAsJson);
     }
 
     static bool IsFileLocked(string path)
@@ -76,50 +112,11 @@ static class FileHelper
 
         return false;
     }
-    public static string ReadResponse()
-    {
-        var filePath = FilePath.ResponseSuccess;
-
-        while (true)
-        {
-            if (File.Exists(filePath))
-            {
-                if (!IsFileLocked(filePath))
-                {
-                    var response = File.ReadAllText(filePath);
-
-                    File.Delete(filePath);
-
-                    return response;
-                }
-            }
-
-            Thread.Sleep(100);
-        }
-
-     
-    }
-
-    public static void WriteFail(Exception exception)
-    {
-        File.WriteAllText(FilePath.ResponseFail, exception.ToString());
-    }
-
-    public static void WriteInput(string inputAsJson)
-    {
-        File.WriteAllText(FilePath.Input, inputAsJson);
-    }
-
-    public static void WriteSuccessResponse(string responseAsJson)
-    {
-        File.WriteAllText(FilePath.ResponseSuccess, responseAsJson);
-    }
 
     static class FilePath
     {
-        public static string ResponseFail => WorkingDirectory + @"ApiInspector.ResponseFail.json";
-        
         public static string Input => WorkingDirectory + @"ApiInspector.Input.json";
+        public static string ResponseFail => WorkingDirectory + @"ApiInspector.ResponseFail.json";
 
         public static string ResponseSuccess => WorkingDirectory + @"ApiInspector.ResponseSuccess.json";
     }

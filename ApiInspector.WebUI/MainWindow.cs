@@ -12,26 +12,29 @@ class MainWindowModel
 
     public string AssemblyFileName { get; set; }
 
+    public string ClassFilter { get; set; }
+
     public string JsonTextForDotNetInstanceProperties { get; set; }
 
     public string JsonTextForDotNetMethodParameters { get; set; }
+
+    public string MethodFilter { get; set; }
 
     public string ResponseAsJson { get; set; }
 
     public MethodReference SelectedMethod { get; set; }
 
-    public string MethodFilter { get; set; }
-
-    public string ClassFilter { get; set; }
-
     public string SelectedMethodTreeNodeKey { get; set; }
-
-    
-
 }
 
 class MainWindow : ReactComponent<MainWindowModel>
 {
+    public bool DebugButtonStatusIsFail { get; set; }
+
+    public bool DebugButtonStatusIsSuccess { get; set; }
+    public bool ExecuteButtonStatusIsFail { get; set; }
+
+    public bool ExecuteButtonStatusIsSuccess { get; set; }
     public bool IsDebugStarted { get; set; }
     public bool IsExecutionStarted { get; set; }
 
@@ -43,17 +46,12 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         state = StateCache.ReadState() ?? new MainWindowModel
         {
-            AssemblyDirectory        = Path.GetDirectoryName(Config.DotNetFrameworkInvokerExePath) + Path.DirectorySeparatorChar,
-            AssemblyFileName         = "ApiInspector.exe",
-            MethodFilter = "GetHelpMessage"
+            AssemblyDirectory = Path.GetDirectoryName(Config.DotNetFrameworkInvokerExePath) + Path.DirectorySeparatorChar,
+            AssemblyFileName  = "ApiInspector.exe",
+            MethodFilter      = "GetHelpMessage"
         };
     }
 
-    void OnFilterTextKeypressCompleted()
-    {
-        
-    }
-    
     protected override Element render()
     {
         ArrangeEditors();
@@ -69,9 +67,8 @@ class MainWindow : ReactComponent<MainWindowModel>
     outline: none;
 }"
             },
-            new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"))
+            new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"),BorderRadius(3))
             {
-               
                 new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom($"1px solid {borderColor}"))
                 {
                     new FlexRow(Gap(5))
@@ -117,9 +114,9 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                             new InputText
                             {
-                                valueBind                = ()=>state.ClassFilter,
-                                valueBindDebounceTimeout =700,
-                                valueBindDebounceHandler =OnFilterTextKeypressCompleted
+                                valueBind                = () => state.ClassFilter,
+                                valueBindDebounceTimeout = 700,
+                                valueBindDebounceHandler = OnFilterTextKeypressCompleted
                             }
                         },
                         new FlexColumn(MarginLeftRight(3))
@@ -128,16 +125,16 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                             new InputText
                             {
-                                valueBind                = ()=>state.MethodFilter,
-                                valueBindDebounceTimeout =700,
-                                valueBindDebounceHandler =OnFilterTextKeypressCompleted
+                                valueBind                = () => state.MethodFilter,
+                                valueBindDebounceTimeout = 700,
+                                valueBindDebounceHandler = OnFilterTextKeypressCompleted
                             }
                         },
 
                         new MethodSelectionView
                         {
-                            ClassFilter=state.ClassFilter,
-                            MethodFilter                    = state.MethodFilter,
+                            ClassFilter               = state.ClassFilter,
+                            MethodFilter              = state.MethodFilter,
                             SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                             SelectionChanged          = OnElementSelected,
                             AssemblyFilePath          = AssemblyFileFullPath
@@ -151,15 +148,13 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         new style
                         {
-
                             text = ".p-splitter-gutter{z-index:9;}"
                         },
                         new Splitter
+                        {
+                            new SplitterPanel(PaddingRight(3))
                             {
-                               
-                             new SplitterPanel(PaddingRight(3))
-                             {
-                                    new FlexColumn(AlignItemsCenter)
+                                new FlexColumn(AlignItemsCenter)
                                 {
                                     new Label
                                     {
@@ -195,14 +190,12 @@ class MainWindow : ReactComponent<MainWindowModel>
                                         }
                                     }
                                 },
-                             },
+                            },
 
-
-                              new SplitterPanel(PaddingLeft(3))
-                              {
-                                  new FlexColumn(AlignItemsCenter)
+                            new SplitterPanel(PaddingLeft(3))
+                            {
+                                new FlexColumn(AlignItemsCenter)
                                 {
-
                                     new Label
                                     {
                                         Text = "Parameters json", style =
@@ -238,22 +231,22 @@ class MainWindow : ReactComponent<MainWindowModel>
                                         }
                                     }
                                 }
-                              }
-                            },
+                            }
+                        },
                         new FlexColumn(FlexGrow(1), Gap(10))
                         {
                             new FlexRow(Height(50), Gap(30))
                             {
                                 new ExecuteButton
                                 {
-                                    Click = OnExecuteClicked, 
-                                    IsProcessing = IsExecutionStarted,
+                                    Click               = OnExecuteClicked,
+                                    IsProcessing        = IsExecutionStarted,
                                     ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
-                                    ShowStatusAsFail = ExecuteButtonStatusIsFail
+                                    ShowStatusAsFail    = ExecuteButtonStatusIsFail
                                 },
                                 new DebugButton
                                 {
-                                    Click               = OnDebugClicked, 
+                                    Click               = OnDebugClicked,
                                     IsProcessing        = IsDebugStarted,
                                     ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
                                     ShowStatusAsFail    = DebugButtonStatusIsFail
@@ -317,9 +310,15 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
-    public bool DebugButtonStatusIsSuccess { get; set; }
-    public bool DebugButtonStatusIsFail { get; set; }
-    
+    void ClearActionButtonStates()
+    {
+        DebugButtonStatusIsFail    = false;
+        DebugButtonStatusIsSuccess = false;
+
+        ExecuteButtonStatusIsFail    = false;
+        ExecuteButtonStatusIsSuccess = false;
+    }
+
     void OnDebugClicked()
     {
         SaveState();
@@ -327,7 +326,6 @@ class MainWindow : ReactComponent<MainWindowModel>
         state.ResponseAsJson = null;
 
         ClearActionButtonStates();
-
 
         if (IsDebugStarted)
         {
@@ -403,24 +401,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                     state.ResponseAsJson = exception.ToString();
                 }
             }
-            
 
             ArrangeEditors();
         }
     }
 
-    public bool ExecuteButtonStatusIsSuccess { get; set; }
-    public bool ExecuteButtonStatusIsFail { get; set; }
-
-    void ClearActionButtonStates()
-    {
-        DebugButtonStatusIsFail    = false;
-        DebugButtonStatusIsSuccess = false;
-
-        ExecuteButtonStatusIsFail    = false;
-        ExecuteButtonStatusIsSuccess = false;
-    }
-    
     void OnExecuteClicked()
     {
         SaveState();
@@ -436,14 +421,14 @@ class MainWindow : ReactComponent<MainWindowModel>
             try
             {
                 state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
-                
+
                 ExecuteButtonStatusIsSuccess = true;
             }
             catch (Exception exception)
             {
                 state.ResponseAsJson = exception.ToString();
 
-                ExecuteButtonStatusIsFail    = true;
+                ExecuteButtonStatusIsFail = true;
             }
 
             Client.GotoMethod(2000, ClearActionButtonStates);
@@ -455,10 +440,14 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
+    void OnFilterTextKeypressCompleted()
+    {
+    }
+
     void SaveState()
     {
         HistoryOfSearchDirectories.AddIfNotExists(state.AssemblyDirectory);
-        
+
         StateCache.Save(state);
 
         if (state.SelectedMethod is not null)

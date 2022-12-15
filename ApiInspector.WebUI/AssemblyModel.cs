@@ -122,12 +122,10 @@ static class AssemblyModelHelper
 
     public static MethodReference AsReference(this MethodInfo methodInfo)
     {
-       
-
         return new MethodReference
         {
-            Name                      = methodInfo.Name,
-            IsStatic                  = methodInfo.IsStatic,
+            Name     = methodInfo.Name,
+            IsStatic = methodInfo.IsStatic,
             FullNameWithoutReturnType = string.Join(string.Empty, new List<string>
             {
                 methodInfo.Name,
@@ -135,12 +133,11 @@ static class AssemblyModelHelper
                 string.Join(", ", methodInfo.GetParameters().Select(parameterInfo => parameterInfo.ParameterType.Name + " " + parameterInfo.Name)),
                 ")"
             }),
-            MetadataToken             = methodInfo.MetadataToken,
+            MetadataToken = methodInfo.MetadataToken,
 
             DeclaringType = methodInfo.DeclaringType.AsReference(),
             Parameters    = methodInfo.GetParameters().Select(AsReference).ToList()
         };
-
     }
 
     public static ParameterReference AsReference(this ParameterInfo parameterInfo)

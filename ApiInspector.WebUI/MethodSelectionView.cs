@@ -1,30 +1,25 @@
 ﻿using System.IO;
 using ReactWithDotNet.Libraries.PrimeReact;
 
-
 namespace ApiInspector.WebUI;
 
 class MetadataNode : TreeNode
 {
+    public List<MetadataNode> children { get; } = new();
     public bool IsClass { get; set; }
     public bool IsMethod { get; set; }
     public bool IsNamespace { get; set; }
-    
-    public string NamespaceReference { get; set; }
     public MethodReference MethodReference { get; set; }
+
+    public string NamespaceReference { get; set; }
     public TypeReference TypeReference { get; set; }
-
-    public List<MetadataNode> children { get; } = new();
-
 }
-
-
 
 class MethodSelectionView : ReactComponent
 {
-    public int Width { get; set; }
-    
     public string AssemblyFilePath { get; set; }
+
+    public string ClassFilter { get; set; }
 
     public string MethodFilter { get; set; }
 
@@ -33,7 +28,7 @@ class MethodSelectionView : ReactComponent
     [ReactCustomEvent]
     public Action<string> SelectionChanged { get; set; }
 
-    public string ClassFilter { get; set; }
+    public int Width { get; set; }
 
     public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey)
     {
@@ -47,12 +42,10 @@ class MethodSelectionView : ReactComponent
             return null;
         }
 
-        var nodes = External.GetMetadataNodes(AssemblyFilePath,classFilter: null,methodFilter: null).ToArray();
+        var nodes = External.GetMetadataNodes(AssemblyFilePath, classFilter: null, methodFilter: null).ToArray();
 
         return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }
-
-   
 
     protected override Element render()
     {
@@ -62,7 +55,7 @@ class MethodSelectionView : ReactComponent
             value             = GetNodes(),
             onSelectionChange = OnSelectionChanged,
             selectionKeys     = SelectedMethodTreeNodeKey,
-            style             = {  WidthMaximized , HeightMaximized }
+            style             = { WidthMaximized, HeightMaximized }
         };
 
         return tree;
@@ -103,14 +96,11 @@ class MethodSelectionView : ReactComponent
         return new div();
     }
 
-  
-
-
     IEnumerable<MetadataNode> GetNodes()
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
-            return External.GetMetadataNodes(AssemblyFilePath,ClassFilter, MethodFilter);
+            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter);
         }
 
         return new List<MetadataNode>();

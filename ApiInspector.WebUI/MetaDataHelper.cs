@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
+﻿using System.Reflection;
 
 namespace ApiInspector.WebUI;
 
@@ -80,10 +78,9 @@ static class MetadataHelper
         {
             return Assembly.GetEntryAssembly();
         }
+
         return Assembly.LoadFile(assemblyFilePath);
     }
-
-
 
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)
     {

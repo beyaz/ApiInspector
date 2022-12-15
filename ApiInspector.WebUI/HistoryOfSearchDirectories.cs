@@ -29,7 +29,7 @@ static class HistoryOfSearchDirectories
         {
             return;
         }
-        
+
         value.Add(path);
 
         CacheDirectory.WriteAllText(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
