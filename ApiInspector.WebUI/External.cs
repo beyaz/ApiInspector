@@ -10,9 +10,9 @@ static class External
         return Execute<(string jsonForInstance, string jsonForParameters)>(nameof(GetEditorTexts), (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters)).Unwrap();
     }
 
-    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath)
+    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter,string methodFilter)
     {
-        return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), assemblyFilePath).Unwrap();
+        return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), (assemblyFilePath,classFilter, methodFilter)).Unwrap();
     }
 
     public static string InvokeMethod(string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)

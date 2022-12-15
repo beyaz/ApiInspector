@@ -48,11 +48,11 @@ static class MetadataHelper
         return returnMethodInfo;
     }
 
-    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath)
+    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
-        return getNamespaceNodes(GetAllTypes(LoadAssembly(assemblyFilePath)));
+        return getNamespaceNodes(GetAllTypes(LoadAssembly(assemblyFilePath), classFilter));
 
-        static IReadOnlyList<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
+        IReadOnlyList<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
         {
             var items = new List<MetadataNode>();
 
@@ -65,15 +65,16 @@ static class MetadataHelper
                     label              = namespaceName
                 };
 
-                nodeForNamespace.children.AddRange(types.Where(x => x.Namespace == namespaceName).Select(classToMetaData));
+                nodeForNamespace.children.AddRange(types.Where(x => x.Namespace == namespaceName).Take(5).Select(classToMetaData));
 
                 items.Add(nodeForNamespace);
             }
 
-            return items;
+            return items.Take(5).ToList();
+
         }
 
-        static MetadataNode classToMetaData(Type x)
+        MetadataNode classToMetaData(Type x)
         {
             var classNode = new MetadataNode
             {
@@ -82,7 +83,23 @@ static class MetadataHelper
                 label         = x.Name
             };
 
-            VisitMethods(x, m => { classNode.children.Add(ConvertToMetadataNode(m)); });
+            VisitMethods(x, m =>
+            {
+                if (!string.IsNullOrWhiteSpace(methodFilter))
+                {
+                    if (classNode.children.Count < 5)
+                    {
+                        if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            classNode.children.Add(ConvertToMetadataNode(m));
+                        }
+                    }
+                    
+                    return;
+                }
+                
+                classNode.children.Add(ConvertToMetadataNode(m));
+            });
 
             return classNode;
         }
@@ -106,15 +123,33 @@ static class MetadataHelper
         };
     }
 
-    static List<Type> GetAllTypes(Assembly assembly)
+    static List<Type> GetAllTypes(Assembly assembly, string classFilter)
     {
         var types = new List<Type>();
 
-        void visit(Type type) => types.Add(type);
+        void visit(Type type)
+        {
+            if (!string.IsNullOrWhiteSpace(classFilter))
+            {
+                if (type.Name.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (types.Count < 5)
+                    {
+                        types.Add(type);
+                    }
+                }
+                
+                return;
+            }
+            types.Add(type);
+        }
 
         VisitTypes(assembly, visit);
 
+        
+
         return types;
+
     }
 
     static bool IsValidForExport(MethodInfo methodInfo)

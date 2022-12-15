@@ -20,9 +20,14 @@ class MainWindowModel
 
     public MethodReference SelectedMethod { get; set; }
 
-    public string SelectedMethodTreeFilter { get; set; }
+    public string MethodFilter { get; set; }
+
+    public string ClassFilter { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
+
+    
+
 }
 
 class MainWindow : ReactComponent<MainWindowModel>
@@ -40,10 +45,15 @@ class MainWindow : ReactComponent<MainWindowModel>
         {
             AssemblyDirectory        = Path.GetDirectoryName(Config.DotNetFrameworkInvokerExePath) + Path.DirectorySeparatorChar,
             AssemblyFileName         = "ApiInspector.exe",
-            SelectedMethodTreeFilter = "GetHelpMessage"
+            MethodFilter = "GetHelpMessage"
         };
     }
 
+    void OnFilterTextKeypressCompleted()
+    {
+        
+    }
+    
     protected override Element render()
     {
         ArrangeEditors();
@@ -101,10 +111,33 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 }
                             }
                         },
+                        new FlexColumn(MarginLeftRight(3))
+                        {
+                            new Label { Text = "Filter by class name" },
+
+                            new InputText
+                            {
+                                valueBind                = ()=>state.ClassFilter,
+                                valueBindDebounceTimeout =700,
+                                valueBindDebounceHandler =OnFilterTextKeypressCompleted
+                            }
+                        },
+                        new FlexColumn(MarginLeftRight(3))
+                        {
+                            new Label { Text = "Filter by method name" },
+
+                            new InputText
+                            {
+                                valueBind                = ()=>state.MethodFilter,
+                                valueBindDebounceTimeout =700,
+                                valueBindDebounceHandler =OnFilterTextKeypressCompleted
+                            }
+                        },
 
                         new MethodSelectionView
                         {
-                            Filter                    = state.SelectedMethodTreeFilter,
+                            ClassFilter=state.ClassFilter,
+                            MethodFilter                    = state.MethodFilter,
                             SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                             SelectionChanged          = OnElementSelected,
                             AssemblyFilePath          = AssemblyFileFullPath
@@ -322,12 +355,11 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
-    void OnElementSelected((string value, string filter) e)
+    void OnElementSelected(string keyOfSelectedTreeNode)
     {
         SaveState();
 
-        state.SelectedMethodTreeNodeKey = e.value;
-        state.SelectedMethodTreeFilter  = e.filter;
+        state.SelectedMethodTreeNodeKey = keyOfSelectedTreeNode;
 
         IsInitializingSelectedMethod = true;
 

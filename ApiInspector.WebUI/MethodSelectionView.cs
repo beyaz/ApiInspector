@@ -18,23 +18,22 @@ class MetadataNode : TreeNode
 
 }
 
-class MethodSelectionModel
-{
-    public string Filter { get; set; }
-}
 
-class MethodSelectionView : ReactComponent<MethodSelectionModel>
+
+class MethodSelectionView : ReactComponent
 {
     public int Width { get; set; }
     
     public string AssemblyFilePath { get; set; }
 
-    public string Filter { get; set; }
+    public string MethodFilter { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
 
     [ReactCustomEvent]
-    public Action<(string value, string filter)> SelectionChanged { get; set; }
+    public Action<string> SelectionChanged { get; set; }
+
+    public string ClassFilter { get; set; }
 
     public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey)
     {
@@ -48,24 +47,17 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
             return null;
         }
 
-        var nodes = External.GetMetadataNodes(AssemblyFilePath).ToArray();
+        var nodes = External.GetMetadataNodes(AssemblyFilePath,classFilter: null,methodFilter: null).ToArray();
 
         return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }
 
-    protected override void constructor()
-    {
-        state = new MethodSelectionModel { Filter = Filter };
-    }
+   
 
     protected override Element render()
     {
         var tree = new SingleSelectionTree<MetadataNode>
         {
-            filterValueBind   = () => state.Filter,
-            filter            = true,
-            filterBy          = nameof(MetadataNode.label),
-            filterPlaceholder = "Search react components or methods which returns Element",
             nodeTemplate      = nodeTemplate,
             value             = GetNodes(),
             onSelectionChange = OnSelectionChanged,
@@ -116,12 +108,9 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
 
     IEnumerable<MetadataNode> GetNodes()
     {
-
-
-        
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
-            return External.GetMetadataNodes(AssemblyFilePath);
+            return External.GetMetadataNodes(AssemblyFilePath,ClassFilter, MethodFilter);
         }
 
         return new List<MetadataNode>();
@@ -129,6 +118,6 @@ class MethodSelectionView : ReactComponent<MethodSelectionModel>
 
     void OnSelectionChanged(SingleSelectionTreeSelectionParams e)
     {
-        DispatchEvent(() => SelectionChanged, (e.value, state.Filter));
+        DispatchEvent(() => SelectionChanged, e.value);
     }
 }

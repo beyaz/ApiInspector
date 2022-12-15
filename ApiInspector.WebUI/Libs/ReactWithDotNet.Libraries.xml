@@ -168,6 +168,22 @@
                 Callback to invoke on value change
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputText.valueBindDebounceHandler">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputText.valueBindDebounceTimeout">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Libraries.PrimeReact.InputText.keyfilter">
             <summary>
             Format definition of the keys to block.

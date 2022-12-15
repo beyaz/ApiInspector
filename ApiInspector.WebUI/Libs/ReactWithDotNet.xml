@@ -1285,6 +1285,22 @@
                 Adds given cssClassName ot class attribute of html element
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.input.onBlur">
             <summary>
                 Occurs when an element loses focus.

@@ -353,9 +353,9 @@ internal class Program
         }
     }
 
-    internal static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath)
+    internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
     {
-        return MetadataHelper.GetMetadataNodes(assemblyFilePath);
+        return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter,prm.methodFilter);
     }
 
     static void WaitForDebuggerAttach()
