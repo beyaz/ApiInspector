@@ -30,7 +30,7 @@ class MethodSelectionView : ReactComponent
 
     public int Width { get; set; }
 
-    public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey)
+    public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter,string methodFilter)
     {
         if (string.IsNullOrWhiteSpace(AssemblyFilePath) || string.IsNullOrWhiteSpace(treeNodeKey))
         {
@@ -42,7 +42,7 @@ class MethodSelectionView : ReactComponent
             return null;
         }
 
-        var nodes = External.GetMetadataNodes(AssemblyFilePath, classFilter: null, methodFilter: null).ToArray();
+        var nodes = External.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter).ToArray();
 
         return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }

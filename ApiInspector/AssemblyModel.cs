@@ -213,10 +213,19 @@ static class AssemblyModelHelper
 
     public static void VisitMethods(this Type type, Action<MethodInfo> visitAction)
     {
-        const BindingFlags AllFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-
-        foreach (var methodInfo in type.GetMethods(AllFlags))
+        var flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        if (type.IsStaticClass())
         {
+            flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        }
+        
+        foreach (var methodInfo in type.GetMethods(flags))
+        {
+            if (methodInfo.DeclaringType == typeof(object))
+            {
+                continue;
+            }
+            
             visitAction(methodInfo);
         }
     }

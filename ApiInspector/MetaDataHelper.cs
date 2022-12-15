@@ -62,7 +62,7 @@ static class MetadataHelper
                     label              = namespaceName
                 };
 
-                nodeForNamespace.children.AddRange(types.Where(x => x.Namespace == namespaceName).Take(5).Select(classToMetaData));
+                nodeForNamespace.children.AddRange(types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).OrderByDescending(classNode => classNode.children.Count > 0).Take(5));
 
                 items.Add(nodeForNamespace);
             }
@@ -151,7 +151,12 @@ static class MetadataHelper
             return false;
         }
 
-        if (methodInfo.Name.StartsWith("get_") || methodInfo.Name.StartsWith("set_"))
+        if (methodInfo.Name.StartsWith("set_"))
+        {
+            return false;
+        }
+
+        if (methodInfo.Name.StartsWith("get_") && !methodInfo.IsStatic)
         {
             return false;
         }
@@ -161,31 +166,10 @@ static class MetadataHelper
             return false;
         }
 
-        // is function component
-        //if (methodInfo.ReturnType == typeof(Element) || methodInfo.ReturnType.IsSubclassOf(typeof(Element)))
-        {
-            return true;
-        }
-
-        return false;
+        return true;
 
         static bool isNotValidForJson(Type t)
         {
-            //if (t == typeof(Element) || t.BaseType == typeof(HtmlElement))
-            //{
-            //    return true;
-            //}
-
-            //if (typeof(Element).IsAssignableFrom(t.BaseType))
-            //{
-            //    return true;
-            //}
-
-            //if (typeof(ReactStatefulComponent).IsAssignableFrom(t.BaseType))
-            //{
-            //    return true;
-            //}
-
             if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
             {
                 return true;
@@ -208,24 +192,6 @@ static class MetadataHelper
 
     static void VisitTypes(Assembly assembly, Action<Type> visit)
     {
-        assembly.VisitTypes(type =>
-        {
-            if (isValidForExport(type))
-            {
-                visit(type);
-            }
-        });
-
-        static bool isValidForExport(Type type)
-        {
-            if (type.IsAbstract)
-            {
-                return false;
-            }
-
-            return true;
-
-            //return type.IsSubclassOf(typeof(ReactStatefulComponent));
-        }
+        assembly.VisitTypes(visit);
     }
 }

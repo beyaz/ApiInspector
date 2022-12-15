@@ -92,6 +92,11 @@ static class FileHelper
 
     static bool IsFileLocked(string path)
     {
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+        
         FileStream stream = null;
         try
         {
