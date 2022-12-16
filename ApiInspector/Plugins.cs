@@ -1,28 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ApiInspector;
-
-class ConfigInfo
-{
-    public static ConfigInfo Instance
-    {
-        get
-        {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? string.Empty, "ApiInspector.Config.json");
-            if (File.Exists(path))
-            {
-                return JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(path));
-            }
-
-            return null;
-        }
-    }
-
-    public IReadOnlyList<PluginInfo> ListOfPlugins { get; set; }
-}
 
 static class Plugins
 {
@@ -174,6 +154,8 @@ static class Plugins
 public sealed class PluginInfo
 {
     public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
+    
     public string FullClassName { get; set; }
+    
     public string FullFilePathOfAssembly { get; set; }
 }

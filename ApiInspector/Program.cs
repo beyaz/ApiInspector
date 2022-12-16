@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static ApiInspector.ProcessHelper;
 
 namespace ApiInspector;
 
@@ -275,26 +276,14 @@ internal class Program
         }
     }
 
-    public static void KillAllNamedProcess(string processName)
-    {
-        foreach (var process in Process.GetProcessesByName(processName))
-        {
-            if (Process.GetCurrentProcess().Id != process.Id)
-            {
-                process.Kill();
-            }
-        }
-    }
+   
 
     public static void Main(string[] args)
     {
         ReflectionHelper.AttachAssemblyResolver();
 
-        //WaitForDebuggerAttach();
-
         KillAllNamedProcess(nameof(ApiInspector));
-
-        //args = new[] { @"GetMetadataNodes|d:\boa\server\bin\BOA.Types.ERP.PersonRelation.dll" };
+        
         try
         {
             if (args == null)

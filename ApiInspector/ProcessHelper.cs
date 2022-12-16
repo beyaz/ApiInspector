@@ -1,6 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace ApiInspector.WebUI;
+namespace ApiInspector;
 
 static class ProcessHelper
 {

@@ -5,13 +5,19 @@ namespace ApiInspector;
 class MetadataNode
 {
     public List<MetadataNode> children { get; } = new();
+    
     public bool IsClass { get; set; }
+    
     public bool IsMethod { get; set; }
+    
     public bool IsNamespace { get; set; }
+    
     public string label { get; set; }
+    
     public MethodReference MethodReference { get; set; }
 
     public string NamespaceReference { get; set; }
+    
     public TypeReference TypeReference { get; set; }
 }
 
