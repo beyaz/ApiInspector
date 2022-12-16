@@ -1,5 +1,5 @@
 ﻿{
-    "DotNetFrameworkInvokerExePath": "D:\\work\\git\\ApiInspector\\ApiInspector\\bin\\Debug\\ApiInspector.exe",
+    "DotNetFrameworkInvokerExePath": "D:\\work\\git\\ApiInspector\\ApiInspector.NetFramework\\bin\\Debug\\ApiInspector.exe",
     "BrowserExePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
     "BrowserExeArguments": "--app=https://localhost:{Port}/",
     "HideConsoleWindow": true,

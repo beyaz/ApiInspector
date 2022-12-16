@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Include="..\ApiInspector\FileHelper.cs" Link="FileHelper.cs" />
+      <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
       <None Include="ApiInspector.WebUI.Config.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
