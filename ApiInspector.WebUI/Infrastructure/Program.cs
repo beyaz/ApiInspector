@@ -12,6 +12,8 @@ public class Program
 
     public static void Main(string[] args)
     {
+        ConsoleWindowUtility.HideConsoleWindow();
+
         CreateHostBuilder(args).Build().Run();
     }
 }
