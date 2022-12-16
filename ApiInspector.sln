@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiInspector.WebUI", "ApiIn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector", "ApiInspector.NetFramework\ApiInspector.csproj", "{007F4126-1D87-4CE5-ACBC-B00305D92A47}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiInspector.NetCore", "ApiInspector.NetCore\ApiInspector.NetCore.csproj", "{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{007F4126-1D87-4CE5-ACBC-B00305D92A47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{007F4126-1D87-4CE5-ACBC-B00305D92A47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{007F4126-1D87-4CE5-ACBC-B00305D92A47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

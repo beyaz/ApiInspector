@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>ApiInspector</AssemblyName>
+  </PropertyGroup>
+
+    <PropertyGroup>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\ConfigInfo.cs" Link="ConfigInfo.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\GlobalUsings.cs" Link="GlobalUsings.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\MetaDataHelper.cs" Link="MetaDataHelper.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\Plugins.cs" Link="Plugins.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\ProcessHelper.cs" Link="ProcessHelper.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\Program.cs" Link="Program.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\ReflectionHelper.cs" Link="ReflectionHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+</Project>
