@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiInspector.WebUI", "ApiInspector.WebUI\ApiInspector.WebUI.csproj", "{0E3CC5D6-96C1-48A3-B73C-8B1612A9EE96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector", "ApiInspector.NetFramework\ApiInspector.csproj", "{007F4126-1D87-4CE5-ACBC-B00305D92A47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.NetFramework", "ApiInspector.NetFramework\ApiInspector.NetFramework.csproj", "{007F4126-1D87-4CE5-ACBC-B00305D92A47}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiInspector.NetCore", "ApiInspector.NetCore\ApiInspector.NetCore.csproj", "{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}"
 EndProject
