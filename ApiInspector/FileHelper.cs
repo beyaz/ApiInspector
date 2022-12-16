@@ -96,7 +96,7 @@ static class FileHelper
         {
             return false;
         }
-        
+
         FileStream stream = null;
         try
         {

@@ -218,14 +218,14 @@ static class AssemblyModelHelper
         {
             flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         }
-        
+
         foreach (var methodInfo in type.GetMethods(flags))
         {
             if (methodInfo.DeclaringType == typeof(object))
             {
                 continue;
             }
-            
+
             visitAction(methodInfo);
         }
     }

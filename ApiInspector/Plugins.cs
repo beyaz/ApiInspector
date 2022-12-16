@@ -154,8 +154,8 @@ static class Plugins
 public sealed class PluginInfo
 {
     public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
-    
+
     public string FullClassName { get; set; }
-    
+
     public string FullFilePathOfAssembly { get; set; }
 }

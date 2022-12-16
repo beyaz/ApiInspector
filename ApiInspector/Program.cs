@@ -276,14 +276,12 @@ internal class Program
         }
     }
 
-   
-
     public static void Main(string[] args)
     {
         ReflectionHelper.AttachAssemblyResolver();
 
         KillAllNamedProcess(nameof(ApiInspector));
-        
+
         try
         {
             if (args == null)
