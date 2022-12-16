@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace ApiInspector.WebUI;
@@ -12,6 +13,10 @@ static class External
 
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
+        if (GetTargetFramework(new FileInfo(assemblyFilePath)).isDotNetFramework)
+        {
+            return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), (assemblyFilePath, classFilter, methodFilter)).Unwrap();
+        }
         return Execute<IEnumerable<MetadataNode>>(nameof(GetMetadataNodes), (assemblyFilePath, classFilter, methodFilter)).Unwrap();
     }
 
@@ -22,7 +27,7 @@ static class External
 
     static (TResponse response, Exception exception) Execute<TResponse>(string methodName, object parameter, bool waitForDebugger = false)
     {
-        FileHelper.WriteInput(JsonConvert.SerializeObject(parameter));
+        FileHelper.WriteInput(JsonConvert.SerializeObject(parameter,new JsonSerializerSettings{Formatting = Formatting.Indented,DefaultValueHandling = DefaultValueHandling.Ignore}));
 
         var exitCode = RunProcess(methodName, waitForDebugger);
         if (exitCode == 1)

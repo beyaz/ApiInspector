@@ -11,7 +11,7 @@ class ConfigInfo
     {
         get
         {
-            const string path = "ApiInspector.Config.json";
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? string.Empty, "ApiInspector.Config.json");
             if (File.Exists(path))
             {
                 return JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(path));
