@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ApiInspector.WebUI;
 
@@ -38,6 +39,28 @@ static partial class Extensions
 
             return memoryStream.ToArray();
         }
+    }
+
+    public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
+    {
+        var CompiledNetCoreRegex      = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
+        var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
+
+        var contents = File.ReadAllText(dll.FullName);
+
+        var match = CompiledNetCoreRegex.Match(contents);
+        if (match.Success)
+        {
+            return (true, false);
+        }
+
+        match = CompiledNetFrameworkRegex.Match(contents);
+        if (match.Success)
+        {
+            return (false, true);
+        }
+
+        return (false, false);
     }
 
     public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
