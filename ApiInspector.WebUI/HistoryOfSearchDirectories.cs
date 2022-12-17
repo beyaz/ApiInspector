@@ -32,7 +32,7 @@ static class HistoryOfSearchDirectories
 
         value.Add(path);
 
-        CacheDirectory.WriteAllText(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
+        FileHelper.WriteAllText(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         }));

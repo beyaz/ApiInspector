@@ -3,10 +3,8 @@ using System.Text.Json;
 
 namespace ApiInspector.WebUI;
 
-class StateCache
+static class StateCache
 {
-    static readonly object fileLock = new();
-
     static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, @"LastState.json");
 
     public static MainWindowModel ReadState()
@@ -39,16 +37,13 @@ class StateCache
 
     public static void Save(MainWindowModel state)
     {
-        lock (fileLock)
+        var jsonContent = JsonSerializer.Serialize(state, new JsonSerializerOptions
         {
-            var jsonContent = JsonSerializer.Serialize(state, new JsonSerializerOptions
-            {
-                WriteIndented    = true,
-                IgnoreNullValues = true
-            });
+            WriteIndented    = true,
+            IgnoreNullValues = true
+        });
 
-            CacheDirectory.WriteAllText(StateFilePath, jsonContent);
-        }
+        FileHelper.WriteAllText(StateFilePath, jsonContent);
     }
 
     public static void Save(MethodReference methodReference, MainWindowModel state)
@@ -59,20 +54,12 @@ class StateCache
             IgnoreNullValues = true
         });
 
-        SaveToFile(GetFileName(methodReference), jsonContent);
-    }
-
-    public static void SaveToFile(string fileNameWithoutExtension, string jsonContent)
-    {
-        lock (fileLock)
-        {
-            CacheDirectory.WriteAllText(GetCacheFilePath(fileNameWithoutExtension), jsonContent);
-        }
+        FileHelper.WriteAllText(methodReference.GetCachedFullFilePath(), jsonContent);
     }
 
     public static MainWindowModel TryRead(MethodReference methodReference)
     {
-        var filePath = GetCacheFilePath(GetFileName(methodReference));
+        var filePath = methodReference.GetCachedFullFilePath();
         if (!File.Exists(filePath))
         {
             return null;
@@ -88,7 +75,12 @@ class StateCache
         }
     }
 
-    static string GetCacheFilePath(string type) => $@"{CacheDirectory.CacheDirectoryPath}{type}.json";
+    static string GetCachedFullFilePath(this MethodReference methodReference)
+    {
+        var cachedAssemblyFolderPath = Path.Combine(CacheDirectory.CacheDirectoryPath, methodReference.DeclaringType.Assembly.Name);
 
-    static string GetFileName(MethodReference methodReference) => methodReference.ToString().GetHashCode().ToString();
+        var fileName = $"{methodReference.ToString().GetHashCode()}.json";
+
+        return Path.Combine(cachedAssemblyFolderPath + Path.DirectorySeparatorChar + fileName);
+    }
 }

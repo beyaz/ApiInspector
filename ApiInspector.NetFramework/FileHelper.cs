@@ -75,6 +75,16 @@ static class FileHelper
         }
     }
 
+    public static void WriteAllText(string path, string contents)
+    {
+        if (!Directory.Exists(Path.GetDirectoryName(path)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+        }
+
+        File.WriteAllText(path, contents);
+    }
+
     public static void WriteFail(Exception exception)
     {
         File.WriteAllText(FilePath.ResponseFail, exception.ToString());
