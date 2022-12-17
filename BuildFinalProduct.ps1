@@ -1,5 +1,5 @@
 $ProjectDirectory = "D:\work\git\ApiInspector\"
-$FinalDirectory   = "D:\work\git\ApiInspector\FinalProduct\ApiInspector\"
+$FinalDirectory   = "D:\work\git\ApiInspector\FinalProduct\"
 $PublishDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Release\netcoreapp3.1\publish\"
 
 
@@ -58,3 +58,5 @@ $temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
 
+$temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\FinalProduct.zip"
+Compress-Archive -Path $FinalDirectory -DestinationPath $temp1 -Force
