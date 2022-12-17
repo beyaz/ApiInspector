@@ -24,10 +24,14 @@ namespace ApiInspector.Bootstrapper
             var installationFolder = System.AppContext.GetData("InstallationFolder") as string;
 
             var webClient = new WebClient();
-            
+
+            IWebProxy wp = WebRequest.DefaultWebProxy;
+            wp.Credentials  = CredentialCache.DefaultNetworkCredentials;
+            webClient.Proxy = wp;
+
             if (!Directory.Exists(installationFolder))
             {
-                
+                Console.WriteLine("Downloading new version...");
                 webClient.DownloadFile(new Uri(newVersionZipFileUrl), "d:\\r.zip");
                 
                 return;
