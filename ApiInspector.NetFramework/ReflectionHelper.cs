@@ -86,6 +86,11 @@ static class ReflectionHelper
     {
         var searchDirectories = new List<string>();
 
+        if (ConfigInfo.Instance?.DefaultAssemblySearchDirectories is not null)
+        {
+            searchDirectories.AddRange(ConfigInfo.Instance.DefaultAssemblySearchDirectories);
+        }
+
         foreach (var plugin in Plugins.ListOfPlugins)
         {
             if (plugin.AssemblySearchDirectories != null)

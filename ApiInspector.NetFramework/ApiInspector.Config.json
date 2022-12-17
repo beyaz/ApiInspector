@@ -7,5 +7,7 @@
                 "d:\\boa\\server\\bin\\"
             ]
         }
-    ]
+    ],
+
+    "DefaultAssemblySearchDirectories": []
 }

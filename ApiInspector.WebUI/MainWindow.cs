@@ -372,6 +372,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         state.JsonTextForDotNetInstanceProperties = null;
         state.JsonTextForDotNetMethodParameters   = null;
+        state.ResponseAsJson                      = null;
 
         var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey,state.ClassFilter,state.MethodFilter);
         if (node is not null)

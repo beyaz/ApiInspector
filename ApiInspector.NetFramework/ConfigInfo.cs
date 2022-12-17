@@ -21,4 +21,6 @@ class ConfigInfo
     }
 
     public IReadOnlyList<PluginInfo> ListOfPlugins { get; set; }
+    
+    public IReadOnlyList<string> DefaultAssemblySearchDirectories { get; set; }
 }
