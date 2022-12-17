@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 
@@ -9,37 +11,70 @@ namespace ApiInspector.Bootstrapper
     {
         static void Main()
         {
-            
-
-
             Console.WriteLine("Checking version...");
 
             using var client = new HttpClient();
 
+            var versionUrl = (string)AppContext.GetData("VersionUrl");
+            if (versionUrl == null)
+            {
+                Console.WriteLine($"Value @{nameof(versionUrl)} cannot be empty.");
+                Console.Read();
+                return;
+            }
 
-            var versionUrl = System.AppContext.GetData("VersionUrl") as string;
+            var newVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl");
+            if (newVersionZipFileUrl == null)
+            {
+                Console.WriteLine($"Value @{nameof(newVersionZipFileUrl)} cannot be empty.");
+                Console.Read();
+                return;
+            }
 
-            var newVersionZipFileUrl = System.AppContext.GetData("NewVersionZipFileUrl") as string;
-
-            var installationFolder = System.AppContext.GetData("InstallationFolder") as string;
+            var installationFolder = (string)AppContext.GetData("InstallationFolder");
+            if (installationFolder == null)
+            {
+                Console.WriteLine($"Value @{nameof(installationFolder)} cannot be empty.");
+                Console.Read();
+                return;
+            }
 
             var webClient = new WebClient();
 
-            IWebProxy wp = WebRequest.DefaultWebProxy;
-            wp.Credentials  = CredentialCache.DefaultNetworkCredentials;
-            webClient.Proxy = wp;
+            var shouldUpdate = false;
+
+            var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
 
             if (!Directory.Exists(installationFolder))
             {
-                Console.WriteLine("Downloading new version...");
-                webClient.DownloadFile(new Uri(newVersionZipFileUrl), "d:\\r.zip");
-                
-                return;
+                Console.WriteLine("Downloading first time please wait...");
+                shouldUpdate = true;
             }
-            var remoteVersion = webClient.DownloadString(versionUrl);
-            
+            else
+            {
+                var localVersion = int.Parse(File.ReadAllText(Path.Combine(installationFolder, "Version.txt")));
 
-            
+                if (remoteVersion > localVersion)
+                {
+                    Console.WriteLine("Updating to new version...");
+                    shouldUpdate = true;
+                }
+            }
+
+            if (shouldUpdate)
+            {
+                var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
+
+                webClient.DownloadFile(new Uri(newVersionZipFileUrl), localZipFilePath);
+
+                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder);
+
+                File.Delete(localZipFilePath);
+
+                File.WriteAllText(Path.Combine(installationFolder, "Version.txt"), remoteVersion.ToString());
+            }
+
+            Process.Start(Path.Combine(installationFolder, "ApiInspector.WebUI.exe"));
         }
     }
 }
