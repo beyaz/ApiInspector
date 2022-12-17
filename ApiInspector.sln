@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.NetFramework",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiInspector.NetCore", "ApiInspector.NetCore\ApiInspector.NetCore.csproj", "{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.Bootstrapper", "ApiInspector.Bootstrapper\ApiInspector.Bootstrapper.csproj", "{6B132CED-7A49-4517-99EC-40B9EE4F53C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84ED7B12-CB85-4D51-BBB8-4B6F93267D47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B132CED-7A49-4517-99EC-40B9EE4F53C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B132CED-7A49-4517-99EC-40B9EE4F53C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B132CED-7A49-4517-99EC-40B9EE4F53C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B132CED-7A49-4517-99EC-40B9EE4F53C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
