@@ -1,9 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>ApiInspector</AssemblyName>
+    <StartupObject>ApiInspector.Bootstrapper.Program</StartupObject>
+    <ApplicationIcon>debug.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="debug.ico" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="InstallationFolder" Value="d:\ABC\" />
+        <RuntimeHostConfigurationOption Include="VersionUrl" Value="https://raw.githubusercontent.com/beyaz/ApiInspector/main/ApiInspector.Bootstrapper/Version.txt" />
+        <RuntimeHostConfigurationOption Include="NewVersionZipFileUrl" Value="https://github.com/beyaz/ApiInspector/raw/main/ApiInspector.Bootstrapper/FinalProduct.zip" />
+        
+    </ItemGroup>
 
 </Project>
