@@ -46,7 +46,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         state = StateCache.ReadState() ?? new MainWindowModel
         {
-            AssemblyDirectory = Path.GetDirectoryName(Config.DotNetFrameworkInvokerExePath) + Path.DirectorySeparatorChar,
+            AssemblyDirectory = Path.GetDirectoryName(DotNetFrameworkInvokerExePath),
             AssemblyFileName  = "ApiInspector.exe",
             MethodFilter      = "GetHelpMessage"
         };

@@ -59,7 +59,7 @@ static class External
     static int RunProcess(bool runCoreApp, string methodName, bool waitForDebugger)
     {
         var process = new Process();
-        process.StartInfo.FileName  = runCoreApp ? Config.DotNetCoreInvokerExePath : Config.DotNetFrameworkInvokerExePath;
+        process.StartInfo.FileName  = runCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath;
         process.StartInfo.Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}";
         process.Start();
         process.WaitForExit();
