@@ -25,6 +25,7 @@ sealed class HtmlContentGenerator
             "    <meta http-equiv='Expires' content='0' />",
 
             "    <title>Api Inspector</title>",
+            $"    <link rel='icon' href='{root}/favicon.ico' />",
 
             "    <!-- Font -->",
             "    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap' media='all'>",
