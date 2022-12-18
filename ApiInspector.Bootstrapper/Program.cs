@@ -39,6 +39,9 @@ namespace ApiInspector.Bootstrapper
                 return;
             }
 
+            installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+
             var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
 
             var webClient = new WebClient();
