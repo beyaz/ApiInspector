@@ -14,9 +14,13 @@ public class ConfigInfo
 
 partial class Extensions
 {
-    public static ConfigInfo Config = JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText("ApiInspector.WebUI.Config.json"));
+    public static ConfigInfo Config = JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(Path.Combine(AppFolder, "ApiInspector.WebUI.Config.json")));
 
-    public static string DotNetCoreInvokerExePath
+    public static string DotNetCoreInvokerExePath => Path.Combine(AppFolder, "ApiInspector.NetCore", "ApiInspector.exe");
+
+    public static string DotNetFrameworkInvokerExePath => Path.Combine(AppFolder, "ApiInspector.NetFramework", "ApiInspector.exe");
+
+    static string AppFolder
     {
         get
         {
@@ -26,21 +30,7 @@ partial class Extensions
                 throw new ArgumentException("assembly location not found");
             }
 
-            return Path.Combine(location, "ApiInspector.NetCore", "ApiInspector.exe");
-        }
-    }
-
-    public static string DotNetFrameworkInvokerExePath
-    {
-        get
-        {
-            var location = Path.GetDirectoryName(typeof(Extensions).Assembly.Location);
-            if (location == null)
-            {
-                throw new ArgumentException("assembly location not found");
-            }
-
-            return Path.Combine(location, "ApiInspector.NetFramework", "ApiInspector.exe");
+            return location;
         }
     }
 }

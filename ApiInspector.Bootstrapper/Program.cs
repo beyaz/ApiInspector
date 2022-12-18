@@ -43,38 +43,39 @@ namespace ApiInspector.Bootstrapper
 
             var webClient = new WebClient();
 
-            var shouldUpdate = false;
+            var shouldUpdate = true;
 
-            var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
+            var localVersionFilePath = Path.Combine(appFolder, "Version.txt");
 
-            if (!Directory.Exists(appFolder))
+            if (File.Exists(localVersionFilePath))
             {
-                Directory.CreateDirectory(appFolder);
-                Console.WriteLine("Downloading first time please wait...");
-                shouldUpdate = true;
-            }
-            else
-            {
-                var localVersion = int.Parse(File.ReadAllText(Path.Combine(appFolder, "Version.txt")));
-
-                if (remoteVersion > localVersion)
+                var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
+                var localVersion  = int.Parse(File.ReadAllText(localVersionFilePath));
+                if (remoteVersion == localVersion)
                 {
-                    Console.WriteLine("Updating to new version...");
-                    shouldUpdate = true;
+                    shouldUpdate = false;
                 }
             }
 
             if (shouldUpdate)
             {
+                Console.WriteLine("Updating to new version...");
+
+                if (!Directory.Exists(appFolder))
+                {
+                    Directory.CreateDirectory(appFolder);
+                }
+
                 var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
 
                 webClient.DownloadFile(new Uri(newVersionZipFileUrl), localZipFilePath);
 
-                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder);
+                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder,true);
 
                 File.Delete(localZipFilePath);
 
-                File.WriteAllText(Path.Combine(appFolder, "Version.txt"), remoteVersion.ToString());
+                var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
+                File.WriteAllText(localVersionFilePath, remoteVersion.ToString());
             }
 
             Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
