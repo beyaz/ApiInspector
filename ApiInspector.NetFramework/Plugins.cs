@@ -13,7 +13,7 @@ static class Plugins
         {
             var plugins = new List<PluginInfo>();
 
-            var directory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            var directory = Path.GetDirectoryName(typeof(Plugins).Assembly.Location);
             if (string.IsNullOrWhiteSpace(directory))
             {
                 return plugins;
