@@ -19,6 +19,9 @@ $temp1 = $PublishDirectory + "wwwroot\index.js"
 $temp2 = $FinalDirectory   + "wwwroot\index.js"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
+$temp1 = $PublishDirectory + "wwwroot\favicon.ico"
+$temp2 = $FinalDirectory   + "wwwroot\favicon.ico"
+Copy-Item -Path $temp1 -Destination $temp2 -Force
 
 
 $temp1 = $PublishDirectory + "*.dll"
