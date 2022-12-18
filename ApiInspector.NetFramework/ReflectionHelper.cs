@@ -94,6 +94,20 @@ static class ReflectionHelper
             searchDirectories.Insert(0, directoryName);
         }
 
+        if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.IndexOf("Core",StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            var folders = new[]
+            {
+                "C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App\\3.1.29",
+                "C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\3.1.29",
+                "C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\3.1.29"
+            };
+            foreach (var folder in folders)
+            {
+                searchDirectories.Add(folder);
+            }
+        }
+
         foreach (var searchDirectory in searchDirectories)
         {
             foreach (var fileExtension in new[] { ".dll", ".exe" })
