@@ -137,6 +137,26 @@ static class Plugins
         return false;
     }
 
+    public static string TryFindAssembly(string fileName)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (plugin.AssemblySearchDirectories is not null)
+            {
+                foreach (var searchDirectory in plugin.AssemblySearchDirectories)
+                {
+                    var path = Path.Combine(searchDirectory, fileName);
+                    if (File.Exists(path))
+                    {
+                        return path;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static (bool isProcessed, bool? isSuccess, object processedVersionOfInstance) UnwrapResponse(object responseInstance)
     {
         foreach (var plugin in ListOfPlugins)
@@ -175,6 +195,8 @@ static class Plugins
 
     sealed class PluginInfo
     {
+        public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
+
         public string FullClassName { get; set; }
 
         public string FullFilePathOfAssembly { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace ApiInspector;
 
@@ -85,7 +86,7 @@ static class ReflectionHelper
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
         var searchDirectories = new List<string>();
-        
+
         var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
 
         var directoryName = Path.GetDirectoryName(e.RequestingAssembly?.Location);
@@ -94,7 +95,7 @@ static class ReflectionHelper
             searchDirectories.Insert(0, directoryName);
         }
 
-        if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.IndexOf("Core",StringComparison.OrdinalIgnoreCase) >= 0)
+        if (RuntimeInformation.FrameworkDescription.IndexOf("Core", StringComparison.OrdinalIgnoreCase) >= 0)
         {
             var folders = new[]
             {
@@ -108,9 +109,22 @@ static class ReflectionHelper
             }
         }
 
+        var extensions = new[] { ".dll", ".exe" };
+
+        foreach (var fileExtension in extensions)
+        {
+            var fileName = fileNameWithoutExtension + fileExtension;
+
+            var fullFilePath = Plugins.TryFindAssembly(fileName);
+            if (fullFilePath is not null)
+            {
+                return Assembly.LoadFile(fullFilePath);
+            }
+        }
+
         foreach (var searchDirectory in searchDirectories)
         {
-            foreach (var fileExtension in new[] { ".dll", ".exe" })
+            foreach (var fileExtension in extensions)
             {
                 var filePath = Path.Combine(searchDirectory, fileNameWithoutExtension + fileExtension);
                 if (File.Exists(filePath))
