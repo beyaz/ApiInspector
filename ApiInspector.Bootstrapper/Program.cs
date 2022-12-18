@@ -78,6 +78,28 @@ namespace ApiInspector.Bootstrapper
                 File.WriteAllText(localVersionFilePath, remoteVersion.ToString());
             }
 
+            // copy plugins
+            {
+                var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+                if (!string.IsNullOrWhiteSpace(directory))
+                {
+                    foreach (var file in Directory.GetFiles(directory, "*.json"))
+                    {
+                        if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (file.IndexOf("NetFramework", StringComparison.OrdinalIgnoreCase) > 0)
+                            {
+                                File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
+                            }
+                            else
+                            {
+                                File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
+                            }
+                        }
+                    }
+                }
+            }
+
             try
             {
                 Console.WriteLine("Starting...");
