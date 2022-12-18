@@ -70,7 +70,7 @@ namespace ApiInspector.Bootstrapper
 
                 webClient.DownloadFile(new Uri(newVersionZipFileUrl), localZipFilePath);
 
-                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder,true);
+                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
 
                 File.Delete(localZipFilePath);
 
@@ -78,7 +78,16 @@ namespace ApiInspector.Bootstrapper
                 File.WriteAllText(localVersionFilePath, remoteVersion.ToString());
             }
 
-            Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+            try
+            {
+                Console.WriteLine("Starting...");
+                Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                Console.Read();
+            }
         }
     }
 }
