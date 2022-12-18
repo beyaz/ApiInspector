@@ -1,12 +1,35 @@
 ﻿using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ApiInspector;
 
 static class Plugins
 {
-    public static readonly IReadOnlyList<PluginInfo> ListOfPlugins = ConfigInfo.Instance?.ListOfPlugins ?? new PluginInfo[] { };
+    static IEnumerable<PluginInfo> ListOfPlugins
+    {
+        get
+        {
+            var plugins = new List<PluginInfo>();
+
+            var directory = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                return plugins;
+            }
+
+            foreach (var file in Directory.GetFiles(directory, "*.json"))
+            {
+                if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
+                {
+                    plugins.Add(JsonConvert.DeserializeObject<PluginInfo>(File.ReadAllText(file)));
+                }
+            }
+
+            return plugins;
+        }
+    }
 
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
@@ -149,13 +172,12 @@ static class Plugins
 
         return (false, null, null);
     }
+
+    sealed class PluginInfo
+    {
+        public string FullClassName { get; set; }
+
+        public string FullFilePathOfAssembly { get; set; }
+    }
 }
 
-public sealed class PluginInfo
-{
-    public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
-
-    public string FullClassName { get; set; }
-
-    public string FullFilePathOfAssembly { get; set; }
-}

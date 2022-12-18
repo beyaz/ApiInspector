@@ -85,20 +85,7 @@ static class ReflectionHelper
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
         var searchDirectories = new List<string>();
-
-        if (ConfigInfo.Instance?.DefaultAssemblySearchDirectories is not null)
-        {
-            searchDirectories.AddRange(ConfigInfo.Instance.DefaultAssemblySearchDirectories);
-        }
-
-        foreach (var plugin in Plugins.ListOfPlugins)
-        {
-            if (plugin.AssemblySearchDirectories != null)
-            {
-                searchDirectories.AddRange(plugin.AssemblySearchDirectories);
-            }
-        }
-
+        
         var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
 
         var directoryName = Path.GetDirectoryName(e.RequestingAssembly?.Location);
