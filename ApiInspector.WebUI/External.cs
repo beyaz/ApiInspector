@@ -8,29 +8,59 @@ static class External
 {
     public static (string jsonForInstance, string jsonForParameters) GetEditorTexts(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance, string jsonForParameters)
     {
-        var isDotNetCoreAssembly = IsDotNetCoreAssembly(assemblyFileFullPath);
+        var fileInfo = new FileInfo(assemblyFileFullPath);
+        if (!fileInfo.Exists)
+        {
+            return (string.Empty, string.Empty);
+        }
+
+        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
+        if (isDotNetCore is false && isDotNetFramework is false)
+        {
+            return (string.Empty, string.Empty);
+        }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance, jsonForParameters);
 
-        return Execute<(string jsonForInstance, string jsonForParameters)>(isDotNetCoreAssembly, nameof(GetEditorTexts), parameter).Unwrap();
+        return Execute<(string jsonForInstance, string jsonForParameters)>(isDotNetCore, nameof(GetEditorTexts), parameter).Unwrap();
     }
 
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFileFullPath, string classFilter, string methodFilter)
     {
-        var isDotNetCoreAssembly = IsDotNetCoreAssembly(assemblyFileFullPath);
+        var fileInfo = new FileInfo(assemblyFileFullPath);
+        if (!fileInfo.Exists)
+        {
+            return Enumerable.Empty<MetadataNode>();
+        }
+
+        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
+        if (isDotNetCore is false && isDotNetFramework is false)
+        {
+            return Enumerable.Empty<MetadataNode>();
+        }
 
         var parameter = (assemblyFileFullPath, classFilter, methodFilter);
 
-        return Execute<IEnumerable<MetadataNode>>(isDotNetCoreAssembly, nameof(GetMetadataNodes), parameter).Unwrap();
+        return Execute<IEnumerable<MetadataNode>>(isDotNetCore, nameof(GetMetadataNodes), parameter).Unwrap();
     }
 
     public static string InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
     {
-        var isDotNetCoreAssembly = IsDotNetCoreAssembly(assemblyFileFullPath);
+        var fileInfo = new FileInfo(assemblyFileFullPath);
+        if (!fileInfo.Exists)
+        {
+            return $"Assembly not exists. Assembly File: {assemblyFileFullPath}";
+        }
+
+        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
+        if (isDotNetCore is false && isDotNetFramework is false)
+        {
+            return $"File is not support .net Core or .net Framework. File: {assemblyFileFullPath}";
+        }
 
         var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
 
-        return Execute<string>(isDotNetCoreAssembly, nameof(InvokeMethod), parameter, waitForDebugger).Unwrap();
+        return Execute<string>(isDotNetCore, nameof(InvokeMethod), parameter, waitForDebugger).Unwrap();
     }
 
     static (TResponse response, Exception exception) Execute<TResponse>(bool runCoreApp, string methodName, object parameter, bool waitForDebugger = false)
@@ -49,11 +79,6 @@ static class External
         }
 
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
-    }
-
-    static bool IsDotNetCoreAssembly(string assemblyFileFullPath)
-    {
-        return GetTargetFramework(new FileInfo(assemblyFileFullPath)).isDotNetCore;
     }
 
     static int RunProcess(bool runCoreApp, string methodName, bool waitForDebugger)
