@@ -79,7 +79,7 @@ namespace ApiInspector.Bootstrapper
 
         static void ExtractZipToFolder(string localZipFilePath, string installationFolder)
         {
-            ZipFile.ExtractToDirectory(localZipFilePath, installationFolder);
+            ZipFile.ExtractToDirectory(localZipFilePath, installationFolder,overwriteFiles: true);
         }
     }
 }
