@@ -39,20 +39,23 @@ namespace ApiInspector.Bootstrapper
                 return;
             }
 
+            var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
+
             var webClient = new WebClient();
 
             var shouldUpdate = false;
 
             var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
 
-            if (!Directory.Exists(installationFolder))
+            if (!Directory.Exists(appFolder))
             {
+                Directory.CreateDirectory(appFolder);
                 Console.WriteLine("Downloading first time please wait...");
                 shouldUpdate = true;
             }
             else
             {
-                var localVersion = int.Parse(File.ReadAllText(Path.Combine(installationFolder, "Version.txt")));
+                var localVersion = int.Parse(File.ReadAllText(Path.Combine(appFolder, "Version.txt")));
 
                 if (remoteVersion > localVersion)
                 {
@@ -71,15 +74,10 @@ namespace ApiInspector.Bootstrapper
 
                 File.Delete(localZipFilePath);
 
-                File.WriteAllText(Path.Combine(installationFolder, "Version.txt"), remoteVersion.ToString());
+                File.WriteAllText(Path.Combine(appFolder, "Version.txt"), remoteVersion.ToString());
             }
 
-            Process.Start(Path.Combine(installationFolder, "ApiInspector.WebUI.exe"));
-        }
-
-        static void ExtractZipToFolder(string localZipFilePath, string installationFolder)
-        {
-            ZipFile.ExtractToDirectory(localZipFilePath, installationFolder,overwriteFiles: true);
+            Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
         }
     }
 }
