@@ -15,7 +15,7 @@
     <ItemGroup>
         <RuntimeHostConfigurationOption Include="InstallationFolder" Value="d:\ABC\" />
         <RuntimeHostConfigurationOption Include="VersionUrl" Value="https://raw.githubusercontent.com/beyaz/ApiInspector/main/ApiInspector.Bootstrapper/Version.txt" />
-        <RuntimeHostConfigurationOption Include="NewVersionZipFileUrl" Value="https://github.com/beyaz/ApiInspector/raw/main/ApiInspector.Bootstrapper/FinalProduct.zip" />
+        <RuntimeHostConfigurationOption Include="NewVersionZipFileUrl" Value="https://github.com/beyaz/ApiInspector/raw/main/ApiInspector.Bootstrapper/ApiInspectorLatestVersion.zip" />
         
     </ItemGroup>
 
