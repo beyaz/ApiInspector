@@ -1,7 +1,6 @@
 $ProjectDirectory = "D:\work\git\ApiInspector\"
 $FinalDirectory   = "D:\work\git\ApiInspector\Api Inspector (.net method invoker)\"
-$PublishDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Release\netcoreapp3.1\publish\"
-
+$WebUiOutputDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Debug\netcoreapp3.1\"
 
 New-Item -ItemType Directory -Force -Path $FinalDirectory
 
@@ -15,28 +14,28 @@ $temp1 = $FinalDirectory + "ApiInspector.NetCore"
 New-Item -ItemType Directory -Force -Path $temp1
 
 
-$temp1 = $PublishDirectory + "wwwroot\index.js"
+$temp1 = $ProjectDirectory + "ApiInspector.WebUI\wwwroot\index.js"
 $temp2 = $FinalDirectory   + "wwwroot\index.js"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
-$temp1 = $PublishDirectory + "wwwroot\favicon.ico"
+$temp1 = $ProjectDirectory + "ApiInspector.WebUI\wwwroot\favicon.ico"
 $temp2 = $FinalDirectory   + "wwwroot\favicon.ico"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
 
-$temp1 = $PublishDirectory + "*.dll"
+$temp1 = $WebUiOutputDirectory + "*.dll"
 Copy-Item -Path $temp1 -Destination $FinalDirectory -Force
 
-$temp1 = $PublishDirectory + "*.exe"
+$temp1 = $WebUiOutputDirectory + "*.exe"
 Copy-Item -Path $temp1 -Destination $FinalDirectory -Force
 
-$temp1 = $PublishDirectory + "ApiInspector.WebUI.Config.json"
+$temp1 = $WebUiOutputDirectory + "ApiInspector.WebUI.Config.json"
 Copy-Item -Path $temp1 -Destination $FinalDirectory -Force
 
-$temp1 = $PublishDirectory + "web.config"
+$temp1 = $WebUiOutputDirectory + "web.config"
 Copy-Item -Path $temp1 -Destination $FinalDirectory -Force
 
-$temp1 = $PublishDirectory + "ApiInspector.WebUI.runtimeconfig.json"
+$temp1 = $WebUiOutputDirectory + "ApiInspector.WebUI.runtimeconfig.json"
 Copy-Item -Path $temp1 -Destination $FinalDirectory -Force
 
 
