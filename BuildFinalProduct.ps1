@@ -1,5 +1,5 @@
 $ProjectDirectory = "D:\work\git\ApiInspector\"
-$FinalDirectory   = "D:\work\git\ApiInspector\FinalProduct\"
+$FinalDirectory   = "D:\work\git\ApiInspector\Api Inspector (.net method invoker)\"
 $PublishDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Release\netcoreapp3.1\publish\"
 
 
@@ -57,6 +57,13 @@ $temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\netcoreapp3.1\*.exe
 $temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
+$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\netcoreapp3.1\ApiInspector.runtimeconfig.json"
+$temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
+Copy-Item -Path $temp1 -Destination $temp2 -Force
 
-$temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\FinalProduct.zip"
+
+
+$temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\ApiInspectorLatestVersion.zip"
 Compress-Archive -Path $FinalDirectory -DestinationPath $temp1 -Force
+
+Remove-Item -Path $FinalDirectory -Force -Recurse
