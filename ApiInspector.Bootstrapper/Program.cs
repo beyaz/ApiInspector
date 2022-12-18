@@ -76,5 +76,10 @@ namespace ApiInspector.Bootstrapper
 
             Process.Start(Path.Combine(installationFolder, "ApiInspector.WebUI.exe"));
         }
+
+        static void ExtractZipToFolder(string localZipFilePath, string installationFolder)
+        {
+            ZipFile.ExtractToDirectory(localZipFilePath, installationFolder);
+        }
     }
 }
