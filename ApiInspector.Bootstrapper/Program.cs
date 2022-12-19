@@ -7,12 +7,26 @@ using System.Net.Http;
 
 namespace ApiInspector.Bootstrapper
 {
-    internal class Program
+    class Program
     {
+        static void KillAllNamedProcess(string processName)
+        {
+            foreach (var process in Process.GetProcessesByName(processName))
+            {
+                if (Process.GetCurrentProcess().Id != process.Id)
+                {
+                    process.Kill();
+                }
+            }
+        }
+
         static void Main()
         {
             try
             {
+                KillAllNamedProcess("ApiInspector.WebUI");
+                KillAllNamedProcess("ApiInspector");
+
                 Console.WriteLine("Checking version...");
 
                 using var client = new HttpClient();
