@@ -14,7 +14,7 @@ public class DirectorySelector : ReactComponent
 
     protected override Element render()
     {
-        var suggestions = new List<string>(HistoryOfSearchDirectories.Value);
+        var suggestions = new List<string>();
 
         if (Directory.Exists(DirectoryPath))
         {
@@ -28,6 +28,8 @@ public class DirectorySelector : ReactComponent
                 suggestions.AddRange(Directory.GetDirectories(temp));
             }
         }
+        
+        suggestions.AddRange(HistoryOfSearchDirectories.Value);
 
         suggestions = suggestions.Distinct().ToList();
 
