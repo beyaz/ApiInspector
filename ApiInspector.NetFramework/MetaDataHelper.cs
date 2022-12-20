@@ -68,24 +68,34 @@ static class MetadataHelper
                     label              = namespaceName
                 };
 
-                nodeForNamespace.children.AddRange(types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).OrderByDescending(classNode => classNode.children.Count > 0).Take(5));
+                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData);
 
-                items.Add(nodeForNamespace);
+                if (!string.IsNullOrWhiteSpace(methodFilter))
+                {
+                    classNodes = classNodes.Where(classNode => classNode.children.Count > 0).Take(5).OrderByDescending(classNode => classNode.children.Count);
+                }
+
+                nodeForNamespace.children.AddRange(classNodes);
+
+                if (nodeForNamespace.children.Count > 0)
+                {
+                    items.Add(nodeForNamespace);
+                }
             }
 
             return items.Take(5).ToList();
         }
 
-        MetadataNode classToMetaData(Type x)
+        MetadataNode classToMetaData(Type type)
         {
             var classNode = new MetadataNode
             {
                 IsClass       = true,
-                TypeReference = x.AsReference(),
-                label         = x.Name
+                TypeReference = type.AsReference(),
+                label         = type.Name
             };
 
-            VisitMethods(x, m =>
+            VisitMethods(type, m =>
             {
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
