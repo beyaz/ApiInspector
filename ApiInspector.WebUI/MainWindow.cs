@@ -67,7 +67,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     outline: none;
 }"
             },
-            new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"),BorderRadius(3))
+            new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"), BorderRadius(3))
             {
                 new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom($"1px solid {borderColor}"))
                 {
@@ -289,24 +289,27 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     void ArrangeEditors()
     {
-        var lines = (state.JsonTextForDotNetInstanceProperties + string.Empty).Split(Environment.NewLine);
+        const int optimumLineCount = 19;
 
-        var optimumLineCount = 19;
-        if (lines.Length < optimumLineCount)
-        {
-            state.JsonTextForDotNetInstanceProperties += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(_ => string.Empty));
-        }
+        state.JsonTextForDotNetInstanceProperties = arrange(state.JsonTextForDotNetInstanceProperties, optimumLineCount);
+        state.JsonTextForDotNetMethodParameters   = arrange(state.JsonTextForDotNetMethodParameters, optimumLineCount);
+        state.ResponseAsJson                      = arrange(state.ResponseAsJson, optimumLineCount);
 
-        lines = (state.JsonTextForDotNetMethodParameters + string.Empty).Split(Environment.NewLine);
-        if (lines.Length < optimumLineCount)
+        static string arrange(string value, int optimumLineCount)
         {
-            state.JsonTextForDotNetMethodParameters += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(_ => string.Empty));
-        }
+            var lineCount = getLineCount(value);
 
-        lines = (state.ResponseAsJson + string.Empty).Split(Environment.NewLine);
-        if (lines.Length < optimumLineCount)
-        {
-            state.ResponseAsJson += string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lines.Length).Select(_ => string.Empty));
+            if (lineCount < optimumLineCount)
+            {
+                return value + string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lineCount).Select(_ => string.Empty));
+            }
+
+            return value;
+
+            static int getLineCount(string value)
+            {
+                return (value + string.Empty).Split('\n').Length;
+            }
         }
     }
 
@@ -374,7 +377,7 @@ class MainWindow : ReactComponent<MainWindowModel>
         state.JsonTextForDotNetMethodParameters   = null;
         state.ResponseAsJson                      = null;
 
-        var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey,state.ClassFilter,state.MethodFilter);
+        var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
         if (node is not null)
         {
             if (node.IsMethod)

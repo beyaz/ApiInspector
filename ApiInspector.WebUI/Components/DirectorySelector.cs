@@ -28,10 +28,15 @@ public class DirectorySelector : ReactComponent
                 suggestions.AddRange(Directory.GetDirectories(temp));
             }
         }
-        
+
         suggestions.AddRange(HistoryOfSearchDirectories.Value);
 
         suggestions = suggestions.Distinct().ToList();
+
+        if (Query.HasValue())
+        {
+            suggestions = suggestions.Where(x => (x + string.Empty).IndexOf(Query.Trim(), StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+        }
 
         return new AutoComplete<string>
                {
