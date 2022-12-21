@@ -78,10 +78,7 @@ static class ReflectionHelper
         return instance;
     }
 
-    public static bool IsStaticClass(this Type type)
-    {
-        return type.IsClass && type.IsAbstract && type.IsSealed;
-    }
+    
 
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {

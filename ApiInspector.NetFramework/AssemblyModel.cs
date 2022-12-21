@@ -257,4 +257,9 @@ static class AssemblyModelHelper
             }
         }
     }
+
+    static bool IsStaticClass(this Type type)
+    {
+        return type.IsClass && type.IsAbstract && type.IsSealed;
+    }
 }
