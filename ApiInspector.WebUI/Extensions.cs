@@ -8,7 +8,7 @@ static partial class Extensions
 {
     public static string BluePrimary => "#1976d2";
 
-    public static StyleModifier PrimaryBackground => Background("rgb(249, 249, 249");
+    public static StyleModifier PrimaryBackground => Background("rgb(249, 249, 249)");
 
     public static string GetSvgUrl(string svgFileName)
     {

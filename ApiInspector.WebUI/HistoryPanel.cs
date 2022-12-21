@@ -30,7 +30,8 @@ class HistoryPanel : ReactComponent
                 Width("60vw"),
                 searchResult.Select(x => new FlexRow(AlignItemsCenter, CursorPointer, Padding(10))
                 {
-                    Hover(PrimaryBackground, Border("1px solid #d9d9d9"), BorderRadius(3)),
+                    Border("1px solid #d9d9d9"), BorderRadius(3),
+                    Hover(PrimaryBackground),
                     
                     new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
 
@@ -48,7 +49,7 @@ class HistoryPanel : ReactComponent
             foreach (var file in Directory.GetFiles(directory))
             {
                 var fileContent = File.ReadAllText(file);
-                if (fileContent?.IndexOf(filter+string.Empty,StringComparison.OrdinalIgnoreCase) >0)
+                if (fileContent?.IndexOf(filter+string.Empty,StringComparison.OrdinalIgnoreCase) >=0)
                 {
                     var mainWindowModel = JsonConvert.DeserializeObject<MainWindowModel>(fileContent);
 
