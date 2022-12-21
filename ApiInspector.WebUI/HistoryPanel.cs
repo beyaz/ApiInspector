@@ -17,8 +17,6 @@ class HistoryPanel : ReactComponent
         
         return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(10))
         {
-            Hover(PrimaryBackground, Border("1px solid #d9d9d9"), BorderRadius(3)),
-            
             new InputText
             {
                 placeholder              = "Search",
