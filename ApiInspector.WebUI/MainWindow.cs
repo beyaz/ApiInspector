@@ -101,11 +101,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 AssemblyDirectoryPath = state.AssemblyDirectory,
                                 AssemblyFileName      = state.AssemblyFileName,
-                                SelectionChanged = x =>
-                                {
-                                    state.AssemblyFileName = x;
-                                    SaveState();
-                                }
+                                SelectionChanged = x => state.AssemblyFileName = x
                             }
                         },
                         new FlexColumn(MarginLeftRight(3))
@@ -324,6 +320,12 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     void OnDebugClicked()
     {
+        if (state.SelectedMethod is null)
+        {
+            state.ResponseAsJson = "Please select any method from left side.";
+            return;
+        }
+        
         SaveState();
 
         state.ResponseAsJson = null;
@@ -358,8 +360,6 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     void OnElementSelected(string keyOfSelectedTreeNode)
     {
-        SaveState();
-
         state.SelectedMethodTreeNodeKey = keyOfSelectedTreeNode;
 
         IsInitializingSelectedMethod = true;
@@ -412,6 +412,12 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     void OnExecuteClicked()
     {
+        if (state.SelectedMethod is null)
+        {
+            state.ResponseAsJson = "Please select any method from left side.";
+            return;
+        }
+        
         SaveState();
 
         state.ResponseAsJson = null;
