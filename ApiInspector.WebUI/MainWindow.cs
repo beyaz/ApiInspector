@@ -35,6 +35,8 @@ class MainWindow : ReactComponent<MainWindowModel>
     public bool ExecuteButtonStatusIsFail { get; set; }
 
     public bool ExecuteButtonStatusIsSuccess { get; set; }
+
+    public bool HistoryDialogVisible { get; set; }
     public bool IsDebugStarted { get; set; }
     public bool IsExecutionStarted { get; set; }
 
@@ -60,6 +62,41 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
+            new Dialog
+            {
+                visible  = HistoryDialogVisible,
+                header   = new div("Select Method From History"),
+                closable = true,
+                onHide   = () => HistoryDialogVisible = false,
+                children =
+                {
+                    new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(10))
+                    {
+                        new InputText { placeholder = "Search", style = { width = "50%" } },
+                        new FlexColumn(AlignItemsStretch, Gap(5))
+                        {
+                            Width("30vw"),
+                            //Height("40vh"),
+                            new FlexRowCentered(Padding(10), Border("1px solid green"))
+                            {
+                                "Agggttt.ggg.t..t:: yyy(string a)"
+                            },
+                            new FlexRowCentered(Padding(10), Border("1px solid green"))
+                            {
+                                "Agggttt.ggg.t..t:: yyy(string a)"
+                            },
+                            new FlexRowCentered(Padding(10), Border("1px solid green"))
+                            {
+                                "Agggttt.ggg.t..t:: yyy(string a)"
+                            },
+                            new FlexRowCentered(Padding(10), Border("1px solid green"))
+                            {
+                                "Agggttt.ggg.t..t:: yyy(string a)"
+                            }
+                        }
+                    }
+                }
+            },
             new style
             {
                 @"
@@ -80,8 +117,13 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                 new FlexRow(HeightMaximized)
                 {
-                    new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20))
+                    new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20), PositionRelative)
                     {
+                        new HistoryButton
+                        {
+                            Click = _ => HistoryDialogVisible = true
+                        } + Right(3) + PositionAbsolute + MarginTop(-14),
+
                         new FlexColumn(MarginLeftRight(3))
                         {
                             new Label { Text = "Assembly Directory" },
@@ -101,7 +143,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 AssemblyDirectoryPath = state.AssemblyDirectory,
                                 AssemblyFileName      = state.AssemblyFileName,
-                                SelectionChanged = x => state.AssemblyFileName = x
+                                SelectionChanged      = x => state.AssemblyFileName = x
                             }
                         },
                         new FlexColumn(MarginLeftRight(3))
@@ -325,7 +367,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             state.ResponseAsJson = "Please select any method from left side.";
             return;
         }
-        
+
         SaveState();
 
         state.ResponseAsJson = null;
@@ -417,7 +459,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             state.ResponseAsJson = "Please select any method from left side.";
             return;
         }
-        
+
         SaveState();
 
         state.ResponseAsJson = null;
