@@ -75,7 +75,7 @@ public sealed class MethodReference
 
     public override string ToString()
     {
-        return $"{DeclaringType}::{Name}({string.Join(", ", Parameters)})";
+        return $"{DeclaringType.FullName}::{FullNameWithoutReturnType}";
     }
 }
 
