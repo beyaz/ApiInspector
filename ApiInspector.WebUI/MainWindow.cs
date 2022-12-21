@@ -54,6 +54,8 @@ class MainWindow : ReactComponent<MainWindowModel>
         };
     }
 
+    
+    
     protected override Element render()
     {
         ArrangeEditors();
@@ -70,31 +72,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 onHide   = () => HistoryDialogVisible = false,
                 children =
                 {
-                    new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(10))
-                    {
-                        new InputText { placeholder = "Search", style = { width = "50%" } },
-                        new FlexColumn(AlignItemsStretch, Gap(5))
-                        {
-                            Width("30vw"),
-                            //Height("40vh"),
-                            new FlexRowCentered(Padding(10), Border("1px solid green"))
-                            {
-                                "Agggttt.ggg.t..t:: yyy(string a)"
-                            },
-                            new FlexRowCentered(Padding(10), Border("1px solid green"))
-                            {
-                                "Agggttt.ggg.t..t:: yyy(string a)"
-                            },
-                            new FlexRowCentered(Padding(10), Border("1px solid green"))
-                            {
-                                "Agggttt.ggg.t..t:: yyy(string a)"
-                            },
-                            new FlexRowCentered(Padding(10), Border("1px solid green"))
-                            {
-                                "Agggttt.ggg.t..t:: yyy(string a)"
-                            }
-                        }
-                    }
+                    new HistoryPanel{ SelectionChanged = selectedMethod => state = StateCache.TryRead(selectedMethod)?? state}
                 }
             },
             new style

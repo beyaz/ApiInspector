@@ -46,26 +46,3 @@ public class ActionButton : ReactComponent
         DispatchEvent(() => OnClick);
     }
 }
-
-
-class HistoryButton: ReactComponent
-{
-    public Action<MouseEvent> Click { get; set; }
-    
-    protected override Element render()
-    {
-        return new FlexRowCentered
-        {
-            "History",
-            Color(BluePrimary),
-            Border($"1px solid {BluePrimary}"),
-            Background("transparent"),
-            BorderRadius(5),
-            CursorPointer,
-            OnClick(Click),
-            Height(25),
-            Width(60)
-            
-        };
-    }
-}
