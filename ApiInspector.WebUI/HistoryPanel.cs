@@ -15,7 +15,7 @@ class HistoryPanel : ReactComponent
     {
         var searchResult = Search(FilterText).Take(5).ToList();
         
-        return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(10))
+        return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(10), Height("50vh"))
         {
             new InputText
             {
