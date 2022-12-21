@@ -54,8 +54,6 @@ class MainWindow : ReactComponent<MainWindowModel>
         };
     }
 
-    
-    
     protected override Element render()
     {
         ArrangeEditors();
@@ -72,7 +70,15 @@ class MainWindow : ReactComponent<MainWindowModel>
                 onHide   = () => HistoryDialogVisible = false,
                 children =
                 {
-                    new HistoryPanel{ SelectionChanged = selectedMethod => state = StateCache.TryRead(selectedMethod)?? state}
+                    new HistoryPanel
+                    {
+                        SelectionChanged = selectedMethod =>
+                        {
+                            HistoryDialogVisible = false;
+
+                            state = StateCache.TryRead(selectedMethod) ?? state;
+                        }
+                    }
                 }
             },
             new style

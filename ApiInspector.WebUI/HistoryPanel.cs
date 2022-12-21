@@ -30,6 +30,8 @@ class HistoryPanel : ReactComponent
                 Width("60vw"),
                 searchResult.Select(x => new FlexRow(AlignItemsCenter, CursorPointer, Padding(10))
                 {
+                    Id(x.file),
+                    OnClick(OnClickHandler),
                     Border("1px solid #d9d9d9"), BorderRadius(3),
                     Hover(PrimaryBackground),
                     
@@ -41,7 +43,16 @@ class HistoryPanel : ReactComponent
         };
     }
 
-    
+    void OnClickHandler(MouseEvent e)
+    {
+        var filePath    = e.FirstNotEmptyId;
+        
+        var fileContent = File.ReadAllText(filePath);
+        var methodReference = JsonConvert.DeserializeObject<MainWindowModel>(fileContent).SelectedMethod;
+        
+        DispatchEvent(()=>SelectionChanged,methodReference);
+    }
+
     static IEnumerable<(string file, MethodReference SelectedMethod)> Search(string filter)
     {
         foreach (var directory in Directory.GetDirectories(CacheDirectory.CacheDirectoryPath))
