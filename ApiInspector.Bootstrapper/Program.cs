@@ -9,18 +9,7 @@ namespace ApiInspector.Bootstrapper
 {
     class Program
     {
-        static void KillAllNamedProcess(string processName)
-        {
-            foreach (var process in Process.GetProcessesByName(processName))
-            {
-                if (Process.GetCurrentProcess().Id != process.Id)
-                {
-                    process.Kill();
-                }
-            }
-        }
-
-        static void Main()
+        public static void Main()
         {
             try
             {
@@ -67,7 +56,7 @@ namespace ApiInspector.Bootstrapper
                     var localVersion  = int.Parse(File.ReadAllText(localVersionFilePath));
 
                     Console.WriteLine($"Remote Version: {remoteVersion}");
-                    Console.WriteLine($"Local Version: {localVersion}");
+                    Console.WriteLine($"Local Version : {localVersion}");
 
                     if (remoteVersion == localVersion)
                     {
@@ -100,36 +89,56 @@ namespace ApiInspector.Bootstrapper
                     File.WriteAllText(localVersionFilePath, remoteVersion.ToString());
                 }
 
-                // copy plugins
-                {
-                    var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-                    if (!string.IsNullOrWhiteSpace(directory))
-                    {
-                        foreach (var file in Directory.GetFiles(directory, "*.json"))
-                        {
-                            if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (file.IndexOf("NetFramework", StringComparison.OrdinalIgnoreCase) > 0)
-                                {
-                                    File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
-                                }
-                                else
-                                {
-                                    File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
-                                }
-                            }
-                        }
-                    }
-                }
+                CopyPlugins(appFolder);
 
-                Console.WriteLine("Starting...");
-                Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+                StartWebApplication(appFolder);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
                 Console.Read();
             }
+        }
+
+        static void CopyPlugins(string appFolder)
+        {
+            var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                return;
+            }
+
+            foreach (var file in Directory.GetFiles(directory, "*.json"))
+            {
+                if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (file.IndexOf("NetFramework", StringComparison.OrdinalIgnoreCase) > 0)
+                    {
+                        File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
+                    }
+                    else
+                    {
+                        File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
+                    }
+                }
+            }
+        }
+
+        static void KillAllNamedProcess(string processName)
+        {
+            foreach (var process in Process.GetProcessesByName(processName))
+            {
+                if (Process.GetCurrentProcess().Id != process.Id)
+                {
+                    process.Kill();
+                }
+            }
+        }
+
+        static void StartWebApplication(string appFolder)
+        {
+            Console.WriteLine("Starting...");
+            Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
         }
     }
 }
