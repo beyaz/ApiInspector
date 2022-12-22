@@ -30,7 +30,7 @@ class MethodSelectionView : ReactComponent
 
     public int Width { get; set; }
 
-    public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter,string methodFilter)
+    public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
     {
         if (string.IsNullOrWhiteSpace(AssemblyFilePath) || string.IsNullOrWhiteSpace(treeNodeKey))
         {
@@ -49,13 +49,28 @@ class MethodSelectionView : ReactComponent
 
     protected override Element render()
     {
+
+        var nodes = GetNodes().ToList();
+        if (nodes.Count == 1)
+        {
+            if (nodes[0].children.Count == 1)
+            {
+                if (nodes[0].children[0].children.Count < 3)
+                {
+                    nodes[0].expanded = true;
+                    nodes[0].children[0].expanded = true;
+                }
+            }
+        }
+
         var tree = new SingleSelectionTree<MetadataNode>
         {
             nodeTemplate      = nodeTemplate,
-            value             = GetNodes(),
+            value             = nodes,
             onSelectionChange = OnSelectionChanged,
             selectionKeys     = SelectedMethodTreeNodeKey,
-            style             = { WidthMaximized, HeightMaximized }
+            style             = { WidthMaximized, HeightMaximized },
+            
         };
 
         return tree;
