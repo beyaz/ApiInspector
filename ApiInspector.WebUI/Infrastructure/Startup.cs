@@ -1,3 +1,4 @@
+using System.IO;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
 namespace ApiInspector.WebUI;
@@ -33,7 +35,8 @@ public class Startup
         app.UseStaticFiles(new StaticFileOptions
         {
             RequestPath         = new PathString("/wwwroot"),
-            ContentTypeProvider = new Utf8CharsetContentTypeProvider()
+            ContentTypeProvider = new Utf8CharsetContentTypeProvider(),
+            FileProvider        = new PhysicalFileProvider(Path.Combine(AppFolder, "wwwroot"))
         });
 
         app.UseResponseCompression();
