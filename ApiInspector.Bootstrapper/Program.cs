@@ -43,6 +43,9 @@ namespace ApiInspector.Bootstrapper
                 var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
 
                 var webClient = new WebClient();
+                webClient.Proxy             = WebRequest.DefaultWebProxy;
+                webClient.Credentials       = CredentialCache.DefaultCredentials; 
+                webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
                 var shouldUpdate = true;
 
@@ -86,6 +89,7 @@ namespace ApiInspector.Bootstrapper
                     File.Delete(localZipFilePath);
 
                     var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
+
                     File.WriteAllText(localVersionFilePath, remoteVersion.ToString());
                 }
 
