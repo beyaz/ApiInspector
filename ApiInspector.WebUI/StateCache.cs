@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 
 namespace ApiInspector.WebUI;
@@ -79,8 +81,31 @@ static class StateCache
     {
         var cachedAssemblyFolderPath = Path.Combine(CacheDirectory.CacheDirectoryPath, methodReference.DeclaringType.Assembly.Name);
 
-        var fileName = $"{methodReference.ToString().GetHashCode()}.json";
+        var fileName = $"{methodReference.ToString().GetHashString()}.json";
 
         return Path.Combine(cachedAssemblyFolderPath + Path.DirectorySeparatorChar + fileName);
+    }
+
+    static string GetHashString(this string text, string salt = "")
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
+        // Uses SHA256 to create the hash
+        using (var sha = new SHA256Managed())
+        {
+            // Convert the string to a byte array first, to be processed
+            var textBytes = Encoding.UTF8.GetBytes(text + salt);
+            var hashBytes = sha.ComputeHash(textBytes);
+
+            // Convert back to a string, removing the '-' that BitConverter adds
+            var hash = BitConverter
+                      .ToString(hashBytes)
+                      .Replace("-", string.Empty);
+
+            return hash;
+        }
     }
 }
