@@ -49,16 +49,19 @@ class MethodSelectionView : ReactComponent
 
     protected override Element render()
     {
-
         var nodes = GetNodes().ToList();
-        if (nodes.Count == 1)
+
+        // expand if there are few elements
         {
-            if (nodes[0].children.Count == 1)
+            if (nodes.Count == 1) // namespace
             {
-                if (nodes[0].children[0].children.Count < 3)
+                if (nodes[0].children.Count == 1) // class
                 {
-                    nodes[0].expanded = true;
-                    nodes[0].children[0].expanded = true;
+                    if (nodes[0].children[0].children.Count < 3)
+                    {
+                        nodes[0].expanded             = true;
+                        nodes[0].children[0].expanded = true;
+                    }
                 }
             }
         }
@@ -70,7 +73,6 @@ class MethodSelectionView : ReactComponent
             onSelectionChange = OnSelectionChanged,
             selectionKeys     = SelectedMethodTreeNodeKey,
             style             = { WidthMaximized, HeightMaximized },
-            
         };
 
         return tree;
