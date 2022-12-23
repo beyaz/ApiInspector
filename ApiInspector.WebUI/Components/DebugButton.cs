@@ -4,8 +4,6 @@ class DebugButton : ReactComponent
 {
     public Action Click { get; set; }
 
-    public bool IsMouseEnter { get; set; }
-
     public bool IsProcessing { get; set; }
 
     public bool ShowStatusAsFail { get; set; }
