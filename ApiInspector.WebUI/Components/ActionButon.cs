@@ -10,7 +10,7 @@ public class ActionButton : ReactComponent
     public Action OnClick { get; set; }
 
     public string SvgFileName { get; set; }
-    
+
     public string Title { get; set; }
 
     protected override Element render()
@@ -38,10 +38,12 @@ public class ActionButton : ReactComponent
 
     void ActionButtonOnClick(MouseEvent _)
     {
-        if (!IsProcessing)
+        if (IsProcessing)
         {
-            IsProcessing = true;
+            throw new InvalidOperationException("Action button already processing...");
         }
+
+        IsProcessing = true;
 
         DispatchEvent(() => OnClick);
     }
