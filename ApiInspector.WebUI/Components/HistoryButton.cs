@@ -1,9 +1,9 @@
 ﻿namespace ApiInspector.WebUI.Components;
 
-class HistoryButton: ReactComponent
+class HistoryButton : ReactComponent
 {
     public Action<MouseEvent> Click { get; set; }
-    
+
     protected override Element render()
     {
         return new FlexRowCentered
@@ -17,7 +17,6 @@ class HistoryButton: ReactComponent
             OnClick(Click),
             Height(25),
             Width(60)
-            
         };
     }
 }

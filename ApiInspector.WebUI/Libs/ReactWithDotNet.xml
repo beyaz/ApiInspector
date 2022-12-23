@@ -233,6 +233,11 @@
                 initialize id attribute of html element
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.Role(System.String)">
+            <summary>
+            Roles define the semantic meaning of content, allowing screen readers and other tools to present and support interaction with an object in a way that is consistent with user expectations of that type of object.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Id(System.Int64)">
             <summary>
                 initialize id attribute of html element
@@ -303,6 +308,16 @@
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.StyleModifier[])">
             <summary>
                 max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.Style)">
+            <summary>
+                max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: 1023px
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.Style)">
@@ -1210,6 +1225,11 @@
         <member name="P:ReactWithDotNet.HtmlElement.className">
             <summary>
                 Gets or sets the name of the class.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.role">
+            <summary>
+            Roles define the semantic meaning of content, allowing screen readers and other tools to present and support interaction with an object in a way that is consistent with user expectations of that type of object.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.accesskey">
