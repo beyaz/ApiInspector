@@ -491,6 +491,14 @@ function GetComponentByDotNetComponentUniqueIdentifier(dotNetComponentUniqueIden
     return component;
 }
 
+/**
+ * @param {number} componentUniqueIdentifier
+ */
+function GetFirstAssignedUniqueIdentifierValueOfComponent(componentUniqueIdentifier)
+{
+    return GetComponentByDotNetComponentUniqueIdentifier(componentUniqueIdentifier)[DotNetComponentUniqueIdentifiers][0];
+}
+
 function isEquivent(a, b)
 {
 	if(a === b)
@@ -662,6 +670,16 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
             key: cmpKey,
             $jsonNode: jsonNode
         };
+
+        const reactAttributeNames = jsonNode.$ReactAttributeNames;
+        if (reactAttributeNames)
+        {
+            for (let i = 0; i < reactAttributeNames.length; i++)
+            {
+                const name = reactAttributeNames[i];
+                cmpProps[name] = jsonNode[DotNetProperties][name];
+            }
+        }
 
         cmpProps[SyncId] = GetNextSequence();
 
@@ -1336,7 +1354,7 @@ function SendRequest(request, onSuccess)
     window.fetch(url, options).then(response => response.json()).then(json => onSuccess(json));
 }
 
-var LastUsedComponentUniqueIdentifier = 0;
+var LastUsedComponentUniqueIdentifier = 1;
 
 function RenderComponentIn(obj)
 {
@@ -1570,6 +1588,28 @@ RegisterCoreFunction("DispatchEvent", function(eventName, eventArguments)
     EventBus.Dispatch(eventName, eventArguments); 
 });
 
+/**
+ * @param {string} senderPropertyFullName
+ * @param {number} senderComponentUniqueIdentifier
+ */
+function GetRealNameOfDotNetEvent(senderPropertyFullName, senderComponentUniqueIdentifier)
+{
+    return [
+        'senderPropertyFullName:' + senderPropertyFullName,
+        'senderComponentUniqueIdentifier:' + senderComponentUniqueIdentifier
+    ].join(',');
+}
+
+RegisterCoreFunction("DispatchDotNetCustomEvent", function(eventSenderInfo, eventArguments)
+{
+    const senderPropertyFullName = eventSenderInfo.SenderPropertyFullName;
+    const senderComponentUniqueIdentifier = GetFirstAssignedUniqueIdentifierValueOfComponent(eventSenderInfo.SenderComponentUniqueIdentifier);
+
+    const eventName = GetRealNameOfDotNetEvent(senderPropertyFullName, senderComponentUniqueIdentifier);
+
+    EventBus.Dispatch(eventName, eventArguments); 
+});
+
 RegisterCoreFunction("ListenEvent", function (eventName, remoteMethodName)
 {
     const component = this;
@@ -1615,13 +1655,20 @@ RegisterCoreFunction("ListenEventOnlyOnce", function (eventName, remoteMethodNam
 });
 
 
-RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventName, remoteMethodName, handlerComponentUniqueIdentifier)
+RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSenderInfo, remoteMethodName, handlerComponentUniqueIdentifier)
 {
     const component = this;
 
+    const senderPropertyFullName = eventSenderInfo.SenderPropertyFullName;
+    const senderComponentUniqueIdentifier = GetFirstAssignedUniqueIdentifierValueOfComponent(eventSenderInfo.SenderComponentUniqueIdentifier);
+
     // avoid multiple attach we need to ensure attach a listener at once
     {
-        const customEventListenerMapKey = eventName + ', RemoteMethodName: ' + remoteMethodName + ' handlerComponentUniqueIdentifier: ' + handlerComponentUniqueIdentifier;
+        const customEventListenerMapKey = [
+            'senderPropertyFullName:' + senderPropertyFullName,
+            'senderComponentUniqueIdentifier:' + senderComponentUniqueIdentifier,
+            'handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier
+        ].join(',');
 
         if (component[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey])
         {
@@ -1639,6 +1686,8 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventNa
 
         StartAction(remoteMethodName, handlerComponent, eventArgumentsAsArray);
     };
+
+    const eventName = GetRealNameOfDotNetEvent(senderPropertyFullName, senderComponentUniqueIdentifier);
 
     component[ON_COMPONENT_DESTROY].push(() =>
     {
@@ -1786,6 +1835,21 @@ function ProcessDynamicCssClasses(dynamicStyles)
     }
 }
 
+function IsMobile()
+{
+    return document.documentElement.clientWidth <= 767;
+}
+
+function IsTablet()
+{
+    return document.documentElement.clientWidth <= 1023 && IsMobile() === false;
+}
+
+function IsDesktop()
+{
+    return IsMobile() === false && IsTablet() === false;
+}
+
 var ReactWithDotNet =
 {
     RequestHandlerUrl: '/HandleReactWithDotNetRequest',
@@ -1795,8 +1859,14 @@ var ReactWithDotNet =
     RenderComponentIn: RenderComponentIn,
     BeforeSendRequest: x=>x,
     RegisterExternalJsObject: RegisterExternalJsObject,
-    GetExternalJsObject: GetExternalJsObject
+    GetExternalJsObject: GetExternalJsObject,
+
+    IsMediaMobile: IsMobile,
+    IsMediaTablet: IsTablet,
+    IsMediaDesktop: IsDesktop
 };
+
+
 
 window.ReactWithDotNet = ReactWithDotNet;
 
