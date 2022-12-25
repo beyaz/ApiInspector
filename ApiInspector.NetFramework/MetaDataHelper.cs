@@ -154,6 +154,21 @@ static class MetadataHelper
 
         VisitTypes(assembly, visit);
 
+        if (types.Count == 0 && !string.IsNullOrWhiteSpace(classFilter))
+        {
+            // try search by namespace
+
+            void filterByNamespaceName(Type type)
+            {
+                if (type.FullName?.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    types.Add(type);
+                }
+            }
+
+            VisitTypes(assembly, filterByNamespaceName);
+        }
+
         return types;
     }
 
