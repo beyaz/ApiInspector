@@ -55,9 +55,9 @@ class HistoryPanel : ReactComponent
 
     static IEnumerable<(string file, MethodReference SelectedMethod)> Search(string filter)
     {
-        foreach (var directory in Directory.GetDirectories(CacheDirectory.CacheDirectoryPath))
+        foreach (var directory in Directory.GetDirectories(CacheDirectory.CacheDirectoryPath).OrderByDescending(x => new DirectoryInfo(x).LastWriteTime))
         {
-            foreach (var file in Directory.GetFiles(directory))
+            foreach (var file in Directory.GetFiles(directory).OrderByDescending(x=>new FileInfo(x).LastWriteTime))
             {
                 var fileContent = File.ReadAllText(file);
                 if (fileContent?.IndexOf(filter+string.Empty,StringComparison.OrdinalIgnoreCase) >=0)
