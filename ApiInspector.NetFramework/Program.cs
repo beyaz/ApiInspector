@@ -181,7 +181,7 @@ internal class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
-            var (isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, string.IsNullOrWhiteSpace(jsonForInstance) ? null : JToken.Parse(jsonForInstance));
+            var (isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, jsonForInstance);
             if (isSuccessfullyCreated)
             {
                 instance = createdInstance;
@@ -211,7 +211,7 @@ internal class Program
                 var jToken = map[parameterInfo.Name];
                 if (jToken != null)
                 {
-                    var (isSuccessfullyCreated, parameterInstance) = Plugins.TryCreateInstance(parameterInfo.ParameterType, jToken);
+                    var (isSuccessfullyCreated, parameterInstance) = Plugins.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
                     if (isSuccessfullyCreated)
                     {
                         invocationParameters.Add(parameterInstance);

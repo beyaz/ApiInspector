@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ApiInspector;
 
@@ -67,7 +66,7 @@ static class Plugins
         return (false, null);
     }
 
-    public static (bool isSuccessfullyCreated, object instance) TryCreateInstance(Type type, JToken jToken)
+    public static (bool isSuccessfullyCreated, object instance) TryCreateInstance(Type type, string json)
     {
         foreach (var plugin in ListOfPlugins)
         {
@@ -90,7 +89,7 @@ static class Plugins
                 continue;
             }
 
-            var response = ((bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[] { type, jToken });
+            var response = ((bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[] { type, json });
             if (response.isSuccessfullyCreated)
             {
                 return response;
