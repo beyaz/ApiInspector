@@ -261,6 +261,11 @@ internal class Program
                 hasNoError = true;
             }
 
+            if (response is string responseAsString)
+            {
+                return responseAsString;
+            }
+            
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings
             {
                 Formatting           = Formatting.Indented,
