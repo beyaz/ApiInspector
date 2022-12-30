@@ -77,6 +77,11 @@ namespace ApiInspector.Bootstrapper
                     }
 
                     var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
+                    if (File.Exists(localZipFilePath))
+                    {
+                        Console.WriteLine("Clearing zip file...");
+                        File.Delete(localZipFilePath);
+                    }
 
                     Console.WriteLine($"Downloading... {newVersionZipFileUrl}");
 
