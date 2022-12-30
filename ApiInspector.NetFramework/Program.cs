@@ -237,6 +237,8 @@ internal class Program
 
         try
         {
+            Plugins.BeforeInvokeMethod(methodInfo);
+            
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
 
             var (isProcessed, isSuccess, processedVersionOfInstance) = Plugins.UnwrapResponse(response);

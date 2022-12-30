@@ -30,6 +30,36 @@ static class Plugins
         }
     }
 
+    public static void BeforeInvokeMethod(MethodInfo targetMethodInfo)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
+            {
+                continue;
+            }
+
+            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(BeforeInvokeMethod), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            methodInfo.Invoke(null, new object[]
+            {
+                targetMethodInfo
+            });
+        }
+    }
+
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
         foreach (var plugin in ListOfPlugins)
@@ -201,4 +231,3 @@ static class Plugins
         public string FullFilePathOfAssembly { get; set; }
     }
 }
-
