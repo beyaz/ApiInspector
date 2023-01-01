@@ -22,6 +22,7 @@
       <None Remove="Resources\Namespace.svg" />
       <None Remove="Resources\play.svg" />
       <None Remove="Resources\success.svg" />
+      <None Remove="Resources\trash.svg" />
     </ItemGroup>
 
     <ItemGroup>
@@ -42,6 +43,7 @@
       <EmbeddedResource Include="Resources\Namespace.svg" />
       <EmbeddedResource Include="Resources\play.svg" />
       <EmbeddedResource Include="Resources\success.svg" />
+      <EmbeddedResource Include="Resources\trash.svg" />
     </ItemGroup>
 
 

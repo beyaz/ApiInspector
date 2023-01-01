@@ -6,16 +6,16 @@ namespace ApiInspector.WebUI;
 
 class HistoryPanel : ReactComponent
 {
+    public string FilterText { get; set; }
+
     [ReactCustomEvent]
     public Action<MethodReference> SelectionChanged { get; set; }
-
-    public string FilterText { get; set; }
 
     protected override Element render()
     {
         var searchResult = Search(FilterText).Take(5).ToList();
-        
-        return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(10), Height("50vh"))
+
+        return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(15), Height("50vh"))
         {
             new InputText
             {
@@ -28,39 +28,40 @@ class HistoryPanel : ReactComponent
             new FlexColumn(AlignItemsStretch, Gap(10))
             {
                 Width("60vw"),
-                searchResult.Select(x => new FlexRow(AlignItemsCenter, CursorPointer, Padding(10))
+                searchResult.Select(x => new FlexRow(JustifyContentSpaceBetween)
                 {
-                    Id(x.file),
-                    OnClick(OnClickHandler),
+                    AlignItemsCenter,
                     Border("1px solid #d9d9d9"), BorderRadius(3),
-                    Hover(Background("rgba(68, 66, 178, 0.1)"),BoxShadow("rgb(68 66 178 / 20%) 0px 0px 0px 0.5px inset")),
+                    Hover(Background("rgba(68, 66, 178, 0.1)"), BoxShadow("rgb(68 66 178 / 20%) 0px 0px 0px 0.5px inset")),
                     BoxShadow("inset 0px 0px 4px 0px rgb(69 42 124 / 15%)"),
-                    new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
 
-                    new div { Text(x.SelectedMethod.DeclaringType.FullName + "::"+ x.SelectedMethod.FullNameWithoutReturnType), MarginLeft(5), FontSize13 }
+                    new FlexRow(AlignItemsCenter, CursorPointer, Padding(10))
+                    {
+                        Id(x.file),
+                        OnClick(OnClickHandler),
+
+                        new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
+
+                        new div { Text(x.SelectedMethod.DeclaringType.FullName + "::" + x.SelectedMethod.FullNameWithoutReturnType), MarginLeft(5), FontSize13 }
+                    },
+                    new img
+                    {
+                        Id(x.file),
+                        Src(GetSvgUrl("trash")), mr(4), wh(24), Hover(wh(26)), Title("Remove From History"), OnClick(OnDeleteClicked)
+                    }
                 })
             }
         };
-    }
-
-    void OnClickHandler(MouseEvent e)
-    {
-        var filePath    = e.FirstNotEmptyId;
-        
-        var fileContent = File.ReadAllText(filePath);
-        var methodReference = JsonConvert.DeserializeObject<MainWindowModel>(fileContent).SelectedMethod;
-        
-        DispatchEvent(()=>SelectionChanged,methodReference);
     }
 
     static IEnumerable<(string file, MethodReference SelectedMethod)> Search(string filter)
     {
         foreach (var directory in Directory.GetDirectories(CacheDirectory.CacheDirectoryPath).OrderByDescending(x => new DirectoryInfo(x).LastWriteTime))
         {
-            foreach (var file in Directory.GetFiles(directory).OrderByDescending(x=>new FileInfo(x).LastWriteTime))
+            foreach (var file in Directory.GetFiles(directory).OrderByDescending(x => new FileInfo(x).LastWriteTime))
             {
                 var fileContent = File.ReadAllText(file);
-                if (fileContent?.IndexOf(filter+string.Empty,StringComparison.OrdinalIgnoreCase) >=0)
+                if (fileContent?.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     var mainWindowModel = JsonConvert.DeserializeObject<MainWindowModel>(fileContent);
 
@@ -68,12 +69,29 @@ class HistoryPanel : ReactComponent
                 }
             }
         }
-        
-       
+    }
+
+    void OnClickHandler(MouseEvent e)
+    {
+        var filePath = e.FirstNotEmptyId;
+
+        var fileContent     = File.ReadAllText(filePath);
+        var methodReference = JsonConvert.DeserializeObject<MainWindowModel>(fileContent).SelectedMethod;
+
+        DispatchEvent(() => SelectionChanged, methodReference);
+    }
+
+    void OnDeleteClicked(MouseEvent e)
+    {
+        var filePath = e.FirstNotEmptyId;
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
     }
 
     void OnFilterTextKeypressCompleted()
     {
-        
     }
 }
