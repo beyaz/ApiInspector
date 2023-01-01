@@ -1271,25 +1271,26 @@ function DefineComponent(componentDeclaration)
 
             if (syncIdInState > syncIdInProp)
             {
+                const componentActiveUniqueIdentifier = NotNull(prevState[DotNetComponentUniqueIdentifier]);
+                const componentNextUniqueIdentifier   = NotNull(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]);
 
-                if (NotNull(prevState[DotNetComponentUniqueIdentifier]) !== NotNull(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]))
+                if (componentActiveUniqueIdentifier !== componentNextUniqueIdentifier)
                 {
-                    const component = COMPONENT_CACHE.FindComponentByDotNetComponentUniqueIdentifier(prevState[DotNetComponentUniqueIdentifier]);
-                    if (component)
-                    {
-                        component[DotNetComponentUniqueIdentifiers].push(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]);
+                    const component = GetComponentByDotNetComponentUniqueIdentifier(componentActiveUniqueIdentifier);
 
-                        const partialState = {};
-                        partialState[DotNetComponentUniqueIdentifier] = NotNull(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]);
-                        return partialState;
-                    }
-                    
-                }             
+                    component[DotNetComponentUniqueIdentifiers].push(componentNextUniqueIdentifier);
 
-                 return null;
+                    const partialState = {};
+
+                    partialState[DotNetComponentUniqueIdentifier] = componentNextUniqueIdentifier;
+
+                    return partialState;                    
+                }
+
+                return null;
             }
 
-            if (syncIdInState !== syncIdInProp)
+            if (syncIdInState < syncIdInProp)
             {
                 const partialState = {};
 
@@ -1297,15 +1298,17 @@ function DefineComponent(componentDeclaration)
                 partialState[RootNode] = nextProps.$jsonNode[RootNode];
                 partialState[ClientTasks] = nextProps.$jsonNode[ClientTasks];
                 partialState[DotNetProperties] = NotNull(nextProps.$jsonNode[DotNetProperties]);
-                
-                if (NotNull(prevState[DotNetComponentUniqueIdentifier]) !== NotNull(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]))
+
+                const componentActiveUniqueIdentifier = NotNull(prevState[DotNetComponentUniqueIdentifier]);
+                const componentNextUniqueIdentifier   = NotNull(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]);
+
+                if (componentActiveUniqueIdentifier !== componentNextUniqueIdentifier)
                 {
-                    const component = GetComponentByDotNetComponentUniqueIdentifier(prevState[DotNetComponentUniqueIdentifier]);
-                    component[DotNetComponentUniqueIdentifiers].push(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]);
+                    const component = GetComponentByDotNetComponentUniqueIdentifier(componentActiveUniqueIdentifier);
+                    component[DotNetComponentUniqueIdentifiers].push(componentNextUniqueIdentifier);
                 }
 
-                partialState[DotNetComponentUniqueIdentifier] = NotNull(nextProps.$jsonNode[DotNetComponentUniqueIdentifier]);
-                
+                partialState[DotNetComponentUniqueIdentifier] = componentNextUniqueIdentifier;
 
                 return partialState;
             }
@@ -1426,7 +1429,9 @@ function InvokeJsFunctionInPath(callerReactComponent, jsFunctionPath, jsFunction
     GetExternalJsObject(jsFunctionPath).apply(callerReactComponent, jsFunctionArguments);
 }
 
-const ExternalJsObjectMap = {};
+const ExternalJsObjectMap = {
+    'React.Fragment': React.Fragment
+};
 
 function RegisterExternalJsObject(key/*string*/, value/* componentFullName | functionName */)
 {

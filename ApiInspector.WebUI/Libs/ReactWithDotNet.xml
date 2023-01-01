@@ -71,6 +71,11 @@
                 style.fontSize = 'small'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.Double)">
+            <summary>
+            style.letterSpacing = <paramref name="letterSpacingAsPixel"/> + 'px'
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.FontWeightExtraBold">
             <summary>
                 style.fontWeight = '800'
@@ -313,6 +318,16 @@
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.Style)">
             <summary>
                 max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 768px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 768px
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.StyleModifier[])">
@@ -1222,50 +1237,46 @@
                 <br>alignItems     = "center"</br>
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.HtmlElement.accesskey">
+            <summary>
+                Provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a
+                space-separated list of characters. The browser should use the first one that exists on the computer keyboard
+                layout.
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.HtmlElement.className">
             <summary>
                 Gets or sets the name of the class.
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.HtmlElement.role">
+        <member name="P:ReactWithDotNet.HtmlElement.data">
             <summary>
-            Roles define the semantic meaning of content, allowing screen readers and other tools to present and support interaction with an object in a way that is consistent with user expectations of that type of object.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.accesskey">
-            <summary>
-            Provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a space-separated list of characters. The browser should use the first one that exists on the computer keyboard layout.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.translate">
-            <summary>
-            An enumerated attribute that is used to specify whether an element's attribute values and the values of its Text node children are to be translated when the page is localized, or whether to leave them unchanged. It can have the following values:
-            <br/>
-            empty string or yes, which indicates that the element will be translated.
-            <br/>
-            no, which indicates that the element will not be translated.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.part">
-            <summary>
-            A space-separated list of the part names of the element. Part names allows CSS to select and style specific elements in a shadow tree via the ::part pseudo-element.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.lang">
-            <summary>
-            Helps define the language of an element: the language that non-editable elements are in, or the language that editable elements should be written in by the user. The attribute contains one "language tag" (made of hyphen-separated "language subtags") in the format defined in RFC 5646: Tags for Identifying Languages (also known as BCP 47). xml:lang has priority over it.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.spellcheck">
-            <summary>
-            An enumerated attribute defines whether the element may be checked for spelling errors. It may have the following values:<br/>
-            empty string or true, which indicates that the element should be, if possible, checked for spelling errors;<br/>
-            false, which indicates that the element should not be checked for spelling errors.
+                The data-* attribute is used to store custom data private to the page or application.
+                <br />
+                The data-* attribute gives us the ability to embed custom data attributes on all HTML elements.
+                <br />
+                The stored (custom) data can then be used in the page's JavaScript to create a more engaging user experience
+                (without any Ajax calls or server-side database queries).
+                <br />
+                The data-* attribute consist of two parts:
+                <br />
+                The attribute name should not contain any uppercase letters, and must be at least one character long after the
+                prefix "data-"<br />
+                The attribute value can be any string<br />
+                Note: Custom attributes prefixed with "data-" will be completely ignored by the user agent.<br />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.innerText">
             <summary>
                 'innerText' property of element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.lang">
+            <summary>
+                Helps define the language of an element: the language that non-editable elements are in, or the language that
+                editable elements should be written in by the user. The attribute contains one "language tag" (made of
+                hyphen-separated "language subtags") in the format defined in RFC 5646: Tags for Identifying Languages (also known
+                as BCP 47). xml:lang has priority over it.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.onClick">
@@ -1275,14 +1286,34 @@
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.onScroll">
             <summary>
-            Handler <paramref name="value"/> should be in client js codes.<br/>
-            <br/>
-            Sample Usage:<br/>
-            <br/>
-            ReactWithDotNet.RegisterExternalJsObject(<paramref name="value"/>, function(e){<br/>
-            ...<br/>
-            ...<br/>
-            });
+                Handler <paramref name="value" /> should be in client js codes.<br />
+                <br />
+                Sample Usage:<br />
+                <br />
+                ReactWithDotNet.RegisterExternalJsObject(<paramref name="value" />, function(e){<br />
+                ...<br />
+                ...<br />
+                });
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.part">
+            <summary>
+                A space-separated list of the part names of the element. Part names allows CSS to select and style specific
+                elements in a shadow tree via the ::part pseudo-element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.role">
+            <summary>
+                Roles define the semantic meaning of content, allowing screen readers and other tools to present and support
+                interaction with an object in a way that is consistent with user expectations of that type of object.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.spellcheck">
+            <summary>
+                An enumerated attribute defines whether the element may be checked for spelling errors. It may have the following
+                values:<br />
+                empty string or true, which indicates that the element should be, if possible, checked for spelling errors;<br />
+                false, which indicates that the element should not be checked for spelling errors.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.style">
@@ -1298,6 +1329,17 @@
         <member name="P:ReactWithDotNet.HtmlElement.text">
             <summary>
                 'innerText' property of element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.translate">
+            <summary>
+                An enumerated attribute that is used to specify whether an element's attribute values and the values of its Text
+                node children are to be translated when the page is localized, or whether to leave them unchanged. It can have the
+                following values:
+                <br />
+                empty string or yes, which indicates that the element will be translated.
+                <br />
+                no, which indicates that the element will not be translated.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.HtmlElement.AddClass(System.String)">
