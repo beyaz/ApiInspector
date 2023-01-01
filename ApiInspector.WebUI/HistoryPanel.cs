@@ -33,7 +33,7 @@ class HistoryPanel : ReactComponent
                     Id(x.file),
                     OnClick(OnClickHandler),
                     Border("1px solid #d9d9d9"), BorderRadius(3),
-                    Hover(PrimaryBackground),
+                    Hover(Background("rgba(68, 66, 178, 0.1)"),BoxShadow("rgb(68 66 178 / 20%) 0px 0px 0px 0.5px inset")),
                     
                     new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
 
