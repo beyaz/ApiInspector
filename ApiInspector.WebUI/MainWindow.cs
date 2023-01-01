@@ -54,8 +54,13 @@ class MainWindow : ReactComponent<MainWindowModel>
         };
     }
 
+
+    static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
+    
     protected override Element render()
     {
+
+       
         ArrangeEditors();
 
         const string borderColor = "#d5d5d8";
@@ -88,7 +93,13 @@ class MainWindow : ReactComponent<MainWindowModel>
     outline: none;
 }"
             },
-            new FlexColumn(Border($"1px solid {borderColor}"), WidthHeightMaximized, Background("white"), BorderRadius(3))
+            new FlexColumn(Border($"1px solid {borderColor}"), 
+                           WidthHeightMaximized,
+                           Background("rgba(255, 255, 255, 0.4)"),
+                           BorderRadius(10),
+                           BoxShadow("0px 30px 30px rgba(69, 42, 124, 0.15)"),
+                           BackdropFilterBlur(30)
+                          )
             {
                 new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom($"1px solid {borderColor}"))
                 {
@@ -106,7 +117,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         new HistoryButton
                         {
                             Click = _ => HistoryDialogVisible = true
-                        } + Right(3) + PositionAbsolute + MarginTop(-14),
+                        } + Right(3) + PositionAbsolute + MarginTop(-14)+ComponentBoxShadow,
 
                         new FlexColumn(MarginLeftRight(3))
                         {
@@ -116,7 +127,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 DirectoryPath    = state.AssemblyDirectory,
                                 SelectionChanged = x => state.AssemblyDirectory = x
-                            }
+                            }+ComponentBoxShadow
                         },
 
                         new FlexColumn(PaddingLeftRight(3))
@@ -128,7 +139,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 AssemblyDirectoryPath = state.AssemblyDirectory,
                                 AssemblyFileName      = state.AssemblyFileName,
                                 SelectionChanged      = x => state.AssemblyFileName = x
-                            }
+                            } + ComponentBoxShadow
                         },
                         new FlexColumn(MarginLeftRight(3))
                         {
@@ -139,7 +150,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 valueBind                = () => state.ClassFilter,
                                 valueBindDebounceTimeout = 700,
                                 valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                            }
+                            }+ComponentBoxShadow
                         },
                         new FlexColumn(MarginLeftRight(3))
                         {
@@ -150,7 +161,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 valueBind                = () => state.MethodFilter,
                                 valueBindDebounceTimeout = 700,
                                 valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                            }
+                            }+ComponentBoxShadow
                         },
 
                         new MethodSelectionView
@@ -160,7 +171,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                             SelectionChanged          = OnElementSelected,
                             AssemblyFilePath          = AssemblyFileFullPath
-                        }
+                        }+ComponentBoxShadow
                     },
                     When(IsInitializingSelectedMethod, new FlexRowCentered(FlexGrow(1))
                     {
@@ -174,6 +185,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         },
                         new Splitter
                         {
+                            ComponentBoxShadow,
                             new SplitterPanel(PaddingRight(3))
                             {
                                 new FlexColumn(AlignItemsCenter)
@@ -265,14 +277,14 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     IsProcessing        = IsExecutionStarted,
                                     ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
                                     ShowStatusAsFail    = ExecuteButtonStatusIsFail
-                                },
+                                }+ComponentBoxShadow,
                                 new DebugButton
                                 {
                                     Click               = OnDebugClicked,
                                     IsProcessing        = IsDebugStarted,
                                     ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
                                     ShowStatusAsFail    = DebugButtonStatusIsFail
-                                }
+                                }+ComponentBoxShadow
                             },
 
                             new FlexColumn(WidthHeightMaximized)
@@ -281,6 +293,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                                 new FreeScrollBar
                                 {
+                                    ComponentBoxShadow,
                                     Height("calc(100% - 28px)"), PaddingBottom(10),
                                     Border("1px solid #d9d9d9"),
                                     BorderRadius(3),

@@ -633,6 +633,16 @@
                 style.paddingBottom = <paramref name="value" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.BackdropFilter(System.String)">
+            <summary>
+                style.backdropFilter = value
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackdropFilterBlur(System.Double)">
+            <summary>
+                style.backdropFilter = blur(px)
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.article">
             <summary>
                 Specifies independent, self-contained content.
