@@ -13,19 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\bug.svg" />
-      <None Remove="Resources\Class.svg" />
-      <None Remove="Resources\dll.svg" />
-      <None Remove="Resources\fail.svg" />
-      <None Remove="Resources\Folder.svg" />
-      <None Remove="Resources\Method.svg" />
-      <None Remove="Resources\Namespace.svg" />
-      <None Remove="Resources\play.svg" />
-      <None Remove="Resources\success.svg" />
-      <None Remove="Resources\trash.svg" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
       <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
       <None Include="ApiInspector.WebUI.Config.json">
