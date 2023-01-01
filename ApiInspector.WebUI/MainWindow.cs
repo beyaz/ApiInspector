@@ -75,6 +75,17 @@ class MainWindow : ReactComponent<MainWindowModel>
                 onHide   = () => HistoryDialogVisible = false,
                 children =
                 {
+                    new style
+                    {
+                        text = @"
+.p-dialog .p-dialog-header {
+    background: transparent;
+}
+.p-dialog .p-dialog-content{
+   background: transparent;
+}
+"
+                    },
                     new HistoryPanel
                     {
                         SelectionChanged = selectedMethod =>
@@ -84,7 +95,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                             state = StateCache.TryRead(selectedMethod) ?? state;
                         }
                     }
-                }
+                },
+                style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
             },
             new style
             {

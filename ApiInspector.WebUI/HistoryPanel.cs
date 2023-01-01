@@ -34,7 +34,7 @@ class HistoryPanel : ReactComponent
                     OnClick(OnClickHandler),
                     Border("1px solid #d9d9d9"), BorderRadius(3),
                     Hover(Background("rgba(68, 66, 178, 0.1)"),BoxShadow("rgb(68 66 178 / 20%) 0px 0px 0px 0.5px inset")),
-                    
+                    BoxShadow("inset 0px 0px 4px 0px rgb(69 42 124 / 15%)"),
                     new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
 
                     new div { Text(x.SelectedMethod.DeclaringType.FullName + "::"+ x.SelectedMethod.FullNameWithoutReturnType), MarginLeft(5), FontSize13 }
