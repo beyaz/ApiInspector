@@ -198,6 +198,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                         new Splitter
                         {
                             ComponentBoxShadow,
+                            MarginTop(5),
+                            BorderRadius(5),
                             new SplitterPanel(PaddingRight(3))
                             {
                                 new FlexColumn(AlignItemsCenter)
@@ -308,7 +310,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     ComponentBoxShadow,
                                     Height("calc(100% - 28px)"), PaddingBottom(10),
                                     Border("1px solid #d9d9d9"),
-                                    BorderRadius(3),
+                                    BorderRadius(5),
                                     WidthMaximized,
 
                                     new CodeMirror
