@@ -103,7 +103,23 @@ class MainWindow : ReactComponent<MainWindowModel>
                 @"
 .ͼ1.cm-editor.cm-focused {
     outline: none;
-}"
+}
+/* string */
+.ͼ1a{
+    color: #f44336;
+    font-weight: bold;
+}
+/* number */
+.ͼ18 {
+    color: #141413;
+    font-weight: bold;
+}
+/* boolean */
+.ͼ1f {
+    color: #2c1aeb;
+    font-weight: bold;
+}
+"
             },
             new FlexColumn(Border($"1px solid {borderColor}"), 
                            WidthHeightMaximized,
