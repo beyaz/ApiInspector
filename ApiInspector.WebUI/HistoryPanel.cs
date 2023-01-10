@@ -56,7 +56,14 @@ class HistoryPanel : ReactComponent
 
     static IEnumerable<(string file, MethodReference SelectedMethod)> Search(string filter)
     {
-        foreach (var directory in Directory.GetDirectories(CacheDirectory.CacheDirectoryPath).OrderByDescending(x => new DirectoryInfo(x).LastWriteTime))
+        var cacheDirectoryPath = CacheDirectory.CacheDirectoryPath;
+
+        if (!Directory.Exists(cacheDirectoryPath))
+        {
+            yield break;
+        }
+
+        foreach (var directory in Directory.GetDirectories(cacheDirectoryPath).OrderByDescending(x => new DirectoryInfo(x).LastWriteTime))
         {
             foreach (var file in Directory.GetFiles(directory).OrderByDescending(x => new FileInfo(x).LastWriteTime))
             {
