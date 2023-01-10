@@ -13,3 +13,9 @@ Press 'Debug' button then attach to process 'ApiInspector' from your ide.
 ![Screenshot](Screenshot.png)
 
 Note: Minimum required platform is '.Net Core 3.1'.
+
+https://dotnet.microsoft.com/en-us/download/dotnet/3.1
+
+.NET Runtime 3.1.32
+
+ASP.NET Core Runtime 3.1.32
