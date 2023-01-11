@@ -55,30 +55,30 @@ static class ReflectionHelper
             {
                 return null;
             }
+
+            foreach (var propertyInfo in type.GetProperties())
+            {
+                if (propertyInfo.GetIndexParameters().Length > 0)
+                {
+                    continue;
+                }
+
+                var existingValue = propertyInfo.GetValue(instance);
+                if (existingValue == null)
+                {
+                    propertyInfo.SetValue(instance, CreateDefaultValue(propertyInfo.PropertyType));
+                }
+            }
+
+            return instance;
         }
         catch (Exception)
         {
             return null;
         }
-
-        foreach (var propertyInfo in type.GetProperties())
-        {
-            if (propertyInfo.GetIndexParameters().Length > 0)
-            {
-                continue;
-            }
-
-            var existingValue = propertyInfo.GetValue(instance);
-            if (existingValue == null)
-            {
-                propertyInfo.SetValue(instance, CreateDefaultValue(propertyInfo.PropertyType));
-            }
-        }
-
-        return instance;
     }
 
-    
+
 
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
