@@ -7,150 +7,128 @@ using static ApiInspector.ProcessHelper;
 
 namespace ApiInspector;
 
-internal class Program
+static class Program
 {
-    public static (string jsonForInstance, string jsonForParameters) GetEditorTexts((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance, string jsonForParameters) state)
+
+   
+    
+    public static string GetInstanceEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance) state)
     {
-        var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
+        var (fullAssemblyPath, methodReference, jsonForInstance) = state;
 
-        if (canShowInstanceEditor())
+        if (methodReference is null || methodReference.IsStatic)
         {
-            initializeInstanceJson();
+            return jsonForInstance;
         }
 
-        if (canShowParametersEditor())
+        var typeOfInstance = methodReference.DeclaringType;
+
+        if (typeOfInstance == null)
         {
-            initializeParametersJson();
+            return jsonForInstance;
         }
 
-        return (jsonForInstance, jsonForParameters);
-
-        bool canShowInstanceEditor()
+        var declaringType = MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(typeOfInstance);
+        if (declaringType == null)
         {
-            if (methodReference?.IsStatic == true)
-            {
-                return false;
-            }
-
-            return true;
+            return jsonForInstance;
         }
 
-        bool canShowParametersEditor()
+        // try create from plugins
         {
-            if (methodReference?.Parameters.Count > 0)
+            var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(declaringType);
+            if (isSuccessfullyCreated)
             {
-                return true;
+                return JsonConvert.SerializeObject(instance, new JsonSerializerSettings
+                {
+                    DefaultValueHandling = DefaultValueHandling.Include,
+                    Formatting           = Formatting.Indented
+                });
             }
-
-            return false;
         }
 
-        void initializeInstanceJson()
+        var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
+        if (map == null)
         {
-            var typeOfInstance = methodReference.DeclaringType;
-
-            if (typeOfInstance == null)
-            {
-                return;
-            }
-
-            var declaringType = MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(typeOfInstance);
-            if (declaringType == null)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(jsonForInstance) ||
-                string.IsNullOrWhiteSpace(jsonForInstance.Replace("{", string.Empty).Replace("}", string.Empty)))
-            {
-                var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(declaringType);
-                if (isSuccessfullyCreated)
-                {
-                    jsonForInstance = JsonConvert.SerializeObject(instance, new JsonSerializerSettings
-                    {
-                        DefaultValueHandling = DefaultValueHandling.Include,
-                        Formatting           = Formatting.Indented
-                    });
-
-                    return;
-                }
-            }
-
-            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
-            if (map == null)
-            {
-                map = new Dictionary<string, object>();
-            }
-
-            foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                var name         = propertyInfo.Name;
-                var propertyType = propertyInfo.PropertyType;
-
-                if (map.ContainsKey(name))
-                {
-                    continue;
-                }
-
-                if (propertyInfo.DeclaringType?.IsAbstract == true)
-                {
-                    continue;
-                }
-
-                if (propertyType.BaseType == typeof(MulticastDelegate))
-                {
-                    continue;
-                }
-
-                var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(propertyType);
-                if (isSuccessfullyCreated)
-                {
-                    map.Add(name, instance);
-                    continue;
-                }
-
-                map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
-            }
-
-            jsonForInstance = JsonConvert.SerializeObject(map, new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented
-            });
+            map = new Dictionary<string, object>();
         }
 
-        void initializeParametersJson()
+        foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.jsonForParameters ?? string.Empty);
-            if (map == null)
+            var name = propertyInfo.Name;
+            var propertyType = propertyInfo.PropertyType;
+
+            if (map.ContainsKey(name))
             {
-                map = new Dictionary<string, object>();
+                continue;
             }
 
-            foreach (var parameterInfo in MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
+            if (propertyInfo.DeclaringType?.IsAbstract == true)
             {
-                var name = parameterInfo.Name;
-                if (name == null || map.ContainsKey(name))
-                {
-                    continue;
-                }
-
-                var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(parameterInfo.ParameterType);
-                if (isSuccessfullyCreated)
-                {
-                    map.Add(name, instance);
-                    continue;
-                }
-
-                map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
+                continue;
             }
 
-            jsonForParameters = JsonConvert.SerializeObject(map, new JsonSerializerSettings
+            if (propertyType.BaseType == typeof(MulticastDelegate))
             {
-                DefaultValueHandling = DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented
-            });
+                continue;
+            }
+
+            var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(propertyType);
+            if (isSuccessfullyCreated)
+            {
+                map.Add(name, instance);
+                continue;
+            }
+
+            map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
         }
+
+        return JsonConvert.SerializeObject(map, new JsonSerializerSettings
+        {
+            DefaultValueHandling = DefaultValueHandling.Include,
+            Formatting = Formatting.Indented
+        });
+    }
+
+    public static string GetParametersEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForParameters) state)
+    {
+        var (fullAssemblyPath, methodReference, jsonForParameters) = state;
+
+        if (methodReference is null || methodReference.Parameters.Count == 0)
+        {
+            return jsonForParameters;
+        }
+
+        var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.jsonForParameters ?? string.Empty);
+        if (map == null)
+        {
+            map = new Dictionary<string, object>();
+        }
+
+        foreach (var parameterInfo in MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
+        {
+            var name = parameterInfo.Name;
+            if (name == null || map.ContainsKey(name))
+            {
+                continue;
+            }
+
+            var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(parameterInfo.ParameterType);
+            if (isSuccessfullyCreated)
+            {
+                map.Add(name, instance);
+                continue;
+            }
+
+            map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
+        }
+
+        return JsonConvert.SerializeObject(map, new JsonSerializerSettings
+        {
+            DefaultValueHandling = DefaultValueHandling.Include,
+            Formatting           = Formatting.Indented
+        });
+
     }
 
     public static string[] GetHelpMessage()

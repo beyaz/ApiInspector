@@ -6,24 +6,44 @@ namespace ApiInspector.WebUI;
 
 static class External
 {
-    public static (string jsonForInstance, string jsonForParameters) GetEditorTexts(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance, string jsonForParameters)
+    public static string GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
         {
-            return (string.Empty, string.Empty);
+            return null;
         }
 
         var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
         if (isDotNetCore is false && isDotNetFramework is false)
         {
-            return (string.Empty, string.Empty);
+            return null;
         }
 
-        var parameter = (assemblyFileFullPath, methodReference, jsonForInstance, jsonForParameters);
+        var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
-        return Execute<(string jsonForInstance, string jsonForParameters)>(isDotNetCore, nameof(GetEditorTexts), parameter).Unwrap();
+        return Execute<string>(isDotNetCore, nameof(GetInstanceEditorJsonText), parameter).Unwrap();
     }
+
+    public static string GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
+    {
+        var fileInfo = new FileInfo(assemblyFileFullPath);
+        if (!fileInfo.Exists)
+        {
+            return null;
+        }
+
+        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
+        if (isDotNetCore is false && isDotNetFramework is false)
+        {
+            return null;
+        }
+
+        var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
+
+        return Execute<string>(isDotNetCore, nameof(GetParametersEditorJsonText), parameter).Unwrap();
+    }
+    
 
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFileFullPath, string classFilter, string methodFilter)
     {

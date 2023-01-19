@@ -3,6 +3,8 @@ using ApiInspector.WebUI.Components;
 using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.react_free_scrollbar;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
+using static System.Environment;
+using static ApiInspector.WebUI.FpExtensions;
 
 namespace ApiInspector.WebUI;
 
@@ -42,6 +44,8 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     public bool IsInitializingSelectedMethod { get; set; }
 
+    static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
+
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
     protected override void constructor()
@@ -54,13 +58,8 @@ class MainWindow : ReactComponent<MainWindowModel>
         };
     }
 
-
-    static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
-    
     protected override Element render()
     {
-
-       
         ArrangeEditors();
 
         const string borderColor = "#d5d5d8";
@@ -121,7 +120,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 }
 "
             },
-            new FlexColumn(Border($"1px solid {borderColor}"), 
+            new FlexColumn(Border($"1px solid {borderColor}"),
                            WidthHeightMaximized,
                            Background("rgba(255, 255, 255, 0.4)"),
                            BorderRadius(10),
@@ -145,7 +144,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         new HistoryButton
                         {
                             Click = _ => HistoryDialogVisible = true
-                        } + Right(3) + PositionAbsolute + MarginTop(-14)+ComponentBoxShadow,
+                        } + Right(3) + PositionAbsolute + MarginTop(-14) + ComponentBoxShadow,
 
                         new FlexColumn(MarginLeftRight(3))
                         {
@@ -155,7 +154,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 DirectoryPath    = state.AssemblyDirectory,
                                 SelectionChanged = x => state.AssemblyDirectory = x
-                            }+ComponentBoxShadow
+                            } + ComponentBoxShadow
                         },
 
                         new FlexColumn(PaddingLeftRight(3))
@@ -178,7 +177,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 valueBind                = () => state.ClassFilter,
                                 valueBindDebounceTimeout = 700,
                                 valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                            }+ComponentBoxShadow
+                            } + ComponentBoxShadow
                         },
                         new FlexColumn(MarginLeftRight(3))
                         {
@@ -189,7 +188,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 valueBind                = () => state.MethodFilter,
                                 valueBindDebounceTimeout = 700,
                                 valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                            }+ComponentBoxShadow
+                            } + ComponentBoxShadow
                         },
 
                         new MethodSelectionView
@@ -199,7 +198,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                             SelectionChanged          = OnElementSelected,
                             AssemblyFilePath          = AssemblyFileFullPath
-                        }+ComponentBoxShadow
+                        } + ComponentBoxShadow
                     },
                     When(IsInitializingSelectedMethod, new FlexRowCentered(FlexGrow(1))
                     {
@@ -307,14 +306,14 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     IsProcessing        = IsExecutionStarted,
                                     ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
                                     ShowStatusAsFail    = ExecuteButtonStatusIsFail
-                                }+ComponentBoxShadow,
+                                } + ComponentBoxShadow,
                                 new DebugButton
                                 {
                                     Click               = OnDebugClicked,
                                     IsProcessing        = IsDebugStarted,
                                     ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
                                     ShowStatusAsFail    = DebugButtonStatusIsFail
-                                }+ComponentBoxShadow
+                                } + ComponentBoxShadow
                             },
 
                             new FlexColumn(WidthHeightMaximized)
@@ -366,7 +365,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
             if (lineCount < optimumLineCount)
             {
-                return value + string.Join(Environment.NewLine, Enumerable.Range(0, optimumLineCount - lineCount).Select(_ => string.Empty));
+                return value + string.Join(NewLine, Enumerable.Range(0, optimumLineCount - lineCount).Select(_ => string.Empty));
             }
 
             return value;
@@ -459,23 +458,24 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         if (state.SelectedMethod != null)
         {
-            if (state.JsonTextForDotNetInstanceProperties.HasNoValue() &&
-                state.JsonTextForDotNetMethodParameters.HasNoValue())
+            if (state.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                try
-                {
-                    var (jsonForInstance, jsonForParameters) = External.GetEditorTexts(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters);
+                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties))
+                   .Then(json => state.JsonTextForDotNetInstanceProperties = json, printError);
+            }
 
-                    state.JsonTextForDotNetInstanceProperties = jsonForInstance;
-                    state.JsonTextForDotNetMethodParameters   = jsonForParameters;
-                }
-                catch (Exception exception)
-                {
-                    state.ResponseAsJson = exception.ToString();
-                }
+            if (state.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            {
+                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetMethodParameters))
+                   .Then(json => state.JsonTextForDotNetMethodParameters = json, printError);
             }
 
             ArrangeEditors();
+
+            void printError(Exception exception)
+            {
+                state.ResponseAsJson = exception + NewLine + state.ResponseAsJson;
+            }
         }
     }
 
