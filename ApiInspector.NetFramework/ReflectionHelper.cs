@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using static ApiInspector.FpExtensions;
 
 namespace ApiInspector;
 
@@ -78,7 +79,12 @@ static class ReflectionHelper
         }
     }
 
+    static Assembly LoadAssemblyFile(string filePath)
+    {
+        return SafeInvoke(() => Assembly.LoadFile(filePath)).TraceError(traceError).Unwrap();
 
+        void traceError(Exception exception) => FileHelper.WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
+    }
 
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
@@ -86,11 +92,13 @@ static class ReflectionHelper
 
         var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
 
-        var directoryName = Path.GetDirectoryName(e.RequestingAssembly?.Location);
-        if (directoryName != null)
+        SafeInvoke(() => Path.GetDirectoryName(e.RequestingAssembly?.Location)).Then(directoryName =>
         {
-            searchDirectories.Insert(0, directoryName);
-        }
+            if (directoryName != null)
+            {
+                searchDirectories.Insert(0, directoryName);
+            }
+        });
 
         if (RuntimeInformation.FrameworkDescription.IndexOf("Core", StringComparison.OrdinalIgnoreCase) >= 0)
         {
@@ -115,7 +123,7 @@ static class ReflectionHelper
             var fullFilePath = Plugins.TryFindAssembly(fileName);
             if (fullFilePath is not null)
             {
-                return Assembly.LoadFile(fullFilePath);
+                return LoadAssemblyFile(fullFilePath);
             }
         }
 
@@ -126,10 +134,12 @@ static class ReflectionHelper
                 var filePath = Path.Combine(searchDirectory, fileNameWithoutExtension + fileExtension);
                 if (File.Exists(filePath))
                 {
-                    return Assembly.LoadFile(filePath);
+                    return LoadAssemblyFile(filePath);
                 }
             }
         }
+
+        FileHelper.WriteLog($"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}");
 
         return null;
     }

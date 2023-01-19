@@ -266,6 +266,8 @@ static class Program
         ReflectionHelper.AttachAssemblyResolver();
 
         KillAllNamedProcess(nameof(ApiInspector));
+        
+        FileHelper.ClearLog();
 
         try
         {

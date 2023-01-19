@@ -77,9 +77,13 @@ static class FileHelper
 
     public static void WriteAllText(string path, string contents)
     {
-        if (!Directory.Exists(Path.GetDirectoryName(path)))
+        var directoryName = Path.GetDirectoryName(path);
+        if (directoryName != null)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
         }
 
         File.WriteAllText(path, contents);
@@ -93,6 +97,19 @@ static class FileHelper
     public static void WriteInput(string inputAsJson)
     {
         File.WriteAllText(FilePath.Input, inputAsJson);
+    }
+
+    public static void WriteLog(string message)
+    {
+        File.WriteAllText(FilePath.Log, message);
+    }
+
+    public static void ClearLog()
+    {
+        if (File.Exists(FilePath.Log))
+        {
+            File.Delete(FilePath.Log);
+        }
     }
 
     public static void WriteSuccessResponse(string responseAsJson)
@@ -131,6 +148,9 @@ static class FileHelper
     static class FilePath
     {
         public static string Input => WorkingDirectory + @"ApiInspector.Input.json";
+
+        public static string Log => WorkingDirectory + @"ApiInspector.log.txt";
+
         public static string ResponseFail => WorkingDirectory + @"ApiInspector.ResponseFail.json";
 
         public static string ResponseSuccess => WorkingDirectory + @"ApiInspector.ResponseSuccess.json";
