@@ -130,11 +130,16 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom($"1px solid {borderColor}"))
                 {
+                    JustifyContentSpaceBetween,
+                    AlignItemsCenter,
+                    
                     new FlexRow(Gap(5))
                     {
                         AlignItemsCenter,
                         new h3 { "Api Inspector" }, new h5 { " (.net method invoker) " }
-                    }
+                    },
+                    
+                    new LogoutButton()
                 },
 
                 new FlexRow(HeightMaximized)
