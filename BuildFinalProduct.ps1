@@ -1,6 +1,6 @@
 $ProjectDirectory = "D:\work\git\ApiInspector\"
 $FinalDirectory   = "D:\work\git\ApiInspector\Api Inspector (.net method invoker)\"
-$WebUiOutputDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Debug\netcoreapp3.1\"
+$WebUiOutputDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Debug\net6.0\"
 
 New-Item -ItemType Directory -Force -Path $FinalDirectory
 
@@ -51,15 +51,15 @@ Copy-Item -Path $temp1 -Destination $temp2 -Force
 
 
 
-$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\netcoreapp3.1\*.dll"
+$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\net6.0\*.dll"
 $temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
-$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\netcoreapp3.1\*.exe"
+$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\net6.0\*.exe"
 $temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
-$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\netcoreapp3.1\ApiInspector.runtimeconfig.json"
+$temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\net6.0\ApiInspector.runtimeconfig.json"
 $temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
