@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 /ApiInspector.WebUI/wwwroot/package-lock.json
 /ApiInspector.WebUI/wwwroot/index.js
+/ApiInspector.WebUI/wwwroot/dist

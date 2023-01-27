@@ -66,5 +66,10 @@
     </ItemGroup>
 
 
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="xcopy &quot;$(ProjectDir)wwwroot\dist\*.*&quot; &quot;$(TargetDir)\wwwroot\dist&quot; /I /Y /E&#xD;&#xA;xcopy &quot;$(SolutionDir)ApiInspector.NetCore\bin\debug\net6.0\*.*&quot; &quot;$(TargetDir)\ApiInspector.NetCore&quot; /I /Y /E &#xD;&#xA;xcopy &quot;$(SolutionDir)ApiInspector.NetFramework\bin\debug\*.*&quot; &quot;$(TargetDir)\ApiInspector.NetFramework&quot; /I /Y /E " />
+    </Target>
+
+
    
 </Project>

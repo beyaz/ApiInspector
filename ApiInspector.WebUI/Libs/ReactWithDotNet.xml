@@ -4,9 +4,19 @@
         <name>ReactWithDotNet</name>
     </assembly>
     <members>
-        <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
+        <member name="M:ReactWithDotNet.Mixin.Dir(System.String)">
             <summary>
-                <para>style.alignItems = "center"</para>
+                initialize dir attribute of html element
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DirRtl">
+            <summary>
+                element.dir = 'rtl'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DirLtr">
+            <summary>
+                element.dir = 'ltr'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.ColorWhite">
@@ -144,6 +154,16 @@
         <member name="P:ReactWithDotNet.Mixin.OverflowScroll">
             <summary>
                 overflow = "scroll"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowWrapAnywhere">
+            <summary>
+            style.overflowWrap = 'anywhere'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowWrapNormal">
+            <summary>
+            style.overflowWrap = 'normal'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowYAuto">
@@ -641,6 +661,76 @@
         <member name="M:ReactWithDotNet.Mixin.BackdropFilterBlur(System.Double)">
             <summary>
                 style.backdropFilter = blur(px)
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Float(System.String)">
+            <summary>
+                style.float = value
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FloatLeft">
+            <summary>
+                style.float = 'left'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FloatRight">
+            <summary>
+                style.float = 'right'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Clear(System.String)">
+            <summary>
+                style.clear = value
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ClearRight">
+            <summary>
+                style.clear = 'right'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ClearLeft">
+            <summary>
+                style.clear = 'left'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ClearBoth">
+            <summary>
+                style.clear = 'both'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
+            <summary>
+                <para>style.alignItems = "center"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignContentCenter">
+            <summary>
+                <para>style.alignContent = "center"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignContentFlexStart">
+            <summary>
+                <para>style.alignContent = "flex-start"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignContentFlexEnd">
+            <summary>
+                <para>style.alignContent = "flex-end"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignContentStretch">
+            <summary>
+                <para>style.alignContent = "stretch"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignContentSpaceAround">
+            <summary>
+                <para>style.alignContent = "space-around"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignContentSpaceBetween">
+            <summary>
+                <para>style.alignContent = "space-between"</para>
             </summary>
         </member>
         <member name="T:ReactWithDotNet.article">
@@ -1193,6 +1283,11 @@
                 Adds the specified element.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Element.Add(System.Func{ReactWithDotNet.Element})">
+            <summary>
+                Invokes <paramref name="elementCreatorFunc" /> then adds return value to children.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Element.GetEnumerator">
             <summary>
                 Gets the enumerator.
@@ -1274,6 +1369,11 @@
                 prefix "data-"<br />
                 The attribute value can be any string<br />
                 Note: Custom attributes prefixed with "data-" will be completely ignored by the user agent.<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.dir">
+            <summary>
+                Specifies the text direction for the content in an element
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.innerText">
@@ -1381,6 +1481,11 @@
         <member name="P:ReactWithDotNet.input.onFocus">
             <summary>
                 occurs when an element gets focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.a.download">
+            <summary>
+            Download file when clicking on the link (instead of navigating to the file):
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">

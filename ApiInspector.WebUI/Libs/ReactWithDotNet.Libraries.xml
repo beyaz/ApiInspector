@@ -720,6 +720,122 @@
             This timeout adds a throttle for onScrollbarScroll. Default is 300. Set to 0 to remove throttle.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.reverse">
+            <summary>
+                Specifies if the animation should make element(s) disappear.<br />
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.cascade">
+            <summary>
+                <br />Stagger its children animations.
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.childClassName">
+            <summary>
+                <br /> Class names to add to the child element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.childStyle">
+            <summary>
+                <br /> Inline styles to add to the child element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.className">
+            <summary>
+                <br /> Class names to add to the container element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.damping">
+            <summary>
+                <br /> Factor that affects the delay that each animated element in a cascade animation will be assigned.
+                <br />  @default 0.5
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.delay">
+            <summary>
+                <br /> Initial delay, in milliseconds.
+                <br /> @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.duration">
+            <summary>
+                <br /> Animation duration, in milliseconds.
+                <br /> @default 1000
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.fraction">
+            <summary>
+                <br /> Float number between 0 and 1 indicating how much the element should be in viewport before the animation is
+                triggered.
+                <br /> @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.RevealBase.triggerOnce">
+            <summary>
+                <br /> Specifies if the animation should run only once or everytime the element enters/exits/re-enters the
+                viewport.
+                <br /> @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.AttentionSeeker.effect">
+            <summary>
+                The animation effect to use for this attention seeker.
+                <br />
+                <br />"bounce" | "flash" | "headShake" | "heartBeat" | "jello" | "pulse" | "rubberBand" | "shake" | "shakeX" |
+                "shakeY" | "swing" | "tada" | "wobble"
+                <br />  @default "bounce"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Bounce.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br />"down" | "left" | "right" | "up"
+                <br />  @default undefined
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Fade.big">
+            <summary>
+                <br /> Causes the animation to start farther. Only works with "down", "left", "right" and "up" directions.
+                <br /> @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Fade.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br /> "bottom-left" | "bottom-right" | "down" | "left" | "right" | "top-left" | "top-right" | "up"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Flip.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br /> "horizontal" | "vertical"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Rotate.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br />  "bottom-left" | "bottom-right" | "top-left" | "top-right"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Slide.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br />  "down" | "left" | "right" | "up"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.react_awesome_reveal.Zoom.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br />  "down" | "left" | "right" | "up"
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Libraries.uiw.react_codemirror.CodeMirror.valueBindDebounceHandler">
             <summary>
             if you want to handle when user iteraction finished see example below<br/>
@@ -734,11 +850,6 @@
             component.valueBind = ()=>state.UserInfo.Name<br/>
             component.valueBindDebounceTimeout = 600 // milliseconds<br/>
             component.valueBindDebounceHandler = OnUserIterationFinished<br/>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.react_simple_code_editor.Editor.highlight">
-            <summary>
-            json, js ...
             </summary>
         </member>
         <member name="P:ReactWithDotNet.react_xarrows.Xarrow.start">
