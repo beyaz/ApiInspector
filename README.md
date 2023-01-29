@@ -23,4 +23,4 @@ ASP.NET Core Runtime 6.0.13
 ## Screenshots
 
 ![Screenshot](Screenshots/1.gif)
-![Screenshot](Screenshots/1.gif)
+![Screenshot](Screenshots/2.gif)
