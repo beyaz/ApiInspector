@@ -14,9 +14,9 @@ $temp1 = $FinalDirectory + "ApiInspector.NetCore"
 New-Item -ItemType Directory -Force -Path $temp1
 
 
-$temp1 = $ProjectDirectory + "ApiInspector.WebUI\wwwroot\index.js"
-$temp2 = $FinalDirectory   + "wwwroot\index.js"
-Copy-Item -Path $temp1 -Destination $temp2 -Force
+$temp1 = $ProjectDirectory + "ApiInspector.WebUI\wwwroot\dist"
+$temp2 = $FinalDirectory   + "wwwroot\"
+Copy-Item -Path $temp1 -Destination $temp2 -Force -Recurse
 
 $temp1 = $ProjectDirectory + "ApiInspector.WebUI\wwwroot\favicon.ico"
 $temp2 = $FinalDirectory   + "wwwroot\favicon.ico"
