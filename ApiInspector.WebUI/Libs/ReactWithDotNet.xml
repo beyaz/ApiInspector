@@ -1543,6 +1543,13 @@
             Allows us to include the padding and border in an element's total width and height.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Style.op_Addition(ReactWithDotNet.Style,ReactWithDotNet.StyleModifier)">
+            <summary>
+                Add given <paramref name="styleModifier"/> to <paramref name="style"/>
+                <br/>
+                if <paramref name="style"/> is null then returns null.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.MediaQuery">
             <summary>
             Example:
@@ -1565,6 +1572,15 @@
         <member name="P:ReactWithDotNet.ThirdPartyReactComponent.style">
             <summary>
                 Gets the style.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyReactComponent.SuspenseFallback">
+            <summary>
+            This is designed for Suspense part of react. When page first rendered as pure html.
+            <br/>
+            When react component fully loaded then this element will be replace by original component.
+            <br/>
+            Default value is sipmle empty div element
             </summary>
         </member>
     </members>
