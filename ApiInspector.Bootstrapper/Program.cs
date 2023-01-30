@@ -2,14 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ApiInspector.Bootstrapper
 {
-    class Program
+    static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             try
             {
@@ -42,11 +42,6 @@ namespace ApiInspector.Bootstrapper
 
                 var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
 
-                var webClient = new WebClient();
-                webClient.Proxy             = WebRequest.DefaultWebProxy;
-                webClient.Credentials       = CredentialCache.DefaultCredentials; 
-                webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-
                 var shouldUpdate = true;
 
                 Console.WriteLine("AppFolder: " + appFolder);
@@ -55,8 +50,9 @@ namespace ApiInspector.Bootstrapper
 
                 if (File.Exists(localVersionFilePath))
                 {
-                    var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
-                    var localVersion  = int.Parse(File.ReadAllText(localVersionFilePath));
+                    var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+
+                    var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
 
                     Console.WriteLine($"Remote Version: {remoteVersion}");
                     Console.WriteLine($"Local Version : {localVersion}");
@@ -85,7 +81,7 @@ namespace ApiInspector.Bootstrapper
 
                     Console.WriteLine($"Downloading... {newVersionZipFileUrl}");
 
-                    webClient.DownloadFile(new Uri(newVersionZipFileUrl), localZipFilePath);
+                    await DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
 
                     Console.WriteLine("Extracting...");
 
@@ -93,9 +89,9 @@ namespace ApiInspector.Bootstrapper
 
                     File.Delete(localZipFilePath);
 
-                    var remoteVersion = int.Parse(webClient.DownloadString(versionUrl));
+                    var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
 
-                    File.WriteAllText(localVersionFilePath, remoteVersion.ToString());
+                    await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
                 }
 
                 CopyPlugins(appFolder);
@@ -133,6 +129,34 @@ namespace ApiInspector.Bootstrapper
             }
         }
 
+        static async Task DownloadFileAsync(string url, string localFilePath)
+        {
+            using var httpClient = new HttpClient();
+
+            File.Delete(localFilePath);
+
+            var directory = Path.GetDirectoryName(localFilePath);
+            if (Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
+
+            var response = await httpClient.GetAsync(url);
+
+            await response.Content.CopyToAsync(fs);
+        }
+
+        static async Task<string> DownloadStringAsync(string url)
+        {
+            using var httpClient = new HttpClient();
+
+            var str = await httpClient.GetStringAsync(url);
+
+            return str;
+        }
+
         static void KillAllNamedProcess(string processName)
         {
             foreach (var process in Process.GetProcessesByName(processName))
@@ -148,6 +172,13 @@ namespace ApiInspector.Bootstrapper
         {
             Console.WriteLine("Starting...");
             Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+        }
+
+        static async Task<B> Then<A, B>(this Task<A> task, Func<A, B> nextFunc)
+        {
+            var a = await task;
+
+            return nextFunc(a);
         }
     }
 }
