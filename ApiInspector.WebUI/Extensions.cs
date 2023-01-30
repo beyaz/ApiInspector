@@ -88,4 +88,16 @@ static partial class Extensions
             return (default, exception);
         }
     }
+
+    public static void IgnoreException(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
 }

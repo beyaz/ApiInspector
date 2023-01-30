@@ -26,7 +26,7 @@ public class Program
         
         if (Config.HideConsoleWindow)
         {
-            ConsoleWindowUtility.HideConsoleWindow();
+            IgnoreException(ConsoleWindowUtility.HideConsoleWindow);
         }
 
         if (Config.UseUrls)
