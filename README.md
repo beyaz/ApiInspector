@@ -16,9 +16,7 @@ Note: Minimum required platform is '.Net 6.0'.
 
 https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-.NET Runtime 6.0.13
-
-ASP.NET Core Runtime 6.0.13
+SDK 6.0.405
 
 ## Screenshots
 
