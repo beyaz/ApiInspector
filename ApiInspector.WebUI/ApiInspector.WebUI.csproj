@@ -6,6 +6,7 @@
 
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
+        <StartupObject>ApiInspector.WebUI.Program</StartupObject>
     </PropertyGroup>
 
     <ItemGroup>
