@@ -19,9 +19,9 @@ https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 SDK 6.0.405
 
 >Note: if there is an error like '..Unable to configure HTTPS endpoint. No server certificate was specified...'\
->>You can  fix:\
->>dotnet dev-certs https --clean\
->>dotnet dev-certs https --verbose
+>You can  fix:\
+>dotnet dev-certs https --clean\
+>dotnet dev-certs https --verbose
 
 ## Screenshots
 
