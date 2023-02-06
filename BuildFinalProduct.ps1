@@ -63,7 +63,10 @@ $temp1 = $ProjectDirectory + "ApiInspector.NetCore\bin\Debug\net6.0\ApiInspector
 $temp2 = $FinalDirectory   + "ApiInspector.NetCore\"
 Copy-Item -Path $temp1 -Destination $temp2 -Force
 
-
+### C O P Y   V E R S I O N 
+$temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\Version.txt"
+$temp2 = $FinalDirectory
+Copy-Item -Path $temp1 -Destination $temp2 -Force
 
 $temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\ApiInspectorLatestVersion.zip"
 Compress-Archive -Path $FinalDirectory -DestinationPath $temp1 -Force
