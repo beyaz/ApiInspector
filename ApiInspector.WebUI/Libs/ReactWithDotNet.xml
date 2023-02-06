@@ -233,6 +233,11 @@
                 style.content = <paramref name="content" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.String)">
+            <summary>
+                style.flexGrow = <paramref name="growValue" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.Double)">
             <summary>
                 style.flexGrow = <paramref name="growValue" />

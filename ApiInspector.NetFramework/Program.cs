@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static ApiInspector.ProcessHelper;
@@ -218,6 +219,17 @@ static class Program
             Plugins.BeforeInvokeMethod(methodInfo);
             
             var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+
+            if (response is Task task)
+            {
+                task.GetAwaiter().GetResult();
+                
+                var resultProperty = task.GetType().GetProperty("Result");
+                if (resultProperty is not null)
+                {
+                    response = resultProperty.GetValue(task);
+                }
+            }
 
             var (isProcessed, isSuccess, processedVersionOfInstance) = Plugins.UnwrapResponse(response);
             if (isProcessed)
