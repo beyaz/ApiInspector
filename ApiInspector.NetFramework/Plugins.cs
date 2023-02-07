@@ -166,7 +166,7 @@ static class Plugins
         return false;
     }
 
-    public static string TryFindAssembly(string fileName)
+    public static string TryFindFullFilePathOfAssembly(string assemblyFileName)
     {
 
         foreach (var plugin in ListOfPlugins)
@@ -184,13 +184,13 @@ static class Plugins
                 continue;
             }
 
-            var methodInfo = helperType.GetMethod(nameof(TryFindAssembly), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            var methodInfo = helperType.GetMethod(nameof(TryFindFullFilePathOfAssembly), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo is null)
             {
                 continue;
             }
 
-            var fullFilePathOfAssembly = (string)methodInfo.Invoke(null, new object[]{fileName});
+            var fullFilePathOfAssembly = (string)methodInfo.Invoke(null, new object[]{assemblyFileName});
             if (fullFilePathOfAssembly != null)
             {
                 return fullFilePathOfAssembly;

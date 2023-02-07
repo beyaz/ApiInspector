@@ -132,7 +132,7 @@ static class ReflectionHelper
         {
             var fileName = fileNameWithoutExtension + fileExtension;
 
-            var fullFilePath = Plugins.TryFindAssembly(fileName);
+            var fullFilePath = Plugins.TryFindFullFilePathOfAssembly(fileName);
             if (fullFilePath is not null)
             {
                 return LoadAssemblyFile(fullFilePath);
