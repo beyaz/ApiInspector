@@ -242,7 +242,7 @@ static class AssemblyModelHelper
             throw new ArgumentNullException(nameof(visitAction));
         }
 
-        foreach (var type in assembly.GetTypes())
+        foreach (var type in TryGetTypes(assembly))
         {
             visitType(type);
         }
@@ -261,5 +261,17 @@ static class AssemblyModelHelper
     static bool IsStaticClass(this Type type)
     {
         return type.IsClass && type.IsAbstract && type.IsSealed;
+    }
+
+    static IEnumerable<Type> TryGetTypes(Assembly assembly)
+    {
+        try
+        {
+            return assembly.GetTypes();
+        }
+        catch (Exception)
+        {
+            return Enumerable.Empty<Type>().ToArray();
+        }
     }
 }
