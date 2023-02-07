@@ -168,18 +168,32 @@ static class Plugins
 
     public static string TryFindAssembly(string fileName)
     {
+
         foreach (var plugin in ListOfPlugins)
         {
-            if (plugin.AssemblySearchDirectories is not null)
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
             {
-                foreach (var searchDirectory in plugin.AssemblySearchDirectories)
-                {
-                    var path = Path.Combine(searchDirectory, fileName);
-                    if (File.Exists(path))
-                    {
-                        return path;
-                    }
-                }
+                continue;
+            }
+
+            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(TryFindAssembly), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            var fullFilePathOfAssembly = (string)methodInfo.Invoke(null, new object[]{fileName});
+            if (fullFilePathOfAssembly != null)
+            {
+                return fullFilePathOfAssembly;
             }
         }
 
@@ -224,8 +238,6 @@ static class Plugins
 
     sealed class PluginInfo
     {
-        public IReadOnlyList<string> AssemblySearchDirectories { get; set; }
-
         public string FullClassName { get; set; }
 
         public string FullFilePathOfAssembly { get; set; }
