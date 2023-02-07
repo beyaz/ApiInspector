@@ -116,17 +116,6 @@ static class ReflectionHelper
 
         var extensions = new[] { ".dll", ".exe" };
 
-        foreach (var fileExtension in extensions)
-        {
-            var fileName = fileNameWithoutExtension + fileExtension;
-
-            var fullFilePath = Plugins.TryFindAssembly(fileName);
-            if (fullFilePath is not null)
-            {
-                return LoadAssemblyFile(fullFilePath);
-            }
-        }
-
         foreach (var searchDirectory in searchDirectories)
         {
             foreach (var fileExtension in extensions)
@@ -136,6 +125,17 @@ static class ReflectionHelper
                 {
                     return LoadAssemblyFile(filePath);
                 }
+            }
+        }
+
+        foreach (var fileExtension in extensions)
+        {
+            var fileName = fileNameWithoutExtension + fileExtension;
+
+            var fullFilePath = Plugins.TryFindAssembly(fileName);
+            if (fullFilePath is not null)
+            {
+                return LoadAssemblyFile(fullFilePath);
             }
         }
 
