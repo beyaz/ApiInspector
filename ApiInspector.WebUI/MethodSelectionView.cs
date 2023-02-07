@@ -49,7 +49,16 @@ class MethodSelectionView : ReactComponent
 
     protected override Element render()
     {
-        var nodes = GetNodes().ToList();
+        List<MetadataNode> nodes = null;
+
+        try
+        {
+            nodes = GetNodes().ToList();
+        }
+        catch (Exception exception)
+        {
+            return new div { "Error occured: " + exception };
+        }
 
         // expand if there are few elements
         {
