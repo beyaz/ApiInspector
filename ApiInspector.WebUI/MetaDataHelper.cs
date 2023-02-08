@@ -79,7 +79,7 @@ static class MetadataHelper
             return Assembly.GetEntryAssembly();
         }
 
-        return Assembly.LoadFile(assemblyFilePath);
+        return Assembly.LoadFrom(assemblyFilePath);
     }
 
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)

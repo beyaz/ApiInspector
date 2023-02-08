@@ -81,7 +81,7 @@ static class ReflectionHelper
 
     static Assembly LoadAssemblyFile(string filePath)
     {
-        return SafeInvoke(() => Assembly.LoadFile(filePath)).TraceError(traceError).Unwrap();
+        return SafeInvoke(() => Assembly.LoadFrom(filePath)).TraceError(traceError).Unwrap();
 
         void traceError(Exception exception) => FileHelper.WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }

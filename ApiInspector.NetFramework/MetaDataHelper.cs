@@ -120,7 +120,7 @@ static class MetadataHelper
     public static Assembly LoadAssembly(string assemblyFilePath)
     {
         ReflectionHelper.AttachAssemblyResolver();
-        return Assembly.LoadFile(assemblyFilePath);
+        return Assembly.LoadFrom(assemblyFilePath);
     }
 
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)

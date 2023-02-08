@@ -39,7 +39,7 @@ static class Plugins
                 continue;
             }
 
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
 
             var helperType = assembly.GetType(plugin.FullClassName);
             if (helperType is null)
@@ -69,7 +69,7 @@ static class Plugins
                 continue;
             }
 
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
 
             var helperType = assembly.GetType(plugin.FullClassName);
             if (helperType is null)
@@ -138,7 +138,7 @@ static class Plugins
                 continue;
             }
 
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
 
             var helperType = assembly.GetType(plugin.FullClassName);
             if (helperType is null)
@@ -176,7 +176,7 @@ static class Plugins
                 continue;
             }
 
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
 
             var helperType = assembly.GetType(plugin.FullClassName);
             if (helperType is null)
@@ -209,7 +209,7 @@ static class Plugins
                 continue;
             }
 
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
 
             var helperType = assembly.GetType(plugin.FullClassName);
             if (helperType is null)
