@@ -32,6 +32,8 @@
 
         "google-map-react": "^2.2.0",
 
-        "react-free-scrollbar": "^0.3.4"
+        "react-free-scrollbar": "^0.3.4",
+
+        "framer-motion": "^9.0.2"
     }
 }

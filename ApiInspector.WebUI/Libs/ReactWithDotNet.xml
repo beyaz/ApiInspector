@@ -4,6 +4,16 @@
         <name>ReactWithDotNet</name>
     </assembly>
     <members>
+        <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
+            <summary>
+                img.alt = <paramref name="alt" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Src(System.String)">
+            <summary>
+                img.src = <paramref name="src" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Dir(System.String)">
             <summary>
                 initialize dir attribute of html element
@@ -233,11 +243,6 @@
                 style.content = <paramref name="content" />
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.String)">
-            <summary>
-                style.flexGrow = <paramref name="growValue" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.Double)">
             <summary>
                 style.flexGrow = <paramref name="growValue" />
@@ -446,11 +451,6 @@
                     if parent is display='flex' and flexDirection = 'column' then create empty div element with style.height =
                     value + 'px'
                 </br>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Src(System.String)">
-            <summary>
-                img.src = <paramref name="src" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
@@ -1493,7 +1493,7 @@
             Download file when clicking on the link (instead of navigating to the file):
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
             <summary>
                 Sample event decleration <br />
                 [ReactCustomEvent] public Action OnUserChanged { get; set; }
@@ -1503,7 +1503,7 @@
                 DispatchEvent(()=> OnUserChanged);
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Action{``0}}},``0)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Action{``0}}},``0)">
             <summary>
                 Sample event decleration <br />
                 [ReactCustomEvent] public Action&lt;UserInfo&gt; OnUserChanged { get; set; }
@@ -1513,7 +1513,7 @@
                 DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo);
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1)">
             <summary>
                 Sample event decleration <br />
                 [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo&gt; OnUserChanged { get; set; }
@@ -1523,7 +1523,7 @@
                 DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo);
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactStatefulComponent.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1,``2)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1,``2)">
             <summary>
                 Sample event decleration <br />
                 [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo,CommissionInfo&gt; OnUserChanged { get; set; }

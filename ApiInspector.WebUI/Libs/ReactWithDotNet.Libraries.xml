@@ -4,6 +4,18 @@
         <name>ReactWithDotNet.Libraries</name>
     </assembly>
     <members>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.checked">
+            <summary>
+            	If true, the component is checked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.value">
+            <summary>
+            The value of the component.The DOM API casts this to a string.
+            <br/>
+            The browser uses "on" as the default value.
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.delay">
             <summary>
             Delay between keystrokes to wait before sending a query.

@@ -30,7 +30,46 @@ static class Plugins
         }
     }
 
-    public static void BeforeInvokeMethod(MethodInfo targetMethodInfo)
+    public static bool AfterInvokeMethod(bool hasNoError, MethodInfo targetMethodInfo, object instance, object[] methodParameters)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
+            {
+                continue;
+            }
+
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(AfterInvokeMethod), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            var successfullyDisposed = (bool)methodInfo.Invoke(null, new[]
+            {
+                hasNoError,
+                targetMethodInfo,
+                instance,
+                methodParameters
+            });
+            if (successfullyDisposed)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void BeforeInvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters)
     {
         foreach (var plugin in ListOfPlugins)
         {
@@ -53,9 +92,11 @@ static class Plugins
                 continue;
             }
 
-            methodInfo.Invoke(null, new object[]
+            methodInfo.Invoke(null, new[]
             {
-                targetMethodInfo
+                targetMethodInfo,
+                instance,
+                methodParameters
             });
         }
     }
@@ -129,46 +170,8 @@ static class Plugins
         return (false, null);
     }
 
-    public static bool TryDisposeInstance(bool hasNoError, object instance)
-    {
-        foreach (var plugin in ListOfPlugins)
-        {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(TryDisposeInstance), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var successfullyDisposed = (bool)methodInfo.Invoke(null, new[]
-            {
-                hasNoError,
-                instance
-            });
-            if (successfullyDisposed)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public static string TryFindFullFilePathOfAssembly(string assemblyFileName)
     {
-
         foreach (var plugin in ListOfPlugins)
         {
             if (!File.Exists(plugin.FullFilePathOfAssembly))
@@ -190,7 +193,7 @@ static class Plugins
                 continue;
             }
 
-            var fullFilePathOfAssembly = (string)methodInfo.Invoke(null, new object[]{assemblyFileName});
+            var fullFilePathOfAssembly = (string)methodInfo.Invoke(null, new object[] { assemblyFileName });
             if (fullFilePathOfAssembly != null)
             {
                 return fullFilePathOfAssembly;

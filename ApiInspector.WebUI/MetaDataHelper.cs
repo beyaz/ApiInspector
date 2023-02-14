@@ -140,7 +140,12 @@ static class MetadataHelper
                 return true;
             }
 
-            if (typeof(ReactStatefulComponent).IsAssignableFrom(t.BaseType))
+            if (typeof(ReactComponentBase).IsAssignableFrom(t.BaseType))
+            {
+                return true;
+            }
+
+            if (typeof(ReactPureComponent).IsAssignableFrom(t.BaseType))
             {
                 return true;
             }
@@ -182,7 +187,7 @@ static class MetadataHelper
                 return false;
             }
 
-            return type.IsSubclassOf(typeof(ReactStatefulComponent));
+            return type.IsSubclassOf(typeof(ReactComponentBase)) || type.IsSubclassOf(typeof(ReactPureComponent));
         }
     }
 }

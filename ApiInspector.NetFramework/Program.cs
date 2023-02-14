@@ -214,11 +214,13 @@ static class Program
 
         var hasNoError = false;
 
+        var methodParameters = invocationParameters.ToArray();
+        
         try
         {
-            Plugins.BeforeInvokeMethod(methodInfo);
+            Plugins.BeforeInvokeMethod(methodInfo,instance,methodParameters);
             
-            var response = methodInfo.Invoke(instance, invocationParameters.ToArray());
+            var response   = methodInfo.Invoke(instance, methodParameters);
 
             if (response is Task task)
             {
@@ -264,12 +266,7 @@ static class Program
         }
         finally
         {
-            Plugins.TryDisposeInstance(hasNoError, instance);
-
-            foreach (var invocationParameter in invocationParameters)
-            {
-                Plugins.TryDisposeInstance(hasNoError, invocationParameter);
-            }
+            Plugins.AfterInvokeMethod(hasNoError, methodInfo, instance, methodParameters);
         }
     }
 
