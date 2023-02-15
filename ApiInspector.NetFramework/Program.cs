@@ -181,6 +181,7 @@ static class Program
 
         foreach (var parameterInfo in methodInfo.GetParameters())
         {
+            // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
             if (map.ContainsKey(parameterInfo.Name))
             {
                 var jToken = map[parameterInfo.Name];
