@@ -233,7 +233,7 @@ static class Program
         }
         catch (Exception exception)
         {
-            invocationException = exception;
+            invocationException = exception.InnerException ?? exception;
         }
 
         var afterInvoke = Plugins.AfterInvokeMethod(methodInfo, instance, methodParameters, response, invocationException);
