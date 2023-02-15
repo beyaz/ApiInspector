@@ -10,9 +10,17 @@ namespace ApiInspector;
 
 static class Program
 {
+    public static string[] GetHelpMessage()
+    {
+        return new[]
+        {
+            "Hello from Api Inspector!",
+            "This tool that you can execute or debug any .net method.",
+            "Select any .net assembly from left side then prepare parameters or instance properties then you can execute selected method.",
+            "if you debug any method then press Debug button and attach to process named 'ApiInspector' by visual studio or any other ide."
+        };
+    }
 
-   
-    
     public static string GetInstanceEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance) state)
     {
         var (fullAssemblyPath, methodReference, jsonForInstance) = state;
@@ -56,7 +64,7 @@ static class Program
 
         foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            var name = propertyInfo.Name;
+            var name         = propertyInfo.Name;
             var propertyType = propertyInfo.PropertyType;
 
             if (map.ContainsKey(name))
@@ -87,7 +95,7 @@ static class Program
         return JsonConvert.SerializeObject(map, new JsonSerializerSettings
         {
             DefaultValueHandling = DefaultValueHandling.Include,
-            Formatting = Formatting.Indented
+            Formatting           = Formatting.Indented
         });
     }
 
@@ -129,18 +137,6 @@ static class Program
             DefaultValueHandling = DefaultValueHandling.Include,
             Formatting           = Formatting.Indented
         });
-
-    }
-
-    public static string[] GetHelpMessage()
-    {
-        return new[]
-        {
-            "Hello from Api Inspector!",
-            "This tool that you can execute or debug any .net method.",
-            "Select any .net assembly from left side then prepare parameters or instance properties then you can execute selected method.",
-            "if you debug any method then press Debug button and attach to process named 'ApiInspector' by visual studio or any other ide."
-        };
     }
 
     public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
@@ -212,62 +208,51 @@ static class Program
             }
         }
 
-        var hasNoError = false;
-
         var methodParameters = invocationParameters.ToArray();
-        
+
+        Plugins.BeforeInvokeMethod(methodInfo, instance, methodParameters);
+
+        object response = null;
+
+        Exception invocationException = null;
+
         try
         {
-            Plugins.BeforeInvokeMethod(methodInfo,instance,methodParameters);
-            
-            var response   = methodInfo.Invoke(instance, methodParameters);
-
+            response = methodInfo.Invoke(instance, methodParameters);
             if (response is Task task)
             {
                 task.GetAwaiter().GetResult();
-                
+
                 var resultProperty = task.GetType().GetProperty("Result");
                 if (resultProperty is not null)
                 {
                     response = resultProperty.GetValue(task);
                 }
             }
-
-            var (isProcessed, isSuccess, processedVersionOfInstance) = Plugins.UnwrapResponse(response);
-            if (isProcessed)
-            {
-                response = processedVersionOfInstance;
-
-                if (isSuccess == null)
-                {
-                    throw new Exception("UnwrapResponse 'isSuccess' return value cannot be null");
-                }
-
-                if (isSuccess == true)
-                {
-                    hasNoError = true;
-                }
-            }
-            else
-            {
-                hasNoError = true;
-            }
-
-            if (response is string responseAsString)
-            {
-                return responseAsString;
-            }
-            
-            return JsonConvert.SerializeObject(response, new JsonSerializerSettings
-            {
-                Formatting           = Formatting.Indented,
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            });
         }
-        finally
+        catch (Exception exception)
         {
-            Plugins.AfterInvokeMethod(hasNoError, methodInfo, instance, methodParameters);
+            invocationException = exception;
         }
+
+        var afterInvoke = Plugins.AfterInvokeMethod(methodInfo, instance, methodParameters, response, invocationException);
+        if (afterInvoke.isProcessed)
+        {
+            response = afterInvoke.invocationResponse;
+
+            invocationException = afterInvoke.invocationException;
+        }
+
+        if (invocationException != null)
+        {
+            throw invocationException;
+        }
+
+        return JsonConvert.SerializeObject(response, new JsonSerializerSettings
+        {
+            Formatting           = Formatting.Indented,
+            DefaultValueHandling = DefaultValueHandling.Ignore
+        });
     }
 
     public static void Main(string[] args)
@@ -275,7 +260,7 @@ static class Program
         ReflectionHelper.AttachAssemblyResolver();
 
         KillAllNamedProcess(nameof(ApiInspector));
-        
+
         FileHelper.ClearLog();
 
         try

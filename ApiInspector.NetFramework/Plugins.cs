@@ -30,7 +30,7 @@ static class Plugins
         }
     }
 
-    public static bool AfterInvokeMethod(bool hasNoError, MethodInfo targetMethodInfo, object instance, object[] methodParameters)
+    public static (bool isProcessed, object invocationResponse, Exception invocationException) AfterInvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters, object targetMethodResponse, Exception invocationException)
     {
         foreach (var plugin in ListOfPlugins)
         {
@@ -53,20 +53,21 @@ static class Plugins
                 continue;
             }
 
-            var successfullyDisposed = (bool)methodInfo.Invoke(null, new[]
+            var invocationResponse = ((bool isProcessed, object invocationResponse, Exception invocationException))methodInfo.Invoke(null, new[]
             {
-                hasNoError,
                 targetMethodInfo,
                 instance,
-                methodParameters
+                methodParameters,
+                targetMethodResponse,
+                invocationException
             });
-            if (successfullyDisposed)
+            if (invocationResponse.isProcessed)
             {
-                return true;
+                return invocationResponse;
             }
         }
 
-        return false;
+        return (isProcessed: false, null, null);
     }
 
     public static void BeforeInvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters)
@@ -201,42 +202,6 @@ static class Plugins
         }
 
         return null;
-    }
-
-    public static (bool isProcessed, bool? isSuccess, object processedVersionOfInstance) UnwrapResponse(object responseInstance)
-    {
-        foreach (var plugin in ListOfPlugins)
-        {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(UnwrapResponse), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var response = ((bool isProcessed, bool? isSuccess, object processedVersionOfInstance))methodInfo.Invoke(null, new[]
-            {
-                responseInstance
-            });
-            if (response.isProcessed)
-            {
-                return response;
-            }
-        }
-
-        return (false, null, null);
     }
 
     sealed class PluginInfo
