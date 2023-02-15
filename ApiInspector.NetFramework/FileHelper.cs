@@ -91,7 +91,17 @@ static class FileHelper
 
     public static void WriteFail(Exception exception)
     {
-        File.WriteAllText(FilePath.ResponseFail, exception.ToString());
+        File.WriteAllText(FilePath.ResponseFail, calculateFailMessage());
+
+        string calculateFailMessage()
+        {
+            if ("true".Equals(exception.Data["ExportOnlyExceptionMessage"]?.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                return exception.Message;
+            }
+
+            return exception.ToString();
+        }
     }
 
     public static void WriteInput(string inputAsJson)

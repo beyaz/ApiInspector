@@ -419,7 +419,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 DebugButtonStatusIsFail = true;
 
-                state.ResponseAsJson = exception.ToString();
+                state.ResponseAsJson = exception.Message;
             }
 
             Client.GotoMethod(2000, ClearActionButtonStates);
@@ -510,7 +510,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             }
             catch (Exception exception)
             {
-                state.ResponseAsJson = exception.ToString();
+                state.ResponseAsJson = exception.Message;
 
                 ExecuteButtonStatusIsFail = true;
             }
