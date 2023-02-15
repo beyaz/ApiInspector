@@ -246,7 +246,7 @@ static class Program
 
         if (invocationException != null)
         {
-            throw invocationException;
+            SaveExceptionAndExitWithFailure(invocationException);
         }
 
         return JsonConvert.SerializeObject(response, new JsonSerializerSettings
@@ -303,28 +303,37 @@ static class Program
                 parameters = new[] { FileHelper.ReadInput(methodInfo.GetParameters()[0].ParameterType) };
             }
 
-            var response = methodInfo.Invoke(null, parameters);
-
-            var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings
-            {
-                Formatting                 = Formatting.Indented,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects
-            });
-
-            FileHelper.WriteSuccessResponse(responseAsJson);
-
-            Environment.Exit(1);
+            SaveResponseAsJsonFileAndExitSuccessfully(methodInfo.Invoke(null, parameters));
         }
         catch (Exception exception)
         {
-            FileHelper.WriteFail(exception);
-            Environment.Exit(0);
+            SaveExceptionAndExitWithFailure(exception);
         }
     }
 
     internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
     {
         return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
+    }
+
+    static void SaveExceptionAndExitWithFailure(Exception exception)
+    {
+        FileHelper.WriteFail(exception);
+        Environment.Exit(0);
+    }
+
+    static void SaveResponseAsJsonFileAndExitSuccessfully(object response)
+    {
+        var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings
+        {
+            DefaultValueHandling       = DefaultValueHandling.Ignore,
+            Formatting                 = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+        });
+
+        FileHelper.WriteSuccessResponse(responseAsJson);
+
+        Environment.Exit(1);
     }
 
     static void WaitForDebuggerAttach()
