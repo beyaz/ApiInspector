@@ -78,29 +78,7 @@ static partial class Extensions
         client.ListenEvent(OnBrowserInactive, handlerAction);
     }
 
-    public static (T value, Exception exception) Try<T>(Func<T> func)
-    {
-        try
-        {
-            return (func(), null);
-        }
-        catch (Exception exception)
-        {
-            return (default, exception);
-        }
-    }
 
-    public static void IgnoreException(Action action)
-    {
-        try
-        {
-            action();
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
-    }
 
     public static readonly IEnumerable<MetadataNode> EmptyMetadataNodes = new ImmutableArray<MetadataNode>();
 }

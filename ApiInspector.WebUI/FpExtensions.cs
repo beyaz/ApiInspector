@@ -1,7 +1,19 @@
 ﻿namespace ApiInspector.WebUI;
 
-static class FpExtensions
+partial class Extensions
 {
+    public static void IgnoreException(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+
     public static bool IsNullOrWhiteSpaceOrEmptyJsonObject(this string jsonText)
     {
         if (string.IsNullOrWhiteSpace(jsonText) ||

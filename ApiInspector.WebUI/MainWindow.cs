@@ -4,7 +4,6 @@ using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.react_free_scrollbar;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
 using static System.Environment;
-using static ApiInspector.WebUI.FpExtensions;
 
 namespace ApiInspector.WebUI;
 

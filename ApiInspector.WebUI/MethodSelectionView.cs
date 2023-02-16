@@ -129,7 +129,7 @@ class MethodSelectionView : ReactComponent
             return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter);
         }
 
-        return new List<MetadataNode>();
+        return Enumerable.Empty<MetadataNode>();
     }
 
     void OnSelectionChanged(SingleSelectionTreeSelectionParams e)
