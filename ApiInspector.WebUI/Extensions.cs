@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Immutable;
+using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -100,4 +101,6 @@ static partial class Extensions
             // ignored
         }
     }
+
+    public static readonly IEnumerable<MetadataNode> EmptyMetadataNodes = new ImmutableArray<MetadataNode>();
 }
