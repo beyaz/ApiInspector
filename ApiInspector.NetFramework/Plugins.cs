@@ -70,38 +70,6 @@ static class Plugins
         return (isProcessed: false, null, null);
     }
 
-    public static void BeforeInvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters)
-    {
-        foreach (var plugin in ListOfPlugins)
-        {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(BeforeInvokeMethod), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            methodInfo.Invoke(null, new[]
-            {
-                targetMethodInfo,
-                instance,
-                methodParameters
-            });
-        }
-    }
-
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
         foreach (var plugin in ListOfPlugins)
@@ -136,6 +104,44 @@ static class Plugins
         }
 
         return (false, null);
+    }
+
+    public static (Exception exception, bool isInvoked, object invocationOutput) InvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
+            {
+                continue;
+            }
+
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(InvokeMethod), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            var response = ((Exception exception, bool isInvoked, object invocationOutput))methodInfo.Invoke(null, new[]
+            {
+                targetMethodInfo,
+                instance,
+                methodParameters
+            });
+            if (response.exception is not null || response.isInvoked)
+            {
+                return response;
+            }
+        }
+
+        return (null, false, null);
     }
 
     public static (Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance) TryCreateInstance(Type type, string json)

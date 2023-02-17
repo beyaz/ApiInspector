@@ -223,7 +223,7 @@ static class Program
 
         var methodParameters = invocationParameters.ToArray();
 
-        Plugins.BeforeInvokeMethod(methodInfo, instance, methodParameters);
+        
 
         object response = null;
 
@@ -231,7 +231,28 @@ static class Program
 
         try
         {
-            response = methodInfo.Invoke(instance, methodParameters);
+            var shouldInvoke = true;
+            
+            var (exception, isInvoked, invocationOutput) = Plugins.InvokeMethod(methodInfo, instance, methodParameters);
+            if (exception is not null)
+            {
+                invocationException = exception;
+
+                shouldInvoke = false;
+            }
+
+            if (isInvoked)
+            {
+                response = invocationOutput;
+
+                shouldInvoke = false;
+            }
+
+            if (shouldInvoke)
+            {
+                response = methodInfo.Invoke(instance, methodParameters);
+            }
+            
             if (response is Task task)
             {
                 task.GetAwaiter().GetResult();
