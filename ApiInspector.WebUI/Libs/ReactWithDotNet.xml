@@ -738,6 +738,31 @@
                 <para>style.alignContent = "space-between"</para>
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.WordBreakAll">
+            <summary>
+                <para>style.wordBreak = "break-all"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WordBreakKeepAll">
+            <summary>
+                <para>style.wordBreak = "keep-all"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WordBreakNormal">
+            <summary>
+                <para>style.wordBreak = "normal"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WordBreakWord">
+            <summary>
+                <para>style.wordBreak = "break-word"</para>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WordBreak(System.String)">
+            <summary>
+                style.wordBreak = <paramref name="value" />
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.article">
             <summary>
                 Specifies independent, self-contained content.

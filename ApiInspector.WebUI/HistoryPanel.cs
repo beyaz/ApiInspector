@@ -42,7 +42,13 @@ class HistoryPanel : ReactComponent
 
                         new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
 
-                        new div { Text(x.SelectedMethod.DeclaringType.FullName + "::" + x.SelectedMethod.FullNameWithoutReturnType), MarginLeft(5), FontSize13 }
+                        new div
+                        {
+                            Text(x.SelectedMethod.DeclaringType.FullName + "::" + x.SelectedMethod.FullNameWithoutReturnType),
+                            MarginLeft(5), 
+                            FontSize13,
+                            WordBreakAll
+                        }
                     },
                     new img
                     {
