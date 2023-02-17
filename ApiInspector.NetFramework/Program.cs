@@ -156,7 +156,7 @@ static class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
-            var (isSuccessfullyCreated, createdInstance, occurredErrorWhenCreatingInstance) = Plugins.TryCreateInstance(declaringType, jsonForInstance);
+            var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, jsonForInstance);
 
             if (occurredErrorWhenCreatingInstance != null)
             {
@@ -193,7 +193,7 @@ static class Program
                 var jToken = map[parameterInfo.Name];
                 if (jToken != null)
                 {
-                    var (isSuccessfullyCreated, parameterInstance, occurredErrorWhenCreatingInstance) = Plugins.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
+                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugins.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
 
                     if (occurredErrorWhenCreatingInstance != null)
                     {

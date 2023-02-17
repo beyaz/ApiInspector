@@ -138,7 +138,7 @@ static class Plugins
         return (false, null);
     }
 
-    public static (bool isSuccessfullyCreated, object instance, Exception occurredErrorWhenCreatingInstance) TryCreateInstance(Type type, string json)
+    public static (Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance) TryCreateInstance(Type type, string json)
     {
         foreach (var plugin in ListOfPlugins)
         {
@@ -161,14 +161,14 @@ static class Plugins
                 continue;
             }
 
-            var response = ((bool isSuccessfullyCreated, object instance, Exception occurredErrorWhenCreatingInstance))methodInfo.Invoke(null, new object[] { type, json });
+            var response = ((Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[] { type, json });
             if (response.isSuccessfullyCreated)
             {
                 return response;
             }
         }
 
-        return (false, null, null);
+        return (null, false, null);
     }
 
     public static string TryFindFullFilePathOfAssembly(string assemblyFileName)
