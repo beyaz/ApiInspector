@@ -1,7 +1,7 @@
 ﻿namespace ApiInspector.WebUI.Components;
 
 // Taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader
-public class LoadingIcon : ReactComponent
+public class LoadingIcon : ReactPureComponent
 {
     protected override Element render()
     {

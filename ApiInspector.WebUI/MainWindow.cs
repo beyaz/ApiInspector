@@ -317,7 +317,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     IsProcessing        = IsDebugStarted,
                                     ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
                                     ShowStatusAsFail    = DebugButtonStatusIsFail
-                                } + ComponentBoxShadow
+                                } + ComponentBoxShadow,
+                                
+                                new MethodReferenceView{ MethodReference = state.SelectedMethod} + ComponentBoxShadow
                             },
 
                             new FlexColumn(WidthHeightMaximized)

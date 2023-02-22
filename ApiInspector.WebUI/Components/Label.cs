@@ -1,6 +1,6 @@
 ﻿namespace ApiInspector.WebUI.Components;
 
-class Label : ReactComponent
+class Label : ReactPureComponent
 {
     public string Text { get; set; }
 

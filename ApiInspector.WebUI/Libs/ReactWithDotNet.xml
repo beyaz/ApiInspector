@@ -4,6 +4,31 @@
         <name>ReactWithDotNet</name>
     </assembly>
     <members>
+        <member name="P:ReactWithDotNet.a.download">
+            <summary>
+                Download file when clicking on the link (instead of navigating to the file):
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.a.TargetBlank">
+            <summary>
+                a.target = '_blank'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.a.Href(System.String)">
+            <summary>
+                a.href = <paramref name="href" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.a.Target(System.String)">
+            <summary>
+                a.target = <paramref name="target" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Href(System.String)">
+            <summary>
+                a.href = <paramref name="href" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
             <summary>
                 img.alt = <paramref name="alt" />
@@ -32,6 +57,11 @@
         <member name="P:ReactWithDotNet.Mixin.ColorWhite">
             <summary>
                 style.color = 'white'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Cursor(System.String)">
+            <summary>
+            style.cursor = <paramref name="value"/>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DirectionLtr">
@@ -251,11 +281,6 @@
         <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
             <summary>
                 style.fontFamily = fontFamily
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Href(System.String)">
-            <summary>
-                a.href = <paramref name="href" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Id(System.String)">
@@ -1513,11 +1538,6 @@
                 occurs when an element gets focus.
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.a.download">
-            <summary>
-            Download file when clicking on the link (instead of navigating to the file):
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
             <summary>
                 Sample event decleration <br />
@@ -1592,6 +1612,11 @@
             Example:
             <br/>
             new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Fill(System.String)">
+            <summary>
+            svg.fill = <paramref name="color"/>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">
