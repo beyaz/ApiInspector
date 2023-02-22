@@ -6,6 +6,6 @@ class MethodReferenceView : ReactPureComponent
     
     protected override Element render()
     {
-        return new FlexRowCentered(BorderRadius(5), PaddingLeftRight(15)) { MethodReference?.ToString() };
+        return new FlexRowCentered(BorderRadius(5), PaddingLeftRight(15), WordBreakWord) { MethodReference?.ToString() };
     }
 }
