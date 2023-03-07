@@ -67,10 +67,12 @@ namespace ApiInspector.Bootstrapper
                 {
                     Console.WriteLine("Updating to new version...");
 
-                    if (!Directory.Exists(appFolder))
+                    if (Directory.Exists(appFolder))
                     {
-                        Directory.CreateDirectory(appFolder);
+                        Directory.Delete(appFolder);
                     }
+
+                    Directory.CreateDirectory(appFolder);
 
                     var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
                     if (File.Exists(localZipFilePath))
