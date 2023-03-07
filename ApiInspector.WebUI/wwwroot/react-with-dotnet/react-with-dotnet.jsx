@@ -40,6 +40,48 @@ const EventBus =
     }
 };
 
+const Before3rdPartyComponentAccessListeners = [];
+
+function Before3rdPartyComponentAccess(dotNetFullClassNameOf3rdPartyComponent)
+{
+    for (var i = 0; i < Before3rdPartyComponentAccessListeners.length; i++)
+    {
+        Before3rdPartyComponentAccessListeners[i](dotNetFullClassNameOf3rdPartyComponent);
+    }
+}
+
+function AttachToBefore3rdPartyComponentAccess(fn)
+{
+    Before3rdPartyComponentAccessListeners.push(fn);
+}
+
+function TryLoadCssByHref(href)
+{
+    const headElement = document.querySelector(`head`);
+
+    if (headElement == null)
+    {
+        return {error: 'Head element not found in document.'};
+    }
+
+    const linkElement = headElement.querySelector("link[href*=" + '"' + href + '"' + "]");
+    if (linkElement)
+    {
+        return { isAlreadyLoaded: true };
+    }
+
+    const newLinkElement = document.createElement(`link`);
+
+    newLinkElement.rel = `stylesheet`;
+    newLinkElement.href = href;
+    newLinkElement.type = 'text/css';
+
+    headElement.appendChild(newLinkElement);
+
+    return { loadStarted: true };
+}
+
+
 function HasId(htmlElement)
 {
     return htmlElement.id !== "";
@@ -739,11 +781,23 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
     if (!constructorFunction)
     {
         throw CreateNewDeveloperError('ReactNode is not recognized');
-    }
+    }    
     
     if (/* is component */constructorFunction.indexOf('.') > 0)
     {
+        Before3rdPartyComponentAccess(constructorFunction);
+
         constructorFunction = GetExternalJsObject(constructorFunction);
+    }
+
+    if (constructorFunction === 'nbsp')
+    {
+        if (jsonNode && jsonNode.length)
+        {
+            return Array(jsonNode.length).fill('\xA0').join('');
+        }
+
+        return '\xA0';
     }
 
     // calculate props
@@ -1486,7 +1540,7 @@ function ConnectComponentFirstResponseToReactSystem(containerHtmlElementId, resp
 
     const element = response.ElementAsJson;
 
-    const component = DefineComponent(element);
+    const component = element.$isPureComponent === 1 ? DefinePureComponent(element) : DefineComponent(element);
 
     LastUsedComponentUniqueIdentifier = response.LastUsedComponentUniqueIdentifier;
             
@@ -1949,9 +2003,16 @@ function ProcessDynamicCssClasses(dynamicStyles)
     {
         if (ReactWithDotNetDynamicCssElement === null)
         {
-            ReactWithDotNetDynamicCssElement = document.createElement('style');
-            ReactWithDotNetDynamicCssElement.id = "ReactWithDotNetDynamicCss";
-            document.head.appendChild(ReactWithDotNetDynamicCssElement);
+            const idOfStyleElement = "ReactWithDotNetDynamicCss";
+
+            ReactWithDotNetDynamicCssElement = document.getElementById(idOfStyleElement);
+
+            if (ReactWithDotNetDynamicCssElement == null)
+            {
+                ReactWithDotNetDynamicCssElement = document.createElement('style');
+                ReactWithDotNetDynamicCssElement.id = idOfStyleElement;
+                document.head.appendChild(ReactWithDotNetDynamicCssElement);
+            }         
         }
 
         const arr = [];
@@ -2000,6 +2061,8 @@ var ReactWithDotNet =
     BeforeSendRequest: x=>x,
     RegisterExternalJsObject: RegisterExternalJsObject,
     GetExternalJsObject: GetExternalJsObject,
+    BeforeAny3rdPartyComponentAccess: AttachToBefore3rdPartyComponentAccess,
+    TryLoadCssByHref: TryLoadCssByHref,
 
     IsMediaMobile: IsMobile,
     IsMediaTablet: IsTablet,

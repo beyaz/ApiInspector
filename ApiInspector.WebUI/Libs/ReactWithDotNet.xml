@@ -29,6 +29,20 @@
                 a.href = <paramref name="href" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.nbsp">
+            <summary>
+                Creates new non-breaking space
+                <br />
+                &amp;nbsp;
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.nbsp(System.Int32)">
+            <summary>
+                Creates new non-breaking space with given <paramref name="length" />
+                <br />
+                &amp;nbsp;
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
             <summary>
                 img.alt = <paramref name="alt" />
@@ -1617,6 +1631,11 @@
         <member name="M:ReactWithDotNet.svg.Fill(System.String)">
             <summary>
             svg.fill = <paramref name="color"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.ViewBox(System.String)">
+            <summary>
+            svg.viewBox = <paramref name="viewBox"/>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">

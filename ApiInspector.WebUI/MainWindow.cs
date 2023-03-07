@@ -458,7 +458,18 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 state.SelectedMethod = node.MethodReference;
 
-                state = StateCache.TryRead(state.SelectedMethod) ?? state;
+                var currentState = state;
+
+                var cachedState = StateCache.TryRead(state.SelectedMethod);
+                if (cachedState is not null)
+                {
+                    state = cachedState;
+
+                    state.AssemblyDirectory = currentState.AssemblyDirectory;
+                    state.AssemblyFileName  = currentState.AssemblyFileName;
+                    state.ClassFilter       = currentState.ClassFilter;
+                    state.MethodFilter      = currentState.MethodFilter;
+                }
             }
         }
 

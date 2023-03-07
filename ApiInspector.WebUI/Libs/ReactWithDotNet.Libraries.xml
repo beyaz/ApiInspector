@@ -4,18 +4,870 @@
         <name>ReactWithDotNet.Libraries</name>
     </assembly>
     <members>
-        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.checked">
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.centerRipple">
             <summary>
-            	If true, the component is checked.
+                If `true`, the ripples are centered.
+                <br/>
+                They won't start at the cursor interaction position.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.disableRipple">
+            <summary>
+                If `true`, the ripple effect is disabled.
+                <br/>
+                <br/>
+                <br/>
+                ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+                <br/>
+                to highlight the element by applying separate styles with the `.Mui-focusVisible` class.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.disableTouchRipple">
+            <summary>
+                If `true`, the touch ripple effect is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.focusRipple">
+            <summary>
+                If `true`, the base button will have a keyboard focus ripple.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.focusVisibleClassName">
+            <summary>
+                This prop can help identify which element has keyboard focus.
+                <br/>
+                The class name will be applied when the element gains the focus through keyboard interaction.
+                <br/>
+                It's a polyfill for the [CSS :focus-visible selector](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
+                <br/>
+                The rationale for using this feature [is explained here](https://github.com/WICG/focus-visible/blob/HEAD/explainer.md).
+                <br/>
+                A [polyfill can be used](https://github.com/WICG/focus-visible) to apply a `focus-visible` class to other components
+                <br/>
+                if needed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ButtonBase.TouchRippleProps">
+            <summary>
+                Props applied to the `TouchRipple` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Card.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Card.raised">
+            <summary>
+                If `true`, the card will use raised styling.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Card.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardActions.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardActions.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardActions.disableSpacing">
+            <summary>
+                If `true`, the actions do not have additional margin.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardContent.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardContent.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardMedia.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardMedia.image">
+            <summary>
+                Image to be displayed as a background image.
+                <br/>
+                Either `image` or `src` prop must be specified.
+                <br/>
+                Note that caller must specify height otherwise the image will not be visible.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardMedia.src">
+            <summary>
+                An alias for `image` property.
+                <br/>
+                Available only with media components.
+                <br/>
+                Media components: `video`, `audio`, `picture`, `iframe`, `img`.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.CardMedia.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.absolute">
+            <summary>
+                Absolutely position the element.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.flexItem">
+            <summary>
+                If `true`, a vertical divider will have the correct height when used in flex container.
+                <br/>
+                (By default, a vertical divider will have a calculated height of `0px` if it is the child of a flex container.)
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.light">
+            <summary>
+                If `true`, the divider will have a lighter color.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.orientation">
+            <summary>
+                The component orientation.
+                <br/>
+                @default 'horizontal'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.textAlign">
+            <summary>
+                The text alignment.
+                <br/>
+                @default 'center'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Divider.variant">
+            <summary>
+                The variant to use.
+                <br/>
+                @default 'fullWidth'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.ElementBase.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'default'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.disableFocusRipple">
+            <summary>
+                If `true`, the  keyboard focus ripple is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.edge">
+            <summary>
+                If given, uses a negative margin to counteract the padding on one
+                <br/>
+                side (this is often helpful for aligning the left or right
+                <br/>
+                side of the icon with content above or below, without ruining the border
+                <br/>
+                size and shape).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.size">
+            <summary>
+                The size of the component.
+                <br/>
+                `small` is equivalent to the dense button styling.
+                <br/>
+                @default 'medium'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.IconButton.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.checkedIcon">
+            <summary>
+                The icon to display when the component is checked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'primary'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.disabled">
+            <summary>
+                If `true`, the component is disabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.icon">
+            <summary>
+                The icon to display when the component is unchecked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.size">
+            <summary>
+                The size of the component.
+                <br/>
+                `small` is equivalent to the dense switch styling.
+                <br/>
+                @default 'medium'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Libraries.mui.material.Switch.value">
             <summary>
-            The value of the component.The DOM API casts this to a string.
-            <br/>
-            The browser uses "on" as the default value.
+                The value of the component. The DOM API casts this to a string.
+                <br/>
+                The browser uses "on" as the default value.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.autoComplete">
+            <summary>
+                This prop helps users to fill forms faster, especially on mobile devices.
+                <br/>
+                The name can be confusing, as it's more like an autofill.
+                <br/>
+                You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.autoFocus">
+            <summary>
+                If `true`, the `input` element is focused during the first mount.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'primary'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.defaultValue">
+            <summary>
+                The default value. Use when the component is not controlled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.error">
+            <summary>
+                If `true`, the label is displayed in an error state.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.FormHelperTextProps">
+            <summary>
+                Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.fullWidth">
+            <summary>
+                If `true`, the input will take up the full width of its container.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.helperText">
+            <summary>
+                The helper text content.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.id">
+            <summary>
+                The id of the `input` element.
+                <br/>
+                Use this prop to make `label` and `helperText` accessible for screen readers.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.InputLabelProps">
+            <summary>
+                Props applied to the [`InputLabel`](/material-ui/api/input-label/) element.
+                <br/>
+                Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.inputProps">
+            <summary>
+                [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.label">
+            <summary>
+                The label content.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.multiline">
+            <summary>
+                If `true`, a `textarea` element is rendered instead of an input.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.name">
+            <summary>
+                Name attribute of the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.placeholder">
+            <summary>
+                The short hint displayed in the `input` before the user enters a value.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.required">
+            <summary>
+                If `true`, the label is displayed as required and the `input` element is required.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.rows">
+            <summary>
+                Number of rows to display when multiline option is set to true.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.maxRows">
+            <summary>
+                Maximum number of rows to display when multiline option is set to true.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.minRows">
+            <summary>
+                Minimum number of rows to display when multiline option is set to true.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.select">
+            <summary>
+                Render a [`Select`](/material-ui/api/select/) element while passing the Input element to `Select` as `input` parameter.
+                <br/>
+                If this option is set you must pass the options of the select as children.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.SelectProps">
+            <summary>
+                Props applied to the [`Select`](/material-ui/api/select/) element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.size">
+            <summary>
+                The size of the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.type">
+            <summary>
+                Type of the `input` element. It should be [a valid HTML5 input type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.TextField.value">
+            <summary>
+                The value of the `input` element, required for a controlled component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Paper.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Paper.elevation">
+            <summary>
+                Shadow depth, corresponds to `dp` in the spec.
+                <br/>
+                It accepts values between 0 and 24 inclusive.
+                <br/>
+                @default 1
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Paper.square">
+            <summary>
+                If `true`, rounded corners are disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Paper.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Paper.variant">
+            <summary>
+                The variant to use.
+                <br/>
+                @default 'elevation'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.checked">
+            <summary>
+                If `true`, the component is checked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.defaultChecked">
+            <summary>
+                The default checked state. Use when the component is not controlled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.disabled">
+            <summary>
+                If `true`, the component is disabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.disableRipple">
+            <summary>
+                If `true`, the ripple effect is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.disableFocusRipple">
+            <summary>
+                If `true`, the  keyboard focus ripple is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.edge">
+            <summary>
+                If given, uses a negative margin to counteract the padding on one
+                <br/>
+                side (this is often helpful for aligning the left or right
+                <br/>
+                side of the icon with content above or below, without ruining the border
+                <br/>
+                size and shape).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.id">
+            <summary>
+                The id of the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.inputProps">
+            <summary>
+                [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.name">
+            <summary>
+                Pass a ref to the `input` element.
+            </summary>
+            <summary>
+                Name attribute of the `input` element.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ReactWithDotNet.Libraries.mui.material.SwitchBase.readOnly" -->
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.required">
+            <summary>
+                If `true`, the `input` element is required.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.SwitchBase.value">
+            <summary>
+                The value of the component. The DOM API casts this to a string.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.arrow">
+            <summary>
+                If `true`, adds an arrow to the tooltip.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.components">
+            <summary>
+                The components used for each slot inside.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `slots` prop.
+                <br/>
+                It's recommended to use the `slots` prop instead.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.componentsProps">
+            <summary>
+                The extra props for the slot components.
+                <br/>
+                You can override the existing props or add new ones.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `slotProps` prop.
+                <br/>
+                It's recommended to use the `slotProps` prop instead, as `componentsProps` will be deprecated in the future.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.describeChild">
+            <summary>
+                Set to `true` if the `title` acts as an accessible description.
+                <br/>
+                By default the `title` acts as an accessible label for the child.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.disableFocusListener">
+            <summary>
+                Do not respond to focus-visible events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.disableHoverListener">
+            <summary>
+                Do not respond to hover events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.disableInteractive">
+            <summary>
+                Makes a tooltip not interactive, i.e. it will close when the user
+                <br/>
+                hovers over the tooltip before the `leaveDelay` is expired.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.disableTouchListener">
+            <summary>
+                Do not respond to long press touch events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.enterDelay">
+            <summary>
+                The number of milliseconds to wait before showing the tooltip.
+                <br/>
+                This prop won't impact the enter touch delay (`enterTouchDelay`).
+                <br/>
+                @default 100
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.enterNextDelay">
+            <summary>
+                The number of milliseconds to wait before showing the tooltip when one was already recently opened.
+                <br/>
+                @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.enterTouchDelay">
+            <summary>
+                The number of milliseconds a user must touch the element before showing the tooltip.
+                <br/>
+                @default 700
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.followCursor">
+            <summary>
+                If `true`, the tooltip follow the cursor over the wrapped element.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.id">
+            <summary>
+                This prop is used to help implement the accessibility logic.
+                <br/>
+                If you don't provide this prop. It falls back to a randomly generated id.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.leaveDelay">
+            <summary>
+                The number of milliseconds to wait before hiding the tooltip.
+                <br/>
+                This prop won't impact the leave touch delay (`leaveTouchDelay`).
+                <br/>
+                @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.leaveTouchDelay">
+            <summary>
+                The number of milliseconds after the user stops touching an element before hiding the tooltip.
+                <br/>
+                @default 1500
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.open">
+            <summary>
+                Callback fired when the component requests to be closed.
+                <br/>
+                <br/>
+                <br/>
+                @param {React.SyntheticEvent} event The event source of the callback.
+            </summary>
+            <summary>
+                Callback fired when the component requests to be open.
+                <br/>
+                <br/>
+                <br/>
+                @param {React.SyntheticEvent} event The event source of the callback.
+            </summary>
+            <summary>
+                If `true`, the component is shown.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.placement">
+            <summary>
+                Tooltip placement.
+                <br/>
+                @default 'bottom'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.PopperProps">
+            <summary>
+                Props applied to the [`Popper`](/material-ui/api/popper/) element.
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.slotProps">
+            <summary>
+                The extra props for the slot components.
+                <br/>
+                You can override the existing props or add new ones.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `componentsProps` prop, which will be deprecated in the future.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.slots">
+            <summary>
+                The components used for each slot inside.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `components` prop, which will be deprecated in the future.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Tooltip.title">
+            <summary>
+                Tooltip title. Zero-length titles string, undefined, null and false are never displayed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.align">
+            <summary>
+                Set the text-align on the component.
+                <br/>
+                @default 'inherit'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.gutterBottom">
+            <summary>
+                If `true`, the text will have a bottom margin.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.noWrap">
+            <summary>
+                If `true`, the text will not wrap, but instead will truncate with a text overflow ellipsis.
+                <br/>
+                <br/>
+                <br/>
+                Note that text overflow can only happen with block or inline-block level elements
+                <br/>
+                (the element needs to have a width in order to overflow).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.paragraph">
+            <summary>
+                If `true`, the element will be a paragraph element.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Libraries.mui.material.Typography.variant">
+            <summary>
+                Applies the theme typography styles.
+                <br/>
+                @default 'body1'
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ReactWithDotNet.Libraries.mui.material.Typography.variantMapping" -->
         <member name="P:ReactWithDotNet.Libraries.PrimeReact.AutoComplete`1.delay">
             <summary>
             Delay between keystrokes to wait before sending a query.

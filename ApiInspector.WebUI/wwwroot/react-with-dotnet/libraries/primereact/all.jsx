@@ -2,70 +2,108 @@ import React from 'react';
 
 import ReactWithDotNet from "../../react-with-dotnet";
 
+import { TabView, TabPanel } from 'primereact/tabview';
+
 function register(name, value)
 {
     ReactWithDotNet.RegisterExternalJsObject("ReactWithDotNet.Libraries.PrimeReact." + name, value);
 }
 
-// Connect components as Lazy
-register("Button", React.lazy(() => import('./Button')));
-register("InputText", React.lazy(() => import('./InputText')));
-register("InputTextarea", React.lazy(() => import('./InputTextarea')));
-register("BlockUI", React.lazy(() => import('./BlockUI')));
-register("Card", React.lazy(() => import('./Card')));
-register("TabView", React.lazy(() => import('./TabView')));
-register("TabPanel", React.lazy(() => import('./TabPanel')));
-register("SplitterPanel", React.lazy(() => import('./SplitterPanel')));
-register("Splitter", React.lazy(() => import('./Splitter')));
-register("Slider", React.lazy(() => import('./Slider')));
-register("ListBox", React.lazy(() => import('./ListBox')));
-register("Dropdown", React.lazy(() => import('./Dropdown')));
-register("Column", React.lazy(() => import('./Column')));
-register("DataTable", React.lazy(() => import('./DataTable')));
-register("Checkbox", React.lazy(() => import('./Checkbox')));
-register("InputMask", React.lazy(() => import('./InputMask')));
-register("AutoComplete", React.lazy(() => import('./AutoComplete')));
-register("Tree", React.lazy(() => import('./Tree')));
-register("InputSwitch", React.lazy(() => import('./InputSwitch')));
-register("Panel", React.lazy(() => import('./Panel')));
-register("Tooltip", React.lazy(() => import('./Tooltip')));
-register("Message", React.lazy(() => import('./Message')));
-register("ScrollPanel", React.lazy(() => import('./ScrollPanel')));
-register("Dialog", React.lazy(() => import('./Dialog')));
-
-
-// U T I L I T Y   F U N C T I O N S
-register("Panel::GetHeaderTemplate", (key) => ReactWithDotNet.GetExternalJsObject(key));
-
-register("GrabOnlyValueParameterFromCommonPrimeReactEvent", function (argumentsAsArray)
+function RegisterComponents()
 {
-    //const originalEvent = argumentsAsArray[0].originalEvent;
+    // Connect components as Lazy
+    register("Button", React.lazy(() => import('./Button')));
+    register("InputText", React.lazy(() => import('./InputText')));
+    register("InputTextarea", React.lazy(() => import('./InputTextarea')));
+    register("BlockUI", React.lazy(() => import('./BlockUI')));
+    register("Card", React.lazy(() => import('./Card')));
+    register("SplitterPanel", React.lazy(() => import('./SplitterPanel')));
+    register("Splitter", React.lazy(() => import('./Splitter')));
+    register("Slider", React.lazy(() => import('./Slider')));
+    register("ListBox", React.lazy(() => import('./ListBox')));
+    register("Dropdown", React.lazy(() => import('./Dropdown')));
+    register("Column", React.lazy(() => import('./Column')));
+    register("DataTable", React.lazy(() => import('./DataTable')));
+    register("Checkbox", React.lazy(() => import('./Checkbox')));
+    register("InputMask", React.lazy(() => import('./InputMask')));
+    register("AutoComplete", React.lazy(() => import('./AutoComplete')));
+    register("Tree", React.lazy(() => import('./Tree')));
+    register("InputSwitch", React.lazy(() => import('./InputSwitch')));
+    register("Panel", React.lazy(() => import('./Panel')));
+    register("Tooltip", React.lazy(() => import('./Tooltip')));
+    register("Message", React.lazy(() => import('./Message')));
+    register("ScrollPanel", React.lazy(() => import('./ScrollPanel')));
+    register("Dialog", React.lazy(() => import('./Dialog')));
 
-    const value = argumentsAsArray[0].value;
+    register("TabView", TabView);
+    register("TabPanel", TabPanel);
 
-    return [{ value: value }];
-});
+    // U T I L I T Y   F U N C T I O N S
+    register("Panel::GetHeaderTemplate", (key) => ReactWithDotNet.GetExternalJsObject(key));
 
-register("GrabWithoutOriginalEvent", function (argumentsAsArray)
-{
-    const newInstance = {};
+    register("GrabOnlyValueParameterFromCommonPrimeReactEvent", function (argumentsAsArray)
+    {
+        //const originalEvent = argumentsAsArray[0].originalEvent;
 
-    const obj = argumentsAsArray[0];
+        const value = argumentsAsArray[0].value;
 
-    for(var propertyName in obj)
-	{
-        if(obj.hasOwnProperty(propertyName))
+        return [{ value: value }];
+    });
+
+    register("GrabWithoutOriginalEvent", function (argumentsAsArray)
+    {
+        const newInstance = {};
+
+        const obj = argumentsAsArray[0];
+
+        for (var propertyName in obj)
         {
-            const value = obj[propertyName];
-
-            if (propertyName === 'originalEvent' && value && value._reactName)
+            if (obj.hasOwnProperty(propertyName))
             {
-                continue;
-            }
+                const value = obj[propertyName];
 
-            newInstance[propertyName] = value;
+                if (propertyName === 'originalEvent' && value && value._reactName)
+                {
+                    continue;
+                }
+
+                newInstance[propertyName] = value;
+            }
         }
+
+        return [newInstance];
+    });
+
+}
+
+function RegisterGlobalStyles()
+{
+    ReactWithDotNet.TryLoadCssByHref("https://cdn.jsdelivr.net/npm/primeicons@5.0.0/primeicons.css");
+    ReactWithDotNet.TryLoadCssByHref("https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/primereact.min.css");
+    ReactWithDotNet.TryLoadCssByHref("https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/themes/saga-blue/theme.css");
+}
+
+var isFirstLoad = false;
+
+/**
+ * @param {string} dotNetFullClassNameOf3rdPartyComponent
+ */
+function BeforeAny3rdPartyComponentAccess(dotNetFullClassNameOf3rdPartyComponent)
+{
+    if (isFirstLoad)
+    {
+        return;
     }
 
-    return [newInstance];
-});
+    if (dotNetFullClassNameOf3rdPartyComponent.indexOf('.PrimeReact.') > 0 )
+    {
+        isFirstLoad = true;
+
+        RegisterGlobalStyles();
+        RegisterComponents();
+    }  
+}
+
+ReactWithDotNet.BeforeAny3rdPartyComponentAccess(BeforeAny3rdPartyComponentAccess);
+
+
