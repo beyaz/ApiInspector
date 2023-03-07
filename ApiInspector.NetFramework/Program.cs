@@ -291,8 +291,6 @@ static class Program
 
     public static void Main(string[] args)
     {
-        args = new[] { "1|InvokeMethod" };
-        
         ReflectionHelper.AttachAssemblyResolver();
 
         KillAllNamedProcess(nameof(ApiInspector));
