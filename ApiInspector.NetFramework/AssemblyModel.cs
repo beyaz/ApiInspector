@@ -190,20 +190,19 @@ static class AssemblyModelHelper
         }
 
         var sameNames = new List<MethodInfo>();
-
-        MethodInfo foundedMethodInfo = null;
+        var fullSame  = new List<MethodInfo>();
 
         assembly.VisitTypes(type =>
         {
-            if (foundedMethodInfo == null)
+            if (fullSame.Count == 0)
             {
                 type.VisitMethods(methodInfo =>
                 {
-                    if (foundedMethodInfo == null)
+                    if (fullSame.Count == 0)
                     {
                         if (methodReference.Equals(methodInfo.AsReference()))
                         {
-                            foundedMethodInfo = methodInfo;
+                            fullSame.Add(methodInfo);
                         }
 
                         if (DeclaringTypesAreSameAndNameIsSame(methodReference, methodInfo.AsReference()))
@@ -215,17 +214,21 @@ static class AssemblyModelHelper
             }
         });
 
-        if (foundedMethodInfo == null && sameNames.Count == 1)
+        if (fullSame.Count == 1)
         {
-            foundedMethodInfo = sameNames[0];
+            return fullSame[0];
         }
 
-        
-        return foundedMethodInfo;
+        if (sameNames.Count == 1)
+        {
+            return sameNames[0];
+        }
+
+        return null;
 
         static bool DeclaringTypesAreSameAndNameIsSame(MethodReference a, MethodReference b)
         {
-            if (a.DeclaringType is not null && b.DeclaringType is  not null)
+            if (a.DeclaringType is not null && b.DeclaringType is not null)
             {
                 if (a.DeclaringType.Equals(b.DeclaringType))
                 {
