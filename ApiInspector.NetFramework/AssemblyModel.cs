@@ -189,6 +189,8 @@ static class AssemblyModelHelper
             throw new ArgumentNullException(nameof(methodReference));
         }
 
+        var sameNames = new List<MethodInfo>();
+
         MethodInfo foundedMethodInfo = null;
 
         assembly.VisitTypes(type =>
@@ -203,12 +205,39 @@ static class AssemblyModelHelper
                         {
                             foundedMethodInfo = methodInfo;
                         }
+
+                        if (DeclaringTypesAreSameAndNameIsSame(methodReference, methodInfo.AsReference()))
+                        {
+                            sameNames.Add(methodInfo);
+                        }
                     }
                 });
             }
         });
 
+        if (foundedMethodInfo == null && sameNames.Count == 1)
+        {
+            foundedMethodInfo = sameNames[0];
+        }
+
+        
         return foundedMethodInfo;
+
+        static bool DeclaringTypesAreSameAndNameIsSame(MethodReference a, MethodReference b)
+        {
+            if (a.DeclaringType is not null && b.DeclaringType is  not null)
+            {
+                if (a.DeclaringType.Equals(b.DeclaringType))
+                {
+                    if (a.Name == b.Name)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 
     public static void VisitMethods(this Type type, Action<MethodInfo> visitAction)
