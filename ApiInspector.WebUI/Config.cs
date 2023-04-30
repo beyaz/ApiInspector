@@ -14,6 +14,7 @@ public class ConfigInfo
 
 partial class Extensions
 {
+
     public static ConfigInfo Config = JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(Path.Combine(AppFolder, "ApiInspector.WebUI.Config.json")));
 
     public static string AppFolder
