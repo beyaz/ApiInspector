@@ -6,6 +6,25 @@ namespace ApiInspector.WebUI;
 
 static class External
 {
+    public static (string response, Exception exception) GetEnvironment(string assemblyFileFullPath)
+    {
+        var fileInfo = new FileInfo(assemblyFileFullPath);
+        if (!fileInfo.Exists)
+        {
+            return (null, new Exception("File not exist."));
+        }
+
+        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
+        if (isDotNetCore is false && isDotNetFramework is false)
+        {
+            return (null, new Exception("Environment not correct."));
+        }
+
+        var parameter = assemblyFileFullPath;
+
+        return Execute<string>(isDotNetCore, nameof(GetEnvironment), parameter);
+    }
+    
     public static string GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);

@@ -43,6 +43,27 @@
                 &amp;nbsp;
             </summary>
         </member>
+        <member name="F:ReactWithDotNet.Mixin.DisplayFlexColumn">
+            <summary>
+                display = "flex"
+                <br/>
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.DisplayFlexRow">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.DisplayFlexRowCentered">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
             <summary>
                 img.alt = <paramref name="alt" />
@@ -53,29 +74,34 @@
                 img.src = <paramref name="src" />
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Dir(System.String)">
+        <member name="P:ReactWithDotNet.Mixin.BackgroundColorTransparent">
             <summary>
-                initialize dir attribute of html element
+                style.backgroundColor = 'transparent'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.DirRtl">
+        <member name="P:ReactWithDotNet.Mixin.BackgroundTransparent">
             <summary>
-                element.dir = 'rtl'
+                style.background = 'transparent'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.DirLtr">
+        <member name="P:ReactWithDotNet.Mixin.ClearBoth">
             <summary>
-                element.dir = 'ltr'
+                style.clear = 'both'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ClearLeft">
+            <summary>
+                style.clear = 'left'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ClearRight">
+            <summary>
+                style.clear = 'right'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.ColorWhite">
             <summary>
                 style.color = 'white'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Cursor(System.String)">
-            <summary>
-            style.cursor = <paramref name="value"/>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DirectionLtr">
@@ -86,6 +112,16 @@
         <member name="P:ReactWithDotNet.Mixin.DirectionRtl">
             <summary>
                 style.direction = "rtl"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DirLtr">
+            <summary>
+                element.dir = 'ltr'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DirRtl">
+            <summary>
+                element.dir = 'rtl'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayBlock">
@@ -118,41 +154,14 @@
                 flexDirection = "row-reverse"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.FontSizeLarge">
+        <member name="P:ReactWithDotNet.Mixin.FloatLeft">
             <summary>
-                style.fontSize = 'large'
+                style.float = 'left'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.FontSizeLarger">
+        <member name="P:ReactWithDotNet.Mixin.FloatRight">
             <summary>
-                style.fontSize = 'larger'
-                <br />
-                Sets the font-size to a larger size than the parent element
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.FontSizeSmall">
-            <summary>
-                style.fontSize = 'small'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.Double)">
-            <summary>
-            style.letterSpacing = <paramref name="letterSpacingAsPixel"/> + 'px'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.FontWeightExtraBold">
-            <summary>
-                style.fontWeight = '800'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.FontWeightMedium">
-            <summary>
-                style.fontWeight = '500'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.FontWeightSemiBold">
-            <summary>
-                style.fontWeight = '600'
+                style.float = 'right'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.Height100vh">
@@ -212,12 +221,12 @@
         </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowWrapAnywhere">
             <summary>
-            style.overflowWrap = 'anywhere'
+                style.overflowWrap = 'anywhere'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowWrapNormal">
             <summary>
-            style.overflowWrap = 'normal'
+                style.overflowWrap = 'normal'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowYAuto">
@@ -245,21 +254,6 @@
                 textDecoration = "underline"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.TextTransformCapitalize">
-            <summary>
-                style.textTransform = 'capitalize'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.TextTransformLowerCase">
-            <summary>
-                style.textTransform = 'lowercase'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.TextTransformUpperCase">
-            <summary>
-                style.textTransform = 'uppercase'
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.Width100vw">
             <summary>
                 style.width = "100vw"
@@ -277,9 +271,29 @@
                 width: 100%
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.BackdropFilter(System.String)">
+            <summary>
+                style.backdropFilter = value
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackdropFilterBlur(System.Double)">
+            <summary>
+                style.backdropFilter = blur(px)
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String)">
+            <summary>
+            style.backgroundImage = <paramref name="backgroundImage"/>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Children(System.Collections.Generic.IEnumerable{ReactWithDotNet.Element})">
             <summary>
                 Adds elements to children
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Clear(System.String)">
+            <summary>
+                style.clear = value
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Content(System.String)">
@@ -287,14 +301,36 @@
                 style.content = <paramref name="content" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.Cursor(System.String)">
+            <summary>
+                style.cursor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Dir(System.String)">
+            <summary>
+                initialize dir attribute of html element
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.Double)">
             <summary>
                 style.flexGrow = <paramref name="growValue" />
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
+        <member name="M:ReactWithDotNet.Mixin.Float(System.String)">
             <summary>
-                style.fontFamily = fontFamily
+                style.float = value
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.Height0">
+            <summary>
+                style.height = 0px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.HSpace(System.Double)">
+            <summary>
+                Creates a new div with given width
+                <br />
+                new div{ style = {width = <paramref name="valueInPx" />}}
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Id(System.String)">
@@ -305,11 +341,6 @@
         <member name="M:ReactWithDotNet.Mixin.Id(System.Int32)">
             <summary>
                 initialize id attribute of html element
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Role(System.String)">
-            <summary>
-            Roles define the semantic meaning of content, allowing screen readers and other tools to present and support interaction with an object in a way that is consistent with user expectations of that type of object.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Id(System.Int64)">
@@ -364,56 +395,6 @@
                 style.maxWidth = <paramref name="maxWidth" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.Style)">
-            <summary>
-                min-width: 1024px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 1024px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.Style)">
-            <summary>
-                max-width: 767px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                max-width: 767px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.Style)">
-            <summary>
-                max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.Style)">
-            <summary>
-                min-width: 768px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 768px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.Style)">
-            <summary>
-                min-width: 768px and max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 768px and max-width: 1023px
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.MinHeight(System.String)">
             <summary>
                 style.minHeight = <paramref name="minHeight" />
@@ -446,16 +427,6 @@
                 });
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Opacity(System.String)">
-            <summary>
-                style.opacity = <paramref name="opacity" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Opacity(System.Double)">
-            <summary>
-                style.opacity = <paramref name="opacity" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.Right(System.String)">
             <summary>
                 style.right = right
@@ -466,9 +437,10 @@
                 style.right = right + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Solid_1px_(System.String)">
+        <member name="M:ReactWithDotNet.Mixin.Role(System.String)">
             <summary>
-                Returns a string value like "1px solid <paramref name="color" />"
+                Roles define the semantic meaning of content, allowing screen readers and other tools to present and support
+                interaction with an object in a way that is consistent with user expectations of that type of object.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Space(System.String)">
@@ -492,11 +464,6 @@
                 </br>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
-            <summary>
-                style.textTransform = <paramref name="textTransform" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.Title(System.String)">
             <summary>
                 element.title = title
@@ -509,14 +476,11 @@
                 style.bottom = <paramref name="pixelValue" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Transform(System.String)">
+        <member name="M:ReactWithDotNet.Mixin.VSpace(System.Double)">
             <summary>
-                style.transform = <paramref name="transform" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Transition(System.String)">
-            <summary>
-                style.transition = <paramref name="transition" />
+                Creates a new div with given height
+                <br />
+                new div{ style = {height = <paramref name="valueInPx" />}}
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.wh(System.Double)">
@@ -697,49 +661,71 @@
                 style.paddingBottom = <paramref name="value" />
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.BackdropFilter(System.String)">
+        <member name="P:ReactWithDotNet.Mixin.FontSizeLarge">
             <summary>
-                style.backdropFilter = value
+                style.fontSize = 'large'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.BackdropFilterBlur(System.Double)">
+        <member name="P:ReactWithDotNet.Mixin.FontSizeLarger">
             <summary>
-                style.backdropFilter = blur(px)
+                style.fontSize = 'larger'
+                <br />
+                Sets the font-size to a larger size than the parent element
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Float(System.String)">
+        <member name="P:ReactWithDotNet.Mixin.FontSizeSmall">
             <summary>
-                style.float = value
+                style.fontSize = 'small'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.FloatLeft">
+        <member name="P:ReactWithDotNet.Mixin.FontWeightExtraBold">
             <summary>
-                style.float = 'left'
+                style.fontWeight = '800'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.FloatRight">
+        <member name="P:ReactWithDotNet.Mixin.FontWeightMedium">
             <summary>
-                style.float = 'right'
+                style.fontWeight = '500'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Clear(System.String)">
+        <member name="P:ReactWithDotNet.Mixin.FontWeightSemiBold">
             <summary>
-                style.clear = value
+                style.fontWeight = '600'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.ClearRight">
+        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
             <summary>
-                style.clear = 'right'
+                style.fontFamily = fontFamily
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.ClearLeft">
+        <member name="M:ReactWithDotNet.Mixin.WebkitFontSmoothing(System.String)">
             <summary>
-                style.clear = 'left'
+            <b>-webkit-font-smoothing</b> = <paramref name="value"/>
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.ClearBoth">
+        <member name="P:ReactWithDotNet.Mixin.WebkitFontSmoothingAntialiased">
             <summary>
-                style.clear = 'both'
+            <b>-webkit-font-smoothing</b> = grayscale
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MozOsxFontSmoothing(System.String)">
+            <summary>
+            <b>-moz-osx-font-smoothing</b> = <paramref name="value"/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.MozOsxFontSmoothingGrayScale">
+            <summary>
+            <b>-moz-osx-font-smoothing</b> = grayscale
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.Double)">
+            <summary>
+                style.letterSpacing = <paramref name="letterSpacingAsPixel" /> + 'px'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.LetterSpacingNormal">
+            <summary>
+                style.letterSpacing = normal
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
@@ -777,6 +763,36 @@
                 <para>style.alignContent = "space-between"</para>
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.WhiteSpaceBreakSpaces">
+            <summary>
+                style.whiteSpace = break-spaces
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WhiteSpaceNormal">
+            <summary>
+                style.whiteSpace = normal
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WhiteSpaceNoWrap">
+            <summary>
+                style.whiteSpace = nowrap
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WhiteSpacePre">
+            <summary>
+                style.whiteSpace = pre
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WhiteSpacePreLine">
+            <summary>
+                style.whiteSpace = pre-line
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WhiteSpacePreWrap">
+            <summary>
+                style.whiteSpace = pre-wrap
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.WordBreakAll">
             <summary>
                 <para>style.wordBreak = "break-all"</para>
@@ -797,9 +813,226 @@
                 <para>style.wordBreak = "break-word"</para>
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.WhiteSpace(System.String)">
+            <summary>
+                style.whiteSpace = <paramref name="value" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.WordBreak(System.String)">
             <summary>
                 style.wordBreak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.Opacity0">
+            <summary>
+                style.opacity = 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.Opacity1">
+            <summary>
+                style.opacity = 1
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextTransformCapitalize">
+            <summary>
+                style.textTransform = 'capitalize'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextTransformLowerCase">
+            <summary>
+                style.textTransform = 'lowercase'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.TextTransformUpperCase">
+            <summary>
+                style.textTransform = 'uppercase'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.VisibilityCollapse">
+            <summary>
+                style.visibility = 'collapse'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.VisibilityHidden">
+            <summary>
+                style.visibility = 'hidden'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.VisibilityVisible">
+            <summary>
+                style.visibility = 'visible'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Opacity(System.String)">
+            <summary>
+                style.opacity = <paramref name="opacity" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Opacity(System.Double)">
+            <summary>
+                style.opacity = <paramref name="opacity" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
+            <summary>
+                style.textTransform = <paramref name="textTransform" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transform(System.String)">
+            <summary>
+                style.transform = <paramref name="transform" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String)">
+            <summary>
+                style.transition = <paramref name="transition" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String,System.Double)">
+            <summary>
+                style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String,System.Double,System.Double)">
+            <summary>
+                style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms {
+                <paramref name="delayAsMilliseconds" />}ms
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String,System.Double,System.String)">
+            <summary>
+                style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms {
+                <paramref name="easingFunction" />}
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String,System.Double,System.String,System.Double)">
+            <summary>
+                style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms {
+                <paramref name="easingFunction" />} {<paramref name="delayAsMilliseconds" />}ms
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Visibility(System.String)">
+            <summary>
+                style.visibility = <paramref name="visibility" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 1024px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 1024px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.Style)">
+            <summary>
+                max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.Style)">
+            <summary>
+                max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 768px and max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 768px and max-width: 1023px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 768px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 768px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderColor(System.String)">
+            <summary>
+                style.borderColor = <paramref name="color" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Dashed(System.Double,System.String)">
+            <summary>
+                Returns a string like <paramref name="widthAsPx" /><b> + px dashed + </b> <paramref name="color" />"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Dotted(System.Double,System.String)">
+            <summary>
+                Returns a string like <paramref name="widthAsPx" /><b> + px dotted + </b> <paramref name="color" />"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Solid(System.Double,System.String)">
+            <summary>
+                Returns a string like <paramref name="widthAsPx" /><b> + px solid + </b> <paramref name="color" />"
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.percent">
+            <summary>
+                50|percent returns like '50%'
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.rem">
+            <summary>
+                2|rem returns like '2rem'
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.vh">
+            <summary>
+                7|vh returns like '7vh'
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.vw">
+            <summary>
+                7|vw returns like '7vw'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.linear_gradient(System.Int32,System.String,System.String)">
+            <summary>
+                'linear-gradient(<paramref name="degree" /><b>+deg</b>, <paramref name="fromColor" />, <paramref name="toColor" />
+                )'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.linear_gradientTo(System.String,System.String,System.String,System.String)">
+            <summary>
+                'linear-gradient(<b>to </b><paramref name="directionFrom" /> <paramref name="directionTo" />,
+                <paramref name="fromColor" />, <paramref name="toColor" />)'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.linear_gradientTo(System.String,System.String,System.String)">
+            <summary>
+                'linear-gradient(<b>to </b> <paramref name="targetDirection" />,
+                <paramref name="fromColor" />, <paramref name="toColor" />)'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.rgb(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Return new string as 'rgb(<paramref name="red" />, <paramref name="green" />, <paramref name="blue" />)'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.rgba(System.Int32,System.Int32,System.Int32,System.Double)">
+            <summary>
+                Return new string as 'rgb(<paramref name="red" />, <paramref name="green" />, <paramref name="blue" />,
+                <paramref name="alpha" />)'
             </summary>
         </member>
         <member name="T:ReactWithDotNet.article">
@@ -890,6 +1123,36 @@
         <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.Style)">
             <summary>
                 Preformatted text
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.code">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(System.String)">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.op_Implicit(System.String)~ReactWithDotNet.code">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Define some text as computer code in a document
             </summary>
         </member>
         <member name="T:ReactWithDotNet.ol">
@@ -1387,6 +1650,45 @@
                 Removes value from start of str
             </summary>
         </member>
+        <member name="T:ReactWithDotNet.FlexRow">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexRow.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexRow.#ctor">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "row"</br>
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.FlexColumn">
+            <summary>
+                display = "flex"
+                <br/>
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexColumn.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                display = "flex"
+                <br/>
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexColumn.#ctor">
+            <summary>
+                display = "flex"
+                <br/>
+                flexDirection  = "column"
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.FlexRowCentered">
             <summary>
                 <br>display = "flex"</br>
@@ -1526,22 +1828,6 @@
                 Adds given cssClassName ot class attribute of html element
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
-            <summary>
-            if you want to handle when user iteraction finished see example below<br/>
-            component.valueBind = ()=>state.UserInfo.Name<br/>
-            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
-            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
-            <summary>
-            if you want to handle when user iteraction finished see example below<br/>
-            component.valueBind = ()=>state.UserInfo.Name<br/>
-            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
-            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.input.onBlur">
             <summary>
                 Occurs when an element loses focus.
@@ -1550,6 +1836,27 @@
         <member name="P:ReactWithDotNet.input.onFocus">
             <summary>
                 occurs when an element gets focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.CssUnit.em">
+            <summary>
+                2|em returns like '2em'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
@@ -1592,50 +1899,108 @@
                 DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo, state.SelectedCommissionInfo);
             </summary>
         </member>
-        <member name="T:ReactWithDotNet.VSpace">
-            <summary>
-                Verticle Space
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Style.alignItems">
             <summary>
-            |˂-?-˃| center flex-start flex-end stretch baseline
+                |˂-?-˃| center flex-start flex-end stretch baseline
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Style.boxSizing">
             <summary>
-            Allows us to include the padding and border in an element's total width and height.
+                Allows us to include the padding and border in an element's total width and height.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Style.op_Addition(ReactWithDotNet.Style,ReactWithDotNet.StyleModifier)">
             <summary>
-                Add given <paramref name="styleModifier"/> to <paramref name="style"/>
-                <br/>
-                if <paramref name="style"/> is null then returns null.
+                Add given <paramref name="styleModifier" /> to <paramref name="style" />
+                <br />
+                if <paramref name="style" /> is null then returns null.
             </summary>
         </member>
         <member name="T:ReactWithDotNet.MediaQuery">
             <summary>
-            Example:
-            <br/>
-            new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
+                Example:
+                <br />
+                new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
             </summary>
         </member>
         <member name="M:ReactWithDotNet.MediaQuery.#ctor(System.String,ReactWithDotNet.Style)">
             <summary>
-            Example:
+                Example:
+                <br />
+                new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Width(System.String)">
+            <summary>
+                svg.width = <paramref name="width" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Width(System.Double)">
+            <summary>
+                svg.width = <paramref name="width" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.WidthHeight(System.String)">
+            <summary>
+                svg.width = <paramref name="widthAndHeight" />
             <br/>
-            new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
+                svg.height = <paramref name="widthAndHeight" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.WidthHeight(System.Double)">
+            <summary>
+                svg.width = <paramref name="widthAndHeight" /> + 'px'
+            <br/>
+                svg.height = <paramref name="widthAndHeight" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Height(System.String)">
+            <summary>
+                svg.height = <paramref name="height" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Height(System.Double)">
+            <summary>
+                svg.height = <paramref name="height" /> + 'px'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.svg.Fill(System.String)">
             <summary>
-            svg.fill = <paramref name="color"/>
+                svg.fill = <paramref name="color" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.svg.ViewBox(System.String)">
             <summary>
-            svg.viewBox = <paramref name="viewBox"/>
+                svg.viewBox = <paramref name="viewBox" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.ViewBox(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.rect.rx">
+            <summary>
+            The horizontal corner radius of the rect
+            <br/>
+            Default value: auto
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.rect.ry">
+            <summary>
+            The vertical corner radius of the rect
+            <br/>
+            Default value: auto
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.rect.x">
+            <summary>
+            The x coordinate of the rect
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.rect.y">
+            <summary>
+            The y coordinate of the rect
             </summary>
         </member>
         <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">
@@ -1650,11 +2015,11 @@
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyReactComponent.SuspenseFallback">
             <summary>
-            This is designed for Suspense part of react. When page first rendered as pure html.
-            <br/>
-            When react component fully loaded then this element will be replace by original component.
-            <br/>
-            Default value is sipmle empty div element
+                This is designed for Suspense part of react. When page first rendered as pure html.
+                <br />
+                When react component fully loaded then this element will be replace by original component.
+                <br />
+                Default value is sipmle empty div element
             </summary>
         </member>
     </members>

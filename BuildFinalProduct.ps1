@@ -1,5 +1,5 @@
-$ProjectDirectory = "D:\work\git\ApiInspector\"
-$FinalDirectory   = "D:\work\git\ApiInspector\Api Inspector (.net method invoker)\"
+$ProjectDirectory = "c:\github\ApiInspector\"
+$FinalDirectory   = "C:\github\ApiInspector\Api Inspector (.net method invoker)\"
 $WebUiOutputDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Debug\net6.0\"
 
 New-Item -ItemType Directory -Force -Path $FinalDirectory

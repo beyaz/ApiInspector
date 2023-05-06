@@ -48,4 +48,25 @@ partial class Extensions
             onFail(response.exception);
         }
     }
+
+    public static B Then<T,B>(this (T value, Exception exception) response, Func<T,B> onSuccess, Func<Exception,B> onFail)
+    {
+        if (response.exception is null)
+        {
+            return onSuccess(response.value);
+        }
+
+        return onFail(response.exception);
+    }
+
+    public static C Flow<A,B,C>(A value, Func<A,(B, Exception)> nextFunc, Func<B,C> onSuccess)
+    {
+        var (b, exception) = nextFunc(value);
+        if (exception is null)
+        {
+            return onSuccess(b);
+        }
+
+        return default;
+    }
 }

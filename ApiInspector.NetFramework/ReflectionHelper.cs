@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using static ApiInspector.FpExtensions;
 
 namespace ApiInspector;
@@ -86,6 +87,28 @@ static class ReflectionHelper
         void traceError(Exception exception) => FileHelper.WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }
 
+    public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
+    {
+        var CompiledNetCoreRegex      = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
+        var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
+
+        var contents = File.ReadAllText(dll.FullName);
+
+        var match = CompiledNetCoreRegex.Match(contents);
+        if (match.Success)
+        {
+            return (true, false);
+        }
+
+        match = CompiledNetFrameworkRegex.Match(contents);
+        if (match.Success)
+        {
+            return (false, true);
+        }
+
+        return (false, false);
+    }
+
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
         var searchDirectories = new List<string>();
@@ -100,14 +123,17 @@ static class ReflectionHelper
             }
         });
 
-        if (RuntimeInformation.FrameworkDescription.IndexOf("Core", StringComparison.OrdinalIgnoreCase) >= 0)
+        if (GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetCore)
         {
+            var version = Environment.Version.ToString();
+
             var folders = new[]
             {
-                "C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App\\3.1.29",
-                "C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\3.1.29",
-                "C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\3.1.29"
+                $"C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App\\{version}",
+                $"C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\{version}",
+                $"C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\{version}"
             };
+            
             foreach (var folder in folders)
             {
                 searchDirectories.Add(folder);

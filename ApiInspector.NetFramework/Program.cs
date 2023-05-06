@@ -282,6 +282,11 @@ static class Program
             SaveExceptionAndExitWithFailure(invocationException);
         }
 
+        if (response is string responseAsString)
+        {
+            return responseAsString;
+        }
+        
         return JsonConvert.SerializeObject(response, new JsonSerializerSettings
         {
             Formatting           = Formatting.Indented,
@@ -289,6 +294,11 @@ static class Program
         });
     }
 
+    public static string GetEnvironment(string assemblyFileFullPath)
+    {
+        return Plugins.GetEnvironment(assemblyFileFullPath);
+    }
+    
     public static void Main(string[] args)
     {
         ReflectionHelper.AttachAssemblyResolver();

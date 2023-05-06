@@ -5,182 +5,181 @@ using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ApiInspector.Bootstrapper
+namespace ApiInspector.Bootstrapper;
+
+static class Program
 {
-    static class Program
+    public static async Task Main()
     {
-        public static async Task Main()
+        try
         {
-            try
+            KillAllNamedProcess("ApiInspector.WebUI");
+            KillAllNamedProcess("ApiInspector");
+
+            Console.WriteLine("Checking version...");
+
+            using var client = new HttpClient();
+
+            var versionUrl = (string)AppContext.GetData("VersionUrl");
+            if (versionUrl == null)
             {
-                KillAllNamedProcess("ApiInspector.WebUI");
-                KillAllNamedProcess("ApiInspector");
+                throw new Exception($"Value @{nameof(versionUrl)} cannot be empty.");
+            }
 
-                Console.WriteLine("Checking version...");
+            var newVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl");
+            if (newVersionZipFileUrl == null)
+            {
+                throw new Exception($"Value @{nameof(newVersionZipFileUrl)} cannot be empty.");
+            }
 
-                using var client = new HttpClient();
+            var installationFolder = (string)AppContext.GetData("InstallationFolder");
+            if (installationFolder == null)
+            {
+                throw new Exception($"Value @{nameof(installationFolder)} cannot be empty.");
+            }
 
-                var versionUrl = (string)AppContext.GetData("VersionUrl");
-                if (versionUrl == null)
+            installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+            var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
+
+            var shouldUpdate = true;
+
+            Console.WriteLine("AppFolder: " + appFolder);
+
+            var localVersionFilePath = Path.Combine(appFolder, "Version.txt");
+
+            if (File.Exists(localVersionFilePath))
+            {
+                var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+
+                var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
+
+                Console.WriteLine($"Remote Version: {remoteVersion}");
+                Console.WriteLine($"Local Version : {localVersion}");
+
+                if (remoteVersion == localVersion)
                 {
-                    throw new Exception($"Value @{nameof(versionUrl)} cannot be empty.");
+                    shouldUpdate = false;
+                }
+            }
+
+            if (shouldUpdate)
+            {
+                Console.WriteLine("Updating to new version...");
+
+                if (Directory.Exists(appFolder))
+                {
+                    Directory.Delete(appFolder);
                 }
 
-                var newVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl");
-                if (newVersionZipFileUrl == null)
+                Directory.CreateDirectory(appFolder);
+
+                var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
+                if (File.Exists(localZipFilePath))
                 {
-                    throw new Exception($"Value @{nameof(newVersionZipFileUrl)} cannot be empty.");
-                }
-
-                var installationFolder = (string)AppContext.GetData("InstallationFolder");
-                if (installationFolder == null)
-                {
-                    throw new Exception($"Value @{nameof(installationFolder)} cannot be empty.");
-                }
-
-                installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-
-                var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
-
-                var shouldUpdate = true;
-
-                Console.WriteLine("AppFolder: " + appFolder);
-
-                var localVersionFilePath = Path.Combine(appFolder, "Version.txt");
-
-                if (File.Exists(localVersionFilePath))
-                {
-                    var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
-
-                    var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
-
-                    Console.WriteLine($"Remote Version: {remoteVersion}");
-                    Console.WriteLine($"Local Version : {localVersion}");
-
-                    if (remoteVersion == localVersion)
-                    {
-                        shouldUpdate = false;
-                    }
-                }
-
-                if (shouldUpdate)
-                {
-                    Console.WriteLine("Updating to new version...");
-
-                    if (Directory.Exists(appFolder))
-                    {
-                        Directory.Delete(appFolder);
-                    }
-
-                    Directory.CreateDirectory(appFolder);
-
-                    var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
-                    if (File.Exists(localZipFilePath))
-                    {
-                        Console.WriteLine("Clearing zip file...");
-                        File.Delete(localZipFilePath);
-                    }
-
-                    Console.WriteLine($"Downloading... {newVersionZipFileUrl}");
-
-                    await DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
-
-                    Console.WriteLine("Extracting...");
-
-                    ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
-
+                    Console.WriteLine("Clearing zip file...");
                     File.Delete(localZipFilePath);
-
-                    var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
-
-                    await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
                 }
 
-                CopyPlugins(appFolder);
+                Console.WriteLine($"Downloading... {newVersionZipFileUrl}");
 
-                StartWebApplication(appFolder);
+                await DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
+
+                Console.WriteLine("Extracting...");
+
+                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
+
+                File.Delete(localZipFilePath);
+
+                var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+
+                await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
             }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                Console.Read();
-            }
+
+            CopyPlugins(appFolder);
+
+            StartWebApplication(appFolder);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            Console.Read();
+        }
+    }
+
+    static void CopyPlugins(string appFolder)
+    {
+        var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+        if (string.IsNullOrWhiteSpace(directory))
+        {
+            return;
         }
 
-        static void CopyPlugins(string appFolder)
+        foreach (var file in Directory.GetFiles(directory, "*.json"))
         {
-            var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-            if (string.IsNullOrWhiteSpace(directory))
+            if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
             {
-                return;
-            }
-
-            foreach (var file in Directory.GetFiles(directory, "*.json"))
-            {
-                if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
+                if (file.IndexOf("NetFramework", StringComparison.OrdinalIgnoreCase) > 0)
                 {
-                    if (file.IndexOf("NetFramework", StringComparison.OrdinalIgnoreCase) > 0)
-                    {
-                        File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
-                    }
-                    else
-                    {
-                        File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
-                    }
+                    File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
                 }
-            }
-        }
-
-        static async Task DownloadFileAsync(string url, string localFilePath)
-        {
-            using var httpClient = new HttpClient();
-
-            File.Delete(localFilePath);
-
-            var directory = Path.GetDirectoryName(localFilePath);
-            if (Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
-
-            var response = await httpClient.GetAsync(url);
-
-            await response.Content.CopyToAsync(fs);
-        }
-
-        static async Task<string> DownloadStringAsync(string url)
-        {
-            using var httpClient = new HttpClient();
-
-            var str = await httpClient.GetStringAsync(url);
-
-            return str;
-        }
-
-        static void KillAllNamedProcess(string processName)
-        {
-            foreach (var process in Process.GetProcessesByName(processName))
-            {
-                if (Process.GetCurrentProcess().Id != process.Id)
+                else
                 {
-                    process.Kill();
+                    File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
                 }
             }
         }
+    }
 
-        static void StartWebApplication(string appFolder)
+    static async Task DownloadFileAsync(string url, string localFilePath)
+    {
+        using var httpClient = new HttpClient();
+
+        File.Delete(localFilePath);
+
+        var directory = Path.GetDirectoryName(localFilePath);
+        if (Directory.Exists(directory))
         {
-            Console.WriteLine("Starting...");
-            Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+            Directory.CreateDirectory(directory);
         }
 
-        static async Task<B> Then<A, B>(this Task<A> task, Func<A, B> nextFunc)
-        {
-            var a = await task;
+        await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
 
-            return nextFunc(a);
+        var response = await httpClient.GetAsync(url);
+
+        await response.Content.CopyToAsync(fs);
+    }
+
+    static async Task<string> DownloadStringAsync(string url)
+    {
+        using var httpClient = new HttpClient();
+
+        var str = await httpClient.GetStringAsync(url);
+
+        return str;
+    }
+
+    static void KillAllNamedProcess(string processName)
+    {
+        foreach (var process in Process.GetProcessesByName(processName))
+        {
+            if (Process.GetCurrentProcess().Id != process.Id)
+            {
+                process.Kill();
+            }
         }
+    }
+
+    static void StartWebApplication(string appFolder)
+    {
+        Console.WriteLine("Starting...");
+        Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+    }
+
+    static async Task<B> Then<A, B>(this Task<A> task, Func<A, B> nextFunc)
+    {
+        var a = await task;
+
+        return nextFunc(a);
     }
 }

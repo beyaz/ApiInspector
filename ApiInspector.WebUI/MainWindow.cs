@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ApiInspector.WebUI.Components;
+using ReactWithDotNet;
 using ReactWithDotNet.Libraries.PrimeReact;
 using ReactWithDotNet.Libraries.react_free_scrollbar;
 using ReactWithDotNet.Libraries.uiw.react_codemirror;
@@ -57,6 +58,13 @@ class MainWindow : ReactComponent<MainWindowModel>
         };
     }
 
+    Element GetEnvironment()
+    {
+        return Flow(AssemblyFileFullPath, External.GetEnvironment, str => new FlexRowCentered
+        {
+            str
+        });
+    }
     protected override Element render()
     {
         ArrangeEditors();
@@ -138,7 +146,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                         new h3 { "Api Inspector" }, new h5 { " (.net method invoker) " }
                     },
                     
-                    new LogoutButton()
+                    new FlexRow(Gap(20))
+                    {
+                        GetEnvironment,
+                        new LogoutButton()
+                    }
                 },
 
                 new FlexRow(HeightMaximized)
