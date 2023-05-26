@@ -49,7 +49,7 @@ class MethodSelectionView : ReactComponent
 
     protected override Element render()
     {
-        List<MetadataNode> nodes = null;
+        List<MetadataNode> nodes;
 
         try
         {

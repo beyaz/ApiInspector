@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using static ApiInspector.FpExtensions;
 
@@ -49,10 +48,9 @@ static class ReflectionHelper
             }
         }
 
-        object instance;
         try
         {
-            instance = Activator.CreateInstance(type);
+            var instance = Activator.CreateInstance(type);
             if (instance == null)
             {
                 return null;
