@@ -14,7 +14,9 @@ public class ConfigInfo
 
 partial class Extensions
 {
-    public static ConfigInfo Config = JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(Path.Combine(AppFolder, "ApiInspector.WebUI.Config.json")));
+    static readonly bool IsRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
+
+    public static readonly ConfigInfo Config = ReadConfig();
 
     public static string AppFolder
     {
@@ -33,4 +35,16 @@ partial class Extensions
     public static string DotNetCoreInvokerExePath => Path.Combine(AppFolder, "ApiInspector.NetCore", "ApiInspector.exe");
 
     public static string DotNetFrameworkInvokerExePath => Path.Combine(AppFolder, "ApiInspector.NetFramework", "ApiInspector.exe");
+
+    static ConfigInfo ReadConfig()
+    {
+        var config = JsonConvert.DeserializeObject<ConfigInfo>(File.ReadAllText(Path.Combine(AppFolder, "ApiInspector.WebUI.Config.json")));
+
+        if (IsRunningInVS)
+        {
+            config.UseUrls = false;
+        }
+
+        return config;
+    }
 }
