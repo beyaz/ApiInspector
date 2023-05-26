@@ -161,218 +161,228 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                 new FlexRow(HeightMaximized)
                 {
-                    new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20), PositionRelative)
+                    searchPanel,
+                    ActiveSelectedMethod
+                }
+            }
+        };
+
+        Element searchPanel()
+        {
+            return new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20), PositionRelative)
+            {
+                new HistoryButton
+                {
+                    Click = _ => HistoryDialogVisible = true
+                } + Right(3) + PositionAbsolute + MarginTop(-14) + ComponentBoxShadow,
+
+                new FlexColumn(MarginLeftRight(3))
+                {
+                    new Label { Text = "Assembly Directory" },
+
+                    new DirectorySelector
                     {
-                        new HistoryButton
-                        {
-                            Click = _ => HistoryDialogVisible = true
-                        } + Right(3) + PositionAbsolute + MarginTop(-14) + ComponentBoxShadow,
+                        DirectoryPath    = state.AssemblyDirectory,
+                        SelectionChanged = x => state.AssemblyDirectory = x
+                    } + ComponentBoxShadow
+                },
 
-                        new FlexColumn(MarginLeftRight(3))
-                        {
-                            new Label { Text = "Assembly Directory" },
+                new FlexColumn(PaddingLeftRight(3))
+                {
+                    new Label { Text = "Assembly" },
 
-                            new DirectorySelector
-                            {
-                                DirectoryPath    = state.AssemblyDirectory,
-                                SelectionChanged = x => state.AssemblyDirectory = x
-                            } + ComponentBoxShadow
-                        },
-
-                        new FlexColumn(PaddingLeftRight(3))
-                        {
-                            new Label { Text = "Assembly" },
-
-                            new AssemblySelector
-                            {
-                                AssemblyDirectoryPath = state.AssemblyDirectory,
-                                AssemblyFileName      = state.AssemblyFileName,
-                                SelectionChanged      = x => state.AssemblyFileName = x
-                            } + ComponentBoxShadow
-                        },
-                        new FlexColumn(MarginLeftRight(3))
-                        {
-                            new Label { Text = "Filter by class name" },
-
-                            new InputText
-                            {
-                                valueBind                = () => state.ClassFilter,
-                                valueBindDebounceTimeout = 700,
-                                valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                            } + ComponentBoxShadow
-                        },
-                        new FlexColumn(MarginLeftRight(3))
-                        {
-                            new Label { Text = "Filter by method name" },
-
-                            new InputText
-                            {
-                                valueBind                = () => state.MethodFilter,
-                                valueBindDebounceTimeout = 700,
-                                valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                            } + ComponentBoxShadow
-                        },
-
-                        new MethodSelectionView
-                        {
-                            ClassFilter               = state.ClassFilter,
-                            MethodFilter              = state.MethodFilter,
-                            SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
-                            SelectionChanged          = OnElementSelected,
-                            AssemblyFilePath          = AssemblyFileFullPath
-                        } + ComponentBoxShadow
-                    },
-                    When(IsInitializingSelectedMethod, new FlexRowCentered(FlexGrow(1))
+                    new AssemblySelector
                     {
-                        new LoadingIcon { wh(100) }
-                    }),
-                    When(!IsInitializingSelectedMethod, () => new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
+                        AssemblyDirectoryPath = state.AssemblyDirectory,
+                        AssemblyFileName      = state.AssemblyFileName,
+                        SelectionChanged      = x => state.AssemblyFileName = x
+                    } + ComponentBoxShadow
+                },
+                new FlexColumn(MarginLeftRight(3))
+                {
+                    new Label { Text = "Filter by class name" },
+
+                    new InputText
                     {
-                        new style
+                        valueBind                = () => state.ClassFilter,
+                        valueBindDebounceTimeout = 700,
+                        valueBindDebounceHandler = OnFilterTextKeypressCompleted
+                    } + ComponentBoxShadow
+                },
+                new FlexColumn(MarginLeftRight(3))
+                {
+                    new Label { Text = "Filter by method name" },
+
+                    new InputText
+                    {
+                        valueBind                = () => state.MethodFilter,
+                        valueBindDebounceTimeout = 700,
+                        valueBindDebounceHandler = OnFilterTextKeypressCompleted
+                    } + ComponentBoxShadow
+                },
+
+                new MethodSelectionView
+                {
+                    ClassFilter               = state.ClassFilter,
+                    MethodFilter              = state.MethodFilter,
+                    SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
+                    SelectionChanged          = OnElementSelected,
+                    AssemblyFilePath          = AssemblyFileFullPath
+                } + ComponentBoxShadow
+            };
+        }
+        
+        Element ActiveSelectedMethod()
+        {
+            if (IsInitializingSelectedMethod)
+            {
+                return new FlexRowCentered(FlexGrow(1))
+                {
+                    new LoadingIcon { wh(100) }
+                };
+            }
+
+            return new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
+            {
+                new Splitter
+                {
+                    ComponentBoxShadow,
+                    MarginTop(5),
+                    BorderRadius(5),
+                    new SplitterPanel(PaddingRight(3))
+                    {
+                        new FlexColumn(AlignItemsCenter)
                         {
-                            text = ".p-splitter-gutter{z-index:9;}"
-                        },
-                        new Splitter
-                        {
-                            ComponentBoxShadow,
-                            MarginTop(5),
-                            BorderRadius(5),
-                            new SplitterPanel(PaddingRight(3))
+                            new Label
                             {
-                                new FlexColumn(AlignItemsCenter)
+                                Text = "Instance json", style =
                                 {
-                                    new Label
-                                    {
-                                        Text = "Instance json", style =
-                                        {
-                                            Padding(10),
-                                            FlexGrow(1)
-                                        }
-                                    },
-                                    new FreeScrollBar
-                                    {
-                                        Height(300), PaddingBottom(10),
-                                        Border("1px solid #d9d9d9"),
-                                        BorderRadius(3),
-                                        WidthMaximized,
-                                        FlexGrow(1),
-                                        new CodeMirror
-                                        {
-                                            extensions = { "json", "githubLight" },
-                                            valueBind  = () => state.JsonTextForDotNetInstanceProperties,
-                                            basicSetup =
-                                            {
-                                                highlightActiveLine       = false,
-                                                highlightActiveLineGutter = false,
-                                            },
-                                            style =
-                                            {
-                                                BorderRadius(3),
-                                                //Border("1px solid #d9d9d9"),
-                                                FontSize11,
-                                                WidthMaximized
-                                            }
-                                        }
-                                    }
-                                },
+                                    Padding(10),
+                                    FlexGrow(1)
+                                }
                             },
-
-                            new SplitterPanel(PaddingLeft(3))
+                            new FreeScrollBar
                             {
-                                new FlexColumn(AlignItemsCenter)
+                                Height(300), PaddingBottom(10),
+                                Border("1px solid #d9d9d9"),
+                                BorderRadius(3),
+                                WidthMaximized,
+                                FlexGrow(1),
+                                new CodeMirror
                                 {
-                                    new Label
+                                    extensions = { "json", "githubLight" },
+                                    valueBind  = () => state.JsonTextForDotNetInstanceProperties,
+                                    basicSetup =
                                     {
-                                        Text = "Parameters json", style =
-                                        {
-                                            Padding(10),
-                                            FlexGrow(1)
-                                        }
+                                        highlightActiveLine       = false,
+                                        highlightActiveLineGutter = false,
                                     },
-                                    new FreeScrollBar
+                                    style =
                                     {
-                                        Height(300), PaddingBottom(10),
-                                        Border("1px solid #d9d9d9"),
                                         BorderRadius(3),
-                                        WidthMaximized,
-                                        FlexGrow(1),
-
-                                        new CodeMirror
-                                        {
-                                            extensions = { "json", "githubLight" },
-                                            valueBind  = () => state.JsonTextForDotNetMethodParameters,
-                                            basicSetup =
-                                            {
-                                                highlightActiveLine       = false,
-                                                highlightActiveLineGutter = false,
-                                            },
-                                            style =
-                                            {
-                                                BorderRadius(3),
-                                                //Border("1px solid #d9d9d9"),
-                                                FontSize11,
-                                                WidthMaximized
-                                            }
-                                        }
+                                        //Border("1px solid #d9d9d9"),
+                                        FontSize11,
+                                        WidthMaximized
                                     }
                                 }
                             }
                         },
-                        new FlexColumn(FlexGrow(1), Gap(10))
+                    },
+
+                    new SplitterPanel(PaddingLeft(3))
+                    {
+                        new FlexColumn(AlignItemsCenter)
                         {
-                            new FlexRow(Height(50), Gap(30))
+                            new Label
                             {
-                                new ExecuteButton
+                                Text = "Parameters json", style =
                                 {
-                                    Click               = OnExecuteClicked,
-                                    IsProcessing        = IsExecutionStarted,
-                                    ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
-                                    ShowStatusAsFail    = ExecuteButtonStatusIsFail
-                                } + ComponentBoxShadow,
-                                new DebugButton
-                                {
-                                    Click               = OnDebugClicked,
-                                    IsProcessing        = IsDebugStarted,
-                                    ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
-                                    ShowStatusAsFail    = DebugButtonStatusIsFail
-                                } + ComponentBoxShadow,
-                                
-                                new MethodReferenceView{ MethodReference = state.SelectedMethod} + ComponentBoxShadow
+                                    Padding(10),
+                                    FlexGrow(1)
+                                }
                             },
-
-                            new FlexColumn(WidthHeightMaximized)
+                            new FreeScrollBar
                             {
-                                new Label { Text = "Response as json" },
+                                Height(300), PaddingBottom(10),
+                                Border("1px solid #d9d9d9"),
+                                BorderRadius(3),
+                                WidthMaximized,
+                                FlexGrow(1),
 
-                                new FreeScrollBar
+                                new CodeMirror
                                 {
-                                    ComponentBoxShadow,
-                                    Height("calc(100% - 28px)"), PaddingBottom(10),
-                                    Border("1px solid #d9d9d9"),
-                                    BorderRadius(5),
-                                    WidthMaximized,
-
-                                    new CodeMirror
+                                    extensions = { "json", "githubLight" },
+                                    valueBind  = () => state.JsonTextForDotNetMethodParameters,
+                                    basicSetup =
                                     {
-                                        extensions = { "json", "githubLight" },
-                                        valueBind  = () => state.ResponseAsJson,
-                                        basicSetup =
-                                        {
-                                            highlightActiveLine       = false,
-                                            highlightActiveLineGutter = false,
-                                        },
-                                        style =
-                                        {
-                                            FontSize11
-                                        }
+                                        highlightActiveLine       = false,
+                                        highlightActiveLineGutter = false,
+                                    },
+                                    style =
+                                    {
+                                        BorderRadius(3),
+                                        //Border("1px solid #d9d9d9"),
+                                        FontSize11,
+                                        WidthMaximized
                                     }
                                 }
                             }
                         }
-                    })
+                    }
+                },
+                new FlexColumn(FlexGrow(1), Gap(10))
+                {
+                    new FlexRow(Height(50), Gap(30))
+                    {
+                        new ExecuteButton
+                        {
+                            Click               = OnExecuteClicked,
+                            IsProcessing        = IsExecutionStarted,
+                            ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
+                            ShowStatusAsFail    = ExecuteButtonStatusIsFail
+                        } + ComponentBoxShadow,
+                        new DebugButton
+                        {
+                            Click               = OnDebugClicked,
+                            IsProcessing        = IsDebugStarted,
+                            ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
+                            ShowStatusAsFail    = DebugButtonStatusIsFail
+                        } + ComponentBoxShadow,
+
+                        new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
+                    },
+
+                    new FlexColumn(WidthHeightMaximized)
+                    {
+                        new Label { Text = "Response as json" },
+
+                        new FreeScrollBar
+                        {
+                            ComponentBoxShadow,
+                            Height("calc(100% - 28px)"), PaddingBottom(10),
+                            Border("1px solid #d9d9d9"),
+                            BorderRadius(5),
+                            WidthMaximized,
+
+                            new CodeMirror
+                            {
+                                extensions = { "json", "githubLight" },
+                                valueBind  = () => state.ResponseAsJson,
+                                basicSetup =
+                                {
+                                    highlightActiveLine       = false,
+                                    highlightActiveLineGutter = false,
+                                },
+                                style =
+                                {
+                                    FontSize11
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        };
+            };
+        }
     }
 
     void ArrangeEditors()
