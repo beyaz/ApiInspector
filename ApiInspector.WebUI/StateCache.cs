@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ApiInspector.WebUI;
@@ -42,8 +43,8 @@ static class StateCache
     {
         var jsonContent = JsonSerializer.Serialize(state, new JsonSerializerOptions
         {
-            WriteIndented    = true,
-            IgnoreNullValues = true
+            WriteIndented          = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
         FileHelper.WriteAllText(StateFilePath, jsonContent);
@@ -53,8 +54,8 @@ static class StateCache
     {
         var jsonContent = JsonSerializer.Serialize(state, new JsonSerializerOptions
         {
-            WriteIndented    = true,
-            IgnoreNullValues = true
+            WriteIndented          = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
         FileHelper.WriteAllText(methodReference.GetCachedFullFilePath(), jsonContent);
@@ -95,7 +96,7 @@ static class StateCache
         }
 
         // Uses SHA256 to create the hash
-        using (var sha = new SHA256Managed())
+        using (var sha = SHA256.Create())
         {
             // Convert the string to a byte array first, to be processed
             var textBytes = Encoding.UTF8.GetBytes(text + salt);
