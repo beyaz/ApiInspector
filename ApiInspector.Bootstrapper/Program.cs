@@ -9,102 +9,129 @@ namespace ApiInspector.Bootstrapper;
 
 static class Program
 {
+
+    class Config
+    {
+        public string VersionUrl { get; set; }
+        public string NewVersionZipFileUrl { get; set; }
+        public string InstallationFolder { get; set; }
+    }
+
+    static Config CalculateConfig()
+    {
+        var versionUrl = (string)AppContext.GetData("VersionUrl");
+        if (versionUrl == null)
+        {
+            throw new Exception($"Value @{nameof(versionUrl)} cannot be empty.");
+        }
+
+        var newVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl");
+        if (newVersionZipFileUrl == null)
+        {
+            throw new Exception($"Value @{nameof(newVersionZipFileUrl)} cannot be empty.");
+        }
+
+        var installationFolder = (string)AppContext.GetData("InstallationFolder");
+        if (installationFolder == null)
+        {
+            throw new Exception($"Value @{nameof(installationFolder)} cannot be empty.");
+        }
+
+        return new Config
+        {
+            VersionUrl           = versionUrl,
+            NewVersionZipFileUrl = newVersionZipFileUrl,
+            InstallationFolder   = installationFolder
+        };
+    }
+    
     public static async Task Main()
     {
         try
         {
-            KillAllNamedProcess("ApiInspector.WebUI");
-            KillAllNamedProcess("ApiInspector");
-
-            Console.WriteLine("Checking version...");
-
-            using var client = new HttpClient();
-
-            var versionUrl = (string)AppContext.GetData("VersionUrl");
-            if (versionUrl == null)
-            {
-                throw new Exception($"Value @{nameof(versionUrl)} cannot be empty.");
-            }
-
-            var newVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl");
-            if (newVersionZipFileUrl == null)
-            {
-                throw new Exception($"Value @{nameof(newVersionZipFileUrl)} cannot be empty.");
-            }
-
-            var installationFolder = (string)AppContext.GetData("InstallationFolder");
-            if (installationFolder == null)
-            {
-                throw new Exception($"Value @{nameof(installationFolder)} cannot be empty.");
-            }
-
-            installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-
-            var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
-
-            var shouldUpdate = true;
-
-            Console.WriteLine("AppFolder: " + appFolder);
-
-            var localVersionFilePath = Path.Combine(appFolder, "Version.txt");
-
-            if (File.Exists(localVersionFilePath))
-            {
-                var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
-
-                var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
-
-                Console.WriteLine($"Remote Version: {remoteVersion}");
-                Console.WriteLine($"Local Version : {localVersion}");
-
-                if (remoteVersion == localVersion)
-                {
-                    shouldUpdate = false;
-                }
-            }
-
-            if (shouldUpdate)
-            {
-                Console.WriteLine("Updating to new version...");
-
-                if (Directory.Exists(appFolder))
-                {
-                    Directory.Delete(appFolder);
-                }
-
-                Directory.CreateDirectory(appFolder);
-
-                var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
-                if (File.Exists(localZipFilePath))
-                {
-                    Console.WriteLine("Clearing zip file...");
-                    File.Delete(localZipFilePath);
-                }
-
-                Console.WriteLine($"Downloading... {newVersionZipFileUrl}");
-
-                await DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
-
-                Console.WriteLine("Extracting...");
-
-                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
-
-                File.Delete(localZipFilePath);
-
-                var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
-
-                await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
-            }
-
-            CopyPlugins(appFolder);
-
-            StartWebApplication(appFolder);
+            await Run(CalculateConfig());
         }
         catch (Exception exception)
         {
             Console.WriteLine(exception);
             Console.Read();
         }
+    }
+
+    static async Task Run(Config config)
+    {
+        KillAllNamedProcess("ApiInspector.WebUI");
+        KillAllNamedProcess("ApiInspector");
+
+        Console.WriteLine("Checking version...");
+
+        using var client = new HttpClient();
+
+        var versionUrl = config.VersionUrl;
+        var newVersionZipFileUrl = config.NewVersionZipFileUrl;
+        var installationFolder = config.InstallationFolder;
+
+        installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+        var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
+
+        var shouldUpdate = true;
+
+        Console.WriteLine("AppFolder: " + appFolder);
+
+        var localVersionFilePath = Path.Combine(appFolder, "Version.txt");
+
+        if (File.Exists(localVersionFilePath))
+        {
+            var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+
+            var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
+
+            Console.WriteLine($"Remote Version: {remoteVersion}");
+            Console.WriteLine($"Local Version : {localVersion}");
+
+            if (remoteVersion == localVersion)
+            {
+                shouldUpdate = false;
+            }
+        }
+
+        if (shouldUpdate)
+        {
+            Console.WriteLine("Updating to new version...");
+
+            if (Directory.Exists(appFolder))
+            {
+                Directory.Delete(appFolder);
+            }
+
+            Directory.CreateDirectory(appFolder);
+
+            var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
+            if (File.Exists(localZipFilePath))
+            {
+                Console.WriteLine("Clearing zip file...");
+                File.Delete(localZipFilePath);
+            }
+
+            Console.WriteLine($"Downloading... {newVersionZipFileUrl}");
+
+            await DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
+
+            Console.WriteLine("Extracting...");
+
+            ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
+
+            File.Delete(localZipFilePath);
+
+            var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+
+            await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
+        }
+
+        CopyPlugins(appFolder);
+
+        StartWebApplication(appFolder);
     }
 
     static void CopyPlugins(string appFolder)
