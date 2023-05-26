@@ -1,5 +1,5 @@
 $ProjectDirectory = "c:\github\ApiInspector\"
-$FinalDirectory   = "C:\github\ApiInspector\Api Inspector (.net method invoker)\"
+$FinalDirectory = [environment]::getfolderpath("mydocuments") + "\ApiInspector\Application\Api Inspector (.net method invoker)\";
 $WebUiOutputDirectory = $ProjectDirectory + "ApiInspector.WebUI\bin\Debug\net6.0\"
 
 New-Item -ItemType Directory -Force -Path $FinalDirectory
@@ -70,5 +70,3 @@ Copy-Item -Path $temp1 -Destination $temp2 -Force
 
 $temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\ApiInspectorLatestVersion.zip"
 Compress-Archive -Path $FinalDirectory -DestinationPath $temp1 -Force
-
-Remove-Item -Path $FinalDirectory -Force -Recurse
