@@ -173,7 +173,17 @@ static class Program
     static void StartWebApplication(string appFolder)
     {
         Console.WriteLine("Starting...");
-        Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+        
+        var process = Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+        
+        if (process?.HasExited == true)
+        {
+            Console.WriteLine($"Exieted with exitCode: {process.ExitCode}"); 
+        }
+        else
+        {
+            Console.WriteLine("Started.");
+        }
     }
 
     static async Task<B> Then<A, B>(this Task<A> task, Func<A, B> nextFunc)
