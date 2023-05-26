@@ -90,7 +90,7 @@ static class Program
             Console.WriteLine($"Remote Version: {remoteVersion}");
             Console.WriteLine($"Local Version : {localVersion}");
 
-            if (remoteVersion == localVersion)
+            if (remoteVersion <= localVersion)
             {
                 shouldUpdate = false;
             }
