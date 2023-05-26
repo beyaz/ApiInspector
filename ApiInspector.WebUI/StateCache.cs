@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ApiInspector.WebUI;
 
@@ -9,11 +10,11 @@ static class StateCache
 {
     static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, @"LastState.json");
 
-    public static MainWindowModel ReadState()
+    public static async Task<MainWindowModel> ReadState()
     {
         if (File.Exists(StateFilePath))
         {
-            var json = File.ReadAllText(StateFilePath);
+            var json = await File.ReadAllTextAsync(StateFilePath);
 
             try
             {

@@ -44,9 +44,6 @@
         <Reference Include="ReactWithDotNet">
             <HintPath>Libs\ReactWithDotNet.dll</HintPath>
         </Reference>
-        <Reference Include="ReactWithDotNet.Libraries">
-            <HintPath>Libs\ReactWithDotNet.Libraries.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
 

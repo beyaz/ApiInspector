@@ -1,9 +1,9 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using ApiInspector.WebUI.Components;
-using ReactWithDotNet;
-using ReactWithDotNet.Libraries.PrimeReact;
-using ReactWithDotNet.Libraries.react_free_scrollbar;
-using ReactWithDotNet.Libraries.uiw.react_codemirror;
+using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
+using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
+using ReactWithDotNet.ThirdPartyLibraries.UIW.ReactCodemirror;
 using static System.Environment;
 
 namespace ApiInspector.WebUI;
@@ -48,9 +48,9 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
-    protected override void constructor()
+    protected override async Task constructor()
     {
-        state = StateCache.ReadState() ?? new MainWindowModel
+        state = await StateCache.ReadState() ?? new MainWindowModel
         {
             AssemblyDirectory = Path.GetDirectoryName(DotNetFrameworkInvokerExePath),
             AssemblyFileName  = "ApiInspector.exe",

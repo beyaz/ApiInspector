@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
-using ReactWithDotNet.Libraries.PrimeReact;
+using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 
 namespace ApiInspector.WebUI;
 
@@ -74,7 +74,7 @@ class HistoryPanel : ReactComponent
             foreach (var file in Directory.GetFiles(directory).OrderByDescending(x => new FileInfo(x).LastWriteTime))
             {
                 var fileContent = File.ReadAllText(file);
-                if (fileContent?.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
+                if (fileContent.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     var mainWindowModel = JsonConvert.DeserializeObject<MainWindowModel>(fileContent);
 

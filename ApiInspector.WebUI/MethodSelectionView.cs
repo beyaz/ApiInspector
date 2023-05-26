@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ReactWithDotNet.Libraries.PrimeReact;
+using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 
 namespace ApiInspector.WebUI;
 

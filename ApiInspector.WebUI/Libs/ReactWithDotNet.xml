@@ -64,6 +64,11 @@
                 <br>alignItems     = "center"</br>
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.Flex(System.Int32,System.Int32,ReactWithDotNet.CssUnit)">
+            <summary>
+                Shorthand property for assign Flex properties
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
             <summary>
                 img.alt = <paramref name="alt" />
@@ -127,6 +132,11 @@
         <member name="P:ReactWithDotNet.Mixin.DisplayBlock">
             <summary>
                 style.display = 'block'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayInlineBlock">
+            <summary>
+                style.display = inline-block
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlex">
@@ -316,6 +326,42 @@
                 style.flexGrow = <paramref name="growValue" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexShrink(System.Double)">
+            <summary>
+                Specifies how the item will shrink relative to the rest of the flexible items inside the same container.
+                <br/>
+                style.flexShrink = <paramref name="value" />
+                <br/>
+                Note: If the element is not a flexible item, the flex-shrink property has no effect.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexBasis(System.String)">
+            <summary>
+                Specifies the initial length of a flexible item.
+                <br/>
+                style.flexBasis = <paramref name="value" />
+                <br/>
+                Note: If the element is not a flexible item, the flex-shrink property has no effect.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexBasis(System.Double)">
+            <summary>
+                Specifies the initial length of a flexible item.
+                <br/>
+                style.flexBasis = <paramref name="value" /> + <b>px</b>
+                <br/>
+                Note: If the element is not a flexible item, the flex-shrink property has no effect.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.FlexBasisAuto">
+            <summary>
+                Specifies the initial length of a flexible item.
+                <br/>
+                style.flexBasis = auto
+                <br/>
+                Note: If the element is not a flexible item, the flex-shrink property has no effect.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Float(System.String)">
             <summary>
                 style.float = value
@@ -462,6 +508,11 @@
                     if parent is display='flex' and flexDirection = 'column' then create empty div element with style.height =
                     value + 'px'
                 </br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.DangerouslySetInnerHTML(System.String)">
+            <summary>
+                Assign dangerouslySetInnerHTML of given element
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Title(System.String)">
@@ -823,6 +874,21 @@
                 style.wordBreak = <paramref name="value" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.WordWrap(System.String)">
+            <summary>
+                style.wordWrap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WordWrapNormal">
+            <summary>
+                style.wordWrap = normal
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WordWrapBreakWord">
+            <summary>
+                style.wordWrap = break-word
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.Opacity0">
             <summary>
                 style.opacity = 0
@@ -1033,6 +1099,60 @@
             <summary>
                 Return new string as 'rgb(<paramref name="red" />, <paramref name="green" />, <paramref name="blue" />,
                 <paramref name="alpha" />)'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.cubic_bezier(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                cubic-bezier(<paramref name="x1"/>, <paramref name="y1"/>, <paramref name="x2"/>, <paramref name="y2"/>)
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ObjectFitFill">
+            <summary>
+                This is default. The image is resized to fill the given dimension. If necessary, the image will be stretched or
+                squished to fit
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ObjectFitContain">
+            <summary>
+                The image keeps its aspect ratio, but is resized to fit within the given dimension
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ObjectFitCover">
+            <summary>
+                The image keeps its aspect ratio and fills the given dimension. The image will be clipped to fit
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ObjectFitNone">
+            <summary>
+                The image is not resized
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ObjectFitScaleDown">
+            <summary>
+                the image is scaled down to the smallest version of none or contain
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ObjectFit(System.String)">
+            <summary>
+                The CSS object-fit property is used to specify how an img or video should be resized to fit its container.
+                <br />
+                This property tells the content to fill the container in a variety of ways; such as "preserve that aspect ratio" or
+                "stretch up and take up as much space as possible".
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundSize(System.String)">
+            <summary>
+                style.backgroundSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundSizeCover">
+            <summary>
+                style.backgroundSize = cover
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundSizeContain">
+            <summary>
+                style.backgroundSize = contain
             </summary>
         </member>
         <member name="T:ReactWithDotNet.article">
@@ -1861,7 +1981,7 @@
         </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
             <summary>
-                Sample event decleration <br />
+                Sample event declaration <br />
                 [ReactCustomEvent] public Action OnUserChanged { get; set; }
                 <br />
                 <br />
@@ -1891,7 +2011,7 @@
         </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1,``2)">
             <summary>
-                Sample event decleration <br />
+                Sample event declaration <br />
                 [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo,CommissionInfo&gt; OnUserChanged { get; set; }
                 <br />
                 <br />
@@ -2008,6 +2128,1742 @@
                 this is the id of first element id which is 'has id value'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.centerRipple">
+            <summary>
+                If `true`, the ripples are centered.
+                <br/>
+                They won't start at the cursor interaction position.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.disableRipple">
+            <summary>
+                If `true`, the ripple effect is disabled.
+                <br/>
+                <br/>
+                <br/>
+                ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+                <br/>
+                to highlight the element by applying separate styles with the `.Mui-focusVisible` class.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.disableTouchRipple">
+            <summary>
+                If `true`, the touch ripple effect is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.focusRipple">
+            <summary>
+                If `true`, the base button will have a keyboard focus ripple.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.focusVisibleClassName">
+            <summary>
+                This prop can help identify which element has keyboard focus.
+                <br/>
+                The class name will be applied when the element gains the focus through keyboard interaction.
+                <br/>
+                It's a polyfill for the [CSS :focus-visible selector](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
+                <br/>
+                The rationale for using this feature [is explained here](https://github.com/WICG/focus-visible/blob/HEAD/explainer.md).
+                <br/>
+                A [polyfill can be used](https://github.com/WICG/focus-visible) to apply a `focus-visible` class to other components
+                <br/>
+                if needed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.TouchRippleProps">
+            <summary>
+                Props applied to the `TouchRipple` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Card.raised">
+            <summary>
+                If `true`, the card will use raised styling.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardActions.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardActions.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardActions.disableSpacing">
+            <summary>
+                If `true`, the actions do not have additional margin.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardContent.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardContent.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardMedia.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardMedia.image">
+            <summary>
+                Image to be displayed as a background image.
+                <br/>
+                Either `image` or `src` prop must be specified.
+                <br/>
+                Note that caller must specify height otherwise the image will not be visible.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardMedia.src">
+            <summary>
+                An alias for `image` property.
+                <br/>
+                Available only with media components.
+                <br/>
+                Media components: `video`, `audio`, `picture`, `iframe`, `img`.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardMedia.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.absolute">
+            <summary>
+                Absolutely position the element.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.flexItem">
+            <summary>
+                If `true`, a vertical divider will have the correct height when used in flex container.
+                <br/>
+                (By default, a vertical divider will have a calculated height of `0px` if it is the child of a flex container.)
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.light">
+            <summary>
+                If `true`, the divider will have a lighter color.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.orientation">
+            <summary>
+                The component orientation.
+                <br/>
+                @default 'horizontal'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.textAlign">
+            <summary>
+                The text alignment.
+                <br/>
+                @default 'center'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.variant">
+            <summary>
+                The variant to use.
+                <br/>
+                @default 'fullWidth'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.IconButton.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'default'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.IconButton.disableFocusRipple">
+            <summary>
+                If `true`, the  keyboard focus ripple is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.IconButton.edge">
+            <summary>
+                If given, uses a negative margin to counteract the padding on one
+                <br/>
+                side (this is often helpful for aligning the left or right
+                <br/>
+                side of the icon with content above or below, without ruining the border
+                <br/>
+                size and shape).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.IconButton.size">
+            <summary>
+                The size of the component.
+                <br/>
+                `small` is equivalent to the dense button styling.
+                <br/>
+                @default 'medium'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Switch.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'primary'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Switch.size">
+            <summary>
+                The size of the component.
+                <br/>
+                `small` is equivalent to the dense switch styling.
+                <br/>
+                @default 'medium'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.autoComplete">
+            <summary>
+                This prop helps users to fill forms faster, especially on mobile devices.
+                <br/>
+                The name can be confusing, as it's more like an autofill.
+                <br/>
+                You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.autoFocus">
+            <summary>
+                If `true`, the `input` element is focused during the first mount.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'primary'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.defaultValue">
+            <summary>
+                The default value. Use when the component is not controlled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.error">
+            <summary>
+                If `true`, the label is displayed in an error state.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.FormHelperTextProps">
+            <summary>
+                Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.fullWidth">
+            <summary>
+                If `true`, the input will take up the full width of its container.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.helperText">
+            <summary>
+                The helper text content.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.id">
+            <summary>
+                The id of the `input` element.
+                <br/>
+                Use this prop to make `label` and `helperText` accessible for screen readers.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.InputLabelProps">
+            <summary>
+                Props applied to the [`InputLabel`](/material-ui/api/input-label/) element.
+                <br/>
+                Pointer events like `onClick` are enabled if and only if `shrink` is `true`.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.inputProps">
+            <summary>
+                [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.label">
+            <summary>
+                The label content.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.multiline">
+            <summary>
+                If `true`, a `textarea` element is rendered instead of an input.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.name">
+            <summary>
+                Name attribute of the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.placeholder">
+            <summary>
+                The short hint displayed in the `input` before the user enters a value.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.required">
+            <summary>
+                If `true`, the label is displayed as required and the `input` element is required.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.rows">
+            <summary>
+                Number of rows to display when multiline option is set to true.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.maxRows">
+            <summary>
+                Maximum number of rows to display when multiline option is set to true.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.minRows">
+            <summary>
+                Minimum number of rows to display when multiline option is set to true.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.select">
+            <summary>
+                Render a [`Select`](/material-ui/api/select/) element while passing the Input element to `Select` as `input` parameter.
+                <br/>
+                If this option is set you must pass the options of the select as children.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.SelectProps">
+            <summary>
+                Props applied to the [`Select`](/material-ui/api/select/) element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.size">
+            <summary>
+                The size of the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.type">
+            <summary>
+                Type of the `input` element. It should be [a valid HTML5 input type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.TextField.value">
+            <summary>
+                The value of the `input` element, required for a controlled component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Paper.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Paper.elevation">
+            <summary>
+                Shadow depth, corresponds to `dp` in the spec.
+                <br/>
+                It accepts values between 0 and 24 inclusive.
+                <br/>
+                @default 1
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Paper.square">
+            <summary>
+                If `true`, rounded corners are disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Paper.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Paper.variant">
+            <summary>
+                The variant to use.
+                <br/>
+                @default 'elevation'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.checked">
+            <summary>
+                If `true`, the component is checked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.defaultChecked">
+            <summary>
+                The default checked state. Use when the component is not controlled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.disableFocusRipple">
+            <summary>
+                If `true`, the  keyboard focus ripple is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.edge">
+            <summary>
+                If given, uses a negative margin to counteract the padding on one
+                <br/>
+                side (this is often helpful for aligning the left or right
+                <br/>
+                side of the icon with content above or below, without ruining the border
+                <br/>
+                size and shape).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.id">
+            <summary>
+                The id of the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.inputProps">
+            <summary>
+                [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.name">
+            <summary>
+                Pass a ref to the `input` element.
+            </summary>
+            <summary>
+                Name attribute of the `input` element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.readOnly">
+            <summary>
+                Callback fired when the state is changed.
+                <br/>
+                <br/>
+                <br/>
+                @param {React.ChangeEvent&lt;HTMLInputElement&gt;} event The event source of the callback.
+                <br/>
+                You can pull out the new value by accessing `event.target.value` (string).
+                <br/>
+                You can pull out the new checked state by accessing `event.target.checked` (boolean).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.required">
+            <summary>
+                If `true`, the `input` element is required.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.value">
+            <summary>
+                The value of the component. The DOM API casts this to a string.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.arrow">
+            <summary>
+                If `true`, adds an arrow to the tooltip.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.components">
+            <summary>
+                The components used for each slot inside.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `slots` prop.
+                <br/>
+                It's recommended to use the `slots` prop instead.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.componentsProps">
+            <summary>
+                The extra props for the slot components.
+                <br/>
+                You can override the existing props or add new ones.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `slotProps` prop.
+                <br/>
+                It's recommended to use the `slotProps` prop instead, as `componentsProps` will be deprecated in the future.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.describeChild">
+            <summary>
+                Set to `true` if the `title` acts as an accessible description.
+                <br/>
+                By default the `title` acts as an accessible label for the child.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableFocusListener">
+            <summary>
+                Do not respond to focus-visible events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableHoverListener">
+            <summary>
+                Do not respond to hover events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableInteractive">
+            <summary>
+                Makes a tooltip not interactive, i.e. it will close when the user
+                <br/>
+                hovers over the tooltip before the `leaveDelay` is expired.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableTouchListener">
+            <summary>
+                Do not respond to long press touch events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.enterDelay">
+            <summary>
+                The number of milliseconds to wait before showing the tooltip.
+                <br/>
+                This prop won't impact the enter touch delay (`enterTouchDelay`).
+                <br/>
+                @default 100
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.enterNextDelay">
+            <summary>
+                The number of milliseconds to wait before showing the tooltip when one was already recently opened.
+                <br/>
+                @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.enterTouchDelay">
+            <summary>
+                The number of milliseconds a user must touch the element before showing the tooltip.
+                <br/>
+                @default 700
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.followCursor">
+            <summary>
+                If `true`, the tooltip follow the cursor over the wrapped element.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.id">
+            <summary>
+                This prop is used to help implement the accessibility logic.
+                <br/>
+                If you don't provide this prop. It falls back to a randomly generated id.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.leaveDelay">
+            <summary>
+                The number of milliseconds to wait before hiding the tooltip.
+                <br/>
+                This prop won't impact the leave touch delay (`leaveTouchDelay`).
+                <br/>
+                @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.leaveTouchDelay">
+            <summary>
+                The number of milliseconds after the user stops touching an element before hiding the tooltip.
+                <br/>
+                @default 1500
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.open">
+            <summary>
+                Callback fired when the component requests to be closed.
+                <br/>
+                <br/>
+                <br/>
+                @param {React.SyntheticEvent} event The event source of the callback.
+            </summary>
+            <summary>
+                Callback fired when the component requests to be open.
+                <br/>
+                <br/>
+                <br/>
+                @param {React.SyntheticEvent} event The event source of the callback.
+            </summary>
+            <summary>
+                If `true`, the component is shown.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.placement">
+            <summary>
+                Tooltip placement.
+                <br/>
+                @default 'bottom'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.PopperProps">
+            <summary>
+                Props applied to the [`Popper`](/material-ui/api/popper/) element.
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.slotProps">
+            <summary>
+                The extra props for the slot components.
+                <br/>
+                You can override the existing props or add new ones.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `componentsProps` prop, which will be deprecated in the future.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.slots">
+            <summary>
+                The components used for each slot inside.
+                <br/>
+                <br/>
+                <br/>
+                This prop is an alias for the `components` prop, which will be deprecated in the future.
+                <br/>
+                <br/>
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.title">
+            <summary>
+                Tooltip title. Zero-length titles string, undefined, null and false are never displayed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.align">
+            <summary>
+                Set the text-align on the component.
+                <br/>
+                @default 'inherit'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.gutterBottom">
+            <summary>
+                If `true`, the text will have a bottom margin.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.noWrap">
+            <summary>
+                If `true`, the text will not wrap, but instead will truncate with a text overflow ellipsis.
+                <br/>
+                <br/>
+                <br/>
+                Note that text overflow can only happen with block or inline-block level elements
+                <br/>
+                (the element needs to have a width in order to overflow).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.paragraph">
+            <summary>
+                If `true`, the element will be a paragraph element.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.variant">
+            <summary>
+                Applies the theme typography styles.
+                <br/>
+                @default 'body1'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Typography.variantMapping">
+            <summary>
+                The component maps the variant prop to a range of different HTML element types.
+                <br/>
+                For instance, subtitle1 to `&lt;h6&gt;`.
+                <br/>
+                If you wish to change that mapping, you can provide your own.
+                <br/>
+                Alternatively, you can use the `component` prop.
+                <br/>
+                @default {
+                <br/>
+                h1: 'h1',
+                <br/>
+                h2: 'h2',
+                <br/>
+                h3: 'h3',
+                <br/>
+                h4: 'h4',
+                <br/>
+                h5: 'h5',
+                <br/>
+                h6: 'h6',
+                <br/>
+                subtitle1: 'h6',
+                <br/>
+                subtitle2: 'h6',
+                <br/>
+                body1: 'p',
+                <br/>
+                body2: 'p',
+                <br/>
+                inherit: 'p',
+                <br/>
+                }
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.delay">
+            <summary>
+            Delay between keystrokes to wait before sending a query.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.suggestions">
+            <summary>
+                An array of suggestions to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.onChange">
+            <summary>
+                Callback to invoke when autocomplete value changes.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.completeMethod">
+            <summary>
+                Callback to invoke to search for suggestions.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.field">
+            <summary>
+                Field of a suggested object to resolve and display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.forceSelection">
+            <summary>
+                When present, autocomplete clears the manual input if it does not match of the suggestions to force only accepting
+                values from the suggestions.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.AutoComplete`1.dropdown">
+            <summary>
+            Displays a button next to the input field when enabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.BlockUI.blocked">
+            <summary>
+            Controls the blocked state.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Button.label">
+            <summary>
+                Text of the button.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Button.iconPos">
+            <summary>
+            Position of the icon, valid values are "left", "right", "top" and "bottom".
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Button.loading">
+             <summary>
+            Display loading icon of the button
+             </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Button.loadingIcon">
+            <summary>
+            Name of the loading icon or JSX.Element for loading icon.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.visible">
+            <summary>
+            Specifies the visibility of the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.modal">
+            <summary>
+            Defines if background should be blocked when dialog is displayed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.footer">
+            <summary>
+            Footer content of the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.header">
+            <summary>
+            Title content of the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.closable">
+            <summary>
+            Adds a close icon to the header to hide the dialog.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.onShow">
+            <summary>
+            Callback to invoke when dialog is showed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dialog.onHide">
+            <summary>
+            Callback to invoke when dialog is hidden (Required).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Checkbox.value">
+            <summary>
+            Value of the checkbox.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Checkbox.checked">
+            <summary>
+               Specifies whether a checkbox should be checked or not.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Checkbox.disabled">
+            <summary>
+            When present, it specifies that the element value cannot be altered.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Checkbox.onChange">
+            <summary>
+            Callback to invoke on value change
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dropdown.filterBy">
+            <summary>
+            When filtering is enabled, filterBy decides which field or fields (comma separated) to search against.
+            <para>Default: label</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dropdown.showClear">
+            <summary>
+            When enabled, a clear icon is displayed to clear the value.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Dropdown.filter">
+            <summary>
+            When specified, displays an input field to filter the items on keyup.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputMask.mask">
+            <summary>
+                Mask pattern.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputMask.placeholder">
+            <summary>
+                Advisory information to display on input.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputMask.maxlength">
+            <summary>
+                Maximum number of character allows in the input field.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputSwitch.checked">
+            <summary>
+                Specifies whether a inputswitch should be checked or not.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputSwitch.disabled">
+            <summary>
+                When present, it specifies that the component should be disabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputSwitch.onChange">
+            <summary>
+                Callback to invoke on value change
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputText.valueBindDebounceHandler">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputText.valueBindDebounceTimeout">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputText.keyfilter">
+            <summary>
+            Format definition of the keys to block.
+            <para>Default: null</para>
+            <para>Type: string/regex</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.InputTextarea.autoResize">
+             <summary>
+            When present, height of textarea changes as being typed.
+             <para>Default: false</para>
+             </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.filter">
+            <summary>
+                When specified, displays a filter input at header.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.filterPlaceholder">
+            <summary>
+            Placeholder text to show when filter input is empty.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.listStyle">
+            <summary>
+                Inline style of inner list element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.optionLabel">
+            <summary>
+                Name of the label field of an option when an arbitrary objects instead of SelectItems are used as options.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.options">
+            <summary>
+                An array of objects to display as the available options.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.optionValue">
+            <summary>
+                Name of the value field of an option when arbitrary objects are used as options instead of SelectItems.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ListBoxSingleSelection`1.value">
+            <summary>
+                Selected value to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Message.text">
+            <summary>
+                Text of the message.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Message.severity">
+            <summary>
+            Severity level of the message.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Panel.collapsed">
+            <summary>
+                	Defines the initial state of panel content, supports one or two-way binding as well.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Panel.toggleable">
+            <summary>
+                Defines if content of panel can be expanded and collapsed.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Panel.header">
+            <summary>
+            Custom header template of the panel.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Panel.headerTemplate">
+            <summary>
+               Header template of the panel to customize more.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Panel.onToggle">
+            <summary>
+                Callback to invoke when a tab gets expanded.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ProgressSpinner.strokeWidth">
+            <summary>
+                Width of the circle stroke.
+                <para>default: 2</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ProgressSpinner.fill">
+            <summary>
+               Color for the background of the circle.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ProgressSpinner.animationDuration">
+            <summary>
+                Duration of the rotate animation.
+                <para>default: 2s</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.RadioButton.value">
+            <summary>
+            Value of the radiobutton.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.RadioButton.checked">
+            <summary>
+                Specifies whether a radiobutton should be checked or not.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.RadioButton.disabled">
+            <summary>
+            When present, it specifies that the element value cannot be altered.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.RadioButton.onChange">
+            <summary>
+            Callback to invoke on radio button click.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Divider.layout">
+            <summary>
+                Specifies the orientation, valid values are "horizontal" and "vertical".
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Divider.align">
+            <summary>
+                Alignment of the content, options are "left", "center", "right" for horizontal layout and "top", "center", "bottom" for vertical.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Divider.type">
+            <summary>
+            Border style type, default is "solid" and other options are "dashed" and "dotted".
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.ScrollPanel">
+            <summary>
+                ScrollPanel is defined using dimensions for the scrollable viewport.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider">
+            <summary>
+                Slider is a component to provide input using dragging of a handle.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.value">
+            <summary>
+                Value of the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.valueBind">
+            <summary>
+                Value of the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.min">
+            <summary>
+                Mininum boundary value.
+                <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.max">
+            <summary>
+                Maximum boundary value.
+                <para>Default: 100</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.step">
+            <summary>
+                Step factor to increment/decrement the value.
+                <para>Default: 1</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.orientation">
+            <summary>
+                Orientation of the slider, valid values are horizontal and vertical.
+                <para>Default: horizontal</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.onChange">
+            <summary>
+            Callback to invoke on value change via slide.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Slider.onSlideEnd">
+            <summary>
+            Callback to invoke when slide ends.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter">
+            <summary>
+            Splitter is utilized to separate and resize panels.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter.layout">
+            <summary>
+            Orientation of the panels, valid values are "horizontal" and "vertical".
+            <para>Default: horizontal</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter.gutterSize">
+            <summary>
+            	Size of the divider in pixels.
+            <para>Default: 4</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.activeIndex">
+            <summary>
+                Active index of the TabView.
+                <para>default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.renderActiveOnly">
+            <summary>
+                Whether to render the contents of the selected tab or all tabs.
+                <para>default: true</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.scrollable">
+            <summary>
+                When enabled displays buttons at each side of the tab headers to scroll the tab list.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.onTabChange">
+            <summary>
+                Callback to invoke when an active tab is changed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.header">
+            <summary>
+                Orientation of tab headers.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.leftIcon">
+            <summary>
+                Icons can be placed at left of a header.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.rightIcon">
+            <summary>
+                Icons can be placed at right of a header.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.disabled">
+            <summary>
+                Whether the tab is disabled.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.closable">
+            <summary>
+                Defines if tab can be removed.
+                <para>default: false</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.headerClassName">
+            <summary>
+                Style class of the tab header.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.headerStyle">
+            <summary>
+            Inline style of the tab header.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.contentClassName">
+            <summary>
+                Style class of the tab content.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.contentStyle">
+            <summary>
+                Inline style of the tab content.
+                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Tooltip.position">
+            <summary>
+            Position of the tooltip, valid values are right, left, top and bottom.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Tooltip.target">
+            <summary>
+            Target element on global tooltip option.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Tooltip.showDelay">
+            <summary>
+            Delay to show the tooltip in milliseconds.
+            <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Tooltip.updateDelay">
+            <summary>
+            	Delay to update the tooltip in milliseconds.
+            <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Tooltip.hideDelay">
+            <summary>
+            Delay to hide the tooltip in milliseconds.
+            <para>Default: 0</para>
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipPositionType">
+            <summary>
+                The tooltip position type
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipPositionType.top">
+            <summary>
+                The top
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipPositionType.bottom">
+            <summary>
+                The bottom
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipPositionType.left">
+            <summary>
+                The left
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipPositionType.right">
+            <summary>
+                The right
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipEventType">
+            <summary>
+                The tooltip event type
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipEventType.hover">
+            <summary>
+                The hover
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipEventType.focus">
+            <summary>
+                The focus
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions">
+            <summary>
+                The tooltip options
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.className">
+            <summary>
+                Style class of the tooltip.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.position">
+            <summary>
+                Position of the tooltip, valid values are right, left, top and bottom.
+                <para>Default: right</para>
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.style">
+            <summary>
+                Style of the tooltip.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.my">
+            <summary>
+                Defines which position on the tooltip being positioned to align with the target element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.at">
+            <summary>
+                Defines which position on the target element to align the positioned tooltip.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.event">
+            <summary>
+                Event to show the tooltip, valid values are hover and focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.showEvent">
+            <summary>
+                Event to show the tooltip if the event property is empty.
+                <para>Default mouseenter</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.hideEvent">
+            <summary>
+                Event to hide the tooltip if the event property is empty.
+                <para>Default mouseleave</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.autoZIndex">
+            <summary>
+                Whether to automatically manage layering.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.baseZIndex">
+            <summary>
+                Base zIndex value to use in layering.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.mouseTrack">
+            <summary>
+                Whether the tooltip will follow the mouse.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.mouseTrackTop">
+            <summary>
+                Defines top position of the tooltip in relation to the mouse when the mouseTrack is enabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.mouseTrackLeft">
+            <summary>
+                Defines top position of the tooltip in relation to the mouse when the mouseTrack is enabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.showDelay">
+            <summary>
+                Delay to show the tooltip in milliseconds.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.updateDelay">
+            <summary>
+                Delay to update the tooltip in milliseconds.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.hideDelay">
+            <summary>
+                Delay to hide the tooltip in milliseconds.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.autoHide">
+            <summary>
+                Whether to hide tooltip when hovering over tooltip content.
+            <para>Default true</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.disabled">
+            <summary>
+                Gets or sets a value indicating whether this <see cref="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions" /> is disabled.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TooltipOptions.showOnDisabled">
+            <summary>
+                Gets or sets a value indicating whether [show on disabled].
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SingleSelectionTree`1.value">
+            <summary>
+                Selected value to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SingleSelectionTree`1.filter">
+            <summary>
+                When specified, displays an input field to filter the items.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SingleSelectionTree`1.filterValue">
+            <summary>
+                When filtering is enabled, the value of input field.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SingleSelectionTree`1.filterPlaceholder">
+            <summary>
+                Placeholder text to show when filter input is empty.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SingleSelectionTree`1.filterBy">
+            <summary>
+                When filtering is enabled, filterBy decides which field or fields (comma separated) to search against.
+                <para>Default: label</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SingleSelectionTree`1.expandedKeys">
+            <summary>
+            An array of keys to represent the state of the tree expansion state in controlled mode.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.reverse">
+            <summary>
+                Specifies if the animation should make element(s) disappear.<br />
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.cascade">
+            <summary>
+                <br />Stagger its children animations.
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.childClassName">
+            <summary>
+                <br /> Class names to add to the child element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.childStyle">
+            <summary>
+                <br /> Inline styles to add to the child element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.damping">
+            <summary>
+                <br /> Factor that affects the delay that each animated element in a cascade animation will be assigned.
+                <br />  @default 0.5
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.delay">
+            <summary>
+                <br /> Initial delay, in milliseconds.
+                <br /> @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.duration">
+            <summary>
+                <br /> Animation duration, in milliseconds.
+                <br /> @default 1000
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.fraction">
+            <summary>
+                <br /> Float number between 0 and 1 indicating how much the element should be in viewport before the animation is
+                triggered.
+                <br /> @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.triggerOnce">
+            <summary>
+                <br /> Specifies if the animation should run only once or everytime the element enters/exits/re-enters the
+                viewport.
+                <br /> @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.AttentionSeeker.effect">
+            <summary>
+                The animation effect to use for this attention seeker.
+                <br />
+                <br />"bounce" | "flash" | "headShake" | "heartBeat" | "jello" | "pulse" | "rubberBand" | "shake" | "shakeX" |
+                "shakeY" | "swing" | "tada" | "wobble"
+                <br />  @default "bounce"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Bounce.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br />"down" | "left" | "right" | "up"
+                <br />  @default undefined
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Fade.big">
+            <summary>
+                <br /> Causes the animation to start farther. Only works with "down", "left", "right" and "up" directions.
+                <br /> @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Fade.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br /> "bottom-left" | "bottom-right" | "down" | "left" | "right" | "top-left" | "top-right" | "up"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Flip.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br /> "horizontal" | "vertical"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Rotate.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br />  "bottom-left" | "bottom-right" | "top-left" | "top-right"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Slide.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br />  "down" | "left" | "right" | "up"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.Zoom.direction">
+            <summary>
+                <br /> Origin of the animation.
+                <br /> @default undefined
+                <br />  "down" | "left" | "right" | "up"
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar">
+            <summary>
+            https://www.npmjs.com/package/react-free-scrollbar
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.fixed">
+            <summary>
+            You can pass fixed to decide if handler's position: fixed or static. If fixed equals true, then the handler will overlap the content inside the scroller.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.autohide">
+            <summary>
+            Set true if you want a macOS style auto-hide scroller.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.timeout">
+            <summary>
+            The time length of the handler disappears. Default: 2000
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.tracksize">
+            <summary>
+            The width of the vertical handler or the height of the horizontal handler. Default: 10px
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.start">
+            <summary>
+            The starting position of the scroll area, can be descriptive string or an object.
+            <br/>
+            Options: "bottom", "bottom right", "top right", "right", {top: 20, left: 30}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.browserOffset">
+            <summary>
+            The browser scroll bar width. Default: "17px". It should fit for most browsers.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar.FreeScrollBar.onScrollbarScrollTimeout">
+            <summary>
+            This timeout adds a throttle for onScrollbarScroll. Default is 300. Set to 0 to remove throttle.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.start">
+            <summary>
+                required
+                can be a reference to a react ref to html element or string - an id of a DOM element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.end">
+            <summary>
+                required
+                can be a reference to a react ref to html element or string - an id of a DOM element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.startAnchor">
+            <summary>
+                "auto" | "middle" | "left" | "right" | "top" | "bottom"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.endAnchor">
+            <summary>
+                "auto" | "middle" | "left" | "right" | "top" | "bottom"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.color">
+            <summary>
+                defines color to the entire arrow. lineColor,headColor and tailColor will override color specifically for line,tail
+                or head
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.strokeWidth">
+            <summary>
+                defines the thickness of the entire arrow. headSize and tailSize defines how big will be the head or tail relative
+                to the strokeWidth
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.path">
+            <summary>
+                can be one of: "smooth" | "grid" | "straight", and it controls the path arrow is drawn, exactly how their name
+                suggest
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.curveness">
+            <summary>
+                defines how much the lines curve. makes a difference only in path='smooth'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.dashness">
+            <summary>
+                can make the arrow dashed and can even animate. if true default values(for dashness) are chosen. if object is passed then default values are chosen except what passed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.animateDrawing">
+            <summary>
+                can animate the drawing of the arrow using svg animation. type: boolean|number. if true animation duration is 1s.
+                if number is passed then animation duration is number's value in seconds
+                <example>animateDrawing={0.1} will animate the drawing of the arrow in 100 milliseconds.</example>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.headShape">
+            <summary>
+            you can customize the svg edges (head or tail) of the arrow. you can use predefined svg by passing string,one of "arrow1" | "circle" | "heart"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.tailShape">
+            <summary>
+            you can customize the svg edges (head or tail) of the arrow. you can use predefined svg by passing string,one of "arrow1" | "circle" | "heart"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.UIW.ReactCodemirror.CodeMirror.valueBindDebounceHandler">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.UIW.ReactCodemirror.CodeMirror.valueBindDebounceTimeout">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyReactComponent.style">
             <summary>
                 Gets the style.
@@ -2019,7 +3875,7 @@
                 <br />
                 When react component fully loaded then this element will be replace by original component.
                 <br />
-                Default value is sipmle empty div element
+                Default value is simple empty div element
             </summary>
         </member>
     </members>
