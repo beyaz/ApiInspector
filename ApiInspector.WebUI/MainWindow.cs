@@ -125,6 +125,12 @@ class MainWindow : ReactComponent<MainWindowModel>
     color: #2c1aeb;
     font-weight: bold;
 }
+
+
+/* prime react splitter */
+.p-splitter-gutter{
+     z-index: 9;
+}
 "
             },
             new FlexColumn(Border($"1px solid {borderColor}"),
