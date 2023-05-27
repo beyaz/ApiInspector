@@ -175,10 +175,10 @@ class MainWindow : ReactComponent<MainWindowModel>
                 new HistoryButton
                 {
                     Click = _ => HistoryDialogVisible = true,
-                    style = { PositionAbsolute , Right(13) , Top(-13) , ComponentBoxShadow }
+                    style = { PositionAbsolute , Right(10) , Top(-13) , ComponentBoxShadow }
                 },
 
-                new FlexColumn(MarginLeftRight(3))
+                new FlexColumn
                 {
                     new Label { Text = "Assembly Directory" },
 
@@ -190,7 +190,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                     }
                 },
 
-                new FlexColumn(PaddingLeftRight(3))
+                new FlexColumn
                 {
                     new Label { Text = "Assembly" },
 
@@ -202,7 +202,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         style                 = { ComponentBoxShadow }
                     }
                 },
-                new FlexColumn(MarginLeftRight(3))
+                new FlexColumn
                 {
                     new Label { Text = "Filter by class name" },
 
@@ -214,7 +214,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         style                    = { ComponentBoxShadow }
                     }
                 },
-                new FlexColumn(MarginLeftRight(3))
+                new FlexColumn
                 {
                     new Label { Text = "Filter by method name" },
 
