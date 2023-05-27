@@ -185,8 +185,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                     new DirectorySelector
                     {
                         DirectoryPath    = state.AssemblyDirectory,
-                        SelectionChanged = x => state.AssemblyDirectory = x
-                    } + ComponentBoxShadow
+                        SelectionChanged = x => state.AssemblyDirectory = x,
+                        style = { ComponentBoxShadow }
+                    }
                 },
 
                 new FlexColumn(PaddingLeftRight(3))
@@ -197,8 +198,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         AssemblyDirectoryPath = state.AssemblyDirectory,
                         AssemblyFileName      = state.AssemblyFileName,
-                        SelectionChanged      = x => state.AssemblyFileName = x
-                    } + ComponentBoxShadow
+                        SelectionChanged      = x => state.AssemblyFileName = x,
+                        style                 = { ComponentBoxShadow }
+                    }
                 },
                 new FlexColumn(MarginLeftRight(3))
                 {
@@ -208,8 +210,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         valueBind                = () => state.ClassFilter,
                         valueBindDebounceTimeout = 700,
-                        valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                    } + ComponentBoxShadow
+                        valueBindDebounceHandler = OnFilterTextKeypressCompleted,
+                        style                    = { ComponentBoxShadow }
+                    }
                 },
                 new FlexColumn(MarginLeftRight(3))
                 {
@@ -219,8 +222,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         valueBind                = () => state.MethodFilter,
                         valueBindDebounceTimeout = 700,
-                        valueBindDebounceHandler = OnFilterTextKeypressCompleted
-                    } + ComponentBoxShadow
+                        valueBindDebounceHandler = OnFilterTextKeypressCompleted,
+                        style                    = { ComponentBoxShadow }
+                    }
                 },
 
                 new MethodSelectionView
@@ -229,8 +233,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                     MethodFilter              = state.MethodFilter,
                     SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                     SelectionChanged          = OnElementSelected,
-                    AssemblyFilePath          = AssemblyFileFullPath
-                } + ComponentBoxShadow
+                    AssemblyFilePath          = AssemblyFileFullPath,
+                    style                     = { ComponentBoxShadow }
+                }
             };
         }
         
