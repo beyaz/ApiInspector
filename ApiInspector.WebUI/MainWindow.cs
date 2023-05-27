@@ -170,12 +170,12 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         Element searchPanel()
         {
-            return new FlexColumn(Width(500), Gap(10), Margin(10), MarginTop(20), PositionRelative)
+            return new FlexColumn(Width(500), Gap(10), Padding(10), MarginTop(20), PositionRelative)
             {
                 new HistoryButton
                 {
                     Click = _ => HistoryDialogVisible = true
-                } + Right(3) + PositionAbsolute + MarginTop(-14) + ComponentBoxShadow,
+                } + Right(13) + PositionAbsolute + MarginTop(-22) + ComponentBoxShadow,
 
                 new FlexColumn(MarginLeftRight(3))
                 {
