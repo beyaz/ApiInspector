@@ -133,9 +133,10 @@ class MainWindow : ReactComponent<MainWindowModel>
 }
 "
             },
-            new FlexColumn(Border($"1px solid {borderColor}"),
+            
+            new FlexColumn(Border(Solid(1,borderColor)),
                            WidthHeightMaximized,
-                           Background("rgba(255, 255, 255, 0.4)"),
+                           Background(rgba(255, 255, 255, 0.4)),
                            BorderRadius(10),
                            BoxShadow("0px 30px 30px rgba(69, 42, 124, 0.15)"),
                            BackdropFilterBlur(30)
