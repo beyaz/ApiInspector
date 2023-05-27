@@ -174,8 +174,9 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 new HistoryButton
                 {
-                    Click = _ => HistoryDialogVisible = true
-                } + Right(13) + PositionAbsolute + MarginTop(-22) + ComponentBoxShadow,
+                    Click = _ => HistoryDialogVisible = true,
+                    style = {  }
+                } + PositionAbsolute + Right(13) + Top(-13) + ComponentBoxShadow,
 
                 new FlexColumn(MarginLeftRight(3))
                 {
