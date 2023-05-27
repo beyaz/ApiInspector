@@ -28,8 +28,6 @@ class MethodSelectionView : ReactComponent
     [ReactCustomEvent]
     public Action<string> SelectionChanged { get; set; }
 
-    public int Width { get; set; }
-
     public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
     {
         if (string.IsNullOrWhiteSpace(AssemblyFilePath) || string.IsNullOrWhiteSpace(treeNodeKey))
