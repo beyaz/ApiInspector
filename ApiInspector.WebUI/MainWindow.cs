@@ -271,6 +271,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                             },
                             new FreeScrollBar
                             {
+                                FreeScrollBar.Modify(x=>x.autohide = true),
+                                
                                 Height(300), PaddingBottom(10),
                                 BorderTop(Solid(1,"#d9d9d9")),
                                 BorderRight(Solid(1,"#d9d9d9")),
@@ -297,7 +299,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                         {
                             new Label
                             {
-                                Text = "Parameters json", style =
+                                Text = "Parameters json",
+                                style =
                                 {
                                     Padding(10),
                                     FlexGrow(1)
@@ -305,8 +308,10 @@ class MainWindow : ReactComponent<MainWindowModel>
                             },
                             new FreeScrollBar
                             {
+                                FreeScrollBar.Modify(x=>x.autohide = true),
+                                
                                 Height(300), PaddingBottom(10),
-                                Border("1px solid #d9d9d9"),
+                                Border(Solid(1,"#d9d9d9")),
                                 BorderRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
@@ -319,13 +324,6 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     {
                                         highlightActiveLine       = false,
                                         highlightActiveLineGutter = false,
-                                    },
-                                    style =
-                                    {
-                                        BorderRadius(3),
-                                        //Border("1px solid #d9d9d9"),
-                                        FontSize11,
-                                        WidthMaximized
                                     }
                                 }
                             }
@@ -360,6 +358,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                         new FreeScrollBar
                         {
+                            FreeScrollBar.Modify(x=>x.autohide = true),
                             ComponentBoxShadow,
                             Height("calc(100% - 28px)"), PaddingBottom(10),
                             Border("1px solid #d9d9d9"),
@@ -374,10 +373,6 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 {
                                     highlightActiveLine       = false,
                                     highlightActiveLineGutter = false,
-                                },
-                                style =
-                                {
-                                    FontSize11
                                 }
                             }
                         }
