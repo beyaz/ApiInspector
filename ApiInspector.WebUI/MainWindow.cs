@@ -256,6 +256,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                     ComponentBoxShadow,
                     MarginTop(5),
                     BorderRadius(5),
+                    
                     new SplitterPanel
                     {
                         new FlexColumn(AlignItemsCenter)

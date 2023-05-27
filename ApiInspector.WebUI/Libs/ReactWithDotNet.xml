@@ -3374,21 +3374,45 @@
             Callback to invoke when slide ends.
             </summary>
         </member>
-        <member name="T:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter">
-            <summary>
-            Splitter is utilized to separate and resize panels.
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter.layout">
             <summary>
-            Orientation of the panels, valid values are "horizontal" and "vertical".
-            <para>Default: horizontal</para>
+                Orientation of the panels, valid values are "horizontal" and "vertical".
+                <br/>
+                @defaultValue horizontal
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter.gutterSize">
             <summary>
-            	Size of the divider in pixels.
-            <para>Default: 4</para>
+                Size of the divider in pixels.
+                <br/>
+                @defaultValue 4
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter.stateKey">
+            <summary>
+                Storage identifier of a stateful Splitter.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Splitter.stateStorage">
+            <summary>
+                Defines where a stateful splitter keeps its state, valid values are "session" for sessionStorage and "local" for localStorage.
+                <br/>
+                @defaultValue session
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SplitterPanel.size">
+            <summary>
+                Size of the element relative to 100%.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SplitterPanel.minSize">
+            <summary>
+                Minimum size of the element relative to 100%.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.SplitterPanel.className">
+            <summary>
+                ClassName of the component.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.activeIndex">
