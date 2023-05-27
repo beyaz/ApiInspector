@@ -256,7 +256,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                     ComponentBoxShadow,
                     MarginTop(5),
                     BorderRadius(5),
-                    new SplitterPanel(PaddingRight(3))
+                    new SplitterPanel
                     {
                         new FlexColumn(AlignItemsCenter)
                         {
@@ -274,8 +274,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 FreeScrollBar.Modify(x=>x.autohide = true),
                                 
                                 Height(300), PaddingBottom(10),
-                                BorderTopRight(Solid(1,"#d9d9d9")),
-                                BorderRadius(3),
+                                BorderTop(Solid(1,"#d9d9d9")),
+                                BorderBottomLeftRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
                                 new CodeMirror
@@ -292,7 +292,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         },
                     },
 
-                    new SplitterPanel(PaddingLeft(3))
+                    new SplitterPanel
                     {
                         new FlexColumn(AlignItemsCenter)
                         {
@@ -310,8 +310,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 FreeScrollBar.Modify(x=>x.autohide = true),
                                 
                                 Height(300), PaddingBottom(10),
-                                Border(Solid(1,"#d9d9d9")),
-                                BorderRadius(3),
+                                BorderTop(Solid(1,"#d9d9d9")),
+                                BorderBottomRightRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
 
