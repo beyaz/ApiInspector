@@ -249,7 +249,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 };
             }
 
-            return new FlexColumn(FlexGrow(1), Gap(10), MarginRight(10))
+            return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
             {
                 new Splitter
                 {
@@ -262,7 +262,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                         {
                             new Label
                             {
-                                Text = "Instance json", style =
+                                Text = "Instance json", 
+                                style =
                                 {
                                     Padding(10),
                                     FlexGrow(1)
@@ -271,7 +272,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                             new FreeScrollBar
                             {
                                 Height(300), PaddingBottom(10),
-                                Border("1px solid #d9d9d9"),
+                                BorderTop(Solid(1,"#d9d9d9")),
+                                BorderRight(Solid(1,"#d9d9d9")),
                                 BorderRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
