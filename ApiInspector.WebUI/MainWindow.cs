@@ -274,8 +274,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 FreeScrollBar.Modify(x=>x.autohide = true),
                                 
                                 Height(300), PaddingBottom(10),
-                                BorderTop(Solid(1,"#d9d9d9")),
-                                BorderRight(Solid(1,"#d9d9d9")),
+                                BorderTopRight(Solid(1,"#d9d9d9")),
                                 BorderRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),

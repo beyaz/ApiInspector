@@ -1037,6 +1037,48 @@
                 style.borderColor = <paramref name="color" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopRight(System.String)">
+            <summary>
+                style.borderTop = <paramref name="borderValue"/>
+            <br/>
+                style.borderRight = <paramref name="borderValue"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeftTop(System.String)">
+            <summary>
+                style.borderLeft = <paramref name="borderValue"/>
+            <br/>
+                style.borderTop = <paramref name="borderValue"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderRightBottom(System.String)">
+            <summary>
+                style.borderRight = <paramref name="borderValue"/>
+            <br/>
+                style.borderBottom = <paramref name="borderValue"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeftBottom(System.String)">
+            <summary>
+                style.borderLeft = <paramref name="borderValue"/>
+            <br/>
+                style.borderBottom = <paramref name="borderValue"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopBottom(System.String)">
+            <summary>
+                style.borderTop = <paramref name="borderValue"/>
+            <br/>
+                style.borderBottom = <paramref name="borderValue"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeftRight(System.String)">
+            <summary>
+                style.borderLeft = <paramref name="borderValue"/>
+            <br/>
+                style.borderRight = <paramref name="borderValue"/>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Dashed(System.Double,System.String)">
             <summary>
                 Returns a string like <paramref name="widthAsPx" /><b> + px dashed + </b> <paramref name="color" />"
