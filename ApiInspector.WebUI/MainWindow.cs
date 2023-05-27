@@ -138,11 +138,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                            WidthHeightMaximized,
                            Background(rgba(255, 255, 255, 0.4)),
                            BorderRadius(10),
-                           BoxShadow("0px 30px 30px rgba(69, 42, 124, 0.15)"),
+                           BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15)),
                            BackdropFilterBlur(30)
                           )
             {
-                new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom($"1px solid {borderColor}"))
+                new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom(Solid(1, borderColor)))
                 {
                     JustifyContentSpaceBetween,
                     AlignItemsCenter,
