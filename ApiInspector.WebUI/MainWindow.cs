@@ -464,15 +464,17 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     void OnDebugClicked()
     {
+        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+        
         if (state.SelectedMethod is null)
         {
-            state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = "Please select any method from left side.";
+            scenario.ResponseAsJson = "Please select any method from left side.";
             return;
         }
 
         SaveState();
 
-        state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = null;
+        scenario.ResponseAsJson = null;
 
         ClearActionButtonStates();
 
@@ -482,7 +484,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
             try
             {
-                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters, true);
+                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true);
 
                 DebugButtonStatusIsSuccess = true;
             }
@@ -490,7 +492,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 DebugButtonStatusIsFail = true;
 
-                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = exception.Message;
+                scenario.ResponseAsJson = exception.Message;
             }
 
             Client.GotoMethod(2000, ClearActionButtonStates);
@@ -567,15 +569,17 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     void OnExecuteClicked()
     {
+        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+        
         if (state.SelectedMethod is null)
         {
-            state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = "Please select any method from left side.";
+            scenario.ResponseAsJson = "Please select any method from left side.";
             return;
         }
 
         SaveState();
 
-        state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = null;
+        scenario.ResponseAsJson = null;
 
         ClearActionButtonStates();
 
@@ -585,13 +589,13 @@ class MainWindow : ReactComponent<MainWindowModel>
 
             try
             {
-                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters, false);
+                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false);
 
                 ExecuteButtonStatusIsSuccess = true;
             }
             catch (Exception exception)
             {
-                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = exception.Message;
+                scenario.ResponseAsJson = exception.Message;
 
                 ExecuteButtonStatusIsFail = true;
             }
