@@ -40,12 +40,7 @@ class MainLayout : ReactComponent
 "
                 },
 
-                new link{rel ="stylesheet" , href = "https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap", media ="all"},
-
-                new link{rel ="stylesheet" , href = "https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/primereact.min.css"},
-                new link{rel ="stylesheet" , href = "https://cdn.jsdelivr.net/npm/primeicons@5.0.0/primeicons.min.css"},
-                new link{rel ="stylesheet" , href = "https://cdn.jsdelivr.net/npm/primereact@8.2.0/resources/themes/saga-blue/theme.min.css"},
-
+                new link{rel ="stylesheet" , href = "https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap", media ="all"}
             },
             new body
             {
