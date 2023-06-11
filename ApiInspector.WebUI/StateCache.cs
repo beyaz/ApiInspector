@@ -9,7 +9,7 @@ namespace ApiInspector.WebUI;
 
 static class StateCache
 {
-    static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, @"LastState.json");
+    static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, "LastState.json");
 
     public static async Task<MainWindowModel> ReadState()
     {
