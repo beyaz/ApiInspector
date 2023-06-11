@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Immutable;
+using System.IO;
 using System.Threading.Tasks;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
@@ -15,20 +16,17 @@ class MainWindowModel
     public string AssemblyFileName { get; set; }
 
     public string ClassFilter { get; set; }
-
-    public string JsonTextForDotNetInstanceProperties { get; set; }
-
-    public string JsonTextForDotNetMethodParameters { get; set; }
-
+    
     public string MethodFilter { get; set; }
 
-    public string ResponseAsJson { get; set; }
 
     public MethodReference SelectedMethod { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
 
-    public int SelectedScenarioIndex { get; set; }
+    public int ScenarioListSelectedIndex { get; set; }
+
+    public ImmutableList<ScenarioModel> ScenarioList { get; set; } = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
 }
 
 sealed class ScenarioModel
@@ -82,8 +80,6 @@ class MainWindow : ReactComponent<MainWindowModel>
     protected override Element render()
     {
         ArrangeEditors();
-
-        
 
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
@@ -185,17 +181,28 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         Element addRemovePanel()
         {
+            
             return new FlexColumn(Width(30),PaddingRight(10), Gap(10),JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
             {
-                new CircleButton{Label = ">", IsSelected =true},
-                new CircleButton{Label = "|"},
-                new CircleButton{Label = "|"},
-                new CircleButton{Label = "|"},
-                new CircleButton{Label = "|"},
-                new CircleButton{Label = "|"},
-                new CircleButton{Label = "|"},
-                new CircleButton{Label = "+"},
-                new CircleButton{Label = "-"}
+                state.ScenarioList.Select((_,i)=> new CircleButton
+                {
+                    Index      = i,
+                    Label      = i.ToString(),
+                    IsSelected = i== state.ScenarioListSelectedIndex,
+                    Clicked    = e =>state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId)
+                }),
+
+
+                new CircleButton{Label = "+",Clicked = _ =>
+                {
+                    state.ScenarioList          = state.ScenarioList.Add(new ScenarioModel());
+                    state.ScenarioListSelectedIndex = state.ScenarioList.Count-1;
+                }},
+                When(state.ScenarioList.Count>1, new CircleButton{Label = "-",Clicked = _ =>
+                {
+                    state.ScenarioList          = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
+                    state.ScenarioListSelectedIndex = state.ScenarioList.Count-1;
+                }})
             };
         }
         
@@ -280,6 +287,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                 };
             }
 
+            var scenarioIndex = state.ScenarioListSelectedIndex;
+            
             return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
             {
                 new Splitter
@@ -316,7 +325,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 new CodeMirror
                                 {
                                     extensions = { "json", "githubLight" },
-                                    valueBind  = () => state.JsonTextForDotNetInstanceProperties,
+                                    valueBind  = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties,
                                     basicSetup =
                                     {
                                         highlightActiveLine       = false,
@@ -354,7 +363,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 new CodeMirror
                                 {
                                     extensions = { "json", "githubLight" },
-                                    valueBind  = () => state.JsonTextForDotNetMethodParameters,
+                                    valueBind  = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters,
                                     basicSetup =
                                     {
                                         highlightActiveLine       = false,
@@ -404,7 +413,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             new CodeMirror
                             {
                                 extensions = { "json", "githubLight" },
-                                valueBind  = () => state.ResponseAsJson,
+                                valueBind  = () => state.ScenarioList[scenarioIndex].ResponseAsJson,
                                 basicSetup =
                                 {
                                     highlightActiveLine       = false,
@@ -422,9 +431,9 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         const int optimumLineCount = 19;
 
-        state.JsonTextForDotNetInstanceProperties = arrange(state.JsonTextForDotNetInstanceProperties, optimumLineCount);
-        state.JsonTextForDotNetMethodParameters   = arrange(state.JsonTextForDotNetMethodParameters, optimumLineCount);
-        state.ResponseAsJson                      = arrange(state.ResponseAsJson, optimumLineCount);
+        state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties = arrange(state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties, optimumLineCount);
+        state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters   = arrange(state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters, optimumLineCount);
+        state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson                      = arrange(state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson, optimumLineCount);
 
         static string arrange(string value, int optimumLineCount)
         {
@@ -457,13 +466,13 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         if (state.SelectedMethod is null)
         {
-            state.ResponseAsJson = "Please select any method from left side.";
+            state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = "Please select any method from left side.";
             return;
         }
 
         SaveState();
 
-        state.ResponseAsJson = null;
+        state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = null;
 
         ClearActionButtonStates();
 
@@ -473,7 +482,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
             try
             {
-                state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, true);
+                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters, true);
 
                 DebugButtonStatusIsSuccess = true;
             }
@@ -481,7 +490,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 DebugButtonStatusIsFail = true;
 
-                state.ResponseAsJson = exception.Message;
+                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = exception.Message;
             }
 
             Client.GotoMethod(2000, ClearActionButtonStates);
@@ -508,9 +517,8 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         state.SelectedMethod = null;
 
-        state.JsonTextForDotNetInstanceProperties = null;
-        state.JsonTextForDotNetMethodParameters   = null;
-        state.ResponseAsJson                      = null;
+        state.ScenarioList          = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
+        state.ScenarioListSelectedIndex = 0;
 
         var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
         if (node is not null)
@@ -536,23 +544,23 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         if (state.SelectedMethod != null)
         {
-            if (state.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            if (state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties))
-                   .Then(json => state.JsonTextForDotNetInstanceProperties = json, printError);
+                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties))
+                   .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties = json, printError);
             }
 
-            if (state.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            if (state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetMethodParameters))
-                   .Then(json => state.JsonTextForDotNetMethodParameters = json, printError);
+                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters))
+                   .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters = json, printError);
             }
 
             ArrangeEditors();
 
             void printError(Exception exception)
             {
-                state.ResponseAsJson = exception + NewLine + state.ResponseAsJson;
+                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = exception + NewLine + state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson;
             }
         }
     }
@@ -561,13 +569,13 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         if (state.SelectedMethod is null)
         {
-            state.ResponseAsJson = "Please select any method from left side.";
+            state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = "Please select any method from left side.";
             return;
         }
 
         SaveState();
 
-        state.ResponseAsJson = null;
+        state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = null;
 
         ClearActionButtonStates();
 
@@ -577,13 +585,13 @@ class MainWindow : ReactComponent<MainWindowModel>
 
             try
             {
-                state.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.JsonTextForDotNetInstanceProperties, state.JsonTextForDotNetMethodParameters, false);
+                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters, false);
 
                 ExecuteButtonStatusIsSuccess = true;
             }
             catch (Exception exception)
             {
-                state.ResponseAsJson = exception.Message;
+                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = exception.Message;
 
                 ExecuteButtonStatusIsFail = true;
             }
@@ -618,11 +626,13 @@ class MainWindow : ReactComponent<MainWindowModel>
         public string Label { get; set; }
         public Action<MouseEvent> Clicked { get; set; }
         public bool IsSelected { get; set; }
+        public int Index { get; set; }
 
         protected override Element render()
         {
             return new FlexRowCentered
             {
+                Id(Index),
                 ComponentBoxShadow,
                 OnClick(Clicked),
                 Label,
@@ -631,7 +641,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 WidthHeight(30),
                 CursorPointer,
                 Hover(Border(Solid(1, "#b8b8ea"))),
-                When(IsSelected, FontWeightExtraBold, Background(rgb(223, 223, 236))),
+                When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230))),
                 
             };
         }
