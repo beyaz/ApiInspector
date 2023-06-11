@@ -465,7 +465,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     void OnDebugClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
-        
+
         if (state.SelectedMethod is null)
         {
             scenario.ResponseAsJson = "Please select any method from left side.";
@@ -546,23 +546,25 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         if (state.SelectedMethod != null)
         {
-            if (state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+
+            if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties))
-                    .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties = json, printError);
+                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties))
+                    .Then(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
 
-            if (state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters))
-                    .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters = json, printError);
+                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters))
+                    .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 
             ArrangeEditors();
 
             void printError(Exception exception)
             {
-                state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson = exception + NewLine + state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson;
+                scenario.ResponseAsJson = exception + NewLine + scenario.ResponseAsJson;
             }
         }
     }
@@ -570,7 +572,7 @@ class MainWindow : ReactComponent<MainWindowModel>
     void OnExecuteClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
-        
+
         if (state.SelectedMethod is null)
         {
             scenario.ResponseAsJson = "Please select any method from left side.";
