@@ -3037,6 +3037,54 @@
             Displays a button next to the input field when enabled.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.icon">
+            <summary>
+                Defines the icon to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.image">
+            <summary>
+                Defines the image to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.imageAlt">
+            <summary>
+                It specifies an alternate text for an image, if the image cannot be displayed.
+                <br/>
+                @defaultValue avatar
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.imageFallback">
+            <summary>
+                Defines a fallback image or URL if the main image fails to load. If "default" will fallback to label then icon.
+                <br/>
+                @defaultValue default
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.label">
+            <summary>
+                Defines the text to display.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.shape">
+            <summary>
+                Shape of the element.
+                <br/>
+                @defaultValue square
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.size">
+            <summary>
+                Size of the element.
+                <br/>
+                @defaultValue normal
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Avatar.template">
+            <summary>
+                Template of the content.
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.BlockUI.blocked">
             <summary>
             Controls the blocked state.
@@ -3415,80 +3463,123 @@
                 ClassName of the component.
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.activeIndex">
-            <summary>
-                Active index of the TabView.
-                <para>default: 0</para>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.renderActiveOnly">
-            <summary>
-                Whether to render the contents of the selected tab or all tabs.
-                <para>default: true</para>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.scrollable">
-            <summary>
-                When enabled displays buttons at each side of the tab headers to scroll the tab list.
-                <para>default: false</para>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.onTabChange">
-            <summary>
-                Callback to invoke when an active tab is changed.
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.header">
             <summary>
                 Orientation of tab headers.
-                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.headerTemplate">
+            <summary>
+                Header template of the tab to customize more.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.leftIcon">
             <summary>
                 Icons can be placed at left of a header.
-                <para>default: null</para>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.rightIcon">
             <summary>
                 Icons can be placed at right of a header.
-                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.prevButton">
+            <summary>
+                Previous button of the tab header.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.nextButton">
+            <summary>
+                Next button of the tab header.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.closeIcon">
+            <summary>
+                Close button of the tab header.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.disabled">
             <summary>
                 Whether the tab is disabled.
-                <para>default: false</para>
+                <br/>
+                @defaultValue false
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.closable">
             <summary>
                 Defines if tab can be removed.
-                <para>default: false</para>
+                <br/>
+                @defaultValue false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.className">
+            <summary>
+                Style class of the tab header and content.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.headerStyle">
+            <summary>
+                Inline style of the tab header.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.headerClassName">
             <summary>
                 Style class of the tab header.
-                <para>default: null</para>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.headerStyle">
-            <summary>
-            Inline style of the tab header.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.contentClassName">
-            <summary>
-                Style class of the tab content.
-                <para>default: null</para>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.contentStyle">
             <summary>
                 Inline style of the tab content.
-                <para>default: null</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabPanel.contentClassName">
+            <summary>
+                Style class of the tab content.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.activeIndex">
+            <summary>
+                Active index of the TabView.
+                <br/>
+                @defaultValue 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.panelContainerClassName">
+            <summary>
+                Style class of the panels container of the tabview.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.panelContainerStyle">
+            <summary>
+                Inline style of the panels container of the tabview.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.renderActiveOnly">
+            <summary>
+                Whether to render the contents of the selected tab or all tabs.
+                <br/>
+                @defaultValue true
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.scrollable">
+            <summary>
+                When enabled displays buttons at each side of the tab headers to scroll the tab list.
+                <br/>
+                @defaultValue false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.onTabChange">
+            <summary>
+                Callback to invoke when an active tab is changed.
+                <br/>
+                @param {TabViewTabChangeEvent} event -  Custom tab change event.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.TabView.onTabClose">
+            <summary>
+                Callback to invoke when an active tab is closed.
+                <br/>
+                @param {TabViewTabCloseEvent} event - Custom tab close event.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.PrimeReact.Tooltip.position">

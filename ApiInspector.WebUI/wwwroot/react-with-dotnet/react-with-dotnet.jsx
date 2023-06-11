@@ -762,13 +762,6 @@ function ConvertToEventHandlerFunction(remoteMethodInfo)
     }
 }
 
-const CreateNewBuildContext = () =>
-{
-    const context = {};
-
-    return context;
-};
-
 function FindRealNodeByFakeChild(fakeChildIndex, rootNodeInState, jsonNodeInProps)
 {
     if (rootNodeInState && rootNodeInState.$FakeChild === fakeChildIndex)
@@ -795,7 +788,7 @@ function FindRealNodeByFakeChild(fakeChildIndex, rootNodeInState, jsonNodeInProp
     return null;
 }
 
-function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRootNode)
+function ConvertToReactElement(jsonNode, component)
 {
     if (jsonNode == null)
     {
@@ -859,24 +852,24 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
 
     let props = null;
 
-    var constructorFunction = jsonNode.$tag;
-    if (!constructorFunction)
+    var elementType = jsonNode.$tag;
+    if (!elementType)
     {
         throw CreateNewDeveloperError('ReactNode is not recognized');
     }
 
     var isThirdPartyComponent = false;
 
-    if (/* is component */constructorFunction.indexOf('.') > 0)
+    if (/* is component */elementType.indexOf('.') > 0)
     {
-        Before3rdPartyComponentAccess(constructorFunction);
+        Before3rdPartyComponentAccess(elementType);
 
-        constructorFunction = GetExternalJsObject(constructorFunction);
+        elementType = GetExternalJsObject(elementType);
 
         isThirdPartyComponent = true;
     }
 
-    if (constructorFunction === 'nbsp')
+    if (elementType === 'nbsp')
     {
         if (jsonNode && jsonNode.length)
         {
@@ -970,9 +963,11 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
                             FunctionExecutionQueueCurrentEntry.isValid = false;
                         }
 
-                        clearTimeout(targetComponent.state[eventName + '-debounceTimeoutId']);
+                        const timeoutKey = eventName + '-debounceTimeoutId';
 
-                        newState[eventName + '-debounceTimeoutId'] = setTimeout(() =>
+                        clearTimeout(targetComponent.state[timeoutKey]);
+
+                        newState[timeoutKey] = setTimeout(() =>
                         {
                             const executionEntry = StartAction(debounceHandler, targetComponent, /*eventArguments*/[]);
                             executionEntry.name = executionQueueItemName;
@@ -990,7 +985,7 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
             // tryProcessAsElement
             if (propValue.$isElement === true)
             {
-                props[propName] = ConvertToReactElement(buildContext, propValue.Element, component);
+                props[propName] = ConvertToReactElement(propValue.Element, component);
 
                 continue;
             }
@@ -1004,7 +999,7 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
                 {
                     if (item == null && itemTemplateForNull)
                     {
-                        return ConvertToReactElement(CreateNewBuildContext(), itemTemplateForNull);
+                        return ConvertToReactElement(itemTemplateForNull);
                     }
 
                     const length = itemTemplates.length;
@@ -1019,7 +1014,7 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
                             // try find as TreeNode
                             if (item && item.key != null && itemInTemplateInfo.key != null && itemInTemplateInfo.key === item.key)
                             {
-                                return ConvertToReactElement(CreateNewBuildContext(), jsonNodeInTemplateInfo);
+                                return ConvertToReactElement(jsonNodeInTemplateInfo);
                             }
                         }
                     }
@@ -1034,7 +1029,7 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
 
                             if (JSON.stringify(itemInTemplateInfo) === JSON.stringify(item))
                             {
-                                return ConvertToReactElement(CreateNewBuildContext(), jsonNodeInTemplateInfo);
+                                return ConvertToReactElement(jsonNodeInTemplateInfo);
                             }
                         }
                     }
@@ -1063,7 +1058,7 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
 
     if (jsonNode.$text != null)
     {
-        return createElement(constructorFunction, props, jsonNode.$text);
+        return createElement(elementType, props, jsonNode.$text);
     }
 
     const children = jsonNode.$children;
@@ -1073,20 +1068,20 @@ function ConvertToReactElement(buildContext, jsonNode, component, isConvertingRo
 
         if (childrenLength === 1)
         {
-            return createElement(constructorFunction, props, ConvertToReactElement(buildContext, children[0], component));
+            return createElement(elementType, props, ConvertToReactElement(children[0], component));
         }
 
         const newChildren = [];
 
         for (let childIndex = 0; childIndex < childrenLength; childIndex++)
         {
-            newChildren.push(ConvertToReactElement(buildContext, children[childIndex], component));
+            newChildren.push(ConvertToReactElement(children[childIndex], component));
         }
 
-        return createElement(constructorFunction, props, newChildren);
+        return createElement(elementType, props, newChildren);
     }
 
-    return createElement(constructorFunction, props);
+    return createElement(elementType, props);
 }
 
 /**
@@ -1397,7 +1392,7 @@ function DefineComponent(componentDeclaration)
         {
             TraceComponent(this, "render");
 
-            return ConvertToReactElement(CreateNewBuildContext(), this.state[RootNode], this, /*isConvertingRootNode*/true);
+            return ConvertToReactElement(this.state[RootNode], this);
         }
 
         componentDidMount()
@@ -1570,7 +1565,7 @@ function DefinePureComponent(componentDeclaration)
     {
         render()
         {
-            return ConvertToReactElement(CreateNewBuildContext(), this.props.$jsonNode[RootNode], this, /*isConvertingRootNode*/true);
+            return ConvertToReactElement(this.props.$jsonNode[RootNode], this);
         }
     }
 

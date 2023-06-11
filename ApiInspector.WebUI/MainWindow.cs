@@ -253,6 +253,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 new Splitter
                 {
+                    Splitter.Modify(x=>x.gutterSize= 8),
                     ComponentBoxShadow,
                     MarginTop(5),
                     BorderRadius(5),
@@ -272,13 +273,15 @@ class MainWindow : ReactComponent<MainWindowModel>
                             },
                             new FreeScrollBar
                             {
-                                FreeScrollBar.Modify(x=>x.autohide = true),
-                                
+                                AutoHideScrollbar,
+
+
                                 Height(300), PaddingBottom(10),
                                 BorderTop(Solid(1,"#d9d9d9")),
                                 BorderBottomLeftRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
+                                
                                 new CodeMirror
                                 {
                                     extensions = { "json", "githubLight" },
@@ -308,8 +311,9 @@ class MainWindow : ReactComponent<MainWindowModel>
                             },
                             new FreeScrollBar
                             {
-                                FreeScrollBar.Modify(x=>x.autohide = true),
-                                
+                                AutoHideScrollbar,
+
+
                                 Height(300), PaddingBottom(10),
                                 BorderTop(Solid(1,"#d9d9d9")),
                                 BorderBottomRightRadius(3),
@@ -358,7 +362,8 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                         new FreeScrollBar
                         {
-                            FreeScrollBar.Modify(x=>x.autohide = true),
+                            AutoHideScrollbar,
+                            
                             ComponentBoxShadow,
                             Height("calc(100% - 28px)"), PaddingBottom(10),
                             Border("1px solid #d9d9d9"),

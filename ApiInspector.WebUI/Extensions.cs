@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 
 namespace ApiInspector.WebUI;
 
@@ -78,6 +79,7 @@ static partial class Extensions
         client.ListenEvent(OnBrowserInactive, handlerAction);
     }
 
+    public static readonly IModifier AutoHideScrollbar = FreeScrollBar.Modify(x => x.autohide = true);
 
 
     public static readonly IEnumerable<MetadataNode> EmptyMetadataNodes = new ImmutableArray<MetadataNode>();
