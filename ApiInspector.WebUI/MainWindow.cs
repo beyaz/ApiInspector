@@ -27,6 +27,17 @@ class MainWindowModel
     public MethodReference SelectedMethod { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
+
+    public int SelectedScenarioIndex { get; set; }
+}
+
+sealed class ScenarioModel
+{
+    public string JsonTextForDotNetInstanceProperties { get; set; }
+
+    public string JsonTextForDotNetMethodParameters { get; set; }
+
+    public string ResponseAsJson { get; set; }
 }
 
 class MainWindow : ReactComponent<MainWindowModel>
@@ -65,11 +76,14 @@ class MainWindow : ReactComponent<MainWindowModel>
             str
         });
     }
+
+    const string borderColor = "#d5d5d8";
+    
     protected override Element render()
     {
         ArrangeEditors();
 
-        const string borderColor = "#d5d5d8";
+        
 
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
@@ -163,11 +177,28 @@ class MainWindow : ReactComponent<MainWindowModel>
                 new FlexRow(HeightMaximized)
                 {
                     searchPanel,
+                    addRemovePanel,
                     ActiveSelectedMethod
                 }
             }
         };
 
+        Element addRemovePanel()
+        {
+            return new FlexColumn(Width(30),PaddingRight(10), Gap(10),JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
+            {
+                new CircleButton{Label = ">", IsSelected =true},
+                new CircleButton{Label = "|"},
+                new CircleButton{Label = "|"},
+                new CircleButton{Label = "|"},
+                new CircleButton{Label = "|"},
+                new CircleButton{Label = "|"},
+                new CircleButton{Label = "|"},
+                new CircleButton{Label = "+"},
+                new CircleButton{Label = "-"}
+            };
+        }
+        
         Element searchPanel()
         {
             return new FlexColumn(Width(500), Gap(10), Padding(10), MarginTop(20), PositionRelative)
@@ -579,6 +610,30 @@ class MainWindow : ReactComponent<MainWindowModel>
         if (state.SelectedMethod is not null)
         {
             StateCache.Save(state.SelectedMethod, state);
+        }
+    }
+
+    class CircleButton:ReactPureComponent
+    {
+        public string Label { get; set; }
+        public Action<MouseEvent> Clicked { get; set; }
+        public bool IsSelected { get; set; }
+
+        protected override Element render()
+        {
+            return new FlexRowCentered
+            {
+                ComponentBoxShadow,
+                OnClick(Clicked),
+                Label,
+                Border(Solid(1, borderColor)),
+                BorderRadius("50%"),
+                WidthHeight(30),
+                CursorPointer,
+                Hover(Border(Solid(1, "#b8b8ea"))),
+                When(IsSelected, FontWeightExtraBold, Background(rgb(223, 223, 236))),
+                
+            };
         }
     }
 }
