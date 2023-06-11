@@ -16,17 +16,16 @@ class MainWindowModel
     public string AssemblyFileName { get; set; }
 
     public string ClassFilter { get; set; }
-    
+
     public string MethodFilter { get; set; }
 
+    public ImmutableList<ScenarioModel> ScenarioList { get; set; } = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
+
+    public int ScenarioListSelectedIndex { get; set; }
 
     public MethodReference SelectedMethod { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
-
-    public int ScenarioListSelectedIndex { get; set; }
-
-    public ImmutableList<ScenarioModel> ScenarioList { get; set; } = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
 }
 
 sealed class ScenarioModel
@@ -40,6 +39,7 @@ sealed class ScenarioModel
 
 class MainWindow : ReactComponent<MainWindowModel>
 {
+    const string borderColor = "#d5d5d8";
     public bool DebugButtonStatusIsFail { get; set; }
 
     public bool DebugButtonStatusIsSuccess { get; set; }
@@ -67,16 +67,6 @@ class MainWindow : ReactComponent<MainWindowModel>
         };
     }
 
-    Element GetEnvironment()
-    {
-        return Flow(AssemblyFileFullPath, External.GetEnvironment, str => new FlexRowCentered
-        {
-            str
-        });
-    }
-
-    const string borderColor = "#d5d5d8";
-    
     protected override Element render()
     {
         ArrangeEditors();
@@ -143,8 +133,8 @@ class MainWindow : ReactComponent<MainWindowModel>
 }
 "
             },
-            
-            new FlexColumn(Border(Solid(1,borderColor)),
+
+            new FlexColumn(Border(Solid(1, borderColor)),
                            WidthHeightMaximized,
                            Background(rgba(255, 255, 255, 0.4)),
                            BorderRadius(10),
@@ -156,13 +146,13 @@ class MainWindow : ReactComponent<MainWindowModel>
                 {
                     JustifyContentSpaceBetween,
                     AlignItemsCenter,
-                    
+
                     new FlexRow(Gap(5))
                     {
                         AlignItemsCenter,
                         new h3 { "Api Inspector" }, new h5 { " (.net method invoker) " }
                     },
-                    
+
                     new FlexRow(Gap(20))
                     {
                         GetEnvironment,
@@ -181,31 +171,35 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         Element addRemovePanel()
         {
-            
-            return new FlexColumn(Width(30),PaddingRight(10), Gap(10),JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
+            return new FlexColumn(Width(30), PaddingRight(10), Gap(10), JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
             {
-                state.ScenarioList.Select((_,i)=> new CircleButton
+                state.ScenarioList.Select((_, i) => new CircleButton
                 {
                     Index      = i,
                     Label      = i.ToString(),
-                    IsSelected = i== state.ScenarioListSelectedIndex,
-                    Clicked    = e =>state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId)
+                    IsSelected = i == state.ScenarioListSelectedIndex,
+                    Clicked    = e => state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId)
                 }),
 
-
-                new CircleButton{Label = "+",Clicked = _ =>
+                new CircleButton
                 {
-                    state.ScenarioList          = state.ScenarioList.Add(new ScenarioModel());
-                    state.ScenarioListSelectedIndex = state.ScenarioList.Count-1;
-                }},
-                When(state.ScenarioList.Count>1, new CircleButton{Label = "-",Clicked = _ =>
+                    Label = "+", Clicked = _ =>
+                    {
+                        state.ScenarioList              = state.ScenarioList.Add(new ScenarioModel());
+                        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+                    }
+                },
+                When(state.ScenarioList.Count > 1, new CircleButton
                 {
-                    state.ScenarioList          = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
-                    state.ScenarioListSelectedIndex = state.ScenarioList.Count-1;
-                }})
+                    Label = "-", Clicked = _ =>
+                    {
+                        state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
+                        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+                    }
+                })
             };
         }
-        
+
         Element searchPanel()
         {
             return new FlexColumn(Width(500), Gap(10), Padding(10), MarginTop(20), PositionRelative)
@@ -213,7 +207,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 new HistoryButton
                 {
                     Click = _ => HistoryDialogVisible = true,
-                    style = { PositionAbsolute , Right(10) , Top(-13) , ComponentBoxShadow }
+                    style = { PositionAbsolute, Right(10), Top(-13), ComponentBoxShadow }
                 },
 
                 new FlexColumn
@@ -224,7 +218,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         DirectoryPath    = state.AssemblyDirectory,
                         SelectionChanged = x => state.AssemblyDirectory = x,
-                        style = { ComponentBoxShadow }
+                        style            = { ComponentBoxShadow }
                     }
                 },
 
@@ -276,7 +270,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 }
             };
         }
-        
+
         Element ActiveSelectedMethod()
         {
             if (IsInitializingSelectedMethod)
@@ -288,23 +282,23 @@ class MainWindow : ReactComponent<MainWindowModel>
             }
 
             var scenarioIndex = state.ScenarioListSelectedIndex;
-            
+
             return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
             {
                 new Splitter
                 {
-                    Splitter.Modify(x=>x.gutterSize= 8),
+                    Splitter.Modify(x => x.gutterSize = 8),
                     ComponentBoxShadow,
                     MarginTop(5),
                     BorderRadius(5),
-                    
+
                     new SplitterPanel
                     {
                         new FlexColumn(AlignItemsCenter)
                         {
                             new Label
                             {
-                                Text = "Instance json", 
+                                Text = "Instance json",
                                 style =
                                 {
                                     Padding(10),
@@ -315,13 +309,12 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 AutoHideScrollbar,
 
-
                                 Height(300), PaddingBottom(10),
-                                BorderTop(Solid(1,"#d9d9d9")),
+                                BorderTop(Solid(1, "#d9d9d9")),
                                 BorderBottomLeftRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
-                                
+
                                 new CodeMirror
                                 {
                                     extensions = { "json", "githubLight" },
@@ -329,11 +322,11 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     basicSetup =
                                     {
                                         highlightActiveLine       = false,
-                                        highlightActiveLineGutter = false,
+                                        highlightActiveLineGutter = false
                                     }
                                 }
                             }
-                        },
+                        }
                     },
 
                     new SplitterPanel
@@ -353,9 +346,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                             {
                                 AutoHideScrollbar,
 
-
                                 Height(300), PaddingBottom(10),
-                                BorderTop(Solid(1,"#d9d9d9")),
+                                BorderTop(Solid(1, "#d9d9d9")),
                                 BorderBottomRightRadius(3),
                                 WidthMaximized,
                                 FlexGrow(1),
@@ -367,7 +359,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                     basicSetup =
                                     {
                                         highlightActiveLine       = false,
-                                        highlightActiveLineGutter = false,
+                                        highlightActiveLineGutter = false
                                     }
                                 }
                             }
@@ -403,7 +395,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                         new FreeScrollBar
                         {
                             AutoHideScrollbar,
-                            
+
                             ComponentBoxShadow,
                             Height("calc(100% - 28px)"), PaddingBottom(10),
                             Border("1px solid #d9d9d9"),
@@ -417,7 +409,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 basicSetup =
                                 {
                                     highlightActiveLine       = false,
-                                    highlightActiveLineGutter = false,
+                                    highlightActiveLineGutter = false
                                 }
                             }
                         }
@@ -460,6 +452,14 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         ExecuteButtonStatusIsFail    = false;
         ExecuteButtonStatusIsSuccess = false;
+    }
+
+    Element GetEnvironment()
+    {
+        return Flow(AssemblyFileFullPath, External.GetEnvironment, str => new FlexRowCentered
+        {
+            str
+        });
     }
 
     void OnDebugClicked()
@@ -517,7 +517,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         state.SelectedMethod = null;
 
-        state.ScenarioList          = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
+        state.ScenarioList              = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
         state.ScenarioListSelectedIndex = 0;
 
         var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
@@ -547,13 +547,13 @@ class MainWindow : ReactComponent<MainWindowModel>
             if (state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
                 SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties))
-                   .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties = json, printError);
+                    .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties = json, printError);
             }
 
             if (state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
                 SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters))
-                   .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters = json, printError);
+                    .Then(json => state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters = json, printError);
             }
 
             ArrangeEditors();
@@ -621,12 +621,12 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
-    class CircleButton:ReactPureComponent
+    class CircleButton : ReactPureComponent
     {
-        public string Label { get; set; }
         public Action<MouseEvent> Clicked { get; set; }
-        public bool IsSelected { get; set; }
         public int Index { get; set; }
+        public bool IsSelected { get; set; }
+        public string Label { get; set; }
 
         protected override Element render()
         {
@@ -641,8 +641,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 WidthHeight(30),
                 CursorPointer,
                 Hover(Border(Solid(1, "#b8b8ea"))),
-                When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230))),
-                
+                When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230)))
             };
         }
     }
