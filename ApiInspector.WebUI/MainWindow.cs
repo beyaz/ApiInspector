@@ -82,26 +82,28 @@ class MainWindow : ReactComponent<MainWindowModel>
 .ͼ1.cm-editor.cm-focused {
     outline: none;
 }
+
+/* left-side-key */
+.ͼ18{
+    color: #c0bcc8;
+    font-weight: bold;
+}
+
+
 /* string */
-.ͼ1a{
+.ͼ1b{
     color: #f44336;
     font-weight: bold;
 }
 /* number */
-.ͼ18 {
+.ͼ19 {
     color: #141413;
     font-weight: bold;
 }
 /* boolean */
-.ͼ1f {
+.ͼ1g {
     color: #2c1aeb;
     font-weight: bold;
-}
-
-
-/* prime react splitter */
-.p-splitter-gutter{
-     z-index: 9;
 }
 "
             },
