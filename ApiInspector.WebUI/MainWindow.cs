@@ -159,6 +159,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         state.ScenarioList              = state.ScenarioList.Add(new ScenarioModel());
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+                        TryInitializeDefaultJsonInputs();
                     }
                 },
                 When(state.ScenarioList.Count > 1, new CircleButton
@@ -516,6 +517,11 @@ class MainWindow : ReactComponent<MainWindowModel>
             }
         }
 
+        TryInitializeDefaultJsonInputs();
+    }
+
+    void TryInitializeDefaultJsonInputs()
+    {
         if (state.SelectedMethod != null)
         {
             var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
