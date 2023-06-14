@@ -299,11 +299,27 @@ static class AssemblyModelHelper
     {
         try
         {
-            return assembly.GetTypes();
+            return assembly.GetTypes().Where(isValidForAnalyze);
         }
         catch (Exception)
         {
             return Enumerable.Empty<Type>().ToArray();
+        }
+
+        static bool isValidForAnalyze(Type type)
+        {
+            var skipTypeList = new []
+            {
+                "Microsoft.CodeAnalysis.EmbeddedAttribute",
+                "System.Runtime.CompilerServices.RefSafetyRulesAttribute"
+            };
+            
+            if (skipTypeList.Contains(type.FullName) )
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
