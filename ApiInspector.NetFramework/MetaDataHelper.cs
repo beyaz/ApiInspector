@@ -207,11 +207,23 @@ static class MetadataHelper
         }
     }
 
+    static (Exception exception, T value) Try<T>(Func<T> func)
+    {
+        try
+        {
+            return (default, func());
+        }
+        catch (Exception exception)
+        {
+            return (exception, default);
+        }
+    }
+
     static void VisitMethods(Type type, Action<MethodInfo> visit)
     {
         type.VisitMethods(methodInfo =>
         {
-            if (IsValidForExport(methodInfo))
+            if (Try(() => IsValidForExport(methodInfo)).value)
             {
                 visit(methodInfo);
             }
