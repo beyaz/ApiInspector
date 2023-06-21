@@ -47,11 +47,11 @@ class MethodSelectionView : ReactComponent
 
     protected override Element render()
     {
-        List<MetadataNode> nodes;
+        IReadOnlyList<MetadataNode> nodes;
 
         try
         {
-            nodes = GetNodes().ToList();
+            nodes = GetNodes();
         }
         catch (Exception exception)
         {
@@ -120,14 +120,14 @@ class MethodSelectionView : ReactComponent
         return new div();
     }
 
-    IEnumerable<MetadataNode> GetNodes()
+    IReadOnlyList<MetadataNode> GetNodes()
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
-            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter);
+            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter).ToList();
         }
 
-        return Enumerable.Empty<MetadataNode>();
+        return Array.Empty<MetadataNode>();
     }
 
     void OnSelectionChanged(SingleSelectionTreeSelectionParams e)
