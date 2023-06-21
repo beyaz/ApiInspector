@@ -51,7 +51,7 @@ class MethodSelectionView : ReactComponent
 
         try
         {
-            nodes = GetNodes();
+            nodes = FetchNodes();
         }
         catch (Exception exception)
         {
@@ -120,7 +120,7 @@ class MethodSelectionView : ReactComponent
         return new div();
     }
 
-    IReadOnlyList<MetadataNode> GetNodes()
+    IReadOnlyList<MetadataNode> FetchNodes()
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
