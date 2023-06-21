@@ -1,9 +1,11 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 
 namespace ApiInspector.WebUI;
 
-class MetadataNode : TreeNode
+[Serializable]
+public sealed class MetadataNode : TreeNode
 {
     public List<MetadataNode> children { get; } = new();
     public bool IsClass { get; set; }
@@ -15,7 +17,8 @@ class MetadataNode : TreeNode
     public TypeReference TypeReference { get; set; }
 }
 
-class MethodSelectionView : ReactComponent
+[Serializable]
+public sealed class MethodSelectionViewState
 {
     public string AssemblyFilePath { get; set; }
 
@@ -24,6 +27,32 @@ class MethodSelectionView : ReactComponent
     public string MethodFilter { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
+    
+    public IReadOnlyList<MetadataNode> Nodes{ get; set; }
+}
+
+class MethodSelectionView : ReactComponent<MethodSelectionViewState>
+{
+    public string AssemblyFilePath { get; set; }
+
+    public string ClassFilter { get; set; }
+
+    public string MethodFilter { get; set; }
+
+    public string SelectedMethodTreeNodeKey { get; set; }
+
+    protected override Task constructor()
+    {
+        state = new MethodSelectionViewState
+        {
+            AssemblyFilePath = AssemblyFilePath,
+            ClassFilter      = ClassFilter,
+            MethodFilter     = MethodFilter,
+            Nodes            = new List<MetadataNode>()
+        };
+        
+        return Task.CompletedTask;
+    }
 
     [ReactCustomEvent]
     public Action<string> SelectionChanged { get; set; }
@@ -45,6 +74,11 @@ class MethodSelectionView : ReactComponent
         return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }
 
+    static MethodSelectionViewState getDerivedStateFromProps(MethodSelectionView nextProps, MethodSelectionViewState prevState)
+    {
+        return null;
+    }
+    
     protected override Element render()
     {
         IReadOnlyList<MetadataNode> nodes;
