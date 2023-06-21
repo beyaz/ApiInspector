@@ -74,8 +74,21 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
         return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }
 
-    static MethodSelectionViewState getDerivedStateFromProps(MethodSelectionView nextProps, MethodSelectionViewState prevState)
+    protected static MethodSelectionViewState getDerivedStateFromProps(MethodSelectionView nextProps, MethodSelectionViewState prevState)
     {
+        if (prevState.AssemblyFilePath != nextProps.AssemblyFilePath||
+            prevState.ClassFilter != nextProps.ClassFilter||
+            prevState.MethodFilter != nextProps.MethodFilter||
+            prevState.SelectedMethodTreeNodeKey != nextProps.SelectedMethodTreeNodeKey)
+        {
+            return new MethodSelectionViewState
+            {
+                AssemblyFilePath = nextProps.AssemblyFilePath,
+                ClassFilter      = nextProps.ClassFilter,
+                MethodFilter     = nextProps.MethodFilter,
+                Nodes            = new List<MetadataNode>()
+            };
+        }
         return null;
     }
     
