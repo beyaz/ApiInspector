@@ -48,8 +48,11 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
             AssemblyFilePath = AssemblyFilePath,
             ClassFilter      = ClassFilter,
             MethodFilter     = MethodFilter,
-            Nodes            = new List<MetadataNode>()
+            SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey
         };
+
+
+        state.Nodes = FetchNodes(state.AssemblyFilePath, state.ClassFilter, state.MethodFilter);
         
         return Task.CompletedTask;
     }
@@ -86,7 +89,7 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
                 AssemblyFilePath = nextProps.AssemblyFilePath,
                 ClassFilter      = nextProps.ClassFilter,
                 MethodFilter     = nextProps.MethodFilter,
-                Nodes            = new List<MetadataNode>()
+                Nodes = FetchNodes(nextProps.AssemblyFilePath, nextProps.ClassFilter, nextProps.MethodFilter)
             };
         }
         return null;
@@ -94,16 +97,7 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
     
     protected override Element render()
     {
-        IReadOnlyList<MetadataNode> nodes;
-
-        try
-        {
-            nodes = FetchNodes();
-        }
-        catch (Exception exception)
-        {
-            return new div { "Error occured: " + exception };
-        }
+        var nodes = state.Nodes;
 
         // expand if there are few elements
         {
@@ -125,7 +119,7 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
             nodeTemplate      = nodeTemplate,
             value             = nodes,
             onSelectionChange = OnSelectionChanged,
-            selectionKeys     = SelectedMethodTreeNodeKey,
+            selectionKeys     = state.SelectedMethodTreeNodeKey,
             style             = { WidthMaximized, HeightMaximized }
         };
 
@@ -166,8 +160,8 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
 
         return new div();
     }
-
-    IReadOnlyList<MetadataNode> FetchNodes()
+    
+    static IReadOnlyList<MetadataNode> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {

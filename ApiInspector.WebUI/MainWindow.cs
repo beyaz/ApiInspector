@@ -45,7 +45,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
-            new Dialog
+            When(HistoryDialogVisible,()=> new Dialog
             {
                 visible  = HistoryDialogVisible,
                 header   = new div("Select Method From History"),
@@ -75,7 +75,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                     }
                 },
                 style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
-            },
+            }),
+            
             new style
             {
                 @"
