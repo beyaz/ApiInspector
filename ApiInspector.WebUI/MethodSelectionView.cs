@@ -86,10 +86,11 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
         {
             return new MethodSelectionViewState
             {
-                AssemblyFilePath = nextProps.AssemblyFilePath,
-                ClassFilter      = nextProps.ClassFilter,
-                MethodFilter     = nextProps.MethodFilter,
-                Nodes = FetchNodes(nextProps.AssemblyFilePath, nextProps.ClassFilter, nextProps.MethodFilter)
+                AssemblyFilePath          = nextProps.AssemblyFilePath,
+                ClassFilter               = nextProps.ClassFilter,
+                MethodFilter              = nextProps.MethodFilter,
+                SelectedMethodTreeNodeKey = nextProps.SelectedMethodTreeNodeKey,
+                Nodes                     = FetchNodes(nextProps.AssemblyFilePath, nextProps.ClassFilter, nextProps.MethodFilter)
             };
         }
         return null;
