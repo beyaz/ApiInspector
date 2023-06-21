@@ -45,7 +45,7 @@ class MainWindow : ReactComponent<MainWindowModel>
 
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
-            When(HistoryDialogVisible,()=> new Dialog
+            When(HistoryDialogVisible, () => new Dialog
             {
                 visible  = HistoryDialogVisible,
                 header   = new div("Select Method From History"),
@@ -76,7 +76,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 },
                 style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
             }),
-            
+
             new style
             {
                 @"
@@ -192,9 +192,13 @@ class MainWindow : ReactComponent<MainWindowModel>
 
                     new DirectorySelector
                     {
-                        DirectoryPath    = state.AssemblyDirectory,
-                        SelectionChanged = x => state.AssemblyDirectory = x,
-                        style            = { ComponentBoxShadow }
+                        DirectoryPath = state.AssemblyDirectory,
+                        SelectionChanged = x =>
+                        {
+                            state.AssemblyDirectory = x;
+                            Client.OnAssemblyChanged(AssemblyFileFullPath);
+                        },
+                        style = { ComponentBoxShadow }
                     }
                 },
 
@@ -206,8 +210,12 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         AssemblyDirectoryPath = state.AssemblyDirectory,
                         AssemblyFileName      = state.AssemblyFileName,
-                        SelectionChanged      = x => state.AssemblyFileName = x,
-                        style                 = { ComponentBoxShadow }
+                        SelectionChanged = x =>
+                        {
+                            state.AssemblyFileName = x;
+                            Client.OnAssemblyChanged(AssemblyFileFullPath);
+                        },
+                        style = { ComponentBoxShadow }
                     }
                 },
                 new FlexColumn
@@ -432,10 +440,10 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     Element GetEnvironment()
     {
-        return Flow(AssemblyFileFullPath, External.GetEnvironment, str => new FlexRowCentered
+        return new EnvironmentInfoView
         {
-            str
-        });
+            AssemblyFileFullPath = AssemblyFileFullPath
+        };
     }
 
     void OnDebugClicked()
@@ -523,33 +531,6 @@ class MainWindow : ReactComponent<MainWindowModel>
         TryInitializeDefaultJsonInputs();
     }
 
-    void TryInitializeDefaultJsonInputs()
-    {
-        if (state.SelectedMethod != null)
-        {
-            var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
-
-            if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
-            {
-                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties))
-                    .Then(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
-            }
-
-            if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
-            {
-                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters))
-                    .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
-            }
-
-            ArrangeEditors();
-
-            void printError(Exception exception)
-            {
-                scenario.ResponseAsJson = exception + NewLine + scenario.ResponseAsJson;
-            }
-        }
-    }
-
     void OnExecuteClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
@@ -608,6 +589,33 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
+    void TryInitializeDefaultJsonInputs()
+    {
+        if (state.SelectedMethod != null)
+        {
+            var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+
+            if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            {
+                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties))
+                    .Then(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
+            }
+
+            if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            {
+                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters))
+                    .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
+            }
+
+            ArrangeEditors();
+
+            void printError(Exception exception)
+            {
+                scenario.ResponseAsJson = exception + NewLine + scenario.ResponseAsJson;
+            }
+        }
+    }
+
     class CircleButton : ReactPureComponent
     {
         public Action<MouseEvent> Clicked { get; set; }
@@ -631,5 +639,48 @@ class MainWindow : ReactComponent<MainWindowModel>
                 When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230)))
             };
         }
+    }
+
+    class EnvironmentInfoView : ReactComponent
+    {
+        public string AssemblyFileFullPath { get; set; }
+        public string Text { get; set; }
+
+        protected override Task constructor()
+        {
+            OnAssemblyChanged(AssemblyFileFullPath);
+
+            Client.OnAssemblyChanged(OnAssemblyChanged);
+
+            return base.constructor();
+        }
+
+        protected override Element render()
+        {
+            return new FlexRowCentered
+            {
+                Text
+            };
+        }
+
+        void OnAssemblyChanged(string assemblyFileFullPath)
+        {
+            AssemblyFileFullPath = assemblyFileFullPath;
+
+            Flow(AssemblyFileFullPath, External.GetEnvironment, str => Text = str);
+        }
+    }
+}
+
+static class EventExtensions
+{
+    public static void OnAssemblyChanged(this Client client, string assemblyFileFullPath)
+    {
+        client.DispatchEvent(nameof(OnAssemblyChanged), assemblyFileFullPath);
+    }
+
+    public static void OnAssemblyChanged(this Client client, Action<string> handlerAction)
+    {
+        client.ListenEvent(OnAssemblyChanged, handlerAction);
     }
 }
