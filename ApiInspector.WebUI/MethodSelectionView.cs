@@ -77,24 +77,25 @@ class MethodSelectionView : ReactComponent<MethodSelectionViewState>
         return SingleSelectionTree<MetadataNode>.FindNodeByKey(nodes, treeNodeKey);
     }
 
-    protected static MethodSelectionViewState getDerivedStateFromProps(MethodSelectionView nextProps, MethodSelectionViewState prevState)
+    protected override Task OverrideStateFromPropsBeforeRender()
     {
-        if (prevState.AssemblyFilePath != nextProps.AssemblyFilePath||
-            prevState.ClassFilter != nextProps.ClassFilter||
-            prevState.MethodFilter != nextProps.MethodFilter||
-            prevState.SelectedMethodTreeNodeKey != nextProps.SelectedMethodTreeNodeKey)
+        
+        if (state.AssemblyFilePath != AssemblyFilePath||
+            state.ClassFilter != ClassFilter||
+            state.MethodFilter != MethodFilter||
+            state.SelectedMethodTreeNodeKey != SelectedMethodTreeNodeKey)
         {
-            return new MethodSelectionViewState
-            {
-                AssemblyFilePath          = nextProps.AssemblyFilePath,
-                ClassFilter               = nextProps.ClassFilter,
-                MethodFilter              = nextProps.MethodFilter,
-                SelectedMethodTreeNodeKey = nextProps.SelectedMethodTreeNodeKey,
-                Nodes                     = FetchNodes(nextProps.AssemblyFilePath, nextProps.ClassFilter, nextProps.MethodFilter)
-            };
+            state.AssemblyFilePath          = AssemblyFilePath;
+            state.ClassFilter               = ClassFilter;
+            state.MethodFilter              = MethodFilter;
+            state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
+            state.Nodes                     = FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter);
         }
-        return null;
+
+        return Task.CompletedTask;
     }
+    
+   
     
     protected override Element render()
     {

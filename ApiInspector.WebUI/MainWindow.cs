@@ -670,19 +670,16 @@ class MainWindow : ReactComponent<MainWindowModel>
                 state.Text
             };
         }
-        
-        
-        protected static EnvironmentInfoState getDerivedStateFromProps(EnvironmentInfoView nextProps, EnvironmentInfoState prevState)
+
+        protected override Task OverrideStateFromPropsBeforeRender()
         {
-            if (prevState.AssemblyFileFullPath != nextProps.AssemblyFileFullPath)
+            if (state.AssemblyFileFullPath != AssemblyFileFullPath)
             {
-                return new EnvironmentInfoState
-                {
-                    AssemblyFileFullPath      = nextProps.AssemblyFileFullPath,
-                    Text = Flow(nextProps.AssemblyFileFullPath, External.GetEnvironment, str => str)
-                };
+                state.AssemblyFileFullPath = AssemblyFileFullPath;
+                state.Text = Flow(AssemblyFileFullPath, External.GetEnvironment, str => str);
             }
-            return null;
+
+            return base.OverrideStateFromPropsBeforeRender();
         }
 
 
