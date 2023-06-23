@@ -641,13 +641,21 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
-    class EnvironmentInfoView : ReactComponent
+    class EnvironmentInfoState
     {
         public string AssemblyFileFullPath { get; set; }
         public string Text { get; set; }
+    }
+    class EnvironmentInfoView : ReactComponent<EnvironmentInfoState>
+    {
+        public string AssemblyFileFullPath { get; set; }
+        
+        
 
         protected override Task constructor()
         {
+            state = new EnvironmentInfoState();
+            
             OnAssemblyChanged(AssemblyFileFullPath);
 
             Client.OnAssemblyChanged(OnAssemblyChanged);
@@ -659,15 +667,30 @@ class MainWindow : ReactComponent<MainWindowModel>
         {
             return new FlexRowCentered
             {
-                Text
+                state.Text
             };
         }
+        
+        
+        protected static EnvironmentInfoState getDerivedStateFromProps(EnvironmentInfoView nextProps, EnvironmentInfoState prevState)
+        {
+            if (prevState.AssemblyFileFullPath != nextProps.AssemblyFileFullPath)
+            {
+                return new EnvironmentInfoState
+                {
+                    AssemblyFileFullPath      = nextProps.AssemblyFileFullPath,
+                    Text = Flow(nextProps.AssemblyFileFullPath, External.GetEnvironment, str => str)
+                };
+            }
+            return null;
+        }
+
 
         void OnAssemblyChanged(string assemblyFileFullPath)
         {
-            AssemblyFileFullPath = assemblyFileFullPath;
+            state.AssemblyFileFullPath = assemblyFileFullPath;
 
-            Flow(AssemblyFileFullPath, External.GetEnvironment, str => Text = str);
+            Flow(assemblyFileFullPath, External.GetEnvironment, str => state.Text = str);
         }
     }
 }
