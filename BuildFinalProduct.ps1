@@ -76,3 +76,5 @@ $temp1 = $ProjectDirectory + "ApiInspector.Bootstrapper\ApiInspectorLatestVersio
 Compress-Archive -Path $FinalDirectory -DestinationPath $temp1 -Force
 
 
+Read-Host -Prompt "Press any key to continue"
+
