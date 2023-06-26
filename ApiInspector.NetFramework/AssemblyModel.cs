@@ -200,15 +200,26 @@ static class AssemblyModelHelper
                 {
                     if (fullSame.Count == 0)
                     {
-                        if (methodReference.Equals(methodInfo.AsReference()))
+                        try
                         {
-                            fullSame.Add(methodInfo);
+                            var asReference = methodInfo.AsReference();
+                            
+                            if (methodReference.Equals(asReference))
+                            {
+                                fullSame.Add(methodInfo);
+                            }
+
+                            if (DeclaringTypesAreSameAndNameIsSame(methodReference, asReference))
+                            {
+                                sameNames.Add(methodInfo);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
                         }
 
-                        if (DeclaringTypesAreSameAndNameIsSame(methodReference, methodInfo.AsReference()))
-                        {
-                            sameNames.Add(methodInfo);
-                        }
+                        
                     }
                 });
             }
