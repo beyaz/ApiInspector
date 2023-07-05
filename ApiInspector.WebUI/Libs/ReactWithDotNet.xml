@@ -43,20 +43,20 @@
                 &amp;nbsp;
             </summary>
         </member>
-        <member name="F:ReactWithDotNet.Mixin.DisplayFlexColumn">
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumn">
             <summary>
                 display = "flex"
                 <br/>
                 flexDirection  = "column"
             </summary>
         </member>
-        <member name="F:ReactWithDotNet.Mixin.DisplayFlexRow">
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlexRow">
             <summary>
                 <br>display = "flex"</br>
                 <br>flexDirection  = "row"</br>
             </summary>
         </member>
-        <member name="F:ReactWithDotNet.Mixin.DisplayFlexRowCentered">
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlexRowCentered">
             <summary>
                 <br>display = "flex"</br>
                 <br>flexDirection  = "row"</br>
@@ -744,29 +744,24 @@
                 style.fontWeight = '600'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
+        <member name="P:ReactWithDotNet.Mixin.LetterSpacingNormal">
             <summary>
-                style.fontFamily = fontFamily
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WebkitFontSmoothing(System.String)">
-            <summary>
-            <b>-webkit-font-smoothing</b> = <paramref name="value"/>
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.WebkitFontSmoothingAntialiased">
-            <summary>
-            <b>-webkit-font-smoothing</b> = grayscale
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MozOsxFontSmoothing(System.String)">
-            <summary>
-            <b>-moz-osx-font-smoothing</b> = <paramref name="value"/>
+                style.letterSpacing = normal
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.MozOsxFontSmoothingGrayScale">
             <summary>
-            <b>-moz-osx-font-smoothing</b> = grayscale
+                <b>-moz-osx-font-smoothing</b> = grayscale
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WebkitFontSmoothingAntialiased">
+            <summary>
+                <b>-webkit-font-smoothing</b> = grayscale
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
+            <summary>
+                style.fontFamily = fontFamily
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.Double)">
@@ -774,9 +769,14 @@
                 style.letterSpacing = <paramref name="letterSpacingAsPixel" /> + 'px'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.LetterSpacingNormal">
+        <member name="M:ReactWithDotNet.Mixin.MozOsxFontSmoothing(System.String)">
             <summary>
-                style.letterSpacing = normal
+                <b>-moz-osx-font-smoothing</b> = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFontSmoothing(System.String)">
+            <summary>
+                <b>-webkit-font-smoothing</b> = <paramref name="value" />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
@@ -1028,6 +1028,26 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 768px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsMobile(ReactWithDotNet.Style)">
+            <summary>
+                max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsMobile(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: 767px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThanMobile(ReactWithDotNet.Style)">
+            <summary>
+                min-width: 768px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThanMobile(ReactWithDotNet.StyleModifier[])">
             <summary>
                 min-width: 768px
             </summary>
@@ -1871,6 +1891,30 @@
             <summary>
                 <br>display = "flex"</br>
                 <br>flexDirection  = "row"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.FlexColumnCentered">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "column"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "column"</br>
+                <br>justifyContent = "center"</br>
+                <br>alignItems     = "center"</br>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                <br>display = "flex"</br>
+                <br>flexDirection  = "column"</br>
                 <br>justifyContent = "center"</br>
                 <br>alignItems     = "center"</br>
             </summary>

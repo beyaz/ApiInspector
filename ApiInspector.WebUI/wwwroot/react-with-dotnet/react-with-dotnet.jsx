@@ -1811,6 +1811,11 @@ RegisterCoreFunction('CopyToClipboard', function (text)
     }
 });
 
+RegisterCoreFunction('RunJavascript', (javascriptCode) => {
+
+    window.eval(javascriptCode)
+});
+
 RegisterCoreFunction('ReplaceNullWhenEmpty', function(value)
 {
     if (IsEmptyObject(value))
