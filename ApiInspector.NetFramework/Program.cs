@@ -183,12 +183,32 @@ static class Program
 
         var invocationParameters = new List<object>();
 
-        var map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
+        var parameterInfoList = methodInfo.GetParameters();
 
-        foreach (var parameterInfo in methodInfo.GetParameters())
+        JObject map = null;
+        try
+        {
+            map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
+        }
+        catch (Exception)
+        {
+            if (parameterInfoList.Length == 1 && parameterInfoList[0].ParameterType.FullName == "System.String" && parameterInfoList[0].Name is not null)
+            {
+                map = new JObject
+                {
+                    [parameterInfoList[0].Name] = new JValue(jsonForParameters)
+                };
+            }
+            else
+            {
+                throw;
+            }
+        }
+        
+        foreach (var parameterInfo in parameterInfoList)
         {
             // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
-            if (map.ContainsKey(parameterInfo.Name))
+            if (parameterInfo.Name is not null && map.ContainsKey(parameterInfo.Name))
             {
                 var jToken = map[parameterInfo.Name];
                 if (jToken != null)

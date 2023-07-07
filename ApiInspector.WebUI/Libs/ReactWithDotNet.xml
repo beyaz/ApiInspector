@@ -144,6 +144,11 @@
                 style.display = 'flex'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayInlineFlex">
+            <summary>
+                style.display = 'inline-flex'
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayNone">
             <summary>
                 style.display = "none"
@@ -812,6 +817,51 @@
         <member name="P:ReactWithDotNet.Mixin.AlignContentSpaceBetween">
             <summary>
                 <para>style.alignContent = "space-between"</para>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AlignSelf(System.String)">
+            <summary>
+                <para>style.alignSelf = <paramref name="value" /></para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfaAuto">
+            <summary>
+                <para>style.alignSelf = "auto"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfStretch">
+            <summary>
+                <para>style.alignSelf = "stretch"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfCenter">
+            <summary>
+                <para>style.alignSelf = "center"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfFlexStart">
+            <summary>
+                <para>style.alignSelf = "flex-start"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfFlexEnd">
+            <summary>
+                <para>style.alignSelf = "flex-end"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfBaseline">
+            <summary>
+                <para>style.alignSelf = "baseline"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfInitial">
+            <summary>
+                <para>style.alignSelf = "initial"</para>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignSelfInherit">
+            <summary>
+                <para>style.alignSelf = "inherit"</para>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.WhiteSpaceBreakSpaces">
