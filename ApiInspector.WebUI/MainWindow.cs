@@ -42,8 +42,6 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     protected override Element render()
     {
-        ArrangeEditors();
-
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
             When(HistoryDialogVisible, () => new Dialog
@@ -238,7 +236,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                     minimap             = new { enabled = false },
                     formatOnPaste       = true,
                     formatOnType        = true,
-                    automaticLayout     = true
+                    automaticLayout     = true,
+                    lineNumbers = false
                 }
             };
         }
@@ -364,31 +363,7 @@ class MainWindow : ReactComponent<MainWindowModel>
         }
     }
 
-    void ArrangeEditors()
-    {
-        const int optimumLineCount = 19;
-
-        state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties = arrange(state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetInstanceProperties, optimumLineCount);
-        state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters   = arrange(state.ScenarioList[state.ScenarioListSelectedIndex].JsonTextForDotNetMethodParameters, optimumLineCount);
-        state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson                      = arrange(state.ScenarioList[state.ScenarioListSelectedIndex].ResponseAsJson, optimumLineCount);
-
-        static string arrange(string value, int optimumLineCount)
-        {
-            var lineCount = getLineCount(value);
-
-            if (lineCount < optimumLineCount)
-            {
-                return value + string.Join(NewLine, Enumerable.Range(0, optimumLineCount - lineCount).Select(_ => string.Empty));
-            }
-
-            return value;
-
-            static int getLineCount(string value)
-            {
-                return (value + string.Empty).Split('\n').Length;
-            }
-        }
-    }
+  
 
     void ClearActionButtonStates()
     {
@@ -567,8 +542,6 @@ class MainWindow : ReactComponent<MainWindowModel>
                 SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters))
                     .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
-
-            ArrangeEditors();
 
             void printError(Exception exception)
             {
