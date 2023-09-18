@@ -47,8 +47,6 @@ class MainLayout : ReactComponent, IPageLayout
 
                 // After page first rendered in client then connect with react system in background.
                 // So user first iteraction time will be minimize.
-                
-                new script{type ="module", src =$"{root}/dist/index.js"},
 
                 new script
                 {
@@ -56,7 +54,7 @@ class MainLayout : ReactComponent, IPageLayout
                     text = 
                         $@"
 
-import {{ReactWithDotNet}} from './{root}/dist/index.js';
+import {{ReactWithDotNet}} from './{root}/dist/index.js?v={{Guid.NewGuid():N}}';
 
 ReactWithDotNet.StrictMode = false;
 ReactWithDotNet.RenderComponentIn({{
