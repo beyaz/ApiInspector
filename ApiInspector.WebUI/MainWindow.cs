@@ -2,9 +2,10 @@
 using System.IO;
 using System.Threading.Tasks;
 using ApiInspector.WebUI.Components;
+using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
-using ReactWithDotNet.ThirdPartyLibraries.UIW.ReactCodemirror;
+
 using static System.Environment;
 
 namespace ApiInspector.WebUI;
@@ -299,14 +300,16 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 WidthMaximized,
                                 FlexGrow(1),
 
-                                new CodeMirror
+                                new Editor
                                 {
-                                    extensions = { "json", "githubLight" },
-                                    valueBind  = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties,
-                                    basicSetup =
+                                    defaultLanguage = "json",
+                                    valueBind       = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties,
+                                    options =
                                     {
-                                        highlightActiveLine       = false,
-                                        highlightActiveLineGutter = false
+                                        renderLineHighlight ="none",
+                                        fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
+                                        fontSize            = 11,
+                                        minimap             = new { enabled = false }
                                     }
                                 }
                             }
@@ -336,14 +339,16 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 WidthMaximized,
                                 FlexGrow(1),
 
-                                new CodeMirror
+                                new Editor
                                 {
-                                    extensions = { "json", "githubLight" },
-                                    valueBind  = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters,
-                                    basicSetup =
+                                    defaultLanguage = "json",
+                                    valueBind       = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters,
+                                    options =
                                     {
-                                        highlightActiveLine       = false,
-                                        highlightActiveLineGutter = false
+                                        renderLineHighlight ="none",
+                                        fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
+                                        fontSize            = 11,
+                                        minimap             = new { enabled = false }
                                     }
                                 }
                             }
@@ -386,14 +391,16 @@ class MainWindow : ReactComponent<MainWindowModel>
                             BorderRadius(5),
                             WidthMaximized,
 
-                            new CodeMirror
+                            new Editor
                             {
-                                extensions = { "json", "githubLight" },
-                                valueBind  = () => state.ScenarioList[scenarioIndex].ResponseAsJson,
-                                basicSetup =
+                                defaultLanguage = "json",
+                                valueBind       = () => state.ScenarioList[scenarioIndex].ResponseAsJson,
+                                options =
                                 {
-                                    highlightActiveLine       = false,
-                                    highlightActiveLineGutter = false
+                                    renderLineHighlight ="none",
+                                    fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
+                                    fontSize            = 11,
+                                    minimap             = new { enabled = false }
                                 }
                             }
                         }

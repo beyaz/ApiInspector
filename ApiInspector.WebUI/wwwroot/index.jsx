@@ -5,7 +5,7 @@ import ReactWithDotNet from "./react-with-dotnet/react-with-dotnet";
 
 import "./react-with-dotnet/libraries/primereact/all";
 import "./react-with-dotnet/libraries/react-free-scrollbar/all";
-import "./react-with-dotnet/libraries/uiw-react-codemirror/all";
+import "./react-with-dotnet/libraries/MonacoEditorReact/all";
 
 ReactWithDotNet.RegisterExternalJsObject("CloseWindow", () => window.close());
 
