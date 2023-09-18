@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.IO;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using ApiInspector.WebUI.Components;
-using Microsoft.VisualBasic;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
@@ -80,37 +79,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
             }),
 
-            new style
-            {
-                @"
-.ͼ1.cm-editor.cm-focused {
-    outline: none;
-}
-
-/* left-side-key */
-.ͼ18{
-    color: #c0bcc8;
-    font-weight: bold;
-}
-
-
-/* string */
-.ͼ1b{
-    color: #f44336;
-    font-weight: bold;
-}
-/* number */
-.ͼ19 {
-    color: #141413;
-    font-weight: bold;
-}
-/* boolean */
-.ͼ1g {
-    color: #2c1aeb;
-    font-weight: bold;
-}
-"
-            },
+         
 
             new FlexColumn(Border(Solid(1, borderColor)),
                            WidthHeightMaximized,
@@ -258,6 +227,26 @@ class MainWindow : ReactComponent<MainWindowModel>
             };
         }
 
+
+        static Element NewJsonEditor(Expression<Func<string>> valueBind)
+        {
+            return new Editor
+            {
+                defaultLanguage = "json",
+                valueBind       = valueBind,
+                options =
+                {
+                    renderLineHighlight = "none",
+                    fontFamily          = "'IBM Plex Mono Medium', 'Courier New', monospace",
+                    fontSize            = 11,
+                    minimap             = new { enabled = false },
+                    formatOnPaste       = true,
+                    formatOnType        = true,
+                    automaticLayout     = true
+                }
+            };
+        }
+        
         Element ActiveSelectedMethod()
         {
             if (IsInitializingSelectedMethod)
@@ -302,21 +291,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 WidthMaximized,
                                 FlexGrow(1),
 
-                                new Editor
-                                {
-                                    defaultLanguage = "json",
-                                    valueBind       = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties,
-                                    options =
-                                    {
-                                        renderLineHighlight ="none",
-                                        fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
-                                        fontSize            = 11,
-                                        minimap             = new { enabled = false },
-                                        formatOnPaste = true,
-                                        formatOnType = true,
-                                        automaticLayout = true
-                                    }
-                                }
+                                NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
                             }
                         }
                     },
@@ -344,18 +319,8 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 WidthMaximized,
                                 FlexGrow(1),
 
-                                new Editor
-                                {
-                                    defaultLanguage = "json",
-                                    valueBind       = () => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters,
-                                    options =
-                                    {
-                                        renderLineHighlight ="none",
-                                        fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
-                                        fontSize            = 11,
-                                        minimap             = new { enabled = false }
-                                    }
-                                }
+                                NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
+                                
                             }
                         }
                     }
@@ -396,18 +361,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             BorderRadius(5),
                             WidthMaximized,
 
-                            new Editor
-                            {
-                                defaultLanguage = "json",
-                                valueBind       = () => state.ScenarioList[scenarioIndex].ResponseAsJson,
-                                options =
-                                {
-                                    renderLineHighlight ="none",
-                                    fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
-                                    fontSize            = 11,
-                                    minimap             = new { enabled = false }
-                                }
-                            }
+                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
                         }
                     }
                 }
