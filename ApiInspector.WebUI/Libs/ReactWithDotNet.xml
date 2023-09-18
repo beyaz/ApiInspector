@@ -29,6 +29,11 @@
                 a.href = <paramref name="href" />
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.TargetBlank">
+            <summary>
+                a.target = '_blank'
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.nbsp">
             <summary>
                 Creates new non-breaking space
@@ -46,22 +51,73 @@
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumn">
             <summary>
                 display = "flex"
-                <br/>
+                <br />
                 flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumnCentered">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexRow">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexRowCentered">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayInlineFlexColumn">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayInlineFlexColumnCentered">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayInlineFlexRow">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayInlineFlexRowCentered">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Flex(System.Int32,System.Int32,ReactWithDotNet.CssUnit)">
@@ -89,6 +145,11 @@
                 style.background = 'transparent'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundWhite">
+            <summary>
+                style.background = 'white'
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.ClearBoth">
             <summary>
                 style.clear = 'both'
@@ -107,6 +168,11 @@
         <member name="P:ReactWithDotNet.Mixin.ColorWhite">
             <summary>
                 style.color = 'white'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.ColorInherit">
+            <summary>
+                style.color = 'inherit'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DirectionLtr">
@@ -229,6 +295,11 @@
                 overflow = "hidden"
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowAuto">
+            <summary>
+                overflow = "auto"
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.OverflowScroll">
             <summary>
                 overflow = "scroll"
@@ -247,6 +318,31 @@
         <member name="P:ReactWithDotNet.Mixin.OverflowYAuto">
             <summary>
                 overflowY: auto
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowXAuto">
+            <summary>
+                overflowX: auto
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowXVisible">
+            <summary>
+                overflowX: visible
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowYVisible">
+            <summary>
+                overflowY: visible
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowYScroll">
+            <summary>
+                overflowY: scroll
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OverflowXScroll">
+            <summary>
+                overflowX: scroll
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.StretchWidthHeight">
@@ -298,12 +394,20 @@
         </member>
         <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String)">
             <summary>
+            The background-image property sets one or more background images for an element.
+            <br/>
+            By default, a background-image is placed at the top-left corner of an element, and repeated both vertically and horizontally.
+            <br/>
             style.backgroundImage = <paramref name="backgroundImage"/>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Children(System.Collections.Generic.IEnumerable{ReactWithDotNet.Element})">
+        <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String[])">
             <summary>
-                Adds elements to children
+            The background-image property sets one or more background images for an element.
+            <br/>
+            By default, a background-image is placed at the top-left corner of an element, and repeated both vertically and horizontally.
+            <br/>
+            style.backgroundImage = <paramref name="backgroundImages[0][0]"/>, <paramref name="backgroundImages[1][1]"/>, <paramref name="backgroundImages[...][...]"/>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Clear(System.String)">
@@ -494,25 +598,14 @@
                 interaction with an object in a way that is consistent with user expectations of that type of object.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Space(System.String)">
+        <member name="M:ReactWithDotNet.Mixin.SpaceX(System.Double)">
             <summary>
-                <br>if parent is display='flex' and flexDirection = 'row' then create empty div element with style.width = value</br>
-                <br>
-                    if parent is display='flex' and flexDirection = 'column' then create empty div element with style.height =
-                    value
-                </br>
+                Creates new div element wihth given width
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Space(System.Double)">
+        <member name="M:ReactWithDotNet.Mixin.SpaceY(System.Double)">
             <summary>
-                <br>
-                    if parent is display='flex' and flexDirection = 'row' then create empty div element with style.width = value +
-                    'px'
-                </br>
-                <br>
-                    if parent is display='flex' and flexDirection = 'column' then create empty div element with style.height =
-                    value + 'px'
-                </br>
+                Creates new div element wihth given height
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.DangerouslySetInnerHTML(System.String)">
@@ -556,7 +649,17 @@
                 Returns given <paramref name="element" /> when condition is true otherwise returns null
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.When(System.Nullable{System.Boolean},ReactWithDotNet.Element)">
+            <summary>
+                Returns given <paramref name="element" /> when condition is true otherwise returns null
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,System.Func{ReactWithDotNet.Element})">
+            <summary>
+                Calls given <paramref name="elementFunc" /> when condition is true otherwise returns null
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.When(System.Nullable{System.Boolean},System.Func{ReactWithDotNet.Element})">
             <summary>
                 Calls given <paramref name="elementFunc" /> when condition is true otherwise returns null
             </summary>
@@ -1032,6 +1135,11 @@
                 style.visibility = <paramref name="visibility" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.TransformOrigin(System.String)">
+            <summary>
+                style.transformOrigin = <paramref name="value" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.Style)">
             <summary>
                 min-width: 1024px
@@ -1102,9 +1210,38 @@
                 min-width: 768px
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThan(System.Int32,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: <paramref name="widthAsPixel"/> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsLessThan(System.Int32,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: <paramref name="widthAsPixel"/> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeBetween(System.Int32,System.Int32,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                (min-width: <paramref name="minWidthAsPixel"/> + 'px') and (max-width: <paramref name="maxWidthAsPixel"/> + 'px')
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.BorderColor(System.String)">
             <summary>
                 style.borderColor = <paramref name="color" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextIndent(System.String)">
+            <summary>
+            specifies the indentation of the first line in a text-block
+            <br/>
+            style.textIndent = <paramref name="value"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextIndent(System.Double)">
+            <summary>
+            specifies the indentation of the first line in a text-block
+            <br/>
+            style.textIndent = <paramref name="valueInPixel"/> + 'px'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.BorderTopRight(System.String)">
@@ -1164,6 +1301,58 @@
                 Returns a string like <paramref name="widthAsPx" /><b> + px solid + </b> <paramref name="color" />"
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.url(System.String)">
+            <summary>
+            "url(urlValue)
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Outline(System.String)">
+            <summary>
+                style.outline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.OutlineNone">
+            <summary>
+                style.outline = none
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderCollapse(System.String)">
+            <summary>
+            Sets whether table borders should collapse into a single border or be separated as in standard HTML.
+            <br/>
+            style.borderCollapse = <paramref name="value"/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BorderCollapseCollapse">
+            <summary>
+                style.borderCollapse = collapse
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BorderCollapseSeparate">
+            <summary>
+                style.borderCollapse = separate
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CellSpacing(System.Nullable{System.Double})">
+            <summary>
+                table.cellSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CellPadding(System.Nullable{System.Double})">
+            <summary>
+                table.cellPadding = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColSpan(System.Int32)">
+            <summary>
+                (tr-td).colSpan = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.RowSpan(System.Int32)">
+            <summary>
+                (tr-td).rowSpan = <paramref name="value" />
+            </summary>
+        </member>
         <member name="F:ReactWithDotNet.Mixin.percent">
             <summary>
                 50|percent returns like '50%'
@@ -1202,12 +1391,12 @@
                 <paramref name="fromColor" />, <paramref name="toColor" />)'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.rgb(System.Int32,System.Int32,System.Int32)">
+        <member name="M:ReactWithDotNet.Mixin.rgb(System.Double,System.Double,System.Double)">
             <summary>
                 Return new string as 'rgb(<paramref name="red" />, <paramref name="green" />, <paramref name="blue" />)'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.rgba(System.Int32,System.Int32,System.Int32,System.Double)">
+        <member name="M:ReactWithDotNet.Mixin.rgba(System.Double,System.Double,System.Double,System.Double)">
             <summary>
                 Return new string as 'rgb(<paramref name="red" />, <paramref name="green" />, <paramref name="blue" />,
                 <paramref name="alpha" />)'
@@ -1218,10 +1407,72 @@
                 cubic-bezier(<paramref name="x1"/>, <paramref name="y1"/>, <paramref name="x2"/>, <paramref name="y2"/>)
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.ObjectFitFill">
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatInherit">
             <summary>
-                This is default. The image is resized to fill the given dimension. If necessary, the image will be stretched or
-                squished to fit
+                style.backgroundRepeat = inherit
+                <br />
+                Inherits this property from its parent element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatInitial">
+            <summary>
+                style.backgroundRepeat = initial
+                <br />
+                Sets this property to its default value.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatNoRepeat">
+            <summary>
+                style.backgroundRepeat = no-repeat
+                <br />
+                The background-image is not repeated. The image will only be shown once
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatRepeat">
+            <summary>
+                style.backgroundRepeat = repeat
+                <br />
+                The background image is repeated both vertically and horizontally.  The last image will be clipped if it does not
+                fit. This is default
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatRepeatX">
+            <summary>
+                style.backgroundRepeat = repeat-x
+                <br />
+                The background image is repeated only horizontally
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatRepeatY">
+            <summary>
+                style.backgroundRepeat = repeat-y
+                <br />
+                The background image is repeated only vertically
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatRound">
+            <summary>
+                style.backgroundRepeat = round
+                <br />
+                The background-image is repeated and squished or stretched to fill the space (no gaps)
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundRepeatSpace">
+            <summary>
+                style.backgroundRepeat = space
+                <br />
+                The background-image is repeated as much as possible without clipping. The first and last image is pinned to either
+                side of the element, and whitespace is distributed evenly between the images
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundSizeContain">
+            <summary>
+                style.backgroundSize = contain
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundSizeCover">
+            <summary>
+                style.backgroundSize = cover
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.ObjectFitContain">
@@ -1234,6 +1485,12 @@
                 The image keeps its aspect ratio and fills the given dimension. The image will be clipped to fit
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.ObjectFitFill">
+            <summary>
+                This is default. The image is resized to fill the given dimension. If necessary, the image will be stretched or
+                squished to fit
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.ObjectFitNone">
             <summary>
                 The image is not resized
@@ -1244,6 +1501,18 @@
                 the image is scaled down to the smallest version of none or contain
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundRepeat(System.String)">
+            <summary>
+                style.backgroundRepeat = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundSize(System.String)">
+            <summary>
+                The background-size property specifies the size of the background images.
+                <br />
+               There are four different syntaxes you can use with this property: the keyword syntax ("auto", "cover" and "contain"), the one-value syntax (sets the width of the image (height becomes "auto"), the two-value syntax (first value: width of the image, second value: height), and the multiple background syntax (separated with comma).
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.ObjectFit(System.String)">
             <summary>
                 The CSS object-fit property is used to specify how an img or video should be resized to fit its container.
@@ -1252,19 +1521,31 @@
                 "stretch up and take up as much space as possible".
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.BackgroundSize(System.String)">
+        <member name="M:ReactWithDotNet.Mixin.Size(System.Double,System.Double)">
             <summary>
-                style.backgroundSize = <paramref name="value" />
+                style.width = <paramref name="width" /> + 'px'
+                <br/>
+                style.height = <paramref name="height" /> + 'px'
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.BackgroundSizeCover">
+        <member name="M:ReactWithDotNet.Mixin.Fill(System.String)">
             <summary>
-                style.backgroundSize = cover
+                svg.fill = <paramref name="color" />
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.BackgroundSizeContain">
+        <member name="M:ReactWithDotNet.Mixin.ViewBox(System.String)">
             <summary>
-                style.backgroundSize = contain
+                svg.viewBox = <paramref name="viewBox" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ViewBox(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ClipPath(System.String)">
+            <summary>
+                g.clipPath = <paramref name="value" />
             </summary>
         </member>
         <member name="T:ReactWithDotNet.article">
@@ -1777,6 +2058,36 @@
                 Italic text
             </summary>
         </member>
+        <member name="T:ReactWithDotNet.u">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(System.String)">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.op_Implicit(System.String)~ReactWithDotNet.u">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.strong">
             <summary>
                 Important text
@@ -1862,6 +2173,11 @@
                 Gets the enumerator.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ElementCollection.Add(System.Func{ReactWithDotNet.Element})">
+            <summary>
+                Invokes <paramref name="elementCreatorFunc" /> then adds return value to list.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Extensions.RemoveFromEnd(System.String,System.String)">
             <summary>
                 Removes value from end of str
@@ -1884,89 +2200,218 @@
         </member>
         <member name="T:ReactWithDotNet.FlexRow">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexRow.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexRow.#ctor">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.InlineFlexRow">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexRow.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexRow.#ctor">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
             </summary>
         </member>
         <member name="T:ReactWithDotNet.FlexColumn">
             <summary>
                 display = "flex"
-                <br/>
+                <br />
                 flexDirection  = "column"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexColumn.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 display = "flex"
-                <br/>
+                <br />
                 flexDirection  = "column"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexColumn.#ctor">
             <summary>
                 display = "flex"
-                <br/>
+                <br />
                 flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.InlineFlexColumn">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexColumn.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexColumn.#ctor">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "inline-column"
             </summary>
         </member>
         <member name="T:ReactWithDotNet.FlexRowCentered">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexRowCentered.#ctor">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexRowCentered.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "row"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.InlineFlexRowCentered">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexRowCentered.#ctor">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexRowCentered.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="T:ReactWithDotNet.FlexColumnCentered">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "column"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "column"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
-                <br>display = "flex"</br>
-                <br>flexDirection  = "column"</br>
-                <br>justifyContent = "center"</br>
-                <br>alignItems     = "center"</br>
+                display = "flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.InlineFlexColumnCentered">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexColumnCentered.#ctor">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexColumnCentered.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.accesskey">
@@ -2017,6 +2462,11 @@
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.onClick">
+            <summary>
+                Gets or sets the on click.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.onClickPreview">
             <summary>
                 Gets or sets the on click.
             </summary>
@@ -2235,6 +2685,11 @@
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.g.ClipPath(System.String)">
+            <summary>
+                g.clipPath = <paramref name="value" />
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.rect.rx">
             <summary>
             The horizontal corner radius of the rect
@@ -2262,6 +2717,268 @@
         <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">
             <summary>
                 this is the id of first element id which is 'has id value'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.table.CellSpacing(System.Nullable{System.Double})">
+            <summary>
+                table.cellSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact.Editor.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact.Editor.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact.Editor.options">
+            <summary>
+            https://microsoft.github.io/monaco-editor/typedoc/variables/editor.EditorOptions.html
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.clearIcon">
+            <summary>
+                Props applied to the [`Chip`](/material-ui/api/chip/) element.
+            </summary>
+            <summary>
+                The icon to display in place of the default clear icon.
+                <br/>
+                @default &lt;ClearIcon fontSize="small" /&gt;
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.clearText">
+            <summary>
+                Override the default text for the *clear* icon button.
+                <br/>
+                <br/>
+                <br/>
+                For localization purposes, you can use the provided [translations](/material-ui/guides/localization/).
+                <br/>
+                @default 'Clear'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.closeText">
+            <summary>
+                Override the default text for the *close popup* icon button.
+                <br/>
+                <br/>
+                <br/>
+                For localization purposes, you can use the provided [translations](/material-ui/guides/localization/).
+                <br/>
+                @default 'Close'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.componentsProps">
+            <summary>
+                The props used for each slot inside.
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.disablePortal">
+            <summary>
+                If `true`, the `Popper` content will be under the DOM hierarchy of the parent component.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.forcePopupIcon">
+            <summary>
+                Force the visibility display of the popup icon.
+                <br/>
+                @default 'auto'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.fullWidth">
+            <summary>
+                If `true`, the input will take up the full width of its container.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.getLimitTagsText">
+            <summary>
+                The label to display when the tags are truncated (`limitTags`).
+                <br/>
+                <br/>
+                <br/>
+                @param {number} more The number of truncated tags.
+                <br/>
+                @returns {ReactNode}
+                <br/>
+                @default (more) =&gt; `+${more}`
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.loading">
+            <summary>
+                The component used to render the listbox.
+                <br/>
+                @default 'ul'
+            </summary>
+            <summary>
+                Props applied to the Listbox element.
+            </summary>
+            <summary>
+                If `true`, the component is in a loading state.
+                <br/>
+                This shows the `loadingText` in place of suggestions (only if there are no suggestions to show, e.g. `options` are empty).
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.loadingText">
+            <summary>
+                Text to display when in a loading state.
+                <br/>
+                <br/>
+                <br/>
+                For localization purposes, you can use the provided [translations](/material-ui/guides/localization/).
+                <br/>
+                @default 'Loading…'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.limitTags">
+            <summary>
+                The maximum number of tags that will be visible when not focused.
+                <br/>
+                Set `-1` to disable the limit.
+                <br/>
+                @default -1
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.noOptionsText">
+            <summary>
+                Text to display when there are no options.
+                <br/>
+                <br/>
+                <br/>
+                For localization purposes, you can use the provided [translations](/material-ui/guides/localization/).
+                <br/>
+                @default 'No options'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.openText">
+            <summary>
+                Override the default text for the *open popup* icon button.
+                <br/>
+                <br/>
+                <br/>
+                For localization purposes, you can use the provided [translations](/material-ui/guides/localization/).
+                <br/>
+                @default 'Open'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.popupIcon">
+            <summary>
+                The component used to render the body of the popup.
+                <br/>
+                @default Paper
+            </summary>
+            <summary>
+                The component used to position the popup.
+                <br/>
+                @default Popper
+            </summary>
+            <summary>
+                The icon to display in place of the default popup icon.
+                <br/>
+                @default &lt;ArrowDropDownIcon /&gt;
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.readOnly">
+            <summary>
+                If `true`, the component becomes readonly. It is also supported for multiple tags where the tag cannot be deleted.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.renderGroup">
+            <summary>
+                Render the group.
+                <br/>
+                <br/>
+                <br/>
+                @param {AutocompleteRenderGroupParams} params The group to render.
+                <br/>
+                @returns {ReactNode}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.renderInput">
+            <summary>
+                Render the input.
+                <br/>
+                <br/>
+                <br/>
+                @param {object} params
+                <br/>
+                @returns {ReactNode}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.renderOption">
+            <summary>
+                Render the option, use `getOptionLabel` by default.
+                <br/>
+                <br/>
+                <br/>
+                @param {object} props The props to apply on the li element.
+                <br/>
+                @param {T} option The option to render.
+                <br/>
+                @param {object} state The state of each option.
+                <br/>
+                @param {object} ownerState The state of the Autocomplete component.
+                <br/>
+                @returns {ReactNode}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.renderTags">
+            <summary>
+                Render the selected value.
+                <br/>
+                <br/>
+                <br/>
+                @param {T[]} value The `value` provided to the component.
+                <br/>
+                @param {function} getTagProps A tag props getter.
+                <br/>
+                @param {object} ownerState The state of the Autocomplete component.
+                <br/>
+                @returns {ReactNode}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.size">
+            <summary>
+                The size of the component.
+                <br/>
+                @default 'medium'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.slotProps">
+            <summary>
+                The props used for each slot inside.
+                <br/>
+                @default {}
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.ButtonBase.centerRipple">
@@ -2397,6 +3114,62 @@
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CardMedia.sx">
             <summary>
                 The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CircularProgress.color">
+            <summary>
+                The color of the component.
+                <br/>
+                It supports both default and custom theme colors, which can be added as shown in the
+                <br/>
+                [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
+                <br/>
+                @default 'primary'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CircularProgress.disableShrink">
+            <summary>
+                If `true`, the shrink animation is disabled.
+                <br/>
+                This only works if variant is `indeterminate`.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CircularProgress.size">
+            <summary>
+                The size of the component.
+                <br/>
+                If using a number, the pixel unit is assumed.
+                <br/>
+                If using a string, you need to provide the CSS unit, e.g '3rem'.
+                <br/>
+                @default 40
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CircularProgress.thickness">
+            <summary>
+                The thickness of the circle.
+                <br/>
+                @default 3.6
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CircularProgress.value">
+            <summary>
+                The value of the progress indicator for the determinate variant.
+                <br/>
+                Value between 0 and 100.
+                <br/>
+                @default 0
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.CircularProgress.variant">
+            <summary>
+                The variant to use.
+                <br/>
+                Use indeterminate when there is no progress value.
+                <br/>
+                @default 'indeterminate'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Divider.absolute">
@@ -2725,6 +3498,37 @@
                 The variant to use.
                 <br/>
                 @default 'elevation'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Slider.onChangeCommitted">
+            <summary>
+            Callback function that is fired when the mouseup is triggered.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Slider.onChange">
+            <summary>
+            Callback function that is fired when the slider's value changed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Slider.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Slider.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Slider.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.SwitchBase.checked">
@@ -3879,6 +4683,128 @@
             An array of keys to represent the state of the tree expansion state in controlled mode.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.url">
+            <summary>
+            The url of a video or song to play
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.playing">
+            <summary>
+            Set to true or false to pause or play the media.
+            <br/>
+            Default: false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.controls">
+            <summary>
+            Set to true or false to display native player controls.
+            <br/>
+            For Vimeo videos, hiding controls must be enabled by the video owner.
+            <br/>
+            Default: false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.playsinline">
+            <summary>
+            Applies the playsinline attribute where supported
+            <br/>
+            Default: false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.light">
+            <summary>
+            Set to true to show just the video thumbnail, which loads the full player on click
+            <br/>
+             Pass in an image URL to override the preview image
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.volume">
+            <summary>
+            Set the volume of the player, between 0 and 1
+            <br/>
+             null uses default volume on all players
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.muted">
+            <summary>
+            Mutes the player
+            <br/>
+             Only works if volume is set
+            <br/>
+             Default: False
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.playbackRate">
+            <summary>
+            Set the playback rate of the player
+            <br/>
+             Only supported by YouTube, Wistia, and file paths
+            <br/>
+             Default: 1
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.width">
+            <summary>
+            Set the width of the player
+            <br/>
+             Default: 640px
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.height">
+            <summary>
+            Set the height of the player
+            <br/>
+             Default: 360px
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.pip">
+            <summary>
+            Set to true or false to enable or disable picture-in-picture mode
+            <br/>
+              Only available when playing file URLs in certain browsers
+            <br/>
+             Default: false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.stopOnUnmount">
+            <summary>
+            If you are using pip you may want to use stopOnUnmount={false} to continue playing in picture-in-picture mode even after ReactPlayer unmounts
+            <br/>
+             Default: true
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.config">
+            <summary>
+            Override options for the various players, see config prop
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.onReady">
+            <summary>
+            Called when media is loaded and ready to play. If playing is set to true, media will play immediately
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.onStart">
+            <summary>
+            Called when media starts playing
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.onPlay">
+            <summary>
+            Called when media starts or resumes playing after pausing or buffering
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.onPause">
+            <summary>
+            Called when media is paused
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.React_Player.ReactPlayer.onEnded">
+            <summary>
+            Called when media finishes playing
+            <br/>
+            Does not fire when loop is set to true
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactAwesomeReveal.RevealBase.reverse">
             <summary>
                 Specifies if the animation should make element(s) disappear.<br />
@@ -4032,6 +4958,66 @@
             This timeout adds a throttle for onScrollbarScroll. Default is 300. Set to 0 to remove throttle.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.highlight">
+            <summary>
+                Callback which will receive text to highlight. You'll need to return an HTML string or a React element with syntax
+                highlighting using a library such as prismjs.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.ignoreTabKey">
+            <summary>
+                Whether the editor should ignore tab key presses so that keyboard users can tab past the editor. Users can toggle
+                this behaviour using Ctrl+Shift+M (Mac) / Ctrl+M manually when this is false. Default: false.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.insertSpaces">
+            <summary>
+                Whether to use spaces for indentation. Default: true. If you set it to false, you might also want to set tabSize to
+                1.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.padding">
+            <summary>
+                Optional padding for code. Default: 0.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.preClassName">
+            <summary>
+                A className for the underlying pre, can be useful for more precise control of its styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.tabSize">
+            <summary>
+                The number of characters to insert when pressing tab key. For example, for 4 space indentation, tabSize will be 4
+                and insertSpaces will be true. Default: 2.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.textareaClassName">
+            <summary>
+                A className for the underlying textarea, can be useful for more precise control of its styles.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.textareaId">
+            <summary>
+                An ID for the underlying textarea, can be useful for setting a label.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSimpleCodeEditor.Editor.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.start">
             <summary>
                 required
@@ -4113,6 +5099,44 @@
             component.valueBind = ()=>state.UserInfo.Name<br/>
             component.valueBindDebounceTimeout = 600 // milliseconds<br/>
             component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.UIW.ReactTextareaCodeEditor.CodeEditor.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.UIW.ReactTextareaCodeEditor.CodeEditor.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries._Swiper_.Swiper.breakpoints">
+            <summary>
+            Sample: <br/>
+            // when window width is &gt;= 320px <br/>
+            320: { <br/>
+             slidesPerView: 2, <br/>
+             spaceBetween: 20 <br/>
+            },
+            <br/>
+            <br/>
+            // when window width is &gt;= 480px <br/>
+            480: { <br/>
+              slidesPerView: 3, <br/>
+              spaceBetween: 30 <br/>
+            }<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyReactComponent.className">
+            <summary>
+                Gets or sets the name of the class.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyReactComponent.style">

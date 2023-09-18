@@ -13,8 +13,23 @@ static class ReactWithDotNetIntegration
     {
         endpoints.MapGet("/", HomePage);
         endpoints.MapPost("/" + nameof(HandleReactWithDotNetRequest), HandleReactWithDotNetRequest);
-        endpoints.MapGet("/" + nameof(ReactWithDotNetDesigner), ReactWithDotNetDesigner);
-        endpoints.MapGet("/" + nameof(ReactWithDotNetDesignerComponentPreview), ReactWithDotNetDesignerComponentPreview);
+        
+        
+#if DEBUG // this two endpoints should use only development mode
+
+        endpoints.MapGet("/" + nameof(ReactWithDotNetDesigner), async httpContext =>
+        {
+            ReactWithDotNetDesigner.IsAttached = true;
+
+            await WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(ReactWithDotNetDesigner));
+        });
+        endpoints.MapGet("/" + nameof(ReactWithDotNetDesignerComponentPreview), async httpContext =>
+        {
+            ReactWithDotNetDesigner.IsAttached = true;
+
+            await WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(ReactWithDotNetDesignerComponentPreview));
+        });
+#endif
     }
 
     static async Task HandleReactWithDotNetRequest(HttpContext httpContext)
@@ -23,7 +38,7 @@ static class ReactWithDotNetIntegration
 
         var jsonText = await CalculateRenderInfo(new CalculateRenderInfoInput
         {
-            HttpContext = httpContext
+            HttpContext           = httpContext
         });
 
         await httpContext.Response.WriteAsync(jsonText);
@@ -31,30 +46,12 @@ static class ReactWithDotNetIntegration
 
     static async Task HomePage(HttpContext httpContext)
     {
-        await WriteHtmlResponse(httpContext, new MainLayout
-        {
-            Page        = new MainWindow(),
-            QueryString = httpContext.Request.QueryString.ToString()
-        });
+        await WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(MainWindow) );
     }
 
-    static async Task ReactWithDotNetDesigner(HttpContext httpContext)
-    {
-        await WriteHtmlResponse(httpContext, new MainLayout
-        {
-            Page = new ReactWithDotNetDesigner()
-        });
-    }
+ 
 
-    static async Task ReactWithDotNetDesignerComponentPreview(HttpContext httpContext)
-    {
-        await WriteHtmlResponse(httpContext, new MainLayout
-        {
-            Page = new ReactWithDotNetDesignerComponentPreview()
-        });
-    }
-
-    static async Task WriteHtmlResponse(HttpContext httpContext, MainLayout mainLayout)
+    static async Task WriteHtmlResponse(HttpContext httpContext, Type layoutType, Type mainContentType)
     {
         httpContext.Response.ContentType = "text/html; charset=UTF-8";
 
@@ -62,12 +59,12 @@ static class ReactWithDotNetIntegration
         httpContext.Response.Headers[HeaderNames.Expires] = "0";
         httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
 
-        mainLayout.RenderInfo = await CalculateRenderInfo(mainLayout.Page, mainLayout.QueryString);
-        
-        var html = await CalculateHtmlText(new CalculateHtmlTextInput
+        var html = await CalculateFirstRender(new CalculateFirstRenderInput
         {
-            ReactComponent = mainLayout,
-            QueryString = httpContext.Request.QueryString.ToString()
+            LayoutType            = layoutType,
+            MainContentType       = mainContentType,
+            HttpContext           = httpContext,
+            QueryString           = httpContext.Request.QueryString.ToString(),
         });
 
         await httpContext.Response.WriteAsync(html);

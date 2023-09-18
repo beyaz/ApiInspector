@@ -1,12 +1,10 @@
 ﻿namespace ApiInspector.WebUI;
 
-class MainLayout : ReactComponent
+class MainLayout : ReactComponent, IPageLayout
 {
-    public Element Page { get; set; }
+    public ComponentRenderInfo RenderInfo { get; set; }
     
-    public string QueryString { get; set; }
-    
-    public string RenderInfo { get; set; }
+    public string ContainerDomElementId => "app";
 
     protected override Element render()
     {
@@ -44,10 +42,7 @@ class MainLayout : ReactComponent
             },
             new body
             {
-                new div(Id("app"), WidthMaximized,Height100vh)
-                {
-                    Page
-                },
+                new div(Id(ContainerDomElementId), WidthHeightMaximized),
 
                 // After page first rendered in client then connect with react system in background.
                 // So user first iteraction time will be minimize.
@@ -57,14 +52,15 @@ class MainLayout : ReactComponent
                 new script
                 {
                     type = "module",
-                    text =
+                    text = 
                         $@"
 
 import {{ReactWithDotNet}} from './{root}/dist/index.js';
 
+ReactWithDotNet.StrictMode = false;
 ReactWithDotNet.RenderComponentIn({{
-  idOfContainerHtmlElement: 'app',
-  renderInfo: {RenderInfo}
+  idOfContainerHtmlElement: '{ContainerDomElementId}',
+  renderInfo: {RenderInfo.ToJsonString()}
 }});
 
 "

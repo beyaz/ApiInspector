@@ -271,7 +271,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             {
                 new Splitter
                 {
-                    Splitter.Modify(x => x.gutterSize = 8),
+                    x => x.gutterSize = 8,
                     ComponentBoxShadow,
                     MarginTop(5),
                     BorderRadius(5),

@@ -1,45 +1,70 @@
 
-import React from 'react';
-
 import ReactWithDotNet from "../../react-with-dotnet";
 
-// import Swiper core and required modules
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper } from 'swiper/react';
-import SwiperCore, { Autoplay, EffectFade } from 'swiper';
+
+// import Swiper core and required modules
+import {
+    Navigation,
+    Pagination,
+    Scrollbar,
+    A11y,
+    Thumbs,
+    FreeMode,
+    Autoplay,
+    EffectFade,
+    EffectCube,
+    EffectFlip,
+    EffectCards,
+    EffectCreative
+} from 'swiper/modules';
+
+
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import 'swiper/css/effect-fade';
+import 'swiper/css/free-mode';
+import 'swiper/css/thumbs';
+import 'swiper/css/effect-cube';
+import 'swiper/css/effect-flip';
+import 'swiper/css/effect-cards';
+import 'swiper/css/effect-creative';
 
-
-SwiperCore.use([Autoplay, EffectFade]);
+const ModuleMap = [
+    ['Navigation', Navigation],
+    ['Pagination', Pagination],
+    ['Scrollbar', Scrollbar],
+    ['A11y', A11y],
+    ['Thumbs', Thumbs],
+    ['FreeMode', FreeMode],    
+    ['Autoplay', Autoplay],
+    ['EffectFade', EffectFade],
+    ['EffectCube', EffectCube],
+    ['EffectFlip', EffectFlip],
+    ['EffectCards', EffectCards],
+    ['EffectCreative', EffectCreative]
+];
 
 function ToSwiperModule(moduleName)
 {
-    if (moduleName === 'Navigation' || moduleName === Navigation)
+    for (var i = 0; i < ModuleMap.length; i++)
     {
-        return Navigation;
+        const arr = ModuleMap[i];
+
+        for (var j = 0; j < arr.length; j++)
+        {
+            if (moduleName === arr[j])
+            {
+                return arr[1];
+            }
+        }
     }
 
-    if (moduleName === 'Pagination' || moduleName === Pagination)
-    {
-        return Pagination;
-    }
-
-    if (moduleName === 'Scrollbar' || moduleName === Scrollbar)
-    {
-        return Scrollbar;
-    }
-
-    if (moduleName === 'A11y' || moduleName === A11y)
-    {
-        return A11y;
-    }
-
-    throw 'ReactWithDownet: Swiper module not recognized. Please customize here [integration->swiper.jsx]';
+    throw 'ToSwiperModule -> invalidArgument: ' + moduleName;
 }
 
 function ConvertToSwiperModules(moduleNames)
@@ -55,49 +80,39 @@ function ConvertToSwiperModules(moduleNames)
     return moduleNames;
 }
 
-const SwiperForwarded = React.forwardRef((props, ref) => (
+/**
+ * @param {string} dotNetFullClassNameOf3rdPartyComponent
+ */
+ReactWithDotNet.OnThirdPartyComponentPropsCalculated('ReactWithDotNet.ThirdPartyLibraries._Swiper_.Swiper', (props, callerComponent) =>
+{
+    if (props.modules)
+    {
+        ConvertToSwiperModules(props.modules);
+    }
 
-    <Swiper ref={ref}
-        autoplay={props.autoplay}
-        effect={props.effect}
-        grabCursor={props.grabCursor}
-        init={props.init}
-        loop={props.loop}
-        //loopAdditionalSlides={props.loopAdditionalSlides}
-        onSlideChangeTransitionStart={props.onSlideChangeTransitionStart}
-        onSlideChange={props.onSlideChange}
-        slideChangeTransitionEnd={props.slideChangeTransitionEnd}
-        pagination={props.pagination}
-        scrollbar={props.scrollbar}
-        slidesPerView={props.slidesPerView}
-        spaceBetween={props.spaceBetween}
-        speed={props.speed}
-        centeredSlides={props.centeredSlides}
-        fadeEffect={props.fadeEffect}
-        navigation={props.navigation}
-        modules={ConvertToSwiperModules(props.modules)} >
-       {props.children}
-    </Swiper>
+    if (props.onSwiper == null && props.name != null)
+    {
+        const name = props.name;
 
-));
+        props.onSwiper = function (swiperInstance)
+        {
+            const partialState = {};
+            partialState[name] = swiperInstance;
 
-export default SwiperForwarded
+            callerComponent.setState(partialState);          
+        };
+    }
 
+    if (props.thumbs)
+    {
+        var swiperInstanceName = props.thumbs.swiperInstanceName;
+        if (swiperInstanceName != null)
+        {
+            props.thumbs.swiper = callerComponent.state[swiperInstanceName];
+        }
+    }
 
+    return props;
+});
 
-
-
-
-
-
-
-
-// -------------------------------
-
-
-
-
-
-
-
-ReactWithDotNet.RegisterExternalJsObject('ReactWithDotNet.ThirdPartyLibraries._Swiper_::ConvertToSwiperModules', );
+export default Swiper;
