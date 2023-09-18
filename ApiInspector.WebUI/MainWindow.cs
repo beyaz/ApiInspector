@@ -6,7 +6,6 @@ using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
-
 using static System.Environment;
 
 namespace ApiInspector.WebUI;
@@ -78,8 +77,6 @@ class MainWindow : ReactComponent<MainWindowModel>
                 },
                 style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
             }),
-
-         
 
             new FlexColumn(Border(Solid(1, borderColor)),
                            WidthHeightMaximized,
@@ -227,7 +224,6 @@ class MainWindow : ReactComponent<MainWindowModel>
             };
         }
 
-
         static Element NewJsonEditor(Expression<Func<string>> valueBind)
         {
             return new Editor
@@ -246,7 +242,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 }
             };
         }
-        
+
         Element ActiveSelectedMethod()
         {
             if (IsInitializingSelectedMethod)
@@ -320,7 +316,6 @@ class MainWindow : ReactComponent<MainWindowModel>
                                 FlexGrow(1),
 
                                 NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
-                                
                             }
                         }
                     }
@@ -612,21 +607,31 @@ class MainWindow : ReactComponent<MainWindowModel>
         public string AssemblyFileFullPath { get; set; }
         public string Text { get; set; }
     }
+
     class EnvironmentInfoView : ReactComponent<EnvironmentInfoState>
     {
         public string AssemblyFileFullPath { get; set; }
-        
-        
 
         protected override Task constructor()
         {
             state = new EnvironmentInfoState();
-            
+
             OnAssemblyChanged(AssemblyFileFullPath);
 
             Client.OnAssemblyChanged(OnAssemblyChanged);
 
             return base.constructor();
+        }
+
+        protected override Task OverrideStateFromPropsBeforeRender()
+        {
+            if (state.AssemblyFileFullPath != AssemblyFileFullPath)
+            {
+                state.AssemblyFileFullPath = AssemblyFileFullPath;
+                state.Text                 = Flow(AssemblyFileFullPath, External.GetEnvironment, str => str);
+            }
+
+            return base.OverrideStateFromPropsBeforeRender();
         }
 
         protected override Element render()
@@ -636,18 +641,6 @@ class MainWindow : ReactComponent<MainWindowModel>
                 state.Text
             };
         }
-
-        protected override Task OverrideStateFromPropsBeforeRender()
-        {
-            if (state.AssemblyFileFullPath != AssemblyFileFullPath)
-            {
-                state.AssemblyFileFullPath = AssemblyFileFullPath;
-                state.Text = Flow(AssemblyFileFullPath, External.GetEnvironment, str => str);
-            }
-
-            return base.OverrideStateFromPropsBeforeRender();
-        }
-
 
         void OnAssemblyChanged(string assemblyFileFullPath)
         {
