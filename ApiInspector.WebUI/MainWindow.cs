@@ -1,7 +1,9 @@
 ﻿using System.Collections.Immutable;
 using System.IO;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ApiInspector.WebUI.Components;
+using Microsoft.VisualBasic;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
@@ -309,7 +311,10 @@ class MainWindow : ReactComponent<MainWindowModel>
                                         renderLineHighlight ="none",
                                         fontFamily          ="'IBM Plex Mono Medium', 'Courier New', monospace",
                                         fontSize            = 11,
-                                        minimap             = new { enabled = false }
+                                        minimap             = new { enabled = false },
+                                        formatOnPaste = true,
+                                        formatOnType = true,
+                                        automaticLayout = true
                                     }
                                 }
                             }
