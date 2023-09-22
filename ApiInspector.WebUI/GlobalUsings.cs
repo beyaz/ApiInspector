@@ -4,4 +4,4 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using static ReactWithDotNet.Mixin;
 global using static ApiInspector.WebUI.Extensions;
-global using static ApiInspector.WebUI.FileStorage;
+global using static ApiInspector.WebUI.Storage;
