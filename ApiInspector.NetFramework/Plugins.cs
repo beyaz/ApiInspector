@@ -91,27 +91,8 @@ static class Plugins
     {
         foreach (var plugin in ListOfPlugins)
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(GetEnvironment), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var environmentInfo = (string)methodInfo.Invoke(null, new object[] { assemblyFileName });
-            if (environmentInfo != null)
+            var (isInvoked, environmentInfo) = TryInvokeStaticMethodFromPlugin<string>(plugin, nameof(GetEnvironment), assemblyFileName);
+            if (isInvoked && environmentInfo != null)
             {
                 return environmentInfo;
             }
