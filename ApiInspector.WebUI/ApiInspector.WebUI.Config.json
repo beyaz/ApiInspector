@@ -5,14 +5,18 @@
   "NextAvailablePortFrom": 5005,
   "UseUrls": true,
 
+  "fileStorage": {
+    "isActive": true,
+    "cacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache >"
+  },
+
   "DbStorage": {
-    "UseDbConnectionForSavingHistory": "--",
-    "SqlSearchInHistory": "SELECT TOP 5 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE (@userName ISNULL OR UserName = @userName) AND (@filter ISNULL OR [Key] LIKE '%' + @filter + '%') AND (@filter ISNULL OR [Value] LIKE '%' + @filter + '%')  ORDER BY LastExecutionTime DESC",
-    "SqlDeleteFromHistory": "DELETE FROM DBT.ApiInspectorWhiteStone WHERE UserName = @userName AND (@filter ISNULL OR [Key] LIKE '%' + @filter + '%') AND (@filter ISNULL OR [Value] LIKE '%' + @filter + '%')  ORDER BY LastExecutionTime DESC",
-    "SqlReadFromHistory": "SELECT TOP 1 * FROM DBT.ApiInspectorWhiteStone WHERE StorageKey = @storageKey",
-    "SqlExistsInHistory": "SELECT TOP 1 * FROM DBT.ApiInspectorWhiteStone WITH (NOLOCK) WHERE StorageKey = @storageKey",
-    "SaveToStorage": "INSERT INTO DBT.ApiInspectorWhiteStone  WHERE @storageKey, @storageValue"
-
+    "IsActive": false,
+    "ConnectionString": null,
+    "DeleteFromStorage": "DELETE FROM Table WHERE Column = @storageKey",
+    "ExistInStorage": "SELECT TOP 1 1 FROM Table WITH (NOLOCK) WHERE Column = @storageKey",
+    "ReadFromStorage": "SELECT TOP 1 Column FROM Table WHERE Column = @storageKey",
+    "SaveToStorage": "INSERT INTO Table  WHERE @storageKey, @storageValue",
+    "SearchInStoreage": "SELECT TOP 5 StorageKey, StorageValue FROM Table WITH (NOLOCK) WHERE (@filter ISNULL OR [Key] LIKE '%' + @filter + '%') AND (@filter ISNULL OR [Value] LIKE '%' + @filter + '%')  ORDER BY LastExecutionTime DESC"
   }
-
 }

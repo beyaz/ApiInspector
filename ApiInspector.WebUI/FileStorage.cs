@@ -2,7 +2,7 @@
 
 namespace ApiInspector.WebUI;
 
-static class FileStore
+static class FileStorage
 {
     static readonly string CacheDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), nameof(ApiInspector)) +
                                                 Path.DirectorySeparatorChar +
