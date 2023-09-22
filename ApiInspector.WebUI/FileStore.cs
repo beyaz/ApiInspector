@@ -14,11 +14,6 @@ static class FileStore
         return File.Exists(ToFilePath(storageKey));
     }
 
-    static string ToFilePath(string storageKey)
-    {
-        return Path.Combine(CacheDirectoryPath, storageKey);
-    }
-
     public static string ReadFromStorage(string storageKey)
     {
         return File.ReadAllText(ToFilePath(storageKey));
@@ -55,6 +50,11 @@ static class FileStore
                 }
             }
         }
+    }
+
+    static string ToFilePath(string storageKey)
+    {
+        return Path.Combine(CacheDirectoryPath, storageKey);
     }
 
     static void WriteAllText(string path, string contents)
