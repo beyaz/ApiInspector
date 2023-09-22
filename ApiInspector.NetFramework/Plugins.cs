@@ -70,49 +70,54 @@ static class Plugins
         return (isProcessed: false, null, null);
     }
 
-    static (bool isInvoked, TMethodOutput output) TryInvokeStaticMethodFromPlugin<TMethodOutput>(PluginInfo plugin, string methodName, object[] methodArguments)
-    {
-        if (!File.Exists(plugin.FullFilePathOfAssembly))
-        {
-            return default;
-        }
-
-        var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-        var helperType = assembly.GetType(plugin.FullClassName);
-        if (helperType is null)
-        {
-            return default;
-        }
-
-        var methodInfo = helperType.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-        if (methodInfo is null)
-        {
-            return default;
-        }
-
-        return (isInvoked: true, (TMethodOutput)methodInfo.Invoke(null, methodArguments));
-    }
-    
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
         foreach (var plugin in ListOfPlugins)
         {
-            var (isInvoked, response) =  TryInvokeStaticMethodFromPlugin<(bool isSuccessfullyCreated, object instance)>(plugin,nameof(GetDefaultValueForJson),new object[]
+            var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(bool isSuccessfullyCreated, object instance)>(plugin, nameof(GetDefaultValueForJson), new object[]
             {
                 type
             });
-            if (!isInvoked)
-            {
-                continue;
-            }
-            if (response.isSuccessfullyCreated)
+            if (isInvoked && response.isSuccessfullyCreated)
             {
                 return response;
             }
         }
 
         return (false, null);
+    }
+
+    public static string GetEnvironment(string assemblyFileName)
+    {
+        foreach (var plugin in ListOfPlugins)
+        {
+            if (!File.Exists(plugin.FullFilePathOfAssembly))
+            {
+                continue;
+            }
+
+            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
+
+            var helperType = assembly.GetType(plugin.FullClassName);
+            if (helperType is null)
+            {
+                continue;
+            }
+
+            var methodInfo = helperType.GetMethod(nameof(GetEnvironment), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo is null)
+            {
+                continue;
+            }
+
+            var environmentInfo = (string)methodInfo.Invoke(null, new object[] { assemblyFileName });
+            if (environmentInfo != null)
+            {
+                return environmentInfo;
+            }
+        }
+
+        return null;
     }
 
     public static (Exception exception, bool isInvoked, object invocationOutput) InvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters)
@@ -190,27 +195,8 @@ static class Plugins
     {
         foreach (var plugin in ListOfPlugins)
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(TryFindFullFilePathOfAssembly), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var fullFilePathOfAssembly = (string)methodInfo.Invoke(null, new object[] { assemblyFileName });
-            if (fullFilePathOfAssembly != null)
+            var (isInvoked,fullFilePathOfAssembly) = TryInvokeStaticMethodFromPlugin<string>(plugin, nameof(TryFindFullFilePathOfAssembly), assemblyFileName);
+            if (isInvoked && fullFilePathOfAssembly != null)
             {
                 return fullFilePathOfAssembly;
             }
@@ -219,38 +205,30 @@ static class Plugins
         return null;
     }
 
-    public static string GetEnvironment(string assemblyFileName)
+    static (bool isInvoked, TMethodOutput output) TryInvokeStaticMethodFromPlugin<TMethodOutput>(PluginInfo plugin, string methodName,params object[] methodArguments)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (!File.Exists(plugin.FullFilePathOfAssembly))
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(GetEnvironment), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var environmentInfo = (string)methodInfo.Invoke(null, new object[] { assemblyFileName });
-            if (environmentInfo != null)
-            {
-                return environmentInfo;
-            }
+            return default;
         }
 
-        return null;
+        var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
+
+        var helperType = assembly.GetType(plugin.FullClassName);
+        if (helperType is null)
+        {
+            return default;
+        }
+
+        var methodInfo = helperType.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        if (methodInfo is null)
+        {
+            return default;
+        }
+
+        return (isInvoked: true, (TMethodOutput)methodInfo.Invoke(null, methodArguments));
     }
+
     sealed class PluginInfo
     {
         public string FullClassName { get; set; }
