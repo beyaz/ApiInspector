@@ -70,33 +70,42 @@ static class Plugins
         return (isProcessed: false, null, null);
     }
 
+    static (bool isInvoked, TMethodOutput output) TryInvokeStaticMethodFromPlugin<TMethodOutput>(PluginInfo plugin, string methodName, object[] methodArguments)
+    {
+        if (!File.Exists(plugin.FullFilePathOfAssembly))
+        {
+            return default;
+        }
+
+        var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
+
+        var helperType = assembly.GetType(plugin.FullClassName);
+        if (helperType is null)
+        {
+            return default;
+        }
+
+        var methodInfo = helperType.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        if (methodInfo is null)
+        {
+            return default;
+        }
+
+        return (isInvoked: true, (TMethodOutput)methodInfo.Invoke(null, methodArguments));
+    }
+    
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
         foreach (var plugin in ListOfPlugins)
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(GetDefaultValueForJson), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var response = ((bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[]
+            var (isInvoked, response) =  TryInvokeStaticMethodFromPlugin<(bool isSuccessfullyCreated, object instance)>(plugin,nameof(GetDefaultValueForJson),new object[]
             {
                 type
             });
+            if (!isInvoked)
+            {
+                continue;
+            }
             if (response.isSuccessfullyCreated)
             {
                 return response;
