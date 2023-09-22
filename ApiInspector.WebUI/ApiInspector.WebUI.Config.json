@@ -1,7 +1,8 @@
 ﻿{
-    "BrowserExePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
-    "BrowserExeArguments": "--app=https://localhost:{Port}/",
-    "HideConsoleWindow": true,
-    "NextAvailablePortFrom": 5005,
-    "UseUrls": true
+  "BrowserExePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "BrowserExeArguments": "--app=https://localhost:{Port}/",
+  "HideConsoleWindow": true,
+  "NextAvailablePortFrom": 5005,
+  "UseUrls": true
+
 }
