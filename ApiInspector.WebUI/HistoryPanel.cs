@@ -13,7 +13,7 @@ class HistoryPanel : ReactComponent
 
     protected override Element render()
     {
-        var searchResult = Search(FilterText).Take(5).ToList();
+        var searchResult = SearchInStoreage(FilterText, 5).Select(x => (file: x.filePath, JsonConvert.DeserializeObject<MainWindowModel>(x.fileContent).SelectedMethod));
 
         return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(15), Height("50vh"))
         {
@@ -60,18 +60,6 @@ class HistoryPanel : ReactComponent
         };
     }
 
-    static IEnumerable<(string file, MethodReference SelectedMethod)> Search(string filter)
-    {
-        foreach (var (filePath, fileContent) in EnumerateAllInStoreage())
-        {
-            if (fileContent.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                var mainWindowModel = JsonConvert.DeserializeObject<MainWindowModel>(fileContent);
-
-                yield return (filePath, mainWindowModel.SelectedMethod);
-            }
-        }
-    }
 
     void OnClickHandler(MouseEvent e)
     {
