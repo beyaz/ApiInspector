@@ -86,32 +86,13 @@ static class Plugins
     {
         foreach (var plugin in ListOfPlugins)
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(InvokeMethod), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var response = ((Exception exception, bool isInvoked, object invocationOutput))methodInfo.Invoke(null, new[]
+            var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(Exception exception, bool isInvoked, object invocationOutput)>(plugin, nameof(InvokeMethod), new[]
             {
                 targetMethodInfo,
                 instance,
                 methodParameters
             });
-            if (response.exception is not null || response.isInvoked)
+            if (isInvoked && response.exception is not null || response.isInvoked)
             {
                 return response;
             }
@@ -124,27 +105,8 @@ static class Plugins
     {
         foreach (var plugin in ListOfPlugins)
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFile(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(TryCreateInstance), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var response = ((Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance))methodInfo.Invoke(null, new object[] { type, json });
-            if (response.isSuccessfullyCreated)
+            var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance)>(plugin, nameof(TryCreateInstance), type, json);
+            if (isInvoked && response.isSuccessfullyCreated)
             {
                 return response;
             }
