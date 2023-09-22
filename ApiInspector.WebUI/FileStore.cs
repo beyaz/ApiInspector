@@ -9,6 +9,16 @@ static class FileStore
                                                 "Cache" +
                                                 Path.DirectorySeparatorChar;
 
+    public static void DeleteFromStorage(string storageKey)
+    {
+        var filePath = ToFilePath(storageKey);
+        
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
+
     public static bool ExistInStorage(string storageKey)
     {
         return File.Exists(ToFilePath(storageKey));
@@ -17,15 +27,6 @@ static class FileStore
     public static string ReadFromStorage(string storageKey)
     {
         return File.ReadAllText(ToFilePath(storageKey));
-    }
-    
-    public static void DeleteFromStorage(string storageKey)
-    {
-        var filePath = ToFilePath(storageKey);
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
     }
 
     public static void SaveToStorage(string storageKey, string content)
@@ -65,6 +66,7 @@ static class FileStore
     {
         return Path.Combine(CacheDirectoryPath, storageKey);
     }
+
     static string ToStorageKey(string filePath)
     {
         return filePath.RemoveFromStart(CacheDirectoryPath);
