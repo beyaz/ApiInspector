@@ -49,7 +49,7 @@ class MainWindow : ReactComponent<MainWindowModel>
             When(HistoryDialogVisible, () => new Dialog
             {
                 visible  = HistoryDialogVisible,
-                header   = new div("Select Method From History"),
+                header   = new div("Select Method From History"){TextAlignCenter},
                 closable = true,
                 onHide   = () => HistoryDialogVisible = false,
                 children =

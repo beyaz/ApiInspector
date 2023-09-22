@@ -62,24 +62,13 @@ class HistoryPanel : ReactComponent
 
     static IEnumerable<(string file, MethodReference SelectedMethod)> Search(string filter)
     {
-        var cacheDirectoryPath = CacheDirectory.CacheDirectoryPath;
-
-        if (!Directory.Exists(cacheDirectoryPath))
+        foreach (var (filePath, fileContent) in EnumerateAllInStoreage())
         {
-            yield break;
-        }
-
-        foreach (var directory in Directory.GetDirectories(cacheDirectoryPath).OrderByDescending(x => new DirectoryInfo(x).LastWriteTime))
-        {
-            foreach (var file in Directory.GetFiles(directory).OrderByDescending(x => new FileInfo(x).LastWriteTime))
+            if (fileContent.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                var fileContent = File.ReadAllText(file);
-                if (fileContent.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    var mainWindowModel = JsonConvert.DeserializeObject<MainWindowModel>(fileContent);
+                var mainWindowModel = JsonConvert.DeserializeObject<MainWindowModel>(fileContent);
 
-                    yield return (file, mainWindowModel.SelectedMethod);
-                }
+                yield return (filePath, mainWindowModel.SelectedMethod);
             }
         }
     }
