@@ -12,9 +12,9 @@ static class Program
 
     class Config
     {
-        public string VersionUrl { get; set; }
-        public string NewVersionZipFileUrl { get; set; }
-        public string InstallationFolder { get; set; }
+        public string VersionUrl { get; init; }
+        public string NewVersionZipFileUrl { get; init; }
+        public string InstallationFolder { get; init; }
     }
 
     static Config CalculateConfig()
