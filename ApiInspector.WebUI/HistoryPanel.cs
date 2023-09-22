@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 
 namespace ApiInspector.WebUI;
@@ -13,7 +12,7 @@ class HistoryPanel : ReactComponent
 
     protected override Element render()
     {
-        var searchResult = SearchInStoreage(FilterText, 5).Select(x => (file: x.filePath, JsonConvert.DeserializeObject<MainWindowModel>(x.fileContent).SelectedMethod));
+        var searchResult = SearchInStoreage(FilterText, 5).Select(x => (x.storageKey, JsonConvert.DeserializeObject<MainWindowModel>(x.fileContent).SelectedMethod));
 
         return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(15), Height("50vh"))
         {
@@ -37,7 +36,7 @@ class HistoryPanel : ReactComponent
 
                     new FlexRow(AlignItemsCenter, CursorPointer, Padding(10))
                     {
-                        Id(x.file),
+                        Id(x.storageKey),
                         OnClick(OnClickHandler),
 
                         new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
@@ -45,14 +44,14 @@ class HistoryPanel : ReactComponent
                         new div
                         {
                             Text(x.SelectedMethod.DeclaringType.FullName + "::" + x.SelectedMethod.FullNameWithoutReturnType),
-                            MarginLeft(5), 
+                            MarginLeft(5),
                             FontSize13,
                             WordBreakAll
                         }
                     },
                     new img
                     {
-                        Id(x.file),
+                        Id(x.storageKey),
                         Src(GetSvgUrl("trash")), mr(4), wh(24), Hover(wh(26)), Title("Remove From History"), OnClick(OnDeleteClicked)
                     }
                 })
@@ -60,12 +59,12 @@ class HistoryPanel : ReactComponent
         };
     }
 
-
     void OnClickHandler(MouseEvent e)
     {
-        var filePath = e.FirstNotEmptyId;
+        var storageKey = e.FirstNotEmptyId;
 
-        var fileContent     = File.ReadAllText(filePath);
+        var fileContent = ReadFromStorage(storageKey);
+
         var methodReference = JsonConvert.DeserializeObject<MainWindowModel>(fileContent).SelectedMethod;
 
         DispatchEvent(() => SelectionChanged, methodReference);
@@ -73,12 +72,9 @@ class HistoryPanel : ReactComponent
 
     void OnDeleteClicked(MouseEvent e)
     {
-        var filePath = e.FirstNotEmptyId;
+        var storageKey = e.FirstNotEmptyId;
 
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
+        DeleteFromStorage(storageKey);
     }
 
     void OnFilterTextKeypressCompleted()
