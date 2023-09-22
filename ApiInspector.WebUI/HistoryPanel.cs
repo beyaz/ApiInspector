@@ -12,7 +12,7 @@ class HistoryPanel : ReactComponent
 
     protected override Element render()
     {
-        var searchResult = SearchInStoreage(FilterText, 5).Select(x => (x.storageKey, JsonConvert.DeserializeObject<MainWindowModel>(x.fileContent).SelectedMethod));
+        var searchResult = SearchInStoreage(FilterText, 5).Select(x => (storageKey: x.StorageKey, JsonConvert.DeserializeObject<MainWindowModel>(x.Content).SelectedMethod));
 
         return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(15), Height("50vh"))
         {

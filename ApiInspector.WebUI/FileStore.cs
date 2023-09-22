@@ -34,12 +34,12 @@ static class FileStore
         WriteAllText(ToFilePath(storageKey), content);
     }
 
-    public static IReadOnlyList<(string storageKey, string fileContent)> SearchInStoreage(string filter, int topN)
+    public static IReadOnlyList<(string StorageKey, string Content)> SearchInStoreage(string filter, int topN)
     {
         return SearchInStoreage(filter).Take(topN).ToList();
     }
 
-    static IEnumerable<(string storageKey, string fileContent)> SearchInStoreage(string filter)
+    static IEnumerable<(string StorageKey, string Content)> SearchInStoreage(string filter)
     {
         var cacheDirectoryPath = CacheDirectoryPath;
 
