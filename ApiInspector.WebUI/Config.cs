@@ -18,6 +18,19 @@ class ConfigInfo
         public bool IsActive { get; set; }
         public string CacheDirectoryFormat { get; set; }
     }
+    
+    public DbStorageInfo DbStorage { get; set; }
+    
+    internal class DbStorageInfo
+    {
+        public bool IsActive { get; set; }
+        public string ConnectionString { get; set; }
+        public string DeleteFromStorage { get; set; }
+        public string ExistInStorage { get; set; }
+        public string ReadFromStorage { get; set; }
+        public string SaveToStorage { get; set; }
+        public string SearchInStoreage { get; set; }
+    }
 }
 
 partial class Extensions

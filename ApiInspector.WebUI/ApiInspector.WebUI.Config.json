@@ -10,7 +10,7 @@
     "CacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache"
   },
 
-  "dbStorage": {
+  "DbStorage": {
     "IsActive": false,
     "ConnectionString": null,
     "DeleteFromStorage": "DELETE FROM Table WHERE Column = @storageKey",
