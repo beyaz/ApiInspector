@@ -185,7 +185,7 @@ static class Program
 
         var parameterInfoList = methodInfo.GetParameters();
 
-        JObject map = null;
+        JObject map;
         try
         {
             map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
