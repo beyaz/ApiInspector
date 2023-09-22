@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace ApiInspector.WebUI;
 
@@ -11,11 +10,11 @@ static class StateCache
 {
     static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, "LastState.json");
 
-    public static async Task<MainWindowModel> ReadState()
+    public static MainWindowModel ReadState()
     {
         if (File.Exists(StateFilePath))
         {
-            var json = await File.ReadAllTextAsync(StateFilePath);
+            var json = ReadFile(StateFilePath);
 
             try
             {
@@ -47,7 +46,7 @@ static class StateCache
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
-        FileHelper.WriteAllText(StateFilePath, jsonContent);
+        SaveFile(StateFilePath, jsonContent);
     }
 
     public static void Save(MethodReference methodReference, MainWindowModel state)
@@ -58,7 +57,7 @@ static class StateCache
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
-        FileHelper.WriteAllText(methodReference.GetCachedFullFilePath(), jsonContent);
+        SaveFile(methodReference.GetCachedFullFilePath(), jsonContent);
     }
 
     public static MainWindowModel TryRead(MethodReference methodReference)
@@ -71,7 +70,7 @@ static class StateCache
 
         try
         {
-            return JsonSerializer.Deserialize<MainWindowModel>(File.ReadAllText(filePath));
+            return JsonSerializer.Deserialize<MainWindowModel>(ReadFile(filePath));
         }
         catch (Exception)
         {
@@ -104,10 +103,20 @@ static class StateCache
 
             // Convert back to a string, removing the '-' that BitConverter adds
             var hash = BitConverter
-                      .ToString(hashBytes)
-                      .Replace("-", string.Empty);
+                .ToString(hashBytes)
+                .Replace("-", string.Empty);
 
             return hash;
         }
+    }
+
+    static string ReadFile(string path)
+    {
+        return File.ReadAllText(path);
+    }
+
+    static void SaveFile(string path, string content)
+    {
+        FileHelper.WriteAllText(path, content);
     }
 }

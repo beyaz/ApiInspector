@@ -30,14 +30,16 @@ class MainWindow : ReactComponent<MainWindowModel>
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
-    protected override async Task constructor()
+    protected override Task constructor()
     {
-        state = await StateCache.ReadState() ?? new MainWindowModel
+        state = StateCache.ReadState() ?? new MainWindowModel
         {
             AssemblyDirectory = Path.GetDirectoryName(DotNetFrameworkInvokerExePath),
             AssemblyFileName  = "ApiInspector.exe",
             MethodFilter      = "GetHelpMessage"
         };
+
+        return Task.CompletedTask;
     }
 
     protected override Element render()
