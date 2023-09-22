@@ -4,9 +4,14 @@ namespace ApiInspector.WebUI;
 
 static class FileStore
 {
+    static readonly string CacheDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), nameof(ApiInspector)) +
+                                                Path.DirectorySeparatorChar +
+                                                "Cache" +
+                                                Path.DirectorySeparatorChar;
+
     public static IEnumerable<(string filePath, string fileContent)> EnumerateAllInStoreage()
     {
-        var cacheDirectoryPath = CacheDirectory.CacheDirectoryPath;
+        var cacheDirectoryPath = CacheDirectoryPath;
 
         if (!Directory.Exists(cacheDirectoryPath))
         {
@@ -31,7 +36,7 @@ static class FileStore
 
     public static string GetUniqueKeyForStorage(string fileName)
     {
-        return Path.Combine(CacheDirectory.CacheDirectoryPath, fileName);
+        return Path.Combine(CacheDirectoryPath, fileName);
     }
 
     public static string ReadFromStorage(string path)
