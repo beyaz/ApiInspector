@@ -6,112 +6,127 @@ namespace ApiInspector;
 
 static class Plugins
 {
-    static IEnumerable<PluginInfo> ListOfPlugins
+    static Plugins()
     {
-        get
+        Plugin = readPluginInfo();
+        
+        static PluginInfo readPluginInfo()
         {
-            var plugins = new List<PluginInfo>();
-
             var directory = Path.GetDirectoryName(typeof(Plugins).Assembly.Location);
             if (string.IsNullOrWhiteSpace(directory))
             {
-                return plugins;
+                return null;
             }
 
             foreach (var file in Directory.GetFiles(directory, "*.json"))
             {
                 if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
                 {
-                    plugins.Add(JsonConvert.DeserializeObject<PluginInfo>(File.ReadAllText(file)));
+                    return JsonConvert.DeserializeObject<PluginInfo>(File.ReadAllText(file));
                 }
             }
 
-            return plugins;
+            return null;
         }
     }
 
+    static readonly PluginInfo Plugin;
+    
+
     public static (bool isProcessed, object invocationResponse, Exception invocationException) AfterInvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters, object targetMethodResponse, Exception invocationException)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (Plugin is null)
         {
-            var (isInvoked, invocationResponse) = TryInvokeStaticMethodFromPlugin<(bool isProcessed, object invocationResponse, Exception invocationException)>(plugin, nameof(AfterInvokeMethod), targetMethodInfo, instance, methodParameters, targetMethodResponse, invocationException);
-            if (isInvoked && invocationResponse.isProcessed)
-            {
-                return invocationResponse;
-            }
+            return default;
+        }
+        
+        var (isInvoked, invocationResponse) = TryInvokeStaticMethodFromPlugin<(bool isProcessed, object invocationResponse, Exception invocationException)>(Plugin, nameof(AfterInvokeMethod), targetMethodInfo, instance, methodParameters, targetMethodResponse, invocationException);
+        if (isInvoked && invocationResponse.isProcessed)
+        {
+            return invocationResponse;
         }
 
-        return (isProcessed: false, null, null);
+        return default;
     }
 
     public static (bool isSuccessfullyCreated, object instance) GetDefaultValueForJson(Type type)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (Plugin is null)
         {
-            var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(bool isSuccessfullyCreated, object instance)>(plugin, nameof(GetDefaultValueForJson), type);
-            if (isInvoked && response.isSuccessfullyCreated)
-            {
-                return response;
-            }
+            return default;
+        }
+        
+        var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(bool isSuccessfullyCreated, object instance)>(Plugin, nameof(GetDefaultValueForJson), type);
+        if (isInvoked && response.isSuccessfullyCreated)
+        {
+            return response;
         }
 
-        return (false, null);
+        return default;
     }
 
     public static string GetEnvironment(string assemblyFileName)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (Plugin is null)
         {
-            var (isInvoked, environmentInfo) = TryInvokeStaticMethodFromPlugin<string>(plugin, nameof(GetEnvironment), assemblyFileName);
-            if (isInvoked && environmentInfo != null)
-            {
-                return environmentInfo;
-            }
+            return default;
+        }
+        
+        var (isInvoked, environmentInfo) = TryInvokeStaticMethodFromPlugin<string>(Plugin, nameof(GetEnvironment), assemblyFileName);
+        if (isInvoked && environmentInfo != null)
+        {
+            return environmentInfo;
         }
 
-        return null;
+        return default;
     }
 
     public static (Exception exception, bool isInvoked, object invocationOutput) InvokeMethod(MethodInfo targetMethodInfo, object instance, object[] methodParameters)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (Plugin is null)
         {
-            var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(Exception exception, bool isInvoked, object invocationOutput)>(plugin, nameof(InvokeMethod), targetMethodInfo, instance, methodParameters);
-            if ((isInvoked && response.exception is not null) || response.isInvoked)
-            {
-                return response;
-            }
+            return default;
+        }
+        
+        var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(Exception exception, bool isInvoked, object invocationOutput)>(Plugin, nameof(InvokeMethod), targetMethodInfo, instance, methodParameters);
+        if ((isInvoked && response.exception is not null) || response.isInvoked)
+        {
+            return response;
         }
 
-        return (null, false, null);
+        return default;
     }
 
     public static (Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance) TryCreateInstance(Type type, string json)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (Plugin is null)
         {
-            var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance)>(plugin, nameof(TryCreateInstance), type, json);
-            if (isInvoked && response.isSuccessfullyCreated)
-            {
-                return response;
-            }
+            return default;
+        }
+        
+        var (isInvoked, response) = TryInvokeStaticMethodFromPlugin<(Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance)>(Plugin, nameof(TryCreateInstance), type, json);
+        if (isInvoked && response.isSuccessfullyCreated)
+        {
+            return response;
         }
 
-        return (null, false, null);
+        return default;
     }
 
     public static string TryFindFullFilePathOfAssembly(string assemblyFileName)
     {
-        foreach (var plugin in ListOfPlugins)
+        if (Plugin is null)
         {
-            var (isInvoked, fullFilePathOfAssembly) = TryInvokeStaticMethodFromPlugin<string>(plugin, nameof(TryFindFullFilePathOfAssembly), assemblyFileName);
-            if (isInvoked && fullFilePathOfAssembly != null)
-            {
-                return fullFilePathOfAssembly;
-            }
+            return default;
+        }
+        
+        var (isInvoked, fullFilePathOfAssembly) = TryInvokeStaticMethodFromPlugin<string>(Plugin, nameof(TryFindFullFilePathOfAssembly), assemblyFileName);
+        if (isInvoked && fullFilePathOfAssembly != null)
+        {
+            return fullFilePathOfAssembly;
         }
 
-        return null;
+        return default;
     }
 
     static (bool isInvoked, TMethodOutput output) TryInvokeStaticMethodFromPlugin<TMethodOutput>(PluginInfo plugin, string methodName, params object[] methodArguments)
