@@ -4,10 +4,20 @@ namespace ApiInspector.WebUI;
 
 static class FileStorage
 {
-    static readonly string CacheDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), nameof(ApiInspector)) +
-                                                Path.DirectorySeparatorChar +
-                                                "Cache" +
-                                                Path.DirectorySeparatorChar;
+    static string CacheDirectoryPath
+    {
+        get
+        {
+            var folderNames = Config.FileStorage.CacheDirectoryFormat.Split('>', StringSplitOptions.RemoveEmptyEntries);
+
+            return string.Join(Path.DirectorySeparatorChar.ToString(), folderNames.Select(processFolderName)) + Path.DirectorySeparatorChar;
+
+            static string processFolderName(string folderName)
+            {
+                return folderName.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)).Trim();
+            }
+        }
+    }
 
     public static void DeleteFromStorage(string storageKey)
     {

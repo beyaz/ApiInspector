@@ -5,12 +5,12 @@
   "NextAvailablePortFrom": 5005,
   "UseUrls": true,
 
-  "fileStorage": {
-    "isActive": true,
-    "cacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache >"
+  "FileStorage": {
+    "IsActive": true,
+    "CacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache"
   },
 
-  "DbStorage": {
+  "dbStorage": {
     "IsActive": false,
     "ConnectionString": null,
     "DeleteFromStorage": "DELETE FROM Table WHERE Column = @storageKey",

@@ -3,13 +3,21 @@ using Newtonsoft.Json;
 
 namespace ApiInspector.WebUI;
 
-public class ConfigInfo
+class ConfigInfo
 {
     public string BrowserExeArguments { get; set; }
     public string BrowserExePath { get; set; }
     public bool HideConsoleWindow { get; set; }
     public int NextAvailablePortFrom { get; set; }
     public bool UseUrls { get; set; }
+
+    public FileStorageInfo FileStorage { get; set; }
+    
+    internal class FileStorageInfo
+    {
+        public bool IsActive { get; set; }
+        public string CacheDirectoryFormat { get; set; }
+    }
 }
 
 partial class Extensions

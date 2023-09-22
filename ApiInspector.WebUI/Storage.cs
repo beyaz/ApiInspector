@@ -24,6 +24,11 @@ static class Storage
 
     public static IReadOnlyList<(string StorageKey, string StorageValue)> SearchInStoreage(string filter, int topN)
     {
-        return FileStorage.SearchInStoreage(filter, topN);
+        if (Config.FileStorage.IsActive)
+        {
+            return FileStorage.SearchInStoreage(filter, topN);    
+        }
+
+        return new List<(string StorageKey, string StorageValue)>();
     }
 }
