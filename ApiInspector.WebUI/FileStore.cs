@@ -12,7 +12,7 @@ static class FileStore
     public static void DeleteFromStorage(string storageKey)
     {
         var filePath = ToFilePath(storageKey);
-        
+
         if (File.Exists(filePath))
         {
             File.Delete(filePath);
@@ -29,17 +29,17 @@ static class FileStore
         return File.ReadAllText(ToFilePath(storageKey));
     }
 
-    public static void SaveToStorage(string storageKey, string content)
+    public static void SaveToStorage(string storageKey, string storageValue)
     {
-        WriteAllText(ToFilePath(storageKey), content);
+        WriteAllText(ToFilePath(storageKey), storageValue);
     }
 
-    public static IReadOnlyList<(string StorageKey, string Content)> SearchInStoreage(string filter, int topN)
+    public static IReadOnlyList<(string StorageKey, string StorageValue)> SearchInStoreage(string filter, int topN)
     {
         return SearchInStoreage(filter).Take(topN).ToList();
     }
 
-    static IEnumerable<(string StorageKey, string Content)> SearchInStoreage(string filter)
+    static IEnumerable<(string StorageKey, string StorageValue)> SearchInStoreage(string filter)
     {
         var cacheDirectoryPath = CacheDirectoryPath;
 
