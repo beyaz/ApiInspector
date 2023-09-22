@@ -11,6 +11,7 @@ static class Plugins
     static Plugins()
     {
         PluginInstance = readPluginInfo();
+        return;
 
         static PluginInfo readPluginInfo()
         {
