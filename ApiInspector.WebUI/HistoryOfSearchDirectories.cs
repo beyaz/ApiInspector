@@ -1,11 +1,10 @@
-﻿using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace ApiInspector.WebUI;
 
 static class HistoryOfSearchDirectories
 {
-    static readonly string filePath = Path.Combine(CacheDirectory.CacheDirectoryPath, $"{nameof(HistoryOfSearchDirectories)}.json");
+    static readonly string filePath = GetUniqueKeyForStorage($"{nameof(HistoryOfSearchDirectories)}.json");
 
     static readonly List<string> value;
 

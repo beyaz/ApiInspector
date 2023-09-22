@@ -8,7 +8,7 @@ namespace ApiInspector.WebUI;
 
 static class StateCache
 {
-    static string StateFilePath => Path.Combine(CacheDirectory.CacheDirectoryPath, "LastState.json");
+    static string StateFilePath => GetUniqueKeyForStorage("LastState.json");
 
     public static MainWindowModel ReadState()
     {
@@ -63,7 +63,7 @@ static class StateCache
     public static MainWindowModel TryRead(MethodReference methodReference)
     {
         var filePath = methodReference.GetCachedFullFilePath();
-        if (!File.Exists(filePath))
+        if (!ExistInStorage(filePath))
         {
             return null;
         }
@@ -80,11 +80,9 @@ static class StateCache
 
     static string GetCachedFullFilePath(this MethodReference methodReference)
     {
-        var cachedAssemblyFolderPath = Path.Combine(CacheDirectory.CacheDirectoryPath, methodReference.DeclaringType.Assembly.Name);
-
         var fileName = $"{methodReference.ToString().GetHashString()}.json";
 
-        return Path.Combine(cachedAssemblyFolderPath + Path.DirectorySeparatorChar + fileName);
+        return GetUniqueKeyForStorage(Path.Combine(methodReference.DeclaringType.Assembly.Name + Path.DirectorySeparatorChar + fileName));
     }
 
     static string GetHashString(this string text, string salt = "")
