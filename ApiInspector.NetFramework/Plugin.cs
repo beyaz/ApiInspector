@@ -4,18 +4,18 @@ using Newtonsoft.Json;
 
 namespace ApiInspector;
 
-static class Plugins
+static class Plugin
 {
     static readonly PluginInfo PluginInstance;
 
-    static Plugins()
+    static Plugin()
     {
         PluginInstance = readPluginInfo();
         return;
 
         static PluginInfo readPluginInfo()
         {
-            var directory = Path.GetDirectoryName(typeof(Plugins).Assembly.Location);
+            var directory = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
             if (string.IsNullOrWhiteSpace(directory))
             {
                 return null;

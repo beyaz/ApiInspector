@@ -45,7 +45,7 @@ static class Program
 
         // try create from plugins
         {
-            var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(declaringType);
+            var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(declaringType);
             if (isSuccessfullyCreated)
             {
                 return JsonConvert.SerializeObject(instance, new JsonSerializerSettings
@@ -82,7 +82,7 @@ static class Program
                 continue;
             }
 
-            var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(propertyType);
+            var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(propertyType);
             if (isSuccessfullyCreated)
             {
                 map.Add(name, instance);
@@ -122,7 +122,7 @@ static class Program
                 continue;
             }
 
-            var (isSuccessfullyCreated, instance) = Plugins.GetDefaultValueForJson(parameterInfo.ParameterType);
+            var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(parameterInfo.ParameterType);
             if (isSuccessfullyCreated)
             {
                 map.Add(name, instance);
@@ -156,7 +156,7 @@ static class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
-            var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugins.TryCreateInstance(declaringType, jsonForInstance);
+            var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugin.TryCreateInstance(declaringType, jsonForInstance);
 
             if (occurredErrorWhenCreatingInstance != null)
             {
@@ -213,7 +213,7 @@ static class Program
                 var jToken = map[parameterInfo.Name];
                 if (jToken != null)
                 {
-                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugins.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
+                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
 
                     if (occurredErrorWhenCreatingInstance != null)
                     {
@@ -253,7 +253,7 @@ static class Program
         {
             var shouldInvoke = true;
             
-            var (exception, isInvoked, invocationOutput) = Plugins.InvokeMethod(methodInfo, instance, methodParameters);
+            var (exception, isInvoked, invocationOutput) = Plugin.InvokeMethod(methodInfo, instance, methodParameters);
             if (exception is not null)
             {
                 invocationException = exception;
@@ -289,7 +289,7 @@ static class Program
             invocationException = exception.InnerException ?? exception;
         }
 
-        var afterInvoke = Plugins.AfterInvokeMethod(methodInfo, instance, methodParameters, response, invocationException);
+        var afterInvoke = Plugin.AfterInvokeMethod(methodInfo, instance, methodParameters, response, invocationException);
         if (afterInvoke.isProcessed)
         {
             response = afterInvoke.invocationResponse;
@@ -316,7 +316,7 @@ static class Program
 
     public static string GetEnvironment(string assemblyFileFullPath)
     {
-        return Plugins.GetEnvironment(assemblyFileFullPath);
+        return Plugin.GetEnvironment(assemblyFileFullPath);
     }
     
     public static void Main(string[] args)
