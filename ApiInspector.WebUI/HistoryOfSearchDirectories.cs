@@ -10,9 +10,9 @@ static class HistoryOfSearchDirectories
 
     static HistoryOfSearchDirectories()
     {
-        if (ExistInStorage(storageKey))
+        if (FileStorage.ExistInStorage(storageKey))
         {
-            value = JsonConvert.DeserializeObject<List<string>>(ReadFromStorage(storageKey));
+            value = JsonConvert.DeserializeObject<List<string>>(FileStorage.ReadFromStorage(storageKey));
         }
         else
         {
@@ -31,7 +31,7 @@ static class HistoryOfSearchDirectories
 
         value.Add(path);
 
-        SaveToStorage(storageKey, JsonConvert.SerializeObject(value, new JsonSerializerSettings
+        FileStorage.SaveToStorage(storageKey, JsonConvert.SerializeObject(value, new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         }));
