@@ -34,26 +34,7 @@ static class Plugins
     {
         foreach (var plugin in ListOfPlugins)
         {
-            if (!File.Exists(plugin.FullFilePathOfAssembly))
-            {
-                continue;
-            }
-
-            var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
-
-            var helperType = assembly.GetType(plugin.FullClassName);
-            if (helperType is null)
-            {
-                continue;
-            }
-
-            var methodInfo = helperType.GetMethod(nameof(AfterInvokeMethod), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo is null)
-            {
-                continue;
-            }
-
-            var invocationResponse = ((bool isProcessed, object invocationResponse, Exception invocationException))methodInfo.Invoke(null, new[]
+            var (isInvoked, invocationResponse) = TryInvokeStaticMethodFromPlugin<(bool isProcessed, object invocationResponse, Exception invocationException)>(plugin, nameof(AfterInvokeMethod), new[]
             {
                 targetMethodInfo,
                 instance,
@@ -61,7 +42,7 @@ static class Plugins
                 targetMethodResponse,
                 invocationException
             });
-            if (invocationResponse.isProcessed)
+            if (isInvoked && invocationResponse.isProcessed)
             {
                 return invocationResponse;
             }
