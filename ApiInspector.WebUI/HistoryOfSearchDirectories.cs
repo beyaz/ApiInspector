@@ -11,9 +11,9 @@ static class HistoryOfSearchDirectories
 
     static HistoryOfSearchDirectories()
     {
-        if (File.Exists(filePath))
+        if (ExistInStore(filePath))
         {
-            value = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(filePath));
+            value = JsonConvert.DeserializeObject<List<string>>(ReadFile(filePath));
         }
         else
         {
@@ -32,7 +32,7 @@ static class HistoryOfSearchDirectories
 
         value.Add(path);
 
-        FileHelper.WriteAllText(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
+        SaveFile(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         }));

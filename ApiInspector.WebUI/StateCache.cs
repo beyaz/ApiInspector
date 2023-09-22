@@ -109,14 +109,4 @@ static class StateCache
             return hash;
         }
     }
-
-    static string ReadFile(string path)
-    {
-        return File.ReadAllText(path);
-    }
-
-    static void SaveFile(string path, string content)
-    {
-        FileHelper.WriteAllText(path, content);
-    }
 }
