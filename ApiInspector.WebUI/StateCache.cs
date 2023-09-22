@@ -14,7 +14,7 @@ static class StateCache
     {
         if (File.Exists(StateFilePath))
         {
-            var json = ReadFile(StateFilePath);
+            var json = ReadFromStorage(StateFilePath);
 
             try
             {
@@ -46,7 +46,7 @@ static class StateCache
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
-        SaveFile(StateFilePath, jsonContent);
+        SaveToStorage(StateFilePath, jsonContent);
     }
 
     public static void Save(MethodReference methodReference, MainWindowModel state)
@@ -57,7 +57,7 @@ static class StateCache
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
-        SaveFile(methodReference.GetCachedFullFilePath(), jsonContent);
+        SaveToStorage(methodReference.GetCachedFullFilePath(), jsonContent);
     }
 
     public static MainWindowModel TryRead(MethodReference methodReference)
@@ -70,7 +70,7 @@ static class StateCache
 
         try
         {
-            return JsonSerializer.Deserialize<MainWindowModel>(ReadFile(filePath));
+            return JsonSerializer.Deserialize<MainWindowModel>(ReadFromStorage(filePath));
         }
         catch (Exception)
         {
