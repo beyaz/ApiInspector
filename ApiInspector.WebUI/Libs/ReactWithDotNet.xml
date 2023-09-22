@@ -1353,6 +1353,11 @@
                 (tr-td).rowSpan = <paramref name="value" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.MixBlendMode(System.String)">
+            <summary>
+            normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|difference|exclusion|hue|saturation|color|luminosity
+            </summary>
+        </member>
         <member name="F:ReactWithDotNet.Mixin.percent">
             <summary>
                 50|percent returns like '50%'
