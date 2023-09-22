@@ -8,7 +8,7 @@ namespace ApiInspector.WebUI;
 
 static class StateCache
 {
-    static string StateFilePath => GetUniqueKeyForStorage("LastState.json");
+    static string StateFilePath => "LastState.json";
 
     public static MainWindowModel ReadState()
     {
@@ -57,20 +57,20 @@ static class StateCache
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
 
-        SaveToStorage(methodReference.GetCachedFullFilePath(), jsonContent);
+        SaveToStorage(methodReference.GetStorageKey(), jsonContent);
     }
 
     public static MainWindowModel TryRead(MethodReference methodReference)
     {
-        var filePath = methodReference.GetCachedFullFilePath();
-        if (!ExistInStorage(filePath))
+        var storageKey = methodReference.GetStorageKey();
+        if (!ExistInStorage(storageKey))
         {
             return null;
         }
 
         try
         {
-            return JsonSerializer.Deserialize<MainWindowModel>(ReadFromStorage(filePath));
+            return JsonSerializer.Deserialize<MainWindowModel>(ReadFromStorage(storageKey));
         }
         catch (Exception)
         {
@@ -78,11 +78,11 @@ static class StateCache
         }
     }
 
-    static string GetCachedFullFilePath(this MethodReference methodReference)
+    static string GetStorageKey(this MethodReference methodReference)
     {
         var fileName = $"{methodReference.ToString().GetHashString()}.json";
 
-        return GetUniqueKeyForStorage(Path.Combine(methodReference.DeclaringType.Assembly.Name + Path.DirectorySeparatorChar + fileName));
+        return Path.Combine(methodReference.DeclaringType.Assembly.Name + Path.DirectorySeparatorChar + fileName);
     }
 
     static string GetHashString(this string text, string salt = "")

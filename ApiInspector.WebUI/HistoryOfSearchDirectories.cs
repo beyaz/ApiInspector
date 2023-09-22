@@ -4,15 +4,15 @@ namespace ApiInspector.WebUI;
 
 static class HistoryOfSearchDirectories
 {
-    static readonly string filePath = GetUniqueKeyForStorage($"{nameof(HistoryOfSearchDirectories)}.json");
+    static readonly string storageKey = $"{nameof(HistoryOfSearchDirectories)}.json";
 
     static readonly List<string> value;
 
     static HistoryOfSearchDirectories()
     {
-        if (ExistInStorage(filePath))
+        if (ExistInStorage(storageKey))
         {
-            value = JsonConvert.DeserializeObject<List<string>>(ReadFromStorage(filePath));
+            value = JsonConvert.DeserializeObject<List<string>>(ReadFromStorage(storageKey));
         }
         else
         {
@@ -31,7 +31,7 @@ static class HistoryOfSearchDirectories
 
         value.Add(path);
 
-        SaveToStorage(filePath, JsonConvert.SerializeObject(value, new JsonSerializerSettings
+        SaveToStorage(storageKey, JsonConvert.SerializeObject(value, new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         }));

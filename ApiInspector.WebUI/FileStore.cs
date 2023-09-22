@@ -9,24 +9,24 @@ static class FileStore
                                                 "Cache" +
                                                 Path.DirectorySeparatorChar;
 
-    public static bool ExistInStorage(string path)
+    public static bool ExistInStorage(string storageKey)
     {
-        return File.Exists(path);
+        return File.Exists(ToFilePath(storageKey));
     }
 
-    public static string GetUniqueKeyForStorage(string fileName)
+    static string ToFilePath(string storageKey)
     {
-        return Path.Combine(CacheDirectoryPath, fileName);
+        return Path.Combine(CacheDirectoryPath, storageKey);
     }
 
-    public static string ReadFromStorage(string path)
+    public static string ReadFromStorage(string storageKey)
     {
-        return File.ReadAllText(path);
+        return File.ReadAllText(ToFilePath(storageKey));
     }
 
-    public static void SaveToStorage(string path, string content)
+    public static void SaveToStorage(string storageKey, string content)
     {
-        WriteAllText(path, content);
+        WriteAllText(ToFilePath(storageKey), content);
     }
 
     public static IReadOnlyList<(string filePath, string fileContent)> SearchInStoreage(string filter, int topN)
