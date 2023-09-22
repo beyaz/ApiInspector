@@ -46,6 +46,20 @@ static class FileStore
 
     public static void SaveToStorage(string path, string content)
     {
-        FileHelper.WriteAllText(path, content);
+        WriteAllText(path, content);
+    }
+
+    static void WriteAllText(string path, string contents)
+    {
+        var directoryName = Path.GetDirectoryName(path);
+        if (directoryName != null)
+        {
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+        }
+
+        File.WriteAllText(path, contents);
     }
 }

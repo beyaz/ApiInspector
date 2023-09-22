@@ -22,6 +22,14 @@ static class FileHelper
         }
     }
 
+    public static void ClearLog()
+    {
+        if (File.Exists(FilePath.Log))
+        {
+            File.Delete(FilePath.Log);
+        }
+    }
+
     public static object ReadInput(Type type)
     {
         var inputAsJson = File.ReadAllText(FilePath.Input);
@@ -75,20 +83,6 @@ static class FileHelper
         }
     }
 
-    public static void WriteAllText(string path, string contents)
-    {
-        var directoryName = Path.GetDirectoryName(path);
-        if (directoryName != null)
-        {
-            if (!Directory.Exists(directoryName))
-            {
-                Directory.CreateDirectory(directoryName);
-            }
-        }
-
-        File.WriteAllText(path, contents);
-    }
-
     public static void WriteFail(Exception exception)
     {
         File.WriteAllText(FilePath.ResponseFail, calculateFailMessage());
@@ -112,14 +106,6 @@ static class FileHelper
     public static void WriteLog(string message)
     {
         File.WriteAllText(FilePath.Log, message);
-    }
-
-    public static void ClearLog()
-    {
-        if (File.Exists(FilePath.Log))
-        {
-            File.Delete(FilePath.Log);
-        }
     }
 
     public static void WriteSuccessResponse(string responseAsJson)
