@@ -14,9 +14,9 @@
     "IsActive": false,
     "ConnectionString": null,
     "DeleteFromStorage": "DELETE FROM Table WHERE Column = @storageKey",
-    "ExistInStorage": "SELECT TOP 1 1 FROM Table WITH (NOLOCK) WHERE Column = @storageKey",
     "ReadFromStorage": "SELECT TOP 1 Column FROM Table WHERE Column = @storageKey",
-    "SaveToStorage": "INSERT INTO Table  WHERE @storageKey, @storageValue, @userName",
+    "InsertIntoStorage": "INSERT INTO Table  WHERE @storageKey, @storageValue, @userName",
+    "UpdateStorage": "UPDATE Table  WHERE @storageKey, @storageValue, @userName",
     "SearchInStoreage": "SELECT TOP 5 StorageKey, StorageValue FROM Table WITH (NOLOCK) WHERE (@filter ISNULL OR [Key] LIKE '%' + @filter + '%') AND (@filter ISNULL OR [Value] LIKE '%' + @filter + '%')  ORDER BY LastExecutionTime DESC"
   }
 }
