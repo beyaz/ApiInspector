@@ -12,9 +12,9 @@ static class StateCache
 
     public static MainWindowModel ReadState()
     {
-        if (File.Exists(StateFilePath))
+        if (FileStorage.ExistInStorage(StateFilePath))
         {
-            var json = ReadFromStorage(StateFilePath);
+            var json = FileStorage.ReadFromStorage(StateFilePath);
 
             try
             {
