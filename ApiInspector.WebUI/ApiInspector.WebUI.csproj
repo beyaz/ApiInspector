@@ -66,6 +66,13 @@
     </ItemGroup>
 
 
+    <ItemGroup>
+      <None Update="Version.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
       <Exec Command="xcopy &quot;$(ProjectDir)wwwroot\dist\*.*&quot; &quot;$(TargetDir)\wwwroot\dist&quot; /I /Y /E&#xD;&#xA;xcopy &quot;$(SolutionDir)ApiInspector.NetCore\bin\debug\net6.0\*.*&quot; &quot;$(TargetDir)\ApiInspector.NetCore&quot; /I /Y /E &#xD;&#xA;xcopy &quot;$(SolutionDir)ApiInspector.NetFramework\bin\debug\*.*&quot; &quot;$(TargetDir)\ApiInspector.NetFramework&quot; /I /Y /E " />
     </Target>
@@ -129,9 +136,6 @@
 		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetFramework\bin\$(Configuration)\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetFramework\bin\$(Configuration)\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		
-		<Copy SourceFiles="$(SolutionDir)ApiInspector.Bootstrapper\Version.txt" DestinationFolder="$(PublishDir)\"></Copy>
-		
-
 	</Target>
    
 </Project>
