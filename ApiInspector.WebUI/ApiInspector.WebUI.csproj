@@ -129,9 +129,10 @@
 		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net6.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
 		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
 
+		<!-- 
 		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
-		
+		 -->
 	</Target>
    
 </Project>
