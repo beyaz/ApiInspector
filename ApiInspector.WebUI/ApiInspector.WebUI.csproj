@@ -129,7 +129,8 @@
 		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetFramework\bin\$(Configuration)\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetFramework\bin\$(Configuration)\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		
-
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.Bootstrapper\Version.txt" DestinationFolder="$(PublishDir)\"></Copy>
+		
 
 	</Target>
    
