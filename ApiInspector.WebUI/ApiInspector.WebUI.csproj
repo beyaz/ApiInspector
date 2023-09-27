@@ -76,6 +76,7 @@
 	<!-- npm -->
 	<PropertyGroup>
 		<AppRoot>wwwroot\</AppRoot>
+		<SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
 	</PropertyGroup>
 	<Target Name="_EnsureNodeEnvironment_" BeforeTargets="rebuild;build" Condition=" !Exists('$(AppRoot)node_modules') ">
 		<Exec Command="node --version" ContinueOnError="true">
