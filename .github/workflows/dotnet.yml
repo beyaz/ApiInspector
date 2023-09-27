@@ -35,8 +35,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: |
-        dotnet build --no-restore
-        dotnet publish ApiInspector.WebUI -p:PublishProfile=FolderProfile1
+        dotnet build ApiInspector.NetCore
+        dotnet publish ApiInspector.WebUI -p:PublishProfile=ApiInspector.WebUI/Properties/PublishProfiles/FolderProfile1
     
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.1
