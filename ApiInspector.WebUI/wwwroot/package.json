@@ -1,5 +1,5 @@
 {
-    "name": "quran-analyzer-web-ui",
+    "name": "api-inspector-web-ui",
     "version": "1.0.0",
     "scripts": {
         "dev": "esbuild index.jsx --bundle --splitting --format=esm --outdir=dist",
