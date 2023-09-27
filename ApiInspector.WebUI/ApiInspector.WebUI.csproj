@@ -121,10 +121,15 @@
 		<RemoveDir Directories="$(PublishDir)\wwwroot\react-with-dotnet" />
 		<RemoveDir Directories="$(PublishDir)\Libs" />
 
-		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetCore\bin\$(Configuration)\net6.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetFramework\bin\$(Configuration)\net6.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
+		<Copy SourceFiles="$(SolutionDir)ApiInspector.NetFramework\bin\$(Configuration)\net6.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
+		
+
 
 	</Target>
    
