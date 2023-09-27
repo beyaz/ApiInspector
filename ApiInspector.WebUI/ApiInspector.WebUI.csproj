@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -117,6 +117,14 @@
 		<Delete Files="$(PublishDir)\wwwroot\index.jsx" />
 		<Delete Files="$(PublishDir)\wwwroot\package.json" />
 		<Delete Files="$(PublishDir)\wwwroot\package-lock.json" />
+
+		<RemoveDir Directories="$(PublishDir)\wwwroot\react-with-dotnet" />
+		<RemoveDir Directories="$(PublishDir)\Libs" />
+
+		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="$(SolutionDir)\ApiInspector.NetCore\bin\$(Configuration)\net6.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
 
 	</Target>
    
