@@ -43,5 +43,6 @@ jobs:
       with:
         type: 'zip'
         filename: 'ApiInspectorLatestVersion.zip'
-        path: 'ApiInspector.WebUI\bin\release\net6.0\publish\'
+        path: 'ApiInspector.WebUI\'
+        #path: 'ApiInspector.WebUI\bin\release\net6.0\publish\'
     
