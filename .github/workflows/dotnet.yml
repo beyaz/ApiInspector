@@ -26,6 +26,7 @@ jobs:
     - name: Build Solution
       run: |
         msbuild.exe ApiInspector.sln /p:platform="Any CPU" /p:configuration="Release"
+        msbuild.exe ApiInspector.NetFramework/ApiInspector.NetFramework.csproj /p:platform="Any CPU" /p:configuration="Release"
       
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -36,7 +37,7 @@ jobs:
     - name: Build
       run: |
         dotnet build ApiInspector.NetCore
-        dotnet publish ApiInspector.WebUI -p:PublishProfile=ApiInspector.WebUI/Properties/PublishProfiles/FolderProfile1
+        dotnet publish ApiInspector.WebUI -p:PublishProfile=ApiInspector.WebUI/Properties/PublishProfiles/FolderProfile1.pubxml
     
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.1
