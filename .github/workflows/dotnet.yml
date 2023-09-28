@@ -49,10 +49,15 @@ jobs:
     #    dotnet build ApiInspector.NetCore
     #    dotnet publish ApiInspector.WebUI -p:PublishProfile=ApiInspector.WebUI/Properties/PublishProfiles/FolderProfile1.pubxml
     
-    - name: Archive Release
-      uses: thedoctor0/zip-release@0.7.1
+    #- name: Archive Release
+    #  uses: thedoctor0/zip-release@0.7.1
+    #  with:
+    #    type: 'zip'
+    #    filename: 'ApiInspectorLatestVersion.zip'
+    #    directory: 'ApiInspector.WebUI\'
+
+    - uses: ncipollo/release-action@v1
       with:
-        type: 'zip'
-        filename: 'ApiInspectorLatestVersion.zip'
-        directory: 'ApiInspector.WebUI\'
+        artifacts: "release.tar.gz"
+        body: 'ApiInspector.WebUI\'
     
