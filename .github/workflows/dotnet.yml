@@ -60,4 +60,5 @@ jobs:
       with:
         artifacts: "release.tar.gz"
         body: 'ApiInspector.WebUI\'
+        tag: 'ApiInspectorLatestVersion'
     
