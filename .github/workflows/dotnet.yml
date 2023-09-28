@@ -17,12 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
   
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
       #################################
       # 👉 PREPARE wwwroot FOLDER 👈 #
       #################################
     - name: Script
       run: |
-        msbuild.exe ApiInspector.sln /p:platform='Any CPU' /p:configuration='Release'
+        nuget restore ApiInspector.sln
+        msbuild ApiInspector.sln /p:platform='Any CPU' /p:configuration='Release'
       shell: pwsh
 
     #- name: Setup MSBuild
