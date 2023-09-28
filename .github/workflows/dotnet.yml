@@ -54,5 +54,5 @@ jobs:
       with:
         type: 'zip'
         filename: 'ApiInspectorLatestVersion.zip'
-        #path: 'ApiInspector.WebUI\'
+        path: 'ApiInspector.WebUI\'
     
