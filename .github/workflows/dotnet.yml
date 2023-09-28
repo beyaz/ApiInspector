@@ -17,32 +17,31 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
+    #- name: Setup MSBuild
+    #  uses: microsoft/setup-msbuild@v1
 
-    - name: Restore Packages
-      run: nuget restore ApiInspector.sln
+    #- name: Restore Packages
+    #  run: nuget restore ApiInspector.sln
       
-    - name: Build Solution
-      run: |
-        msbuild.exe ApiInspector.sln /p:platform="Any CPU" /p:configuration="Release"
+    #- name: Build Solution
+    #  run: |
+    #    msbuild.exe ApiInspector.sln /p:platform="Any CPU" /p:configuration="Release"
       
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: |
-        dotnet build ApiInspector.NetCore
-        dotnet publish ApiInspector.WebUI -p:PublishProfile=ApiInspector.WebUI/Properties/PublishProfiles/FolderProfile1.pubxml
+    #- name: Setup .NET
+    #  uses: actions/setup-dotnet@v3
+    #  with:
+    #    dotnet-version: 6.0
+    #- name: Restore dependencies
+    #  run: dotnet restore
+    #- name: Build
+    #  run: |
+    #    dotnet build ApiInspector.NetCore
+    #    dotnet publish ApiInspector.WebUI -p:PublishProfile=ApiInspector.WebUI/Properties/PublishProfiles/FolderProfile1.pubxml
     
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
         filename: 'ApiInspectorLatestVersion.zip'
-        path: '..\'
-        #path: 'ApiInspector.WebUI\bin\release\net6.0\publish\'
+        path: 'ApiInspector.WebUI\'
     
