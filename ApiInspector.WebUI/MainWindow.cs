@@ -167,7 +167,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                             state.AssemblyDirectory = x;
                             Client.OnAssemblyChanged(AssemblyFileFullPath);
                         },
-                        style = { ComponentBoxShadow }
+                        style = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
                     }
                 },
 
@@ -190,25 +190,27 @@ class MainWindow : ReactComponent<MainWindowModel>
                 new FlexColumn
                 {
                     new Label { Text = "Filter by class name" },
-
-                    new InputText
+                    
+                    new input
                     {
+                        type                     ="text",
                         valueBind                = () => state.ClassFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
-                        style                    = { ComponentBoxShadow }
+                        style                    = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
                     }
                 },
                 new FlexColumn
                 {
                     new Label { Text = "Filter by method name" },
-
-                    new InputText
+                    
+                    new input
                     {
+                        type                     ="text",
                         valueBind                = () => state.MethodFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
-                        style                    = { ComponentBoxShadow }
+                        style                    = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
                     }
                 },
 
