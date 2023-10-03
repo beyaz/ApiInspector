@@ -54,26 +54,34 @@ class MainWindow : ReactComponent<MainWindowModel>
                 onClose   = () => HistoryDialogVisible = false,
                 children =
                 {
-                    new style
-                    {
-                        text = @"
-.p-dialog .p-dialog-header {
-    background: transparent;
-}
-.p-dialog .p-dialog-content{
-   background: transparent;
-}
-"
-                    },
-                    new HistoryPanel
-                    {
-                        SelectionChanged = selectedMethod =>
-                        {
-                            HistoryDialogVisible = false;
+//                    new style
+//                    {
+//                        text = @"
+//.p-dialog .p-dialog-header {
+//    background: transparent;
+//}
+//.p-dialog .p-dialog-content{
+//   background: transparent;
+//}
+//"
+//                    },
+            
+new Modal.Header
+{
+    "Select Method From History"
+},
+new Modal.Body
+{
+    new HistoryPanel
+    {
+        SelectionChanged = selectedMethod =>
+        {
+            HistoryDialogVisible = false;
 
-                            state = StateCache.TryRead(selectedMethod) ?? state;
-                        }
-                    }
+            state = StateCache.TryRead(selectedMethod) ?? state;
+        }
+    }
+}
                 },
                 style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
             }),
