@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
+using ReactWithDotNet.ThirdPartyLibraries.ReactSuite;
 
 namespace ApiInspector.WebUI.Components;
 
@@ -23,21 +23,20 @@ public class AssemblySelector : ReactComponent
             suggestions = Directory.GetFiles(AssemblyDirectoryPath).Where(x => Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe").Where(x => x.Contains(Query ?? string.Empty, StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).Take(7);
         }
 
-        return new AutoComplete<string>
+        return new AutoComplete
                {
                    value = AssemblyFileName,
-
-                   suggestions    = suggestions,
-                   completeMethod = _ => Query = _.query,
+                   data           = suggestions,
+                   
                    onChange       = OnChange,
-                   inputStyle     = { WidthMaximized }
+                   style     = { WidthMaximized }
                }
                + FlexGrow(1);
     }
 
-    void OnChange(AutoCompleteChangeParams<string> e)
+    void OnChange(string selectedValue)
     {
-        AssemblyFileName = e.value;
+        AssemblyFileName = selectedValue;
 
         if (File.Exists(Path.Combine(AssemblyDirectoryPath, AssemblyFileName)))
         {
