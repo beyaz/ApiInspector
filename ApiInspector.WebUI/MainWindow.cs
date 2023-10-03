@@ -46,46 +46,6 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
-            When(HistoryDialogVisible, () => new Modal
-            {
-                open  = HistoryDialogVisible,
-                //header   = new div("Select Method From History"){TextAlignCenter},
-                //closable = true,
-                onClose   = () => HistoryDialogVisible = false,
-                children =
-                {
-//                    new style
-//                    {
-//                        text = @"
-//.p-dialog .p-dialog-header {
-//    background: transparent;
-//}
-//.p-dialog .p-dialog-content{
-//   background: transparent;
-//}
-//"
-//                    },
-            
-new Modal.Header
-{
-    "Select Method From History"
-},
-new Modal.Body
-{
-    new HistoryPanel
-    {
-        SelectionChanged = selectedMethod =>
-        {
-            HistoryDialogVisible = false;
-
-            state = StateCache.TryRead(selectedMethod) ?? state;
-        }
-    }
-}
-                },
-                style = { Border($"1px solid {borderColor}"), BackdropFilterBlur(12), Background("rgba(255, 255, 255, 0.4)") }
-            }),
-
             new FlexColumn(Border(Solid(1, borderColor)),
                            WidthHeightMaximized,
                            Background(rgba(255, 255, 255, 0.4)),
@@ -94,33 +54,50 @@ new Modal.Body
                            BackdropFilterBlur(30)
                           )
             {
-                new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom(Solid(1, borderColor)))
-                {
-                    JustifyContentSpaceBetween,
-                    AlignItemsCenter,
+                applicationHeader,
 
-                    new FlexRow(Gap(5))
+                HistoryDialogVisible
+                    ? new FlexColumnCentered(HeightMaximized)
                     {
-                        AlignItemsCenter,
-                        new h3 { "Api Inspector" }, new h5 { " (.net method invoker) " }
-                    },
+                        new HistoryPanel
+                        {
+                            SelectionChanged = selectedMethod =>
+                            {
+                                HistoryDialogVisible = false;
 
-                    new FlexRow(Gap(20))
-                    {
-                        GetEnvironment,
-                        new LogoutButton()
+                                state = StateCache.TryRead(selectedMethod) ?? state;
+                            }
+                        }
                     }
-                },
-
-                new FlexRow(HeightMaximized)
-                {
-                    searchPanel,
-                    addRemovePanel,
-                    ActiveSelectedMethod
-                }
+                    : new FlexRow(HeightMaximized)
+                    {
+                        searchPanel,
+                        addRemovePanel,
+                        ActiveSelectedMethod
+                    }
             }
         };
 
+        Element applicationHeader()
+        {
+            return new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom(Solid(1, borderColor)))
+            {
+                JustifyContentSpaceBetween,
+                AlignItemsCenter,
+
+                new FlexRow(Gap(5))
+                {
+                    AlignItemsCenter,
+                    new h3 { "Api Inspector" }, new h5 { " (.net method invoker) " }
+                },
+
+                new FlexRow(Gap(20))
+                {
+                    GetEnvironment,
+                    new LogoutButton()
+                }
+            };
+        }
         Element addRemovePanel()
         {
             return new FlexColumn(Width(30), PaddingRight(10), Gap(10), JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
