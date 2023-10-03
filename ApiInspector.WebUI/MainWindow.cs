@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
-using ReactWithDotNet.ThirdPartyLibraries.ReactSuite;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 using static System.Environment;
 
@@ -61,13 +60,16 @@ class MainWindow : ReactComponent<MainWindowModel>
                     {
                         new HistoryPanel
                         {
+                            Closed = ()=>HistoryDialogVisible = false,
                             SelectionChanged = selectedMethod =>
                             {
                                 HistoryDialogVisible = false;
 
                                 state = StateCache.TryRead(selectedMethod) ?? state;
                             }
-                        }
+                        },
+                        SpaceY(200)
+                        
                     }
                     : new FlexRow(HeightMaximized)
                     {
@@ -88,7 +90,7 @@ class MainWindow : ReactComponent<MainWindowModel>
                 new FlexRow(Gap(5))
                 {
                     AlignItemsCenter,
-                    new h3 { "Api Inspector" }, new h5 { " (.net method invoker) " }
+                    new h3 { "Api Inspector" }, new h5 { " (.net method invoker) ", MarginTop(5) }
                 },
 
                 new FlexRow(Gap(20))

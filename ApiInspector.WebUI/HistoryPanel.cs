@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
 
 namespace ApiInspector.WebUI;
 
@@ -9,6 +8,9 @@ class HistoryPanel : ReactComponent
 
     [ReactCustomEvent]
     public Action<MethodReference> SelectionChanged { get; set; }
+    
+    [ReactCustomEvent]
+    public Action Closed { get; set; }
 
     protected override Element render()
     {
@@ -16,13 +18,20 @@ class HistoryPanel : ReactComponent
 
         return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(15), Height("50vh"))
         {
-            new InputText
+            new FlexRowCentered(FontSize40, FontWeight700, Color("#ced4da"), Padding(5),  CursorDefault, Hover(Color("#adada6")))
             {
-                placeholder              = "Search",
-                style                    = { width = "50%" },
+                "\u2190",
+                Title("Return Back"),
+                OnClick(OnClose)
+            },
+            new input
+            {
+                placeholder              = "Search in history",
+                type                     ="text",
                 valueBind                = () => FilterText,
                 valueBindDebounceTimeout = 700,
-                valueBindDebounceHandler = OnFilterTextKeypressCompleted
+                valueBindDebounceHandler = OnFilterTextKeypressCompleted,
+                style                    = { Width("50%"), FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
             },
             new FlexColumn(AlignItemsStretch, Gap(10))
             {
@@ -57,6 +66,11 @@ class HistoryPanel : ReactComponent
                 })
             }
         };
+    }
+
+    void OnClose(MouseEvent obj)
+    {
+        DispatchEvent(() => Closed);
     }
 
     void OnClickHandler(MouseEvent e)
