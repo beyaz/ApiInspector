@@ -208,9 +208,9 @@ static class Program
         foreach (var parameterInfo in parameterInfoList)
         {
             // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
-            if (parameterInfo.Name is not null && map.ContainsKey(parameterInfo.Name))
+            if (parameterInfo.Name is not null)
             {
-                var jToken = map[parameterInfo.Name];
+                var jToken = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
                 if (jToken != null)
                 {
                     var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
