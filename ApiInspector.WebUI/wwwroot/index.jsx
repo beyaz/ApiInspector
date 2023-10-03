@@ -11,3 +11,4 @@ import "./react-with-dotnet/libraries/MonacoEditorReact/all";
 ReactWithDotNet.RegisterExternalJsObject("CloseWindow", () => window.close());
 
 export { ReactWithDotNet };
+
