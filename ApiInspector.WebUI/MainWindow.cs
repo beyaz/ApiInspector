@@ -258,66 +258,59 @@ class MainWindow : ReactComponent<MainWindowModel>
 
             return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
             {
-                new Splitter
+                new FlexRow(WidthMaximized)
                 {
-                    x => x.gutterSize = 8,
                     ComponentBoxShadow,
                     MarginTop(5),
                     BorderRadius(5),
 
-                    new SplitterPanel
+                    new FlexColumn(AlignItemsCenter, FlexGrow(1), When(state.SelectedMethod?.IsStatic == true, DisplayNone))
                     {
-                        new FlexColumn(AlignItemsCenter)
+                        new Label
                         {
-                            new Label
+                            Text = "Instance json",
+                            style =
                             {
-                                Text = "Instance json",
-                                style =
-                                {
-                                    Padding(10),
-                                    FlexGrow(1)
-                                }
-                            },
-                            new FreeScrollBar
-                            {
-                                AutoHideScrollbar,
-
-                                Height(300), PaddingBottom(10),
-                                BorderTop(Solid(1, "#d9d9d9")),
-                                BorderBottomLeftRadius(3),
-                                WidthMaximized,
-                                FlexGrow(1),
-
-                                NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
+                                Padding(10),
+                                FlexGrow(1)
                             }
+                        },
+                        new FreeScrollBar
+                        {
+                            AutoHideScrollbar,
+
+                            Height(300), PaddingBottom(10),
+                            BorderTop(Solid(1, "#d9d9d9")),
+                            BorderBottomLeftRadius(3),
+                            WidthMaximized,
+                            FlexGrow(1),
+
+                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
                         }
                     },
 
-                    new SplitterPanel
+                    new FlexColumn(AlignItemsCenter,FlexGrow(1))
                     {
-                        new FlexColumn(AlignItemsCenter)
+                        new Label
                         {
-                            new Label
+                            Text = "Parameters json",
+                            style =
                             {
-                                Text = "Parameters json",
-                                style =
-                                {
-                                    Padding(10),
-                                    FlexGrow(1)
-                                }
-                            },
-                            new FreeScrollBar
-                            {
-                                AutoHideScrollbar,
-
-                                Height(300), PaddingBottom(10),
-                                BorderTop(Solid(1, "#d9d9d9")),
-                                BorderBottomRightRadius(3),
-                                WidthMaximized,
-                                FlexGrow(1),
-
-                                NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
+                                Padding(10),
+                                FlexGrow(1)
                             }
+                        },
+                        new FreeScrollBar
+                        {
+                            AutoHideScrollbar,
+
+                            Height(300), PaddingBottom(10),
+                            BorderTop(Solid(1, "#d9d9d9")),
+                            BorderBottomRightRadius(3),
+                            WidthMaximized,
+                            FlexGrow(1),
+
+                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
                         }
                     }
                 },
