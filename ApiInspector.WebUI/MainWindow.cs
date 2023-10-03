@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
-using ReactWithDotNet.ThirdPartyLibraries.PrimeReact;
+using ReactWithDotNet.ThirdPartyLibraries.ReactSuite;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 using static System.Environment;
 
@@ -46,12 +46,12 @@ class MainWindow : ReactComponent<MainWindowModel>
     {
         return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
         {
-            When(HistoryDialogVisible, () => new Dialog
+            When(HistoryDialogVisible, () => new Modal
             {
-                visible  = HistoryDialogVisible,
-                header   = new div("Select Method From History"){TextAlignCenter},
-                closable = true,
-                onHide   = () => HistoryDialogVisible = false,
+                open  = HistoryDialogVisible,
+                //header   = new div("Select Method From History"){TextAlignCenter},
+                //closable = true,
+                onClose   = () => HistoryDialogVisible = false,
                 children =
                 {
                     new style
