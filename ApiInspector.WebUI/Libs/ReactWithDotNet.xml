@@ -125,6 +125,36 @@
                 Shorthand property for assign Flex properties
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.WithClass``1(``0,ReactWithDotNet.Style)">
+            <summary>
+            Automatically generates a css class then adds class name to element.
+            <br/>
+            css class will be automatically remove when component destroyed.
+            <br/>
+            Example:
+            <code>
+            arrowDown.WithClass(new Style
+            {
+               Transform("rotate(-180deg)")
+            })
+            </code>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WithClass``1(``0,ReactWithDotNet.StyleModifier[])">
+            <summary>
+            Automatically generates a css class then adds class name to element.
+            <br/>
+            css class will be automatically remove when component destroyed.
+            <br/>
+            Example:
+            <code>
+            arrowDown.WithClass(new []
+            {
+               Transform("rotate(-180deg)")
+            })
+            </code>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
             <summary>
                 img.alt = <paramref name="alt" />
