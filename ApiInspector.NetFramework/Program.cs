@@ -210,10 +210,10 @@ static class Program
             // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
             if (parameterInfo.Name is not null)
             {
-                var jToken = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
-                if (jToken != null)
+                var jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
+                if (jProperty != null)
                 {
-                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jToken.ToString());
+                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.ToString());
 
                     if (occurredErrorWhenCreatingInstance != null)
                     {
@@ -226,7 +226,7 @@ static class Program
                         continue;
                     }
 
-                    invocationParameters.Add(jToken.ToObject(parameterInfo.ParameterType));
+                    invocationParameters.Add(jProperty.Value.ToObject(parameterInfo.ParameterType));
                     continue;
                 }
             }
