@@ -24,14 +24,12 @@ public class AssemblySelector : ReactComponent
         }
 
         return new AutoComplete
-               {
-                   value = AssemblyFileName,
-                   data           = suggestions,
-                   
-                   onChange       = OnChange,
-                   style     = { WidthMaximized }
-               }
-               + FlexGrow(1);
+        {
+            value    = AssemblyFileName,
+            data     = suggestions,
+            onChange = OnChange,
+            style    = { WidthMaximized }
+        };
     }
 
     void OnChange(string selectedValue)
