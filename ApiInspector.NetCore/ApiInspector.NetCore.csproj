@@ -20,6 +20,7 @@
     <Compile Include="..\ApiInspector.NetFramework\ProcessHelper.cs" Link="ProcessHelper.cs" />
     <Compile Include="..\ApiInspector.NetFramework\Program.cs" Link="Program.cs" />
     <Compile Include="..\ApiInspector.NetFramework\ReflectionHelper.cs" Link="ReflectionHelper.cs" />
+    <Compile Include="..\ApiInspector.NetFramework\PropertyInfoConverter.cs" Link="PropertyInfoConverter.cs" />
   </ItemGroup>
 
   <ItemGroup>

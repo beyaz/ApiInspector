@@ -12,7 +12,7 @@ sealed class PropertyInfoConverter : JsonConverter
 
     public override bool CanConvert(Type objectType)
     {
-        return typeof(Type).IsAssignableFrom(objectType);
+        return typeof(PropertyInfo).IsAssignableFrom(objectType);
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
