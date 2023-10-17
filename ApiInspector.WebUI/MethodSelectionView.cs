@@ -32,7 +32,7 @@ public sealed class MethodSelectionViewState
     public IReadOnlyList<MetadataNode> Nodes{ get; set; }
 }
 
-class MethodSelectionView : ReactComponent<MethodSelectionViewState>
+class MethodSelectionView : Component<MethodSelectionViewState>
 {
     
     public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)

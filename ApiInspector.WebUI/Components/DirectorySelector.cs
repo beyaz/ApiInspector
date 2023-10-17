@@ -2,7 +2,7 @@
 
 namespace ApiInspector.WebUI.Components;
 
-public class DirectorySelector : ReactComponent
+public class DirectorySelector : Component
 {
     public string DirectoryPath { get; set; }
 

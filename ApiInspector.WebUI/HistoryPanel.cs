@@ -2,7 +2,7 @@
 
 namespace ApiInspector.WebUI;
 
-class HistoryPanel : ReactComponent
+class HistoryPanel : Component
 {
     public string FilterText { get; set; }
 

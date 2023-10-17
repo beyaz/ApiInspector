@@ -9,3 +9,15 @@ class Label : ReactPureComponent
         return new div { FontSizeSmall, FontWeight600, Text };
     }
 }
+
+abstract class ReactPureComponent: PureComponent
+{
+    
+}
+
+abstract class ReactComponent: Component
+{
+    
+    
+}
+

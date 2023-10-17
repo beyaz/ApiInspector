@@ -9,7 +9,7 @@ using static System.Environment;
 
 namespace ApiInspector.WebUI;
 
-class MainWindow : ReactComponent<MainWindowModel>
+class MainWindow : Component<MainWindowModel>
 {
     const string borderColor = "#d5d5d8";
     public bool DebugButtonStatusIsFail { get; set; }
@@ -565,7 +565,7 @@ class MainWindow : ReactComponent<MainWindowModel>
         public string Text { get; set; }
     }
 
-    class EnvironmentInfoView : ReactComponent<EnvironmentInfoState>
+    class EnvironmentInfoView : Component<EnvironmentInfoState>
     {
         public string AssemblyFileFullPath { get; set; }
 

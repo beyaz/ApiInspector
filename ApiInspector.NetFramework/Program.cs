@@ -391,7 +391,8 @@ static class Program
         {
             DefaultValueHandling       = DefaultValueHandling.Ignore,
             Formatting                 = Formatting.Indented,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            Converters = new List<JsonConverter>{ new PropertyInfoConverter()}
         });
 
         FileHelper.WriteSuccessResponse(responseAsJson);

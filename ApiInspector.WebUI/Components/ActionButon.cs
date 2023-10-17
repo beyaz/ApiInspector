@@ -1,6 +1,6 @@
 ﻿namespace ApiInspector.WebUI.Components;
 
-public class ActionButton : ReactComponent
+public class ActionButton : Component
 {
     public bool IsProcessing { get; set; }
 

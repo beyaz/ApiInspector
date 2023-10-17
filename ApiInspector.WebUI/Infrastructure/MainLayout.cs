@@ -1,6 +1,6 @@
 ﻿namespace ApiInspector.WebUI;
 
-class MainLayout : ReactComponent, IPageLayout
+class MainLayout : Component, IPageLayout
 {
     public ComponentRenderInfo RenderInfo { get; set; }
     

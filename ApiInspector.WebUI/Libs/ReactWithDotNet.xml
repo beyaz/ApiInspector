@@ -9,6 +9,15 @@
                 Download file when clicking on the link (instead of navigating to the file):
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.a.rel">
+            <summary>
+                Specifies the relationship between the current document and the linked document.
+                <br />
+                Only used if the href attribute is present.
+                <br />
+                Tip: Search engines can use this attribute to get more information about a link!
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.a.TargetBlank">
             <summary>
                 a.target = '_blank'
@@ -24,6 +33,18 @@
                 a.target = <paramref name="target" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.a.Rel(System.String)">
+            <summary>
+                a.href = <paramref name="value" />;
+                <br/>
+                <br/>
+                Specifies the relationship between the current document and the linked document.
+                <br />
+                Only used if the href attribute is present.
+                <br />
+                Tip: Search engines can use this attribute to get more information about a link!
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Href(System.String)">
             <summary>
                 a.href = <paramref name="href" />
@@ -32,6 +53,18 @@
         <member name="P:ReactWithDotNet.Mixin.TargetBlank">
             <summary>
                 a.target = '_blank'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Rel(System.String)">
+            <summary>
+                a.href = <paramref name="value" />;
+                <br/>
+                <br/>
+                Specifies the relationship between the current document and the linked document.
+                <br />
+                Only used if the href attribute is present.
+                <br />
+                Tip: Search engines can use this attribute to get more information about a link!
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.nbsp">
@@ -412,23 +445,9 @@
                 width: 100%
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.BackdropFilter(System.String)">
-            <summary>
-                style.backdropFilter = value
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.BackdropFilterBlur(System.Double)">
             <summary>
                 style.backdropFilter = blur(px)
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String)">
-            <summary>
-            The background-image property sets one or more background images for an element.
-            <br/>
-            By default, a background-image is placed at the top-left corner of an element, and repeated both vertically and horizontally.
-            <br/>
-            style.backgroundImage = <paramref name="backgroundImage"/>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String[])">
@@ -438,21 +457,6 @@
             By default, a background-image is placed at the top-left corner of an element, and repeated both vertically and horizontally.
             <br/>
             style.backgroundImage = <paramref name="backgroundImages[0][0]"/>, <paramref name="backgroundImages[1][1]"/>, <paramref name="backgroundImages[...][...]"/>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Clear(System.String)">
-            <summary>
-                style.clear = value
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Content(System.String)">
-            <summary>
-                style.content = <paramref name="content" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Cursor(System.String)">
-            <summary>
-                style.cursor = <paramref name="value" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Dir(System.String)">
@@ -470,15 +474,6 @@
                 Specifies how the item will shrink relative to the rest of the flexible items inside the same container.
                 <br/>
                 style.flexShrink = <paramref name="value" />
-                <br/>
-                Note: If the element is not a flexible item, the flex-shrink property has no effect.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.FlexBasis(System.String)">
-            <summary>
-                Specifies the initial length of a flexible item.
-                <br/>
-                style.flexBasis = <paramref name="value" />
                 <br/>
                 Note: If the element is not a flexible item, the flex-shrink property has no effect.
             </summary>
@@ -558,11 +553,6 @@
                 style.bottom = <paramref name="value" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.ListStyle(System.String)">
-            <summary>
-                style.listStyle = <paramref name="listStyle" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.ListStyleInside">
             <summary>
                 style.listStyle = 'inside'
@@ -578,19 +568,9 @@
                 style.listStyle = 'square'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.MaxHeight(System.String)">
-            <summary>
-                style.maxHeight = <paramref name="maxHeight" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.MaxHeight(System.Double)">
             <summary>
                 style.maxHeight = <paramref name="maxHeight" /> + "px"
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MaxWidth(System.String)">
-            <summary>
-                style.maxWidth = <paramref name="maxWidth" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MaxWidth(System.Double)">
@@ -598,19 +578,9 @@
                 style.maxWidth = <paramref name="maxWidth" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.MinHeight(System.String)">
-            <summary>
-                style.minHeight = <paramref name="minHeight" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.MinHeight(System.Double)">
             <summary>
                 style.minHeight = <paramref name="minHeight" /> + "px"
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MinWidth(System.String)">
-            <summary>
-                style.minWidth = minWidth
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MinWidth(System.Double)">
@@ -628,11 +598,6 @@
                 ...<br />
                 ...<br />
                 });
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Right(System.String)">
-            <summary>
-                style.right = right
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Right(System.Double)">
@@ -915,24 +880,9 @@
                 <b>-webkit-font-smoothing</b> = grayscale
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
-            <summary>
-                style.fontFamily = fontFamily
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.Double)">
             <summary>
                 style.letterSpacing = <paramref name="letterSpacingAsPixel" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MozOsxFontSmoothing(System.String)">
-            <summary>
-                <b>-moz-osx-font-smoothing</b> = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WebkitFontSmoothing(System.String)">
-            <summary>
-                <b>-webkit-font-smoothing</b> = <paramref name="value" />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
@@ -968,11 +918,6 @@
         <member name="P:ReactWithDotNet.Mixin.AlignContentSpaceBetween">
             <summary>
                 <para>style.alignContent = "space-between"</para>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.AlignSelf(System.String)">
-            <summary>
-                <para>style.alignSelf = <paramref name="value" /></para>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.AlignSelfaAuto">
@@ -1065,21 +1010,6 @@
                 <para>style.wordBreak = "break-word"</para>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WhiteSpace(System.String)">
-            <summary>
-                style.whiteSpace = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WordBreak(System.String)">
-            <summary>
-                style.wordBreak = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WordWrap(System.String)">
-            <summary>
-                style.wordWrap = <paramref name="value" />
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.WordWrapNormal">
             <summary>
                 style.wordWrap = normal
@@ -1130,29 +1060,9 @@
                 style.visibility = 'visible'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Opacity(System.String)">
-            <summary>
-                style.opacity = <paramref name="opacity" />
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.Opacity(System.Double)">
             <summary>
                 style.opacity = <paramref name="opacity" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
-            <summary>
-                style.textTransform = <paramref name="textTransform" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Transform(System.String)">
-            <summary>
-                style.transform = <paramref name="transform" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Transition(System.String)">
-            <summary>
-                style.transition = <paramref name="transition" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Transition(System.String,System.Double)">
@@ -1176,16 +1086,6 @@
             <summary>
                 style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms {
                 <paramref name="easingFunction" />} {<paramref name="delayAsMilliseconds" />}ms
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.Visibility(System.String)">
-            <summary>
-                style.visibility = <paramref name="visibility" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.TransformOrigin(System.String)">
-            <summary>
-                style.transformOrigin = <paramref name="value" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.Style)">
@@ -1273,18 +1173,6 @@
                 (min-width: <paramref name="minWidthAsPixel"/> + 'px') and (max-width: <paramref name="maxWidthAsPixel"/> + 'px')
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.BorderColor(System.String)">
-            <summary>
-                style.borderColor = <paramref name="color" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.TextIndent(System.String)">
-            <summary>
-            specifies the indentation of the first line in a text-block
-            <br/>
-            style.textIndent = <paramref name="value"/>
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.TextIndent(System.Double)">
             <summary>
             specifies the indentation of the first line in a text-block
@@ -1354,21 +1242,9 @@
             "url(urlValue)
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.Outline(System.String)">
-            <summary>
-                style.outline = <paramref name="value" />
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.OutlineNone">
             <summary>
                 style.outline = none
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.BorderCollapse(System.String)">
-            <summary>
-            Sets whether table borders should collapse into a single border or be separated as in standard HTML.
-            <br/>
-            style.borderCollapse = <paramref name="value"/>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.BorderCollapseCollapse">
@@ -1399,11 +1275,6 @@
         <member name="M:ReactWithDotNet.Mixin.RowSpan(System.Int32)">
             <summary>
                 (tr-td).rowSpan = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MixBlendMode(System.String)">
-            <summary>
-            normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|difference|exclusion|hue|saturation|color|luminosity
             </summary>
         </member>
         <member name="F:ReactWithDotNet.Mixin.percent">
@@ -1554,26 +1425,6 @@
                 the image is scaled down to the smallest version of none or contain
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.BackgroundRepeat(System.String)">
-            <summary>
-                style.backgroundRepeat = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.BackgroundSize(System.String)">
-            <summary>
-                The background-size property specifies the size of the background images.
-                <br />
-               There are four different syntaxes you can use with this property: the keyword syntax ("auto", "cover" and "contain"), the one-value syntax (sets the width of the image (height becomes "auto"), the two-value syntax (first value: width of the image, second value: height), and the multiple background syntax (separated with comma).
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.ObjectFit(System.String)">
-            <summary>
-                The CSS object-fit property is used to specify how an img or video should be resized to fit its container.
-                <br />
-                This property tells the content to fill the container in a variety of ways; such as "preserve that aspect ratio" or
-                "stretch up and take up as much space as possible".
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.Size(System.Double,System.Double)">
             <summary>
                 style.width = <paramref name="width" /> + 'px'
@@ -1581,9 +1432,3174 @@
                 style.height = <paramref name="height" /> + 'px'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.AccentColor(System.String)">
+            <summary>
+                style.accentColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AdditiveSymbols(System.String)">
+            <summary>
+                style.additiveSymbols = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AlignContent(System.String)">
+            <summary>
+                style.alignContent = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AlignItems(System.String)">
+            <summary>
+                style.alignItems = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AlignSelf(System.String)">
+            <summary>
+                style.alignSelf = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AlignmentBaseline(System.String)">
+            <summary>
+                style.alignmentBaseline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.All(System.String)">
+            <summary>
+                style.all = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Animation(System.String)">
+            <summary>
+                style.animation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationComposition(System.String)">
+            <summary>
+                style.animationComposition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationDelay(System.String)">
+            <summary>
+                style.animationDelay = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationDirection(System.String)">
+            <summary>
+                style.animationDirection = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationDuration(System.String)">
+            <summary>
+                style.animationDuration = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationFillMode(System.String)">
+            <summary>
+                style.animationFillMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationIterationCount(System.String)">
+            <summary>
+                style.animationIterationCount = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationName(System.String)">
+            <summary>
+                style.animationName = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationPlayState(System.String)">
+            <summary>
+                style.animationPlayState = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationRange(System.String)">
+            <summary>
+                style.animationRange = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationRangeEnd(System.String)">
+            <summary>
+                style.animationRangeEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationRangeStart(System.String)">
+            <summary>
+                style.animationRangeStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationTimeline(System.String)">
+            <summary>
+                style.animationTimeline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AnimationTimingFunction(System.String)">
+            <summary>
+                style.animationTimingFunction = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AppRegion(System.String)">
+            <summary>
+                style.appRegion = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Appearance(System.String)">
+            <summary>
+                style.appearance = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AscentOverride(System.String)">
+            <summary>
+                style.ascentOverride = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.AspectRatio(System.String)">
+            <summary>
+                style.aspectRatio = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackdropFilter(System.String)">
+            <summary>
+                style.backdropFilter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackfaceVisibility(System.String)">
+            <summary>
+                style.backfaceVisibility = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Background(System.String)">
+            <summary>
+                style.background = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundAttachment(System.String)">
+            <summary>
+                style.backgroundAttachment = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundBlendMode(System.String)">
+            <summary>
+                style.backgroundBlendMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundClip(System.String)">
+            <summary>
+                style.backgroundClip = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundColor(System.String)">
+            <summary>
+                style.backgroundColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String)">
+            <summary>
+                style.backgroundImage = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundOrigin(System.String)">
+            <summary>
+                style.backgroundOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundPosition(System.String)">
+            <summary>
+                style.backgroundPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundPositionX(System.String)">
+            <summary>
+                style.backgroundPositionX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundPositionY(System.String)">
+            <summary>
+                style.backgroundPositionY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundRepeat(System.String)">
+            <summary>
+                style.backgroundRepeat = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundRepeatX(System.String)">
+            <summary>
+                style.backgroundRepeatX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundRepeatY(System.String)">
+            <summary>
+                style.backgroundRepeatY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BackgroundSize(System.String)">
+            <summary>
+                style.backgroundSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BasePalette(System.String)">
+            <summary>
+                style.basePalette = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BaselineShift(System.String)">
+            <summary>
+                style.baselineShift = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BaselineSource(System.String)">
+            <summary>
+                style.baselineSource = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BlockSize(System.String)">
+            <summary>
+                style.blockSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Border(System.String)">
+            <summary>
+                style.border = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlock(System.String)">
+            <summary>
+                style.borderBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockColor(System.String)">
+            <summary>
+                style.borderBlockColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockEnd(System.String)">
+            <summary>
+                style.borderBlockEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockEndColor(System.String)">
+            <summary>
+                style.borderBlockEndColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockEndStyle(System.String)">
+            <summary>
+                style.borderBlockEndStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockEndWidth(System.String)">
+            <summary>
+                style.borderBlockEndWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockStart(System.String)">
+            <summary>
+                style.borderBlockStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockStartColor(System.String)">
+            <summary>
+                style.borderBlockStartColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockStartStyle(System.String)">
+            <summary>
+                style.borderBlockStartStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockStartWidth(System.String)">
+            <summary>
+                style.borderBlockStartWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockStyle(System.String)">
+            <summary>
+                style.borderBlockStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBlockWidth(System.String)">
+            <summary>
+                style.borderBlockWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBottom(System.String)">
+            <summary>
+                style.borderBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBottomColor(System.String)">
+            <summary>
+                style.borderBottomColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBottomLeftRadius(System.String)">
+            <summary>
+                style.borderBottomLeftRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBottomRightRadius(System.String)">
+            <summary>
+                style.borderBottomRightRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBottomStyle(System.String)">
+            <summary>
+                style.borderBottomStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderBottomWidth(System.String)">
+            <summary>
+                style.borderBottomWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderCollapse(System.String)">
+            <summary>
+                style.borderCollapse = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderColor(System.String)">
+            <summary>
+                style.borderColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderEndEndRadius(System.String)">
+            <summary>
+                style.borderEndEndRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderEndStartRadius(System.String)">
+            <summary>
+                style.borderEndStartRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImage(System.String)">
+            <summary>
+                style.borderImage = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageOutset(System.String)">
+            <summary>
+                style.borderImageOutset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageOutset(System.Double)">
+            <summary>
+                style.borderImageOutset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageRepeat(System.String)">
+            <summary>
+                style.borderImageRepeat = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageSlice(System.String)">
+            <summary>
+                style.borderImageSlice = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageSource(System.String)">
+            <summary>
+                style.borderImageSource = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageWidth(System.String)">
+            <summary>
+                style.borderImageWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderImageWidth(System.Double)">
+            <summary>
+                style.borderImageWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInline(System.String)">
+            <summary>
+                style.borderInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineColor(System.String)">
+            <summary>
+                style.borderInlineColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineEnd(System.String)">
+            <summary>
+                style.borderInlineEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineEndColor(System.String)">
+            <summary>
+                style.borderInlineEndColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineEndStyle(System.String)">
+            <summary>
+                style.borderInlineEndStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineEndWidth(System.String)">
+            <summary>
+                style.borderInlineEndWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineStart(System.String)">
+            <summary>
+                style.borderInlineStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineStartColor(System.String)">
+            <summary>
+                style.borderInlineStartColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineStartStyle(System.String)">
+            <summary>
+                style.borderInlineStartStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineStartWidth(System.String)">
+            <summary>
+                style.borderInlineStartWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineStyle(System.String)">
+            <summary>
+                style.borderInlineStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderInlineWidth(System.String)">
+            <summary>
+                style.borderInlineWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeft(System.String)">
+            <summary>
+                style.borderLeft = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeftColor(System.String)">
+            <summary>
+                style.borderLeftColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeftStyle(System.String)">
+            <summary>
+                style.borderLeftStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderLeftWidth(System.String)">
+            <summary>
+                style.borderLeftWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderRadius(System.String)">
+            <summary>
+                style.borderRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderRight(System.String)">
+            <summary>
+                style.borderRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderRightColor(System.String)">
+            <summary>
+                style.borderRightColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderRightStyle(System.String)">
+            <summary>
+                style.borderRightStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderRightWidth(System.String)">
+            <summary>
+                style.borderRightWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderSpacing(System.String)">
+            <summary>
+                style.borderSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderStartEndRadius(System.String)">
+            <summary>
+                style.borderStartEndRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderStartStartRadius(System.String)">
+            <summary>
+                style.borderStartStartRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderStyle(System.String)">
+            <summary>
+                style.borderStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTop(System.String)">
+            <summary>
+                style.borderTop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopColor(System.String)">
+            <summary>
+                style.borderTopColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopLeftRadius(System.String)">
+            <summary>
+                style.borderTopLeftRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopRightRadius(System.String)">
+            <summary>
+                style.borderTopRightRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopStyle(System.String)">
+            <summary>
+                style.borderTopStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderTopWidth(System.String)">
+            <summary>
+                style.borderTopWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderWidth(System.String)">
+            <summary>
+                style.borderWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Bottom(System.String)">
+            <summary>
+                style.bottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BoxShadow(System.String)">
+            <summary>
+                style.boxShadow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BoxSizing(System.String)">
+            <summary>
+                style.boxSizing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BreakAfter(System.String)">
+            <summary>
+                style.breakAfter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BreakBefore(System.String)">
+            <summary>
+                style.breakBefore = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BreakInside(System.String)">
+            <summary>
+                style.breakInside = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BufferedRendering(System.String)">
+            <summary>
+                style.bufferedRendering = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CaptionSide(System.String)">
+            <summary>
+                style.captionSide = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CaretColor(System.String)">
+            <summary>
+                style.caretColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Clear(System.String)">
+            <summary>
+                style.clear = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Clip(System.String)">
+            <summary>
+                style.clip = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ClipPath(System.String)">
+            <summary>
+                style.clipPath = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ClipPath(System.Double)">
+            <summary>
+                style.clipPath = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ClipRule(System.String)">
+            <summary>
+                style.clipRule = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Color(System.String)">
+            <summary>
+                style.color = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColorInterpolation(System.String)">
+            <summary>
+                style.colorInterpolation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColorInterpolationFilters(System.String)">
+            <summary>
+                style.colorInterpolationFilters = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColorRendering(System.String)">
+            <summary>
+                style.colorRendering = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColorScheme(System.String)">
+            <summary>
+                style.colorScheme = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnCount(System.String)">
+            <summary>
+                style.columnCount = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnFill(System.String)">
+            <summary>
+                style.columnFill = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnGap(System.String)">
+            <summary>
+                style.columnGap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnRule(System.String)">
+            <summary>
+                style.columnRule = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnRuleColor(System.String)">
+            <summary>
+                style.columnRuleColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnRuleStyle(System.String)">
+            <summary>
+                style.columnRuleStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnRuleWidth(System.String)">
+            <summary>
+                style.columnRuleWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnSpan(System.String)">
+            <summary>
+                style.columnSpan = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ColumnWidth(System.String)">
+            <summary>
+                style.columnWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Columns(System.String)">
+            <summary>
+                style.columns = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Contain(System.String)">
+            <summary>
+                style.contain = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainIntrinsicBlockSize(System.String)">
+            <summary>
+                style.containIntrinsicBlockSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainIntrinsicHeight(System.String)">
+            <summary>
+                style.containIntrinsicHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainIntrinsicInlineSize(System.String)">
+            <summary>
+                style.containIntrinsicInlineSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainIntrinsicSize(System.String)">
+            <summary>
+                style.containIntrinsicSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainIntrinsicWidth(System.String)">
+            <summary>
+                style.containIntrinsicWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Container(System.String)">
+            <summary>
+                style.container = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainerName(System.String)">
+            <summary>
+                style.containerName = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContainerType(System.String)">
+            <summary>
+                style.containerType = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Content(System.String)">
+            <summary>
+                style.content = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ContentVisibility(System.String)">
+            <summary>
+                style.contentVisibility = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CounterIncrement(System.String)">
+            <summary>
+                style.counterIncrement = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CounterReset(System.String)">
+            <summary>
+                style.counterReset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CounterSet(System.String)">
+            <summary>
+                style.counterSet = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Cursor(System.String)">
+            <summary>
+                style.cursor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Cx(System.String)">
+            <summary>
+                style.cx = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Cy(System.String)">
+            <summary>
+                style.cy = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.D(System.String)">
+            <summary>
+                style.d = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.DescentOverride(System.String)">
+            <summary>
+                style.descentOverride = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Direction(System.String)">
+            <summary>
+                style.direction = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Display(System.String)">
+            <summary>
+                style.display = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.DominantBaseline(System.String)">
+            <summary>
+                style.dominantBaseline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.EmptyCells(System.String)">
+            <summary>
+                style.emptyCells = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Fallback(System.String)">
+            <summary>
+                style.fallback = <paramref name="value" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Fill(System.String)">
             <summary>
-                svg.fill = <paramref name="color" />
+                style.fill = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Fill(System.Double)">
+            <summary>
+                style.fill = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FillOpacity(System.String)">
+            <summary>
+                style.fillOpacity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FillRule(System.String)">
+            <summary>
+                style.fillRule = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Filter(System.String)">
+            <summary>
+                style.filter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Flex(System.String)">
+            <summary>
+                style.flex = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexBasis(System.String)">
+            <summary>
+                style.flexBasis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexDirection(System.String)">
+            <summary>
+                style.flexDirection = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexFlow(System.String)">
+            <summary>
+                style.flexFlow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexGrow(System.String)">
+            <summary>
+                style.flexGrow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FlexShrink(System.String)">
+            <summary>
+                style.flexShrink = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.float(System.String)">
+            <summary>
+                style.@float = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FloodColor(System.String)">
+            <summary>
+                style.floodColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FloodOpacity(System.String)">
+            <summary>
+                style.floodOpacity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Font(System.String)">
+            <summary>
+                style.font = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontDisplay(System.String)">
+            <summary>
+                style.fontDisplay = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontFamily(System.String)">
+            <summary>
+                style.fontFamily = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontFeatureSettings(System.String)">
+            <summary>
+                style.fontFeatureSettings = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontKerning(System.String)">
+            <summary>
+                style.fontKerning = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontOpticalSizing(System.String)">
+            <summary>
+                style.fontOpticalSizing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontPalette(System.String)">
+            <summary>
+                style.fontPalette = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontSize(System.String)">
+            <summary>
+                style.fontSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontStretch(System.String)">
+            <summary>
+                style.fontStretch = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontStyle(System.String)">
+            <summary>
+                style.fontStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontSynthesis(System.String)">
+            <summary>
+                style.fontSynthesis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontSynthesisSmallCaps(System.String)">
+            <summary>
+                style.fontSynthesisSmallCaps = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontSynthesisStyle(System.String)">
+            <summary>
+                style.fontSynthesisStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontSynthesisWeight(System.String)">
+            <summary>
+                style.fontSynthesisWeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariant(System.String)">
+            <summary>
+                style.fontVariant = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariantAlternates(System.String)">
+            <summary>
+                style.fontVariantAlternates = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariantCaps(System.String)">
+            <summary>
+                style.fontVariantCaps = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariantEastAsian(System.String)">
+            <summary>
+                style.fontVariantEastAsian = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariantLigatures(System.String)">
+            <summary>
+                style.fontVariantLigatures = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariantNumeric(System.String)">
+            <summary>
+                style.fontVariantNumeric = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariantPosition(System.String)">
+            <summary>
+                style.fontVariantPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontVariationSettings(System.String)">
+            <summary>
+                style.fontVariationSettings = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontWeight(System.String)">
+            <summary>
+                style.fontWeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ForcedColorAdjust(System.String)">
+            <summary>
+                style.forcedColorAdjust = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Gap(System.String)">
+            <summary>
+                style.gap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Grid(System.String)">
+            <summary>
+                style.grid = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridArea(System.String)">
+            <summary>
+                style.gridArea = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridAutoColumns(System.String)">
+            <summary>
+                style.gridAutoColumns = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridAutoFlow(System.String)">
+            <summary>
+                style.gridAutoFlow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridAutoRows(System.String)">
+            <summary>
+                style.gridAutoRows = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridColumn(System.String)">
+            <summary>
+                style.gridColumn = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridColumnEnd(System.String)">
+            <summary>
+                style.gridColumnEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridColumnGap(System.String)">
+            <summary>
+                style.gridColumnGap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridColumnStart(System.String)">
+            <summary>
+                style.gridColumnStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridGap(System.String)">
+            <summary>
+                style.gridGap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridRow(System.String)">
+            <summary>
+                style.gridRow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridRowEnd(System.String)">
+            <summary>
+                style.gridRowEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridRowGap(System.String)">
+            <summary>
+                style.gridRowGap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridRowStart(System.String)">
+            <summary>
+                style.gridRowStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridTemplate(System.String)">
+            <summary>
+                style.gridTemplate = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridTemplateAreas(System.String)">
+            <summary>
+                style.gridTemplateAreas = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridTemplateColumns(System.String)">
+            <summary>
+                style.gridTemplateColumns = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridTemplateRows(System.String)">
+            <summary>
+                style.gridTemplateRows = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Height(System.String)">
+            <summary>
+                style.height = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.HyphenateCharacter(System.String)">
+            <summary>
+                style.hyphenateCharacter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.HyphenateLimitChars(System.String)">
+            <summary>
+                style.hyphenateLimitChars = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Hyphens(System.String)">
+            <summary>
+                style.hyphens = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ImageOrientation(System.String)">
+            <summary>
+                style.imageOrientation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ImageRendering(System.String)">
+            <summary>
+                style.imageRendering = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Inherits(System.String)">
+            <summary>
+                style.inherits = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InitialLetter(System.String)">
+            <summary>
+                style.initialLetter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InitialValue(System.String)">
+            <summary>
+                style.initialValue = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InlineSize(System.String)">
+            <summary>
+                style.inlineSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Inset(System.String)">
+            <summary>
+                style.inset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InsetBlock(System.String)">
+            <summary>
+                style.insetBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InsetBlockEnd(System.String)">
+            <summary>
+                style.insetBlockEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InsetBlockStart(System.String)">
+            <summary>
+                style.insetBlockStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InsetInline(System.String)">
+            <summary>
+                style.insetInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InsetInlineEnd(System.String)">
+            <summary>
+                style.insetInlineEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.InsetInlineStart(System.String)">
+            <summary>
+                style.insetInlineStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Isolation(System.String)">
+            <summary>
+                style.isolation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.JustifyContent(System.String)">
+            <summary>
+                style.justifyContent = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.JustifyItems(System.String)">
+            <summary>
+                style.justifyItems = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.JustifySelf(System.String)">
+            <summary>
+                style.justifySelf = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Left(System.String)">
+            <summary>
+                style.left = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.String)">
+            <summary>
+                style.letterSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LightingColor(System.String)">
+            <summary>
+                style.lightingColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LineBreak(System.String)">
+            <summary>
+                style.lineBreak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LineGapOverride(System.String)">
+            <summary>
+                style.lineGapOverride = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LineHeight(System.String)">
+            <summary>
+                style.lineHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyle(System.String)">
+            <summary>
+                style.listStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyleImage(System.String)">
+            <summary>
+                style.listStyleImage = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStylePosition(System.String)">
+            <summary>
+                style.listStylePosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListStyleType(System.String)">
+            <summary>
+                style.listStyleType = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Margin(System.String)">
+            <summary>
+                style.margin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginBlock(System.String)">
+            <summary>
+                style.marginBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginBlockEnd(System.String)">
+            <summary>
+                style.marginBlockEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginBlockStart(System.String)">
+            <summary>
+                style.marginBlockStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginBottom(System.String)">
+            <summary>
+                style.marginBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginInline(System.String)">
+            <summary>
+                style.marginInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginInlineEnd(System.String)">
+            <summary>
+                style.marginInlineEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginInlineStart(System.String)">
+            <summary>
+                style.marginInlineStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginLeft(System.String)">
+            <summary>
+                style.marginLeft = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginRight(System.String)">
+            <summary>
+                style.marginRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarginTop(System.String)">
+            <summary>
+                style.marginTop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Marker(System.String)">
+            <summary>
+                style.marker = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarkerEnd(System.String)">
+            <summary>
+                style.markerEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarkerMid(System.String)">
+            <summary>
+                style.markerMid = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MarkerStart(System.String)">
+            <summary>
+                style.markerStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Mask(System.String)">
+            <summary>
+                style.mask = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaskType(System.String)">
+            <summary>
+                style.maskType = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MathDepth(System.String)">
+            <summary>
+                style.mathDepth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MathShift(System.String)">
+            <summary>
+                style.mathShift = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MathStyle(System.String)">
+            <summary>
+                style.mathStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxBlockSize(System.String)">
+            <summary>
+                style.maxBlockSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxHeight(System.String)">
+            <summary>
+                style.maxHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxInlineSize(System.String)">
+            <summary>
+                style.maxInlineSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MaxWidth(System.String)">
+            <summary>
+                style.maxWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinBlockSize(System.String)">
+            <summary>
+                style.minBlockSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinHeight(System.String)">
+            <summary>
+                style.minHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinInlineSize(System.String)">
+            <summary>
+                style.minInlineSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinWidth(System.String)">
+            <summary>
+                style.minWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MixBlendMode(System.String)">
+            <summary>
+                style.mixBlendMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Negative(System.String)">
+            <summary>
+                style.negative = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ObjectFit(System.String)">
+            <summary>
+                style.objectFit = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ObjectPosition(System.String)">
+            <summary>
+                style.objectPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ObjectViewBox(System.String)">
+            <summary>
+                style.objectViewBox = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Offset(System.String)">
+            <summary>
+                style.offset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OffsetAnchor(System.String)">
+            <summary>
+                style.offsetAnchor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OffsetDistance(System.String)">
+            <summary>
+                style.offsetDistance = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OffsetPath(System.String)">
+            <summary>
+                style.offsetPath = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OffsetPosition(System.String)">
+            <summary>
+                style.offsetPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OffsetRotate(System.String)">
+            <summary>
+                style.offsetRotate = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Opacity(System.String)">
+            <summary>
+                style.opacity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Order(System.String)">
+            <summary>
+                style.order = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Orphans(System.String)">
+            <summary>
+                style.orphans = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Outline(System.String)">
+            <summary>
+                style.outline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OutlineColor(System.String)">
+            <summary>
+                style.outlineColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OutlineOffset(System.String)">
+            <summary>
+                style.outlineOffset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OutlineStyle(System.String)">
+            <summary>
+                style.outlineStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OutlineWidth(System.String)">
+            <summary>
+                style.outlineWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Overflow(System.String)">
+            <summary>
+                style.overflow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverflowAnchor(System.String)">
+            <summary>
+                style.overflowAnchor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverflowClipMargin(System.String)">
+            <summary>
+                style.overflowClipMargin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverflowWrap(System.String)">
+            <summary>
+                style.overflowWrap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverflowX(System.String)">
+            <summary>
+                style.overflowX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverflowY(System.String)">
+            <summary>
+                style.overflowY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Overlay(System.String)">
+            <summary>
+                style.overlay = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverrideColors(System.String)">
+            <summary>
+                style.overrideColors = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverscrollBehavior(System.String)">
+            <summary>
+                style.overscrollBehavior = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverscrollBehaviorBlock(System.String)">
+            <summary>
+                style.overscrollBehaviorBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverscrollBehaviorInline(System.String)">
+            <summary>
+                style.overscrollBehaviorInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverscrollBehaviorX(System.String)">
+            <summary>
+                style.overscrollBehaviorX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverscrollBehaviorY(System.String)">
+            <summary>
+                style.overscrollBehaviorY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Pad(System.String)">
+            <summary>
+                style.pad = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Padding(System.String)">
+            <summary>
+                style.padding = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingBlock(System.String)">
+            <summary>
+                style.paddingBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingBlockEnd(System.String)">
+            <summary>
+                style.paddingBlockEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingBlockStart(System.String)">
+            <summary>
+                style.paddingBlockStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingBottom(System.String)">
+            <summary>
+                style.paddingBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingInline(System.String)">
+            <summary>
+                style.paddingInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingInlineEnd(System.String)">
+            <summary>
+                style.paddingInlineEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingInlineStart(System.String)">
+            <summary>
+                style.paddingInlineStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingLeft(System.String)">
+            <summary>
+                style.paddingLeft = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingRight(System.String)">
+            <summary>
+                style.paddingRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaddingTop(System.String)">
+            <summary>
+                style.paddingTop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Page(System.String)">
+            <summary>
+                style.page = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PageBreakAfter(System.String)">
+            <summary>
+                style.pageBreakAfter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PageBreakBefore(System.String)">
+            <summary>
+                style.pageBreakBefore = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PageBreakInside(System.String)">
+            <summary>
+                style.pageBreakInside = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PageOrientation(System.String)">
+            <summary>
+                style.pageOrientation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PaintOrder(System.String)">
+            <summary>
+                style.paintOrder = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Perspective(System.String)">
+            <summary>
+                style.perspective = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PerspectiveOrigin(System.String)">
+            <summary>
+                style.perspectiveOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PlaceContent(System.String)">
+            <summary>
+                style.placeContent = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PlaceItems(System.String)">
+            <summary>
+                style.placeItems = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PlaceSelf(System.String)">
+            <summary>
+                style.placeSelf = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.PointerEvents(System.String)">
+            <summary>
+                style.pointerEvents = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Position(System.String)">
+            <summary>
+                style.position = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Prefix(System.String)">
+            <summary>
+                style.prefix = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Quotes(System.String)">
+            <summary>
+                style.quotes = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.R(System.String)">
+            <summary>
+                style.r = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Range(System.String)">
+            <summary>
+                style.range = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Resize(System.String)">
+            <summary>
+                style.resize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Right(System.String)">
+            <summary>
+                style.right = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Rotate(System.String)">
+            <summary>
+                style.rotate = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.RowGap(System.String)">
+            <summary>
+                style.rowGap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.RubyPosition(System.String)">
+            <summary>
+                style.rubyPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Rx(System.String)">
+            <summary>
+                style.rx = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Ry(System.String)">
+            <summary>
+                style.ry = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Scale(System.String)">
+            <summary>
+                style.scale = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollBehavior(System.String)">
+            <summary>
+                style.scrollBehavior = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMargin(System.String)">
+            <summary>
+                style.scrollMargin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginBlock(System.String)">
+            <summary>
+                style.scrollMarginBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginBlockEnd(System.String)">
+            <summary>
+                style.scrollMarginBlockEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginBlockStart(System.String)">
+            <summary>
+                style.scrollMarginBlockStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginBottom(System.String)">
+            <summary>
+                style.scrollMarginBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginInline(System.String)">
+            <summary>
+                style.scrollMarginInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginInlineEnd(System.String)">
+            <summary>
+                style.scrollMarginInlineEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginInlineStart(System.String)">
+            <summary>
+                style.scrollMarginInlineStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginLeft(System.String)">
+            <summary>
+                style.scrollMarginLeft = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginRight(System.String)">
+            <summary>
+                style.scrollMarginRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginTop(System.String)">
+            <summary>
+                style.scrollMarginTop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollMarginTop(System.Double)">
+            <summary>
+                style.scrollMarginTop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPadding(System.String)">
+            <summary>
+                style.scrollPadding = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingBlock(System.String)">
+            <summary>
+                style.scrollPaddingBlock = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingBlockEnd(System.String)">
+            <summary>
+                style.scrollPaddingBlockEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingBlockStart(System.String)">
+            <summary>
+                style.scrollPaddingBlockStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingBottom(System.String)">
+            <summary>
+                style.scrollPaddingBottom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingInline(System.String)">
+            <summary>
+                style.scrollPaddingInline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingInlineEnd(System.String)">
+            <summary>
+                style.scrollPaddingInlineEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingInlineStart(System.String)">
+            <summary>
+                style.scrollPaddingInlineStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingLeft(System.String)">
+            <summary>
+                style.scrollPaddingLeft = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingRight(System.String)">
+            <summary>
+                style.scrollPaddingRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollPaddingTop(System.String)">
+            <summary>
+                style.scrollPaddingTop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollSnapAlign(System.String)">
+            <summary>
+                style.scrollSnapAlign = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollSnapStop(System.String)">
+            <summary>
+                style.scrollSnapStop = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollSnapType(System.String)">
+            <summary>
+                style.scrollSnapType = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollTimeline(System.String)">
+            <summary>
+                style.scrollTimeline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollTimelineAxis(System.String)">
+            <summary>
+                style.scrollTimelineAxis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollTimelineName(System.String)">
+            <summary>
+                style.scrollTimelineName = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollbarGutter(System.String)">
+            <summary>
+                style.scrollbarGutter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ShapeImageThreshold(System.String)">
+            <summary>
+                style.shapeImageThreshold = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ShapeMargin(System.String)">
+            <summary>
+                style.shapeMargin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ShapeOutside(System.String)">
+            <summary>
+                style.shapeOutside = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ShapeRendering(System.String)">
+            <summary>
+                style.shapeRendering = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Size(System.String)">
+            <summary>
+                style.size = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.SizeAdjust(System.String)">
+            <summary>
+                style.sizeAdjust = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Speak(System.String)">
+            <summary>
+                style.speak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.SpeakAs(System.String)">
+            <summary>
+                style.speakAs = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StopColor(System.String)">
+            <summary>
+                style.stopColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StopOpacity(System.String)">
+            <summary>
+                style.stopOpacity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Stroke(System.String)">
+            <summary>
+                style.stroke = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeDasharray(System.String)">
+            <summary>
+                style.strokeDasharray = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeDashoffset(System.String)">
+            <summary>
+                style.strokeDashoffset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeLinecap(System.String)">
+            <summary>
+                style.strokeLinecap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeLinejoin(System.String)">
+            <summary>
+                style.strokeLinejoin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeMiterlimit(System.String)">
+            <summary>
+                style.strokeMiterlimit = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeOpacity(System.String)">
+            <summary>
+                style.strokeOpacity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.StrokeWidth(System.String)">
+            <summary>
+                style.strokeWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Suffix(System.String)">
+            <summary>
+                style.suffix = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Symbols(System.String)">
+            <summary>
+                style.symbols = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Syntax(System.String)">
+            <summary>
+                style.syntax = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.System(System.String)">
+            <summary>
+                style.system = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TabSize(System.String)">
+            <summary>
+                style.tabSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TableLayout(System.String)">
+            <summary>
+                style.tableLayout = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextAlign(System.String)">
+            <summary>
+                style.textAlign = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextAlignLast(System.String)">
+            <summary>
+                style.textAlignLast = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextAnchor(System.String)">
+            <summary>
+                style.textAnchor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextCombineHorizontal(System.String)">
+            <summary>
+                style.textCombineHorizontal = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextCombineUpright(System.String)">
+            <summary>
+                style.textCombineUpright = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextDecoration(System.String)">
+            <summary>
+                style.textDecoration = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextDecorationColor(System.String)">
+            <summary>
+                style.textDecorationColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextDecorationLine(System.String)">
+            <summary>
+                style.textDecorationLine = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextDecorationSkipInk(System.String)">
+            <summary>
+                style.textDecorationSkipInk = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextDecorationStyle(System.String)">
+            <summary>
+                style.textDecorationStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextDecorationThickness(System.String)">
+            <summary>
+                style.textDecorationThickness = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextEmphasis(System.String)">
+            <summary>
+                style.textEmphasis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextEmphasisColor(System.String)">
+            <summary>
+                style.textEmphasisColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextEmphasisPosition(System.String)">
+            <summary>
+                style.textEmphasisPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextEmphasisStyle(System.String)">
+            <summary>
+                style.textEmphasisStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextIndent(System.String)">
+            <summary>
+                style.textIndent = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextOrientation(System.String)">
+            <summary>
+                style.textOrientation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextOverflow(System.String)">
+            <summary>
+                style.textOverflow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextRendering(System.String)">
+            <summary>
+                style.textRendering = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextShadow(System.String)">
+            <summary>
+                style.textShadow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextSizeAdjust(System.String)">
+            <summary>
+                style.textSizeAdjust = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextTransform(System.String)">
+            <summary>
+                style.textTransform = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextUnderlineOffset(System.String)">
+            <summary>
+                style.textUnderlineOffset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextUnderlinePosition(System.String)">
+            <summary>
+                style.textUnderlinePosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TextWrap(System.String)">
+            <summary>
+                style.textWrap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TimelineScope(System.String)">
+            <summary>
+                style.timelineScope = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Top(System.String)">
+            <summary>
+                style.top = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TouchAction(System.String)">
+            <summary>
+                style.touchAction = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transform(System.String)">
+            <summary>
+                style.transform = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransformBox(System.String)">
+            <summary>
+                style.transformBox = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransformOrigin(System.String)">
+            <summary>
+                style.transformOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransformStyle(System.String)">
+            <summary>
+                style.transformStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.String)">
+            <summary>
+                style.transition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransitionBehavior(System.String)">
+            <summary>
+                style.transitionBehavior = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransitionDelay(System.String)">
+            <summary>
+                style.transitionDelay = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransitionDuration(System.String)">
+            <summary>
+                style.transitionDuration = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransitionProperty(System.String)">
+            <summary>
+                style.transitionProperty = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.TransitionTimingFunction(System.String)">
+            <summary>
+                style.transitionTimingFunction = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Translate(System.String)">
+            <summary>
+                style.translate = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.UnicodeBidi(System.String)">
+            <summary>
+                style.unicodeBidi = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.UnicodeRange(System.String)">
+            <summary>
+                style.unicodeRange = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.UserSelect(System.String)">
+            <summary>
+                style.userSelect = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.VectorEffect(System.String)">
+            <summary>
+                style.vectorEffect = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.VerticalAlign(System.String)">
+            <summary>
+                style.verticalAlign = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ViewTimeline(System.String)">
+            <summary>
+                style.viewTimeline = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ViewTimelineAxis(System.String)">
+            <summary>
+                style.viewTimelineAxis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ViewTimelineInset(System.String)">
+            <summary>
+                style.viewTimelineInset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ViewTimelineName(System.String)">
+            <summary>
+                style.viewTimelineName = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ViewTransitionName(System.String)">
+            <summary>
+                style.viewTransitionName = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Visibility(System.String)">
+            <summary>
+                style.visibility = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAlignContent(System.String)">
+            <summary>
+                style.webkitAlignContent = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAlignItems(System.String)">
+            <summary>
+                style.webkitAlignItems = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAlignSelf(System.String)">
+            <summary>
+                style.webkitAlignSelf = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimation(System.String)">
+            <summary>
+                style.webkitAnimation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationDelay(System.String)">
+            <summary>
+                style.webkitAnimationDelay = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationDirection(System.String)">
+            <summary>
+                style.webkitAnimationDirection = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationDuration(System.String)">
+            <summary>
+                style.webkitAnimationDuration = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationFillMode(System.String)">
+            <summary>
+                style.webkitAnimationFillMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationIterationCount(System.String)">
+            <summary>
+                style.webkitAnimationIterationCount = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationName(System.String)">
+            <summary>
+                style.webkitAnimationName = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationPlayState(System.String)">
+            <summary>
+                style.webkitAnimationPlayState = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAnimationTimingFunction(System.String)">
+            <summary>
+                style.webkitAnimationTimingFunction = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAppRegion(System.String)">
+            <summary>
+                style.webkitAppRegion = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitAppearance(System.String)">
+            <summary>
+                style.webkitAppearance = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBackfaceVisibility(System.String)">
+            <summary>
+                style.webkitBackfaceVisibility = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBackgroundClip(System.String)">
+            <summary>
+                style.webkitBackgroundClip = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBackgroundOrigin(System.String)">
+            <summary>
+                style.webkitBackgroundOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBackgroundSize(System.String)">
+            <summary>
+                style.webkitBackgroundSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderAfter(System.String)">
+            <summary>
+                style.webkitBorderAfter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderAfterColor(System.String)">
+            <summary>
+                style.webkitBorderAfterColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderAfterStyle(System.String)">
+            <summary>
+                style.webkitBorderAfterStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderAfterWidth(System.String)">
+            <summary>
+                style.webkitBorderAfterWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderBefore(System.String)">
+            <summary>
+                style.webkitBorderBefore = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderBeforeColor(System.String)">
+            <summary>
+                style.webkitBorderBeforeColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderBeforeStyle(System.String)">
+            <summary>
+                style.webkitBorderBeforeStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderBeforeWidth(System.String)">
+            <summary>
+                style.webkitBorderBeforeWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderBottomLeftRadius(System.String)">
+            <summary>
+                style.webkitBorderBottomLeftRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderBottomRightRadius(System.String)">
+            <summary>
+                style.webkitBorderBottomRightRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderEnd(System.String)">
+            <summary>
+                style.webkitBorderEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderEndColor(System.String)">
+            <summary>
+                style.webkitBorderEndColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderEndStyle(System.String)">
+            <summary>
+                style.webkitBorderEndStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderEndWidth(System.String)">
+            <summary>
+                style.webkitBorderEndWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderHorizontalSpacing(System.String)">
+            <summary>
+                style.webkitBorderHorizontalSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderImage(System.String)">
+            <summary>
+                style.webkitBorderImage = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderRadius(System.String)">
+            <summary>
+                style.webkitBorderRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderStart(System.String)">
+            <summary>
+                style.webkitBorderStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderStartColor(System.String)">
+            <summary>
+                style.webkitBorderStartColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderStartStyle(System.String)">
+            <summary>
+                style.webkitBorderStartStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderStartWidth(System.String)">
+            <summary>
+                style.webkitBorderStartWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderTopLeftRadius(System.String)">
+            <summary>
+                style.webkitBorderTopLeftRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderTopRightRadius(System.String)">
+            <summary>
+                style.webkitBorderTopRightRadius = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBorderVerticalSpacing(System.String)">
+            <summary>
+                style.webkitBorderVerticalSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxAlign(System.String)">
+            <summary>
+                style.webkitBoxAlign = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxDecorationBreak(System.String)">
+            <summary>
+                style.webkitBoxDecorationBreak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxDirection(System.String)">
+            <summary>
+                style.webkitBoxDirection = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxFlex(System.String)">
+            <summary>
+                style.webkitBoxFlex = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxOrdinalGroup(System.String)">
+            <summary>
+                style.webkitBoxOrdinalGroup = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxOrient(System.String)">
+            <summary>
+                style.webkitBoxOrient = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxPack(System.String)">
+            <summary>
+                style.webkitBoxPack = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxReflect(System.String)">
+            <summary>
+                style.webkitBoxReflect = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxShadow(System.String)">
+            <summary>
+                style.webkitBoxShadow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitBoxSizing(System.String)">
+            <summary>
+                style.webkitBoxSizing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitClipPath(System.String)">
+            <summary>
+                style.webkitClipPath = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnBreakAfter(System.String)">
+            <summary>
+                style.webkitColumnBreakAfter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnBreakBefore(System.String)">
+            <summary>
+                style.webkitColumnBreakBefore = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnBreakInside(System.String)">
+            <summary>
+                style.webkitColumnBreakInside = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnCount(System.String)">
+            <summary>
+                style.webkitColumnCount = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnGap(System.String)">
+            <summary>
+                style.webkitColumnGap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnRule(System.String)">
+            <summary>
+                style.webkitColumnRule = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnRuleColor(System.String)">
+            <summary>
+                style.webkitColumnRuleColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnRuleStyle(System.String)">
+            <summary>
+                style.webkitColumnRuleStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnRuleWidth(System.String)">
+            <summary>
+                style.webkitColumnRuleWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnSpan(System.String)">
+            <summary>
+                style.webkitColumnSpan = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumnWidth(System.String)">
+            <summary>
+                style.webkitColumnWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitColumns(System.String)">
+            <summary>
+                style.webkitColumns = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFilter(System.String)">
+            <summary>
+                style.webkitFilter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlex(System.String)">
+            <summary>
+                style.webkitFlex = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlexBasis(System.String)">
+            <summary>
+                style.webkitFlexBasis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlexDirection(System.String)">
+            <summary>
+                style.webkitFlexDirection = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlexFlow(System.String)">
+            <summary>
+                style.webkitFlexFlow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlexGrow(System.String)">
+            <summary>
+                style.webkitFlexGrow = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlexShrink(System.String)">
+            <summary>
+                style.webkitFlexShrink = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFlexWrap(System.String)">
+            <summary>
+                style.webkitFlexWrap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFontFeatureSettings(System.String)">
+            <summary>
+                style.webkitFontFeatureSettings = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitFontSmoothing(System.String)">
+            <summary>
+                style.webkitFontSmoothing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitHyphenateCharacter(System.String)">
+            <summary>
+                style.webkitHyphenateCharacter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitJustifyContent(System.String)">
+            <summary>
+                style.webkitJustifyContent = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitLineBreak(System.String)">
+            <summary>
+                style.webkitLineBreak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitLineClamp(System.String)">
+            <summary>
+                style.webkitLineClamp = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitLocale(System.String)">
+            <summary>
+                style.webkitLocale = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitLogicalHeight(System.String)">
+            <summary>
+                style.webkitLogicalHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitLogicalWidth(System.String)">
+            <summary>
+                style.webkitLogicalWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMarginAfter(System.String)">
+            <summary>
+                style.webkitMarginAfter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMarginBefore(System.String)">
+            <summary>
+                style.webkitMarginBefore = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMarginEnd(System.String)">
+            <summary>
+                style.webkitMarginEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMarginStart(System.String)">
+            <summary>
+                style.webkitMarginStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMask(System.String)">
+            <summary>
+                style.webkitMask = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskBoxImage(System.String)">
+            <summary>
+                style.webkitMaskBoxImage = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskBoxImageOutset(System.String)">
+            <summary>
+                style.webkitMaskBoxImageOutset = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskBoxImageRepeat(System.String)">
+            <summary>
+                style.webkitMaskBoxImageRepeat = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskBoxImageSlice(System.String)">
+            <summary>
+                style.webkitMaskBoxImageSlice = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskBoxImageSource(System.String)">
+            <summary>
+                style.webkitMaskBoxImageSource = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskBoxImageWidth(System.String)">
+            <summary>
+                style.webkitMaskBoxImageWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskClip(System.String)">
+            <summary>
+                style.webkitMaskClip = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskComposite(System.String)">
+            <summary>
+                style.webkitMaskComposite = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskImage(System.String)">
+            <summary>
+                style.webkitMaskImage = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskOrigin(System.String)">
+            <summary>
+                style.webkitMaskOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskPosition(System.String)">
+            <summary>
+                style.webkitMaskPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskPositionX(System.String)">
+            <summary>
+                style.webkitMaskPositionX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskPositionY(System.String)">
+            <summary>
+                style.webkitMaskPositionY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskRepeat(System.String)">
+            <summary>
+                style.webkitMaskRepeat = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskRepeatX(System.String)">
+            <summary>
+                style.webkitMaskRepeatX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskRepeatY(System.String)">
+            <summary>
+                style.webkitMaskRepeatY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaskSize(System.String)">
+            <summary>
+                style.webkitMaskSize = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaxLogicalHeight(System.String)">
+            <summary>
+                style.webkitMaxLogicalHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMaxLogicalWidth(System.String)">
+            <summary>
+                style.webkitMaxLogicalWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMinLogicalHeight(System.String)">
+            <summary>
+                style.webkitMinLogicalHeight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitMinLogicalWidth(System.String)">
+            <summary>
+                style.webkitMinLogicalWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitOpacity(System.String)">
+            <summary>
+                style.webkitOpacity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitOrder(System.String)">
+            <summary>
+                style.webkitOrder = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPaddingAfter(System.String)">
+            <summary>
+                style.webkitPaddingAfter = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPaddingBefore(System.String)">
+            <summary>
+                style.webkitPaddingBefore = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPaddingEnd(System.String)">
+            <summary>
+                style.webkitPaddingEnd = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPaddingStart(System.String)">
+            <summary>
+                style.webkitPaddingStart = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPerspective(System.String)">
+            <summary>
+                style.webkitPerspective = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPerspectiveOrigin(System.String)">
+            <summary>
+                style.webkitPerspectiveOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPerspectiveOriginX(System.String)">
+            <summary>
+                style.webkitPerspectiveOriginX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPerspectiveOriginY(System.String)">
+            <summary>
+                style.webkitPerspectiveOriginY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitPrintColorAdjust(System.String)">
+            <summary>
+                style.webkitPrintColorAdjust = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitRtlOrdering(System.String)">
+            <summary>
+                style.webkitRtlOrdering = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitRubyPosition(System.String)">
+            <summary>
+                style.webkitRubyPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitShapeImageThreshold(System.String)">
+            <summary>
+                style.webkitShapeImageThreshold = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitShapeMargin(System.String)">
+            <summary>
+                style.webkitShapeMargin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitShapeOutside(System.String)">
+            <summary>
+                style.webkitShapeOutside = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTapHighlightColor(System.String)">
+            <summary>
+                style.webkitTapHighlightColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextCombine(System.String)">
+            <summary>
+                style.webkitTextCombine = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextDecorationsInEffect(System.String)">
+            <summary>
+                style.webkitTextDecorationsInEffect = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextEmphasis(System.String)">
+            <summary>
+                style.webkitTextEmphasis = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextEmphasisColor(System.String)">
+            <summary>
+                style.webkitTextEmphasisColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextEmphasisPosition(System.String)">
+            <summary>
+                style.webkitTextEmphasisPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextEmphasisStyle(System.String)">
+            <summary>
+                style.webkitTextEmphasisStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextFillColor(System.String)">
+            <summary>
+                style.webkitTextFillColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextOrientation(System.String)">
+            <summary>
+                style.webkitTextOrientation = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextSecurity(System.String)">
+            <summary>
+                style.webkitTextSecurity = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextSizeAdjust(System.String)">
+            <summary>
+                style.webkitTextSizeAdjust = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextStroke(System.String)">
+            <summary>
+                style.webkitTextStroke = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextStrokeColor(System.String)">
+            <summary>
+                style.webkitTextStrokeColor = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTextStrokeWidth(System.String)">
+            <summary>
+                style.webkitTextStrokeWidth = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransform(System.String)">
+            <summary>
+                style.webkitTransform = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransformOrigin(System.String)">
+            <summary>
+                style.webkitTransformOrigin = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransformOriginX(System.String)">
+            <summary>
+                style.webkitTransformOriginX = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransformOriginY(System.String)">
+            <summary>
+                style.webkitTransformOriginY = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransformOriginZ(System.String)">
+            <summary>
+                style.webkitTransformOriginZ = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransformStyle(System.String)">
+            <summary>
+                style.webkitTransformStyle = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransition(System.String)">
+            <summary>
+                style.webkitTransition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransitionDelay(System.String)">
+            <summary>
+                style.webkitTransitionDelay = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransitionDuration(System.String)">
+            <summary>
+                style.webkitTransitionDuration = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransitionProperty(System.String)">
+            <summary>
+                style.webkitTransitionProperty = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitTransitionTimingFunction(System.String)">
+            <summary>
+                style.webkitTransitionTimingFunction = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitUserDrag(System.String)">
+            <summary>
+                style.webkitUserDrag = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitUserModify(System.String)">
+            <summary>
+                style.webkitUserModify = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitUserSelect(System.String)">
+            <summary>
+                style.webkitUserSelect = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WebkitWritingMode(System.String)">
+            <summary>
+                style.webkitWritingMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhiteSpace(System.String)">
+            <summary>
+                style.whiteSpace = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhiteSpaceCollapse(System.String)">
+            <summary>
+                style.whiteSpaceCollapse = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Widows(System.String)">
+            <summary>
+                style.widows = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Width(System.String)">
+            <summary>
+                style.width = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WillChange(System.String)">
+            <summary>
+                style.willChange = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WordBreak(System.String)">
+            <summary>
+                style.wordBreak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WordSpacing(System.String)">
+            <summary>
+                style.wordSpacing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WordWrap(System.String)">
+            <summary>
+                style.wordWrap = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WritingMode(System.String)">
+            <summary>
+                style.writingMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.X(System.String)">
+            <summary>
+                style.x = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Y(System.String)">
+            <summary>
+                style.y = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ZIndex(System.String)">
+            <summary>
+                style.zIndex = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Zoom(System.String)">
+            <summary>
+                style.zoom = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MozOsxFontSmoothing(System.String)">
+            <summary>
+                style.mozOsxFontSmoothing = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BoxDecorationBreak(System.String)">
+            <summary>
+                style.boxDecorationBreak = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CssFloat(System.String)">
+            <summary>
+                style.cssFloat = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.CssText(System.String)">
+            <summary>
+                style.cssText = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontLanguageOverride(System.String)">
+            <summary>
+                style.fontLanguageOverride = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.FontSizeAdjust(System.String)">
+            <summary>
+                style.fontSizeAdjust = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.GridAutoPosition(System.String)">
+            <summary>
+                style.gridAutoPosition = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Icon(System.String)">
+            <summary>
+                style.icon = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ImageResolution(System.String)">
+            <summary>
+                style.imageResolution = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ImeMode(System.String)">
+            <summary>
+                style.imeMode = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Marks(System.String)">
+            <summary>
+                style.marks = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.NavDown(System.String)">
+            <summary>
+                style.navDown = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.NavIndex(System.String)">
+            <summary>
+                style.navIndex = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.NavLeft(System.String)">
+            <summary>
+                style.navLeft = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.NavRight(System.String)">
+            <summary>
+                style.navRight = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.NavUp(System.String)">
+            <summary>
+                style.navUp = <paramref name="value" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OverflowClipBox(System.String)">
+            <summary>
+                style.overflowClipBox = <paramref name="value" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.ViewBox(System.String)">
@@ -1594,11 +4610,6 @@
         <member name="M:ReactWithDotNet.Mixin.ViewBox(System.Double,System.Double,System.Double,System.Double)">
             <summary>
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.ClipPath(System.String)">
-            <summary>
-                g.clipPath = <paramref name="value" />
             </summary>
         </member>
         <member name="T:ReactWithDotNet.article">
@@ -2191,6 +5202,46 @@
                 Section in a document
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+            <summary>
+                Sample event declaration <br />
+                [ReactCustomEvent] public Action OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged);
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Action{``0}}},``0)">
+            <summary>
+                Sample event decleration <br />
+                [ReactCustomEvent] public Action&lt;UserInfo&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo);
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1)">
+            <summary>
+                Sample event decleration <br />
+                [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo);
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1,``2)">
+            <summary>
+                Sample event declaration <br />
+                [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo,CommissionInfo&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo, state.SelectedCommissionInfo);
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.Element">
             <summary>
                 The element
@@ -2618,54 +5669,11 @@
                 2|em returns like '2em'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Action}})">
+        <member name="T:ReactWithDotNet.PureComponent">
             <summary>
-                Sample event declaration <br />
-                [ReactCustomEvent] public Action OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged);
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Action{``0}}},``0)">
-            <summary>
-                Sample event decleration <br />
-                [ReactCustomEvent] public Action&lt;UserInfo&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo);
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1)">
-            <summary>
-                Sample event decleration <br />
-                [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo);
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Action{``0,``1}}},``0,``1,``2)">
-            <summary>
-                Sample event declaration <br />
-                [ReactCustomEvent] public Action&lt;UserInfo,OrderInfo,CommissionInfo&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, state.SelectedUserInfo, state.SelectedOrderInfo, state.SelectedCommissionInfo);
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Style.alignItems">
-            <summary>
-                |˂-?-˃| center flex-start flex-end stretch baseline
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Style.boxSizing">
-            <summary>
-                Allows us to include the padding and border in an element's total width and height.
+            PureComponent is similar to Component but it skips re-renders for same props and state.
+            <br/>
+            https://react.dev/reference/react/PureComponent
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Style.op_Addition(ReactWithDotNet.Style,ReactWithDotNet.StyleModifier)">

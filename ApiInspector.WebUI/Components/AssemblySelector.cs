@@ -3,7 +3,7 @@ using ReactWithDotNet.ThirdPartyLibraries.ReactSuite;
 
 namespace ApiInspector.WebUI.Components;
 
-public class AssemblySelector : ReactComponent
+public class AssemblySelector : Component
 {
     public string AssemblyDirectoryPath { get; set; }
 
