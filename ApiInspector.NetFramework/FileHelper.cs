@@ -87,6 +87,7 @@ static class FileHelper
     public static void WriteFail(Exception exception)
     {
         File.WriteAllText(FilePath.ResponseFail, calculateFailMessage());
+        return;
 
         string calculateFailMessage()
         {
