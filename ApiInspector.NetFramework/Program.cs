@@ -10,6 +10,11 @@ namespace ApiInspector;
 
 static class Program
 {
+    public static string GetEnvironment(string assemblyFileFullPath)
+    {
+        return Plugin.GetEnvironment(assemblyFileFullPath);
+    }
+
     public static string[] GetHelpMessage()
     {
         return new[]
@@ -64,7 +69,7 @@ static class Program
 
         foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            var name         = propertyInfo.Name;
+            var name = propertyInfo.Name;
             var propertyType = propertyInfo.PropertyType;
 
             if (map.ContainsKey(name))
@@ -204,7 +209,7 @@ static class Program
                 throw;
             }
         }
-        
+
         foreach (var parameterInfo in parameterInfoList)
         {
             // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
@@ -243,8 +248,6 @@ static class Program
 
         var methodParameters = invocationParameters.ToArray();
 
-        
-
         object response = null;
 
         Exception invocationException = null;
@@ -252,7 +255,7 @@ static class Program
         try
         {
             var shouldInvoke = true;
-            
+
             var (exception, isInvoked, invocationOutput) = Plugin.InvokeMethod(methodInfo, instance, methodParameters);
             if (exception is not null)
             {
@@ -272,7 +275,7 @@ static class Program
             {
                 response = methodInfo.Invoke(instance, methodParameters);
             }
-            
+
             if (response is Task task)
             {
                 task.GetAwaiter().GetResult();
@@ -306,7 +309,7 @@ static class Program
         {
             return responseAsString;
         }
-        
+
         return JsonConvert.SerializeObject(response, new JsonSerializerSettings
         {
             Formatting           = Formatting.Indented,
@@ -314,11 +317,6 @@ static class Program
         });
     }
 
-    public static string GetEnvironment(string assemblyFileFullPath)
-    {
-        return Plugin.GetEnvironment(assemblyFileFullPath);
-    }
-    
     public static void Main(string[] args)
     {
         ReflectionHelper.AttachAssemblyResolver();
@@ -379,6 +377,17 @@ static class Program
         return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
     }
 
+    static string ResponseToJson(object response)
+    {
+        return JsonConvert.SerializeObject(response, new JsonSerializerSettings
+        {
+            DefaultValueHandling       = DefaultValueHandling.Ignore,
+            Formatting                 = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            Converters                 = new List<JsonConverter> { new PropertyInfoConverter() }
+        });
+    }
+
     static void SaveExceptionAndExitWithFailure(Exception exception)
     {
         FileHelper.WriteFail(exception);
@@ -387,15 +396,7 @@ static class Program
 
     static void SaveResponseAsJsonFileAndExitSuccessfully(object response)
     {
-        var responseAsJson = JsonConvert.SerializeObject(response, new JsonSerializerSettings
-        {
-            DefaultValueHandling       = DefaultValueHandling.Ignore,
-            Formatting                 = Formatting.Indented,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-            Converters = new List<JsonConverter>{ new PropertyInfoConverter()}
-        });
-
-        FileHelper.WriteSuccessResponse(responseAsJson);
+        FileHelper.WriteSuccessResponse(ResponseToJson(response));
 
         Environment.Exit(1);
     }
