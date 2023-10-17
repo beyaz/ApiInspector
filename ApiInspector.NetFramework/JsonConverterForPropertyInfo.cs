@@ -33,12 +33,12 @@ sealed class JsonConverterForPropertyInfo : JsonConverter
             }
         }
 
-        if (declaringType is null)
+        if (declaringType is null || propertyName is null)
         {
             return null;
         }
 
-        return Type.GetType(declaringType)?.GetProperty(propertyName ?? string.Empty);
+        return Type.GetType(declaringType)?.GetProperty(propertyName);
     }
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

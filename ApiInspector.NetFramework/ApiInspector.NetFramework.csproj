@@ -48,7 +48,7 @@
     <Compile Include="ProcessHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyInfoConverter.cs" />
+    <Compile Include="JsonConverterForPropertyInfo.cs" />
     <Compile Include="ReflectionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
