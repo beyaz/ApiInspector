@@ -325,6 +325,8 @@ static class Program
 
         FileHelper.ClearLog();
 
+        string inputAsJsonString = null;
+        
         try
         {
             if (args == null)
@@ -361,7 +363,9 @@ static class Program
             var parameters = new object[] { };
             if (methodInfo.GetParameters().Length == 1)
             {
-                parameters = new[] { FileHelper.ReadInput(methodInfo.GetParameters()[0].ParameterType) };
+                inputAsJsonString = FileHelper.ReadInputAsJsonString();
+                
+                parameters = new[] { JsonConvert.DeserializeObject(inputAsJsonString, methodInfo.GetParameters()[0].ParameterType) };
             }
 
             SaveResponseAsJsonFileAndExitSuccessfully(methodInfo.Invoke(null, parameters));
@@ -371,6 +375,11 @@ static class Program
             if (args is not null)
             {
                 exception.Data.Add(nameof(args), string.Join(", ", args));
+            }
+
+            if (inputAsJsonString is not null)
+            {
+                exception.Data.Add(nameof(inputAsJsonString), inputAsJsonString);
             }
             
             SaveExceptionAndExitWithFailure(exception);

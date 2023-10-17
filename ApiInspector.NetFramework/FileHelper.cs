@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 using System.Threading;
-using Newtonsoft.Json;
 
 namespace ApiInspector;
 
@@ -32,13 +31,13 @@ static class FileHelper
         }
     }
 
-    public static object ReadInput(Type type)
+    public static string ReadInputAsJsonString()
     {
         var inputAsJson = File.ReadAllText(FilePath.Input);
 
         File.Delete(FilePath.Input);
 
-        return JsonConvert.DeserializeObject(inputAsJson, type);
+        return inputAsJson;
     }
 
     public static string ReadResponse()
