@@ -310,11 +310,7 @@ static class Program
             return responseAsString;
         }
 
-        return JsonConvert.SerializeObject(response, new JsonSerializerSettings
-        {
-            Formatting           = Formatting.Indented,
-            DefaultValueHandling = DefaultValueHandling.Ignore
-        });
+        return ResponseToJson(response);
     }
 
     public static void Main(string[] args)
@@ -326,7 +322,7 @@ static class Program
         FileHelper.ClearLog();
 
         string inputAsJsonString = null;
-        
+
         try
         {
             if (args == null)
@@ -364,11 +360,13 @@ static class Program
             if (methodInfo.GetParameters().Length == 1)
             {
                 inputAsJsonString = FileHelper.ReadInputAsJsonString();
-                
+
                 parameters = new[] { JsonConvert.DeserializeObject(inputAsJsonString, methodInfo.GetParameters()[0].ParameterType) };
             }
 
-            SaveResponseAsJsonFileAndExitSuccessfully(methodInfo.Invoke(null, parameters));
+            var response = methodInfo.Invoke(null, parameters);
+
+            SaveResponseAsJsonFileAndExitSuccessfully(response);
         }
         catch (Exception exception)
         {
@@ -381,7 +379,7 @@ static class Program
             {
                 exception.Data.Add(nameof(inputAsJsonString), inputAsJsonString);
             }
-            
+
             SaveExceptionAndExitWithFailure(exception);
         }
     }
