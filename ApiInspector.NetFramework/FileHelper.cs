@@ -97,6 +97,8 @@ static class FileHelper
 
             var sb = new StringBuilder();
 
+            sb.AppendLine("Fail");
+            
             foreach (DictionaryEntry entry in exception.Data)
             {
                 sb.Append(entry.Key);
