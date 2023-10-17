@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -368,6 +369,12 @@ static class Program
         }
         catch (Exception exception)
         {
+            var arguments = args?.FirstOrDefault();
+            if (arguments is not null)
+            {
+                exception.Data.Add(nameof(arguments), arguments);
+            }
+            
             SaveExceptionAndExitWithFailure(exception);
         }
     }

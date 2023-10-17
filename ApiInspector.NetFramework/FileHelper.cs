@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
+using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
 
@@ -94,7 +96,19 @@ static class FileHelper
                 return exception.Message;
             }
 
-            return exception.ToString();
+            var sb = new StringBuilder();
+
+            foreach (DictionaryEntry entry in exception.Data)
+            {
+                sb.Append(entry.Key);
+                sb.Append(": ");
+                sb.Append(entry.Value);
+                sb.AppendLine();
+            }
+            
+            sb.AppendLine(exception.ToString());
+
+            return sb.ToString();
         }
     }
 
