@@ -319,6 +319,19 @@ static class Program
 
     public static void Main(string[] args)
     {
+        foreach (var propertyInfo in typeof(string).GetProperties())
+        {
+            var json = ResponseToJson(propertyInfo);
+
+            var abc = JsonConvert.DeserializeObject<PropertyInfo>(json, new JsonSerializerSettings
+            {
+                DefaultValueHandling       = DefaultValueHandling.Ignore,
+                Formatting                 = Formatting.Indented,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                Converters                 = new List<JsonConverter> { new PropertyInfoConverter() }
+            });
+        }
+        
         ReflectionHelper.AttachAssemblyResolver();
 
         KillAllNamedProcess(nameof(ApiInspector));

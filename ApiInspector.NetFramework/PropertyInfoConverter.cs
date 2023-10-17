@@ -5,11 +5,6 @@ namespace ApiInspector;
 
 sealed class PropertyInfoConverter : JsonConverter
 {
-    //public override bool CanWrite
-    //{
-    //    get { return false; }
-    //}
-
     public override bool CanConvert(Type objectType)
     {
         return typeof(PropertyInfo).IsAssignableFrom(objectType);
@@ -18,46 +13,34 @@ sealed class PropertyInfoConverter : JsonConverter
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         string propertyName = null;
-        string assemblyName = null;
-        string typeName = null;
+        string declaringType = null;
 
         while (reader.Read())
         {
             if (reader.TokenType == JsonToken.PropertyName)
             {
-                string value = reader.Value.ToString();
-
-                switch (reader.Value.ToString())
+                if ("propertyName".Equals((string)reader.Value, StringComparison.OrdinalIgnoreCase))
                 {
-                    case "Name":
-                        if (reader.Read())
-                        {
-                            propertyName = reader.Value.ToString();
-                        }
+                    reader.Read();
+                    propertyName = (string)reader.Value;
+                }
 
-                        break;
-                    case "AssemblyName":
-                        if (reader.Read())
-                        {
-                            assemblyName = reader.Value.ToString();
-                        }
-
-                        break;
-                    case "ClassName":
-                        if (reader.Read())
-                        {
-                            typeName = reader.Value.ToString();
-                        }
-
-                        break;
+                if ("declaringType".Equals((string)reader.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    reader.Read();
+                    declaringType = (string)reader.Value;
                 }
             }
         }
 
-        return Type.GetType(typeName + ", " + assemblyName)?.GetProperty(propertyName ?? string.Empty);
+        if (declaringType is null)
+        {
+            return null;
+        }
+
+        return Type.GetType(declaringType)?.GetProperty(propertyName ?? string.Empty);
     }
 
-    /// <inheritdoc />
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
         var propertyInfo = (PropertyInfo)value;
@@ -66,11 +49,21 @@ sealed class PropertyInfoConverter : JsonConverter
             writer.WriteNull();
             return;
         }
+
+        var assemblyQualifiedName = propertyInfo.DeclaringType?.AssemblyQualifiedName;
+        if (assemblyQualifiedName is null)
+        {
+            writer.WriteNull();
+            return;
+        }
+
         writer.WriteStartObject();
-        writer.WritePropertyName("name");
+        writer.WritePropertyName("propertyName");
         writer.WriteValue(propertyInfo.Name);
+
+        writer.WritePropertyName("declaringType");
+        writer.WriteValue(assemblyQualifiedName);
+
         writer.WriteEndObject();
     }
-
-
 }
