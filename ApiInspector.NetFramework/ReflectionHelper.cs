@@ -63,6 +63,12 @@ static class ReflectionHelper
                     continue;
                 }
 
+                // avoid circular
+                if (propertyInfo.PropertyType == type)
+                {
+                    continue;
+                }
+
                 var existingValue = propertyInfo.GetValue(instance);
                 if (existingValue == null)
                 {
