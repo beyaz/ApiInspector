@@ -112,8 +112,6 @@
 	<Target Name="_AfterPublish_" AfterTargets="Publish">
 		<Delete Files="$(PublishDir)\ReactWithDotNet.pdb" />
 		<Delete Files="$(PublishDir)\ReactWithDotNet.xml" />
-		<Delete Files="$(PublishDir)\AlyaVillas.Integration.pdb" />
-		<Delete Files="$(PublishDir)\AlyaVillas.Integration.xml" />
 		<Delete Files="$(PublishDir)\$(MSBuildProjectName).pdb" />
 		<Delete Files="$(PublishDir)\$(MSBuildProjectName).xml" />
 
