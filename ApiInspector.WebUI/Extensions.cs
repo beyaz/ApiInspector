@@ -11,6 +11,8 @@ static partial class Extensions
     public static string BluePrimary => "#1976d2";
 
     public static StyleModifier PrimaryBackground => Background("rgb(249, 249, 249)");
+    
+    public static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
 
     public static string GetSvgUrl(string svgFileName)
     {

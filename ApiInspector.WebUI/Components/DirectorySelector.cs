@@ -16,7 +16,9 @@ public class DirectorySelector : Component
             type                     = "text",
             valueBind                = () => DirectoryPath,
             valueBindDebounceTimeout = 700,
-            valueBindDebounceHandler = OnFilterTextKeypressCompleted
+            valueBindDebounceHandler = OnFilterTextKeypressCompleted,
+            placeholder = "Sample: d:\\work\\",
+            style = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
         };
     }
 

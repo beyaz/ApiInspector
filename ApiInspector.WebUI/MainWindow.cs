@@ -24,7 +24,7 @@ class MainWindow : Component<MainWindowModel>
 
     public bool IsInitializingSelectedMethod { get; set; }
 
-    static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
+    
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
@@ -175,8 +175,7 @@ class MainWindow : Component<MainWindowModel>
                             Client.OnAssemblyChanged(AssemblyFileFullPath);
                             
                             return Task.CompletedTask;
-                        },
-                        style = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
+                        }
                     }
                 },
 
