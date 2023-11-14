@@ -7,10 +7,10 @@ class HistoryPanel : Component
     public string FilterText { get; set; }
 
     [ReactCustomEvent]
-    public Action<MethodReference> SelectionChanged { get; set; }
+    public Func<MethodReference, Task> SelectionChanged { get; set; }
     
     [ReactCustomEvent]
-    public Action Closed { get; set; }
+    public Func<Task> Closed { get; set; }
 
     protected override Element render()
     {
@@ -68,12 +68,14 @@ class HistoryPanel : Component
         };
     }
 
-    void OnClose(MouseEvent obj)
+    Task OnClose(MouseEvent obj)
     {
         DispatchEvent(() => Closed);
+        
+        return Task.CompletedTask;
     }
 
-    void OnClickHandler(MouseEvent e)
+    Task OnClickHandler(MouseEvent e)
     {
         var storageKey = e.FirstNotEmptyId;
 
@@ -82,16 +84,21 @@ class HistoryPanel : Component
         var methodReference = JsonConvert.DeserializeObject<MainWindowModel>(fileContent).SelectedMethod;
 
         DispatchEvent(() => SelectionChanged, methodReference);
+        
+        return Task.CompletedTask;
     }
 
-    void OnDeleteClicked(MouseEvent e)
+    Task OnDeleteClicked(MouseEvent e)
     {
         var storageKey = e.FirstNotEmptyId;
 
         DeleteFromStorage(storageKey);
+        
+        return Task.CompletedTask;
     }
 
-    void OnFilterTextKeypressCompleted()
+    Task OnFilterTextKeypressCompleted()
     {
+        return Task.CompletedTask;
     }
 }

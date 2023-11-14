@@ -7,7 +7,7 @@ public class DirectorySelector : Component
     public string DirectoryPath { get; set; }
 
     [ReactCustomEvent]
-    public Action<string> SelectionChanged { get; set; }
+    public Func<string,Task> SelectionChanged { get; set; }
 
     protected override Element render()
     {
@@ -20,13 +20,15 @@ public class DirectorySelector : Component
         };
     }
 
-    void OnFilterTextKeypressCompleted()
+    Task OnFilterTextKeypressCompleted()
     {
         if (!Directory.Exists(DirectoryPath))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         DispatchEvent(() => SelectionChanged, DirectoryPath);
+        
+        return Task.CompletedTask;
     }
 }

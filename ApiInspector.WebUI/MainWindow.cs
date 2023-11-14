@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.IO;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
@@ -60,12 +59,20 @@ class MainWindow : Component<MainWindowModel>
                     {
                         new HistoryPanel
                         {
-                            Closed = ()=>HistoryDialogVisible = false,
+                            Closed = ()=>
+                            {
+                                
+                                HistoryDialogVisible = false;
+                                
+                                return Task.CompletedTask;
+                            },
                             SelectionChanged = selectedMethod =>
                             {
                                 HistoryDialogVisible = false;
 
                                 state = StateCache.TryRead(selectedMethod) ?? state;
+                                
+                                return Task.CompletedTask;
                             }
                         },
                         SpaceY(200)
@@ -109,7 +116,11 @@ class MainWindow : Component<MainWindowModel>
                     Index      = i,
                     Label      = i.ToString(),
                     IsSelected = i == state.ScenarioListSelectedIndex,
-                    Clicked    = e => state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId)
+                    Clicked    = e =>
+                    {
+                        state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId);
+                        return Task.CompletedTask;
+                    }
                 }),
 
                 new CircleButton
@@ -119,6 +130,8 @@ class MainWindow : Component<MainWindowModel>
                         state.ScenarioList              = state.ScenarioList.Add(new ScenarioModel());
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
                         TryInitializeDefaultJsonInputs();
+                        
+                        return Task.CompletedTask;
                     }
                 },
                 When(state.ScenarioList.Count > 1, new CircleButton
@@ -127,6 +140,8 @@ class MainWindow : Component<MainWindowModel>
                     {
                         state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+                        
+                        return Task.CompletedTask;
                     }
                 })
             };
@@ -138,7 +153,12 @@ class MainWindow : Component<MainWindowModel>
             {
                 new HistoryButton
                 {
-                    Click = _ => HistoryDialogVisible = true,
+                    Click = _ =>
+                    {
+                        HistoryDialogVisible = true;
+                        
+                        return Task.CompletedTask;
+                    },
                     style = { PositionAbsolute, Right(10), Top(-13), ComponentBoxShadow }
                 },
 
@@ -153,6 +173,8 @@ class MainWindow : Component<MainWindowModel>
                         {
                             state.AssemblyDirectory = x;
                             Client.OnAssemblyChanged(AssemblyFileFullPath);
+                            
+                            return Task.CompletedTask;
                         },
                         style = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
                     }
@@ -170,6 +192,8 @@ class MainWindow : Component<MainWindowModel>
                         {
                             state.AssemblyFileName = x;
                             Client.OnAssemblyChanged(AssemblyFileFullPath);
+                            
+                            return Task.CompletedTask;
                         },
                         style = { ComponentBoxShadow }
                     }
@@ -349,13 +373,15 @@ class MainWindow : Component<MainWindowModel>
 
   
 
-    void ClearActionButtonStates()
+    Task ClearActionButtonStates()
     {
         DebugButtonStatusIsFail    = false;
         DebugButtonStatusIsSuccess = false;
 
         ExecuteButtonStatusIsFail    = false;
         ExecuteButtonStatusIsSuccess = false;
+        
+        return Task.CompletedTask;
     }
 
     Element GetEnvironment()
@@ -366,7 +392,7 @@ class MainWindow : Component<MainWindowModel>
         };
     }
 
-    void OnDebugClicked()
+    async Task OnDebugClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
@@ -380,7 +406,7 @@ class MainWindow : Component<MainWindowModel>
 
         scenario.ResponseAsJson = null;
 
-        ClearActionButtonStates();
+        await ClearActionButtonStates();
 
         if (IsDebugStarted)
         {
@@ -408,16 +434,18 @@ class MainWindow : Component<MainWindowModel>
         }
     }
 
-    void OnElementSelected(string keyOfSelectedTreeNode)
+    Task OnElementSelected(string keyOfSelectedTreeNode)
     {
         state.SelectedMethodTreeNodeKey = keyOfSelectedTreeNode;
 
         IsInitializingSelectedMethod = true;
 
         Client.GotoMethod(OnElementSelected);
+        
+        return Task.CompletedTask;
     }
 
-    void OnElementSelected()
+    Task OnElementSelected()
     {
         IsInitializingSelectedMethod = false;
 
@@ -449,9 +477,10 @@ class MainWindow : Component<MainWindowModel>
         }
 
         TryInitializeDefaultJsonInputs();
+        return Task.CompletedTask;
     }
 
-    void OnExecuteClicked()
+    async Task OnExecuteClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
@@ -465,7 +494,7 @@ class MainWindow : Component<MainWindowModel>
 
         scenario.ResponseAsJson = null;
 
-        ClearActionButtonStates();
+       await ClearActionButtonStates();
 
         if (IsExecutionStarted)
         {
@@ -493,8 +522,9 @@ class MainWindow : Component<MainWindowModel>
         }
     }
 
-    void OnFilterTextKeypressCompleted()
+    Task OnFilterTextKeypressCompleted()
     {
+        return Task.CompletedTask;
     }
 
     void SaveState()
@@ -536,7 +566,7 @@ class MainWindow : Component<MainWindowModel>
 
     class CircleButton : ReactPureComponent
     {
-        public Action<MouseEvent> Clicked { get; set; }
+        public MouseEventHandler Clicked { get; set; }
         public int Index { get; set; }
         public bool IsSelected { get; set; }
         public string Label { get; set; }
@@ -599,11 +629,13 @@ class MainWindow : Component<MainWindowModel>
             };
         }
 
-        void OnAssemblyChanged(string assemblyFileFullPath)
+        Task OnAssemblyChanged(string assemblyFileFullPath)
         {
             state.AssemblyFileFullPath = assemblyFileFullPath;
 
             Flow(assemblyFileFullPath, External.GetEnvironment, str => state.Text = str);
+            
+            return Task.CompletedTask;
         }
     }
 }
@@ -615,7 +647,7 @@ static class EventExtensions
         client.DispatchEvent(nameof(OnAssemblyChanged), assemblyFileFullPath);
     }
 
-    public static void OnAssemblyChanged(this Client client, Action<string> handlerAction)
+    public static void OnAssemblyChanged(this Client client, Func<string,Task> handlerAction)
     {
         client.ListenEvent(OnAssemblyChanged, handlerAction);
     }

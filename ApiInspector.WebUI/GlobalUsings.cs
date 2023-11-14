@@ -5,3 +5,4 @@ global using System.Linq;
 global using static ReactWithDotNet.Mixin;
 global using static ApiInspector.WebUI.Extensions;
 global using static ApiInspector.WebUI.Storage;
+global using System.Threading.Tasks;

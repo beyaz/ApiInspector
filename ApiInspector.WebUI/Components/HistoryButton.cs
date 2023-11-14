@@ -2,7 +2,7 @@
 
 class HistoryButton : ReactComponent
 {
-    public Action<MouseEvent> Click { get; set; }
+    public MouseEventHandler Click { get; set; }
 
     protected override Element render()
     {

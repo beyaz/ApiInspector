@@ -32,10 +32,12 @@ class LogoutButton : ReactComponent
         }).Start();
     }
 
-    void OnClicked(MouseEvent _)
+    Task OnClicked(MouseEvent _)
     {
         Client.CallJsFunction("CloseWindow");
 
         ExitAfterThreeSeconds();
+        
+        return Task.CompletedTask;
     }
 }

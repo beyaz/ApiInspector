@@ -12,7 +12,7 @@ public class AssemblySelector : Component
     public string Query { get; set; }
 
     [ReactCustomEvent]
-    public Action<string> SelectionChanged { get; set; }
+    public Func<string,Task> SelectionChanged { get; set; }
 
     protected override Element render()
     {
@@ -32,7 +32,7 @@ public class AssemblySelector : Component
         };
     }
 
-    void OnChange(string selectedValue)
+    Task OnChange(string selectedValue)
     {
         AssemblyFileName = selectedValue;
 
@@ -40,5 +40,7 @@ public class AssemblySelector : Component
         {
             DispatchEvent(() => SelectionChanged, AssemblyFileName);
         }
+        
+        return Task.CompletedTask;
     }
 }

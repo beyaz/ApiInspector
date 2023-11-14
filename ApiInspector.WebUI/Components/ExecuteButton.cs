@@ -2,7 +2,7 @@
 
 class ExecuteButton : ReactComponent
 {
-    public Action Click { get; set; }
+    public Func<Task> Click { get; set; }
 
     public bool IsProcessing { get; set; }
 

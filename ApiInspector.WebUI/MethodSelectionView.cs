@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
 
 namespace ApiInspector.WebUI;
 
@@ -78,7 +77,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     }
 
     [ReactCustomEvent]
-    public Action<string> SelectionChanged { get; set; }
+    public Func<string,Task> SelectionChanged { get; set; }
 
     static MetadataNode FindTreeNode(IEnumerable<MetadataNode> nodes, Func<MetadataNode, bool> hasMatch)
     {
@@ -249,8 +248,10 @@ class MethodSelectionView : Component<MethodSelectionViewState>
 
     
     
-    void OnTreeItemClicked(MouseEvent e)
+    Task OnTreeItemClicked(MouseEvent e)
     {
         DispatchEvent(() => SelectionChanged, e.FirstNotEmptyId);
+        
+        return Task.CompletedTask;
     }
 }

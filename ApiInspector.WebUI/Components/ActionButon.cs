@@ -7,7 +7,7 @@ public class ActionButton : Component
     public string Label { get; set; }
 
     [ReactCustomEvent]
-    public Action OnClick { get; set; }
+    public Func<Task> OnClick { get; set; }
 
     public string SvgFileName { get; set; }
 
@@ -36,7 +36,7 @@ public class ActionButton : Component
         };
     }
 
-    void ActionButtonOnClick(MouseEvent _)
+    Task ActionButtonOnClick(MouseEvent _)
     {
         if (IsProcessing)
         {
@@ -46,5 +46,7 @@ public class ActionButton : Component
         IsProcessing = true;
 
         DispatchEvent(() => OnClick);
+        
+        return Task.CompletedTask;
     }
 }

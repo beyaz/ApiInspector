@@ -74,7 +74,7 @@ static partial class Extensions
         client.DispatchEvent(nameof(OnBrowserInactive));
     }
 
-    public static void OnBrowserInactive(this Client client, Action handlerAction)
+    public static void OnBrowserInactive(this Client client, Func<Task> handlerAction)
     {
         client.ListenEvent(OnBrowserInactive, handlerAction);
     }
