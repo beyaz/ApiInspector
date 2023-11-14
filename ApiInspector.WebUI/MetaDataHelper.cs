@@ -46,10 +46,11 @@ static class MetadataHelper
                 {
                     NamespaceReference = namespaceName,
                     IsNamespace        = true,
-                    label              = namespaceName
+                    label              = namespaceName,
+                    children = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToList()
                 };
 
-                nodeForNamespace.children.AddRange(types.Where(x => x.Namespace == namespaceName).Select(classToMetaData));
+                
 
                 items.Add(nodeForNamespace);
             }
@@ -66,7 +67,11 @@ static class MetadataHelper
                 label         = x.Name
             };
 
-            VisitMethods(x, m => { classNode.children.Add(ConvertToMetadataNode(m)); });
+            VisitMethods(x, m =>
+            {
+                classNode.children ??= new List<MetadataNode>();
+                classNode.children.Add(ConvertToMetadataNode(m));
+            });
 
             return classNode;
         }

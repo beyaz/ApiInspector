@@ -5,7 +5,7 @@ namespace ApiInspector.WebUI;
 [Serializable]
 public sealed class MetadataNode 
 {
-    public List<MetadataNode> children { get; } = new();
+    public List<MetadataNode> children { get; set; }
     public bool IsClass { get; set; }
     public bool IsMethod { get; set; }
     public bool IsNamespace { get; set; }

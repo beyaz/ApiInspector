@@ -4,7 +4,7 @@ namespace ApiInspector;
 
 class MetadataNode
 {
-    public List<MetadataNode> children { get; } = new();
+    public List<MetadataNode> children { get; set; }
 
     public bool IsClass { get; set; }
 
@@ -23,6 +23,16 @@ class MetadataNode
 
 static class MetadataHelper
 {
+    static void AddChild(this MetadataNode node, MetadataNode child)
+    {
+        (node.children ??= new List<MetadataNode>()).Add(child);
+    }
+    
+    static bool HasChild(this MetadataNode node)
+    {
+        return node.children?.Count > 0;
+    }
+    
     public static MethodInfo FindMethodInfo(Assembly assembly, MetadataNode node)
     {
         MethodInfo returnMethodInfo = null;
@@ -61,25 +71,22 @@ static class MetadataHelper
 
             foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
             {
-                var nodeForNamespace = new MetadataNode
-                {
-                    NamespaceReference = namespaceName,
-                    IsNamespace        = true,
-                    label              = namespaceName
-                };
-
-                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData);
+                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToList();
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    classNodes = classNodes.Where(classNode => classNode.children.Count > 0).Take(5).OrderByDescending(classNode => classNode.children.Count);
+                    classNodes = classNodes.Where(classNode => classNode.HasChild()).Take(5).OrderByDescending(classNode => classNode.children.Count).ToList();
                 }
 
-                nodeForNamespace.children.AddRange(classNodes);
-
-                if (nodeForNamespace.children.Count > 0)
+                if (classNodes.Count > 0)
                 {
-                    items.Add(nodeForNamespace);
+                    items.Add(new MetadataNode
+                    {
+                        NamespaceReference = namespaceName,
+                        IsNamespace        = true,
+                        label              = namespaceName,
+                        children = classNodes
+                    });
                 }
             }
 
@@ -99,18 +106,18 @@ static class MetadataHelper
             {
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    if (classNode.children.Count < 5)
+                    if (classNode.children?.Count < 5)
                     {
                         if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            classNode.children.Add(ConvertToMetadataNode(m));
+                            classNode.AddChild(ConvertToMetadataNode(m));
                         }
                     }
 
                     return;
                 }
 
-                classNode.children.Add(ConvertToMetadataNode(m));
+                classNode.AddChild(ConvertToMetadataNode(m));
             });
 
             return classNode;
