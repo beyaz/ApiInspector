@@ -106,7 +106,7 @@ static class MetadataHelper
             {
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    if (classNode.children?.Count < 5)
+                    if (classNode.children is null || classNode.children?.Count < 5)
                     {
                         if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
