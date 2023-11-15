@@ -184,22 +184,26 @@ class MainWindow : Component<MainWindowModel>
                     }
                 },
 
-                new FlexColumn
+                new Tooltip
                 {
-                    new Label { Text = "Assembly" },
-
-                    new AssemblySelector
+                    Tooltip.Title("Type any .dll or .exe file name"),
+                    new FlexColumn
                     {
-                        AssemblyDirectoryPath = state.AssemblyDirectory,
-                        AssemblyFileName      = state.AssemblyFileName,
-                        SelectionChanged = x =>
+                        new Label { Text = "Assembly" },
+
+                        new AssemblySelector
                         {
-                            state.AssemblyFileName = x;
-                            Client.OnAssemblyChanged(AssemblyFileFullPath);
+                            AssemblyDirectoryPath = state.AssemblyDirectory,
+                            AssemblyFileName      = state.AssemblyFileName,
+                            SelectionChanged = x =>
+                            {
+                                state.AssemblyFileName = x;
+                                Client.OnAssemblyChanged(AssemblyFileFullPath);
                             
-                            return Task.CompletedTask;
-                        },
-                        style = { ComponentBoxShadow }
+                                return Task.CompletedTask;
+                            },
+                            style = { ComponentBoxShadow }
+                        }
                     }
                 },
                 new FlexColumn
