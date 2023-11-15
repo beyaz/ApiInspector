@@ -30,7 +30,7 @@ class DebugButton : ReactComponent
             SvgFileName  = svgFileName,
             OnClick      = Click,
             IsProcessing = IsProcessing,
-            Title        = "Attach to 'ApiInspector' process by visual studio or any other ide."
+            TooltipText        = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide."
         };
     }
 }

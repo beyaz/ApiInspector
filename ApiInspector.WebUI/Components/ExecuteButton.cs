@@ -30,7 +30,7 @@ class ExecuteButton : ReactComponent
             SvgFileName  = svgFileName,
             OnClick      = Click,
             IsProcessing = IsProcessing,
-            Title        = "Executes selected method by given parameters above then show results in below."
+            TooltipText        = "Executes selected method by given parameters above then show results in below."
         };
     }
 }

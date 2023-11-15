@@ -579,7 +579,7 @@ class MainWindow : Component<MainWindowModel>
         
         protected override Element render()
         {
-            var content = new FlexRowCentered
+            return ArrangeTooltip(new FlexRowCentered
             {
                 Id(Index),
                 ComponentBoxShadow,
@@ -591,8 +591,11 @@ class MainWindow : Component<MainWindowModel>
                 CursorPointer,
                 Hover(Border(Solid(1, "#b8b8ea"))),
                 When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230)))
-            };
-            
+            });
+        }
+
+        Element ArrangeTooltip(Element content)
+        {
             if (TooltipText.HasValue())
             {
                 return new Tooltip

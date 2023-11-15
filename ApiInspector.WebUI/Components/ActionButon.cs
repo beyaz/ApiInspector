@@ -1,4 +1,6 @@
-﻿namespace ApiInspector.WebUI.Components;
+﻿using ReactWithDotNet.ThirdPartyLibraries.MUI.Material;
+
+namespace ApiInspector.WebUI.Components;
 
 public class ActionButton : Component
 {
@@ -11,11 +13,11 @@ public class ActionButton : Component
 
     public string SvgFileName { get; set; }
 
-    public string Title { get; set; }
+    public string TooltipText { get; set; }
 
     protected override Element render()
     {
-        return new FlexRowCentered(When(Title.HasValue(), Title(Title)))
+        return ArrangeTooltip(new FlexRowCentered
         {
             children =
             {
@@ -33,7 +35,7 @@ public class ActionButton : Component
                 Padding(10, 20),
                 CursorPointer
             }
-        };
+        });
     }
 
     Task ActionButtonOnClick(MouseEvent _)
@@ -46,7 +48,24 @@ public class ActionButton : Component
         IsProcessing = true;
 
         DispatchEvent(() => OnClick);
-        
+
         return Task.CompletedTask;
+    }
+    
+    Element ArrangeTooltip(Element content)
+    {
+        if (TooltipText.HasValue())
+        {
+            return new Tooltip
+            {
+                arrow = true,
+                title = TooltipText,
+                children =
+                {
+                    content
+                }
+            };
+        }
+        return content;
     }
 }
