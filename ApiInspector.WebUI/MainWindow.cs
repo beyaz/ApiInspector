@@ -81,8 +81,8 @@ class MainWindow : Component<MainWindowModel>
                     : new FlexRow(HeightMaximized)
                     {
                         searchPanel,
-                        addRemovePanel,
-                        ActiveSelectedMethod
+                        ActiveSelectedMethod,
+                        addRemovePanel
                     }
             }
         };
@@ -133,7 +133,7 @@ class MainWindow : Component<MainWindowModel>
                         
                         return Task.CompletedTask;
                     }
-                },
+                }+Title("Adds new test case"),
                 When(state.ScenarioList.Count > 1, new CircleButton
                 {
                     Label = "-", Clicked = _ =>
