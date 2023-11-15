@@ -20,6 +20,10 @@
     "react-free-scrollbar": "^0.3.4",
     "react-transition-group": "^4.4.2",
 
-    "rsuite": "^5.19.1"
+    "rsuite": "^5.19.1",
+	
+	"@mui/material": "^5.11.7",
+	"@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5"
   }
 }

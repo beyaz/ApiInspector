@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq.Expressions;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
+using ReactWithDotNet.ThirdPartyLibraries.MUI.Material;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 using static System.Environment;
 
@@ -125,24 +126,28 @@ class MainWindow : Component<MainWindowModel>
 
                 new CircleButton
                 {
-                    Label = "+", Clicked = _ =>
+                    Label = "+", 
+                    Clicked = _ =>
                     {
                         state.ScenarioList              = state.ScenarioList.Add(new ScenarioModel());
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
                         TryInitializeDefaultJsonInputs();
                         
                         return Task.CompletedTask;
-                    }
-                }+Title("Adds new test case"),
+                    },
+                    TooltipText = "Add new test scenario"
+                },
                 When(state.ScenarioList.Count > 1, new CircleButton
                 {
-                    Label = "-", Clicked = _ =>
+                    Label = "-", 
+                    Clicked = _ =>
                     {
                         state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
                         
                         return Task.CompletedTask;
-                    }
+                    },
+                    TooltipText = "Remove selected test scenario"
                 })
             };
         }
@@ -570,9 +575,11 @@ class MainWindow : Component<MainWindowModel>
         public bool IsSelected { get; set; }
         public string Label { get; set; }
 
+        public string TooltipText { get; set; }
+        
         protected override Element render()
         {
-            return new FlexRowCentered
+            var content = new FlexRowCentered
             {
                 Id(Index),
                 ComponentBoxShadow,
@@ -585,6 +592,20 @@ class MainWindow : Component<MainWindowModel>
                 Hover(Border(Solid(1, "#b8b8ea"))),
                 When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230)))
             };
+            
+            if (TooltipText.HasValue())
+            {
+                return new Tooltip
+                {
+                    arrow = true,
+                    title = TooltipText,
+                    children =
+                    {
+                        content
+                    }
+                };
+            }
+            return content;
         }
     }
 

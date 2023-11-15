@@ -7,6 +7,7 @@ import "./react-with-dotnet/libraries/rsuite/all";
 import "./react-with-dotnet/libraries/primereact/all";
 import "./react-with-dotnet/libraries/react-free-scrollbar/all";
 import "./react-with-dotnet/libraries/MonacoEditorReact/all";
+import "./react-with-dotnet/libraries/mui-core/all";
 
 ReactWithDotNet.RegisterExternalJsObject("CloseWindow", () => window.close());
 
