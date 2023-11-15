@@ -9,8 +9,6 @@ public class AssemblySelector : Component
 
     public string AssemblyFileName { get; set; }
 
-    public string Query { get; set; }
-
     [ReactCustomEvent]
     public Func<string,Task> SelectionChanged { get; set; }
 
@@ -20,7 +18,7 @@ public class AssemblySelector : Component
 
         if (Directory.Exists(AssemblyDirectoryPath))
         {
-            suggestions = Directory.GetFiles(AssemblyDirectoryPath).Where(x => Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe").Where(x => x.Contains(Query ?? string.Empty, StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).Take(7);
+            suggestions = Directory.GetFiles(AssemblyDirectoryPath).Where(x => Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe").Where(x => x.Contains(AssemblyFileName ?? string.Empty, StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).Take(7);
         }
 
         return new AutoComplete
