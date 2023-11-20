@@ -7325,6 +7325,92 @@
             https://microsoft.github.io/monaco-editor/typedoc/variables/editor.EditorOptions.html
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.classes">
+            <summary>
+                Override or extend the styles applied to the component.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.defaultExpanded">
+            <summary>
+                If `true`, expands the accordion by default.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.DefaultExpanded(System.Nullable{System.Boolean})">
+            <summary>
+                If `true`, expands the accordion by default.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.disabled">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.Disabled(System.Nullable{System.Boolean})">
+            <summary>
+                If `true`, the component is disabled.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.disableGutters">
+            <summary>
+                If `true`, it removes the margin between two expanded accordion items and the increase of height.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.DisableGutters(System.Nullable{System.Boolean})">
+            <summary>
+                If `true`, it removes the margin between two expanded accordion items and the increase of height.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.expanded">
+            <summary>
+                If `true`, expands the accordion, otherwise collapse it.
+                <br/>
+                Setting this prop enables control over the accordion.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.Expanded(System.Nullable{System.Boolean})">
+            <summary>
+                If `true`, expands the accordion, otherwise collapse it.
+                <br/>
+                Setting this prop enables control over the accordion.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.onChange">
+            <summary>
+                Callback fired when the expand/collapse state is changed.
+                <br/>
+                <br/>
+                <br/>
+                @param {React.SyntheticEvent} event The event source of the callback. **Warning**: This is a generic event not a change event.
+                <br/>
+                @param {boolean} expanded The `expanded` state of the accordion.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.sx">
+            <summary>
+                The system prop that allows defining system overrides as well as additional CSS styles.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Accordion.GetSuspenseFallbackElement">
+            <summary>
+                The component used for the transition.
+                <br/>
+                [Follow this guide](/material-ui/transitions/#transitioncomponent-prop) to learn more about the requirements for this component.
+                <br/>
+                @default Collapse
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Autocomplete.clearIcon">
             <summary>
                 Props applied to the [`Chip`](/material-ui/api/chip/) element.
@@ -8191,6 +8277,13 @@
                 @default false
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.Arrow(System.Nullable{System.Boolean})">
+            <summary>
+                If `true`, adds an arrow to the tooltip.
+                <br/>
+                @default false
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.classes">
             <summary>
                 Override or extend the styles applied to the component.
@@ -8237,6 +8330,15 @@
                 @default false
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.DescribeChild(System.Nullable{System.Boolean})">
+            <summary>
+                Set to `true` if the `title` acts as an accessible description.
+                <br/>
+                By default the `title` acts as an accessible label for the child.
+                <br/>
+                @default false
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableFocusListener">
             <summary>
                 Do not respond to focus-visible events.
@@ -8244,7 +8346,21 @@
                 @default false
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.DisableFocusListener(System.Nullable{System.Boolean})">
+            <summary>
+                Do not respond to focus-visible events.
+                <br/>
+                @default false
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableHoverListener">
+            <summary>
+                Do not respond to hover events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.DisableHoverListener(System.Nullable{System.Boolean})">
             <summary>
                 Do not respond to hover events.
                 <br/>
@@ -8260,7 +8376,23 @@
                 @default false
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.DisableInteractive(System.Nullable{System.Boolean})">
+            <summary>
+                Makes a tooltip not interactive, i.e. it will close when the user
+                <br/>
+                hovers over the tooltip before the `leaveDelay` is expired.
+                <br/>
+                @default false
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.disableTouchListener">
+            <summary>
+                Do not respond to long press touch events.
+                <br/>
+                @default false
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.DisableTouchListener(System.Nullable{System.Boolean})">
             <summary>
                 Do not respond to long press touch events.
                 <br/>
@@ -8276,7 +8408,23 @@
                 @default 100
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.EnterDelay(System.Nullable{System.Double})">
+            <summary>
+                The number of milliseconds to wait before showing the tooltip.
+                <br/>
+                This prop won't impact the enter touch delay (`enterTouchDelay`).
+                <br/>
+                @default 100
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.enterNextDelay">
+            <summary>
+                The number of milliseconds to wait before showing the tooltip when one was already recently opened.
+                <br/>
+                @default 0
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.EnterNextDelay(System.Nullable{System.Double})">
             <summary>
                 The number of milliseconds to wait before showing the tooltip when one was already recently opened.
                 <br/>
@@ -8290,6 +8438,13 @@
                 @default 700
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.EnterTouchDelay(System.Nullable{System.Double})">
+            <summary>
+                The number of milliseconds a user must touch the element before showing the tooltip.
+                <br/>
+                @default 700
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.followCursor">
             <summary>
                 If `true`, the tooltip follow the cursor over the wrapped element.
@@ -8297,7 +8452,21 @@
                 @default false
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.FollowCursor(System.Nullable{System.Boolean})">
+            <summary>
+                If `true`, the tooltip follow the cursor over the wrapped element.
+                <br/>
+                @default false
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.id">
+            <summary>
+                This prop is used to help implement the accessibility logic.
+                <br/>
+                If you don't provide this prop. It falls back to a randomly generated id.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.Id(System.String)">
             <summary>
                 This prop is used to help implement the accessibility logic.
                 <br/>
@@ -8313,6 +8482,15 @@
                 @default 0
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.LeaveDelay(System.Nullable{System.Double})">
+            <summary>
+                The number of milliseconds to wait before hiding the tooltip.
+                <br/>
+                This prop won't impact the leave touch delay (`leaveTouchDelay`).
+                <br/>
+                @default 0
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.leaveTouchDelay">
             <summary>
                 The number of milliseconds after the user stops touching an element before hiding the tooltip.
@@ -8320,7 +8498,14 @@
                 @default 1500
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.open">
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.LeaveTouchDelay(System.Nullable{System.Double})">
+            <summary>
+                The number of milliseconds after the user stops touching an element before hiding the tooltip.
+                <br/>
+                @default 1500
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.onClose">
             <summary>
                 Callback fired when the component requests to be closed.
                 <br/>
@@ -8328,6 +8513,8 @@
                 <br/>
                 @param {React.SyntheticEvent} event The event source of the callback.
             </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.onOpen">
             <summary>
                 Callback fired when the component requests to be open.
                 <br/>
@@ -8335,11 +8522,25 @@
                 <br/>
                 @param {React.SyntheticEvent} event The event source of the callback.
             </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.open">
+            <summary>
+                If `true`, the component is shown.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.Open(System.Nullable{System.Boolean})">
             <summary>
                 If `true`, the component is shown.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.placement">
+            <summary>
+                Tooltip placement.
+                <br/>
+                @default 'bottom'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.Placement(System.String)">
             <summary>
                 Tooltip placement.
                 <br/>
@@ -8387,6 +8588,11 @@
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.title">
+            <summary>
+                Tooltip title. Zero-length titles string, undefined, null and false are never displayed.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ThirdPartyLibraries.MUI.Material.Tooltip.Title(ReactWithDotNet.Element)">
             <summary>
                 Tooltip title. Zero-length titles string, undefined, null and false are never displayed.
             </summary>

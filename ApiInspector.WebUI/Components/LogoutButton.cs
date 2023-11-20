@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using ReactWithDotNet.ThirdPartyLibraries.MUI.Material;
 
 namespace ApiInspector.WebUI.Components;
 
@@ -8,16 +9,20 @@ class LogoutButton : ReactComponent
     {
         const string svgFileName = "logout";
 
-        return new img
+        return new Tooltip
         {
-            Src(GetSvgUrl(svgFileName)),
-            wh(25),
-            OnClick(OnClicked),
-            new Style
+            Tooltip.Title("Close"),
+            new img
             {
-                hover =
+                Src(GetSvgUrl(svgFileName)),
+                wh(25),
+                OnClick(OnClicked),
+                new Style
                 {
-                    BoxShadow("0px 1px 20px 11px rgb(69 42 124 / 15%)"),
+                    hover =
+                    {
+                        BoxShadow("0px 1px 20px 11px rgb(69 42 124 / 15%)"),
+                    }
                 }
             }
         };
