@@ -14,10 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\logout.svg" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
       <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
       <None Include="ApiInspector.WebUI.Config.json">
@@ -26,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Resources\logout.svg" />
       <EmbeddedResource Include="Resources\bug.svg" />
       <EmbeddedResource Include="Resources\Class.svg" />
       <EmbeddedResource Include="Resources\dll.svg" />
