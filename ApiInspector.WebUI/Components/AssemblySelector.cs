@@ -26,7 +26,7 @@ public class AssemblySelector : Component
             value    = AssemblyFileName,
             data     = suggestions,
             onChange = OnChange,
-            style    = { WidthMaximized }
+            style    = { BorderRadius(5) }
         };
     }
 

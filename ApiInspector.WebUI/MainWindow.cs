@@ -202,7 +202,7 @@ class MainWindow : Component<MainWindowModel>
                             
                                 return Task.CompletedTask;
                             },
-                            style = { ComponentBoxShadow }
+                            style = {ComponentBoxShadow}
                         }
                     }
                 },
