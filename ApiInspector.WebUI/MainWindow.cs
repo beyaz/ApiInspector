@@ -216,7 +216,7 @@ class MainWindow : Component<MainWindowModel>
                         valueBind                = () => state.ClassFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
-                        style                    = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
+                        style                    = {InputStyle }
                     }
                 },
                 new FlexColumn
@@ -229,7 +229,7 @@ class MainWindow : Component<MainWindowModel>
                         valueBind                = () => state.MethodFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
-                        style                    = {ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1,"#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057") }
+                        style                    = { InputStyle }
                     }
                 },
 

@@ -14,6 +14,12 @@ static partial class Extensions
     
     public static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
 
+    public static StyleModifier InputStyle => new Style
+    {
+        Hover(Border(Solid(1,"#3498ff"))),
+        ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1, "#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057")
+    };
+
     public static string GetSvgUrl(string svgFileName)
     {
         var resourceFilePathInAssembly = $"ApiInspector.WebUI.Resources.{svgFileName}.svg";
