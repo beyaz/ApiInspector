@@ -4616,6 +4616,126 @@
                 Specifies independent, self-contained content.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.button.type">
+            <summary>
+                Specifies the type of button. button, reset, submit
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.value">
+            <summary>
+                Specifies an initial value for the button
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.autofocus">
+            <summary>
+                Specifies that the button should have input focus when the page loads. Only one element in a document can have this attribute.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.disabled">
+            <summary>
+                Specifies that the button should be disabled. A disabled button cannot be clicked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.form">
+            <summary>
+                Specifies the form that the button is associated with.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.formaction">
+            <summary>
+                Specifies the URL of the form action when the button is clicked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.formenctype">
+            <summary>
+                Specifies the form encoding method (e.g., application/x-www-form-urlencoded, multipart/form-data) when the button is clicked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.formmethod">
+            <summary>
+                Specifies the form submission method (e.g., GET, POST) when the button is clicked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.formnovalidate">
+            <summary>
+                Specifies that the form should not be validated before submission when the button is clicked.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.button.name">
+            <summary>
+                Specifies a name for the button. The name attribute is used to reference form-data after the form has been submitted, or to reference the element in JavaScript.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Type(System.String)">
+            <summary>
+                type = <paramref name="value"/>
+            <br/>
+                Specifies the type of button. button, reset, submit
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Value(System.String)">
+            <summary>
+                value = <paramref name="value"/>
+            <br/>
+                Specifies an initial value for the button
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Autofocus(System.String)">
+            <summary>
+                autofocus = <paramref name="value"/>
+            <br/>
+                Specifies that the button should have input focus when the page loads. Only one element in a document can have this attribute.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Disabled(System.String)">
+            <summary>
+                disabled = <paramref name="value"/>
+            <br/>
+                Specifies that the button should be disabled. A disabled button cannot be clicked.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Form(System.String)">
+            <summary>
+                form = <paramref name="value"/>
+            <br/>
+                Specifies the form that the button is associated with.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Formaction(System.String)">
+            <summary>
+                formaction = <paramref name="value"/>
+            <br/>
+                Specifies the URL of the form action when the button is clicked.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Formenctype(System.String)">
+            <summary>
+                formenctype = <paramref name="value"/>
+            <br/>
+                Specifies the form encoding method (e.g., application/x-www-form-urlencoded, multipart/form-data) when the button is clicked.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Formmethod(System.String)">
+            <summary>
+                formmethod = <paramref name="value"/>
+            <br/>
+                Specifies the form submission method (e.g., GET, POST) when the button is clicked.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Formnovalidate(System.String)">
+            <summary>
+                formnovalidate = <paramref name="value"/>
+            <br/>
+                Specifies that the form should not be validated before submission when the button is clicked.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.button.Name(System.String)">
+            <summary>
+                name = <paramref name="value"/>
+            <br/>
+                Specifies a name for the button. The name attribute is used to reference form-data after the form has been submitted, or to reference the element in JavaScript.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.p">
             <summary>
                 Defines a paragraph
@@ -5734,42 +5854,42 @@
                 The linejoin style of the rectangle's stroke.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.X(System.String)">
+        <member name="M:ReactWithDotNet.rect.X(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 x = <paramref name="value"/>
             <br/>
                 The x-coordinate of the top-left corner of the rectangle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.Y(System.String)">
+        <member name="M:ReactWithDotNet.rect.Y(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 y = <paramref name="value"/>
             <br/>
                 The y-coordinate of the top-left corner of the rectangle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.Width(System.String)">
+        <member name="M:ReactWithDotNet.rect.Width(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 width = <paramref name="value"/>
             <br/>
                 The width of the rectangle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.Height(System.String)">
+        <member name="M:ReactWithDotNet.rect.Height(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 height = <paramref name="value"/>
             <br/>
                 The height of the rectangle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.Rx(System.String)">
+        <member name="M:ReactWithDotNet.rect.Rx(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 rx = <paramref name="value"/>
             <br/>
                 The border radius of the rectangle on the horizontal axis.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.Ry(System.String)">
+        <member name="M:ReactWithDotNet.rect.Ry(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 ry = <paramref name="value"/>
             <br/>
@@ -5790,7 +5910,7 @@
                 The stroke color of the rectangle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.rect.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.rect.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -6786,6 +6906,258 @@
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.form.action">
+            <summary>
+                Specifies the URL of the page where the form data will be submitted.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.form.method">
+            <summary>
+                Specifies how the form data will be sent to the server. Possible values are 'get' and 'post'.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.form.enctype">
+            <summary>
+                Specifies the encoding type for form data. Possible values are 'application/x-www-form-urlencoded' and 'multipart/form-data'.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.form.target">
+            <summary>
+                Specifies the name of the frame where the form will be submitted. The default value is '_self', which means the form will be submitted in the current frame.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.form.name">
+            <summary>
+                Specifies a name for the form. This name is used to reference the form in JavaScript or to reference form data after a form is submitted.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.form.novalidate">
+            <summary>
+                Disables form validation. This attribute is useful when you want to submit the form without validating the user input.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.form.autocomplete">
+            <summary>
+                Specifies whether the browser should automatically fill in form fields based on the user's past input.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Action(System.String)">
+            <summary>
+                action = <paramref name="value"/>
+            <br/>
+                Specifies the URL of the page where the form data will be submitted.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Method(System.String)">
+            <summary>
+                method = <paramref name="value"/>
+            <br/>
+                Specifies how the form data will be sent to the server. Possible values are 'get' and 'post'.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Enctype(System.String)">
+            <summary>
+                enctype = <paramref name="value"/>
+            <br/>
+                Specifies the encoding type for form data. Possible values are 'application/x-www-form-urlencoded' and 'multipart/form-data'.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Target(System.String)">
+            <summary>
+                target = <paramref name="value"/>
+            <br/>
+                Specifies the name of the frame where the form will be submitted. The default value is '_self', which means the form will be submitted in the current frame.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Name(System.String)">
+            <summary>
+                name = <paramref name="value"/>
+            <br/>
+                Specifies a name for the form. This name is used to reference the form in JavaScript or to reference form data after a form is submitted.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Novalidate(System.String)">
+            <summary>
+                novalidate = <paramref name="value"/>
+            <br/>
+                Disables form validation. This attribute is useful when you want to submit the form without validating the user input.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.form.Autocomplete(System.String)">
+            <summary>
+                autocomplete = <paramref name="value"/>
+            <br/>
+                Specifies whether the browser should automatically fill in form fields based on the user's past input.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.name">
+            <summary>
+                Specifies a name for the textarea element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.cols">
+            <summary>
+                Specifies the visible width of the textarea element in characters.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.rows">
+            <summary>
+                Specifies the number of visible lines in the textarea element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.placeholder">
+            <summary>
+                Specifies a short hint that describes the expected value of the textarea element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.readOnly">
+            <summary>
+                Disables user input in the textarea element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.required">
+            <summary>
+                Indicates that the textarea element must be filled out before the form is submitted.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.autofocus">
+            <summary>
+                Automatically gives focus to the textarea element when the page loads.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.autocomplete">
+            <summary>
+                Specifies that the user's browser should automatically complete the textarea element's value.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.dirname">
+            <summary>
+                Specifies the directory to use as the default value for the 'file' input type.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.form">
+            <summary>
+                Specifies the ID of the form that the textarea element belongs to.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.maxlength">
+            <summary>
+                Specifies the maximum number of characters that can be entered into the textarea element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.minlength">
+            <summary>
+                Specifies the minimum number of characters that must be entered into the textarea element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.wrap">
+            <summary>
+                Specifies whether the text in the textarea element should wrap to the next line when it reaches the end of the visible area.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.defaultValue">
+            <summary>
+                A string. Specifies the initial value for a text area.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Name(System.String)">
+            <summary>
+                name = <paramref name="value"/>
+            <br/>
+                Specifies a name for the textarea element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Cols(ReactWithDotNet.UnionProp{System.String,System.Nullable{System.Int32}})">
+            <summary>
+                cols = <paramref name="value"/>
+            <br/>
+                Specifies the visible width of the textarea element in characters.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Rows(ReactWithDotNet.UnionProp{System.String,System.Nullable{System.Int32}})">
+            <summary>
+                rows = <paramref name="value"/>
+            <br/>
+                Specifies the number of visible lines in the textarea element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Placeholder(System.String)">
+            <summary>
+                placeholder = <paramref name="value"/>
+            <br/>
+                Specifies a short hint that describes the expected value of the textarea element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.ReadOnly(System.String)">
+            <summary>
+                readOnly = <paramref name="value"/>
+            <br/>
+                Disables user input in the textarea element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Required(System.String)">
+            <summary>
+                required = <paramref name="value"/>
+            <br/>
+                Indicates that the textarea element must be filled out before the form is submitted.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Autofocus(System.String)">
+            <summary>
+                autofocus = <paramref name="value"/>
+            <br/>
+                Automatically gives focus to the textarea element when the page loads.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Autocomplete(System.String)">
+            <summary>
+                autocomplete = <paramref name="value"/>
+            <br/>
+                Specifies that the user's browser should automatically complete the textarea element's value.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Dirname(System.String)">
+            <summary>
+                dirname = <paramref name="value"/>
+            <br/>
+                Specifies the directory to use as the default value for the 'file' input type.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Form(System.String)">
+            <summary>
+                form = <paramref name="value"/>
+            <br/>
+                Specifies the ID of the form that the textarea element belongs to.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Maxlength(System.String)">
+            <summary>
+                maxlength = <paramref name="value"/>
+            <br/>
+                Specifies the maximum number of characters that can be entered into the textarea element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Minlength(System.String)">
+            <summary>
+                minlength = <paramref name="value"/>
+            <br/>
+                Specifies the minimum number of characters that must be entered into the textarea element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.Wrap(System.String)">
+            <summary>
+                wrap = <paramref name="value"/>
+            <br/>
+                Specifies whether the text in the textarea element should wrap to the next line when it reaches the end of the visible area.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.textarea.DefaultValue(System.String)">
+            <summary>
+                defaultValue = <paramref name="value"/>
+            <br/>
+                A string. Specifies the initial value for a text area.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Func{System.Threading.Tasks.Task}}})">
             <summary>
                 Sample event declaration
@@ -7238,6 +7610,11 @@
         <member name="M:ReactWithDotNet.HtmlElement.AddClass(System.String)">
             <summary>
                 Adds given cssClassName ot class attribute of html element
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.autoFocus">
+            <summary>
+                Element must automatically get focus when the page loads.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.input.onBlur">

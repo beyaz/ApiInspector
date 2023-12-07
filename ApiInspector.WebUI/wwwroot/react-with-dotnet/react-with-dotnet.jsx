@@ -375,6 +375,12 @@ function SetValueInPath(obj, steps, value)
     {
         var step = steps[i];
 
+        if (len === i + 3 && steps[i] === '[' && steps[i + 2] === ']')
+        {
+            obj[steps[i + 1]] = value;
+            return;
+        }
+
         if (obj[step] == null)
         {
             obj[step] = {};
@@ -825,32 +831,38 @@ function isTwoLiteralObjectEquivent(o1, o2)
     return true;
 };
 
-function tryToFindCachedMethodInfo(targetComponent, remoteMethodName, eventArguments)
+function GetAllCachedMethodsOfComponent(component)
 {
-    if (targetComponent.props &&
-        targetComponent.props.$jsonNode &&
-        targetComponent.props.$jsonNode.$CachedMethods)
+    return component.state.$CachedMethods;
+}
+
+function tryToFindCachedMethodInfo(component, remoteMethodName, eventArguments)
+{
+    const cachedMethods = GetAllCachedMethodsOfComponent(component);
+    if (cachedMethods == null)
     {
-        for (var i = 0; i < targetComponent.props.$jsonNode.$CachedMethods.length; i++)
+        return null;
+    }
+
+    for (var i = 0; i < cachedMethods.length; i++)
+    {
+        const cachedMethodInfo = cachedMethods[i];
+
+        if (cachedMethodInfo.MethodName === remoteMethodName && cachedMethodInfo.IgnoreParameters)
         {
-            const cachedMethodInfo = targetComponent.props.$jsonNode.$CachedMethods[i];
+            return cachedMethodInfo;
+        }
 
-            if (cachedMethodInfo.MethodName === remoteMethodName && cachedMethodInfo.IgnoreParameters)
+        if (remoteMethodName === 'componentDidMount' && cachedMethodInfo.MethodName.endsWith('|componentDidMount'))
+        {
+            return cachedMethodInfo;
+        }
+
+        if (cachedMethodInfo.MethodName === remoteMethodName && eventArguments.length === 1)
+        {
+            if (isEquivent(eventArguments[0], cachedMethodInfo.Parameter))
             {
                 return cachedMethodInfo;
-            }
-
-            if (remoteMethodName === 'componentDidMount' && cachedMethodInfo.MethodName.endsWith('|componentDidMount'))
-            {
-                return cachedMethodInfo;
-            }
-
-            if (cachedMethodInfo.MethodName === remoteMethodName && eventArguments.length === 1)
-            {
-                if (isEquivent(eventArguments[0], cachedMethodInfo.Parameter))
-                {
-                    return cachedMethodInfo;
-                }
             }
         }
     }
@@ -1277,8 +1289,6 @@ function ConvertToSyntheticMouseEvent(e)
         firstNotEmptyId = null;
     }
 
-    const target = ConvertToShadowHtmlElement(e.target);
-
     return {
         FirstNotEmptyId: firstNotEmptyId,
 
@@ -1295,9 +1305,11 @@ function ConvertToSyntheticMouseEvent(e)
         screenX:   e.screenX,
         screenY:   e.screenY,
         shiftKey:  e.shiftKey,
-        target:    target,
         timeStamp: e.timeStamp,
-        type:      e.type
+        type:      e.type,
+
+        target: ConvertToShadowHtmlElement(e.target),
+        currentTarget :ConvertToShadowHtmlElement(e.currentTarget)
     };
 }
 
@@ -1360,7 +1372,8 @@ function ConvertToShadowHtmlElement(htmlElement)
         selectedIndex: selectedIndex,
         selectionStart: selectionStart,
         tagName: htmlElement.tagName,
-        value: value
+        value: value,
+        data: htmlElement.dataset
     };
 }
 
@@ -1525,6 +1538,22 @@ function HandleAction(actionArguments)
 
 function CalculateNewStateFromJsonElement(componentState, jsonElement)
 {
+    // connect unique idendifiers
+    if (NotNull(componentState[DotNetComponentUniqueIdentifier]) !== NotNull(jsonElement[DotNetComponentUniqueIdentifier]))
+    {
+        const component = COMPONENT_CACHE.FindComponentByDotNetComponentUniqueIdentifier(componentState[DotNetComponentUniqueIdentifier]);
+        if (component)
+        {
+            component[DotNetComponentUniqueIdentifiers].push(jsonElement[DotNetComponentUniqueIdentifier]);
+        }
+    }
+
+    // new way
+    jsonElement[SyncId] = GetNextSequence();
+    return jsonElement;
+
+
+    // old way  todo: check usage
     const newState = {};
 
     newState[DotNetState]     = NotNull(jsonElement[DotNetState]);
@@ -1533,17 +1562,6 @@ function CalculateNewStateFromJsonElement(componentState, jsonElement)
     newState[ClientTasks]     = jsonElement[ClientTasks];
     newState[DotNetProperties] = jsonElement[DotNetProperties];
     newState[DotNetComponentUniqueIdentifier] = jsonElement[DotNetComponentUniqueIdentifier];
-
-
-    if (NotNull(componentState[DotNetComponentUniqueIdentifier]) !== NotNull(jsonElement[DotNetComponentUniqueIdentifier]))
-    {
-        const component = COMPONENT_CACHE.FindComponentByDotNetComponentUniqueIdentifier(componentState[DotNetComponentUniqueIdentifier]);
-        if (component)
-        {
-            component[DotNetComponentUniqueIdentifiers].push(jsonElement[DotNetComponentUniqueIdentifier]);
-        }
-
-    }
 
     return newState;
 }
@@ -1701,27 +1719,36 @@ function DefineComponent(componentDeclaration)
 
             const instance = this;
 
+            // new way
             const initialState = {};
+            if (props)
+            {
+                Object.assign(initialState, props.$jsonNode);
 
-            initialState[DotNetState] = NotNull(props.$jsonNode[DotNetState]);
-            initialState[SyncId] = ShouldBeNumber(props[SyncId]);
-            initialState[RootNode] = props.$jsonNode[RootNode];
-            initialState[DotNetProperties] = NotNull(props.$jsonNode[DotNetProperties]);
-            initialState[DotNetComponentUniqueIdentifier] = NotNull(props.$jsonNode[DotNetComponentUniqueIdentifier]);
-
-            if (props.$jsonNode[HasComponentDidMountMethod]) {
-                initialState[HasComponentDidMountMethod] = props.$jsonNode[HasComponentDidMountMethod];
+                initialState[SyncId] = ShouldBeNumber(props[SyncId]);
             }
 
-            if (props.$jsonNode[ClientTasks]) {
-                initialState[ClientTasks] = props.$jsonNode[ClientTasks];
-            }
+            // old way todo: check and remove
+            //initialState[DotNetState]      = NotNull(props.$jsonNode[DotNetState]);
+            //initialState[SyncId]           = ShouldBeNumber(props[SyncId]);
+            //initialState[RootNode]         = props.$jsonNode[RootNode];
+            //initialState[DotNetProperties] = NotNull(props.$jsonNode[DotNetProperties]);
+            //initialState[DotNetComponentUniqueIdentifier] = NotNull(props.$jsonNode[DotNetComponentUniqueIdentifier]);
 
-            initialState[DotNetTypeOfReactComponent] = dotNetTypeOfReactComponent;
+            //if (props.$jsonNode[HasComponentDidMountMethod]) {
+            //    initialState[HasComponentDidMountMethod] = props.$jsonNode[HasComponentDidMountMethod];
+            //}
+
+            //if (props.$jsonNode[ClientTasks]) {
+            //    initialState[ClientTasks] = props.$jsonNode[ClientTasks];
+            //}
+
+            //initialState.$CachedMethods = props.$jsonNode.$CachedMethods;
+           
 
             instance.state = initialState;
 
-            instance[DotNetTypeOfReactComponent] = dotNetTypeOfReactComponent;
+            initialState[DotNetTypeOfReactComponent] = instance[DotNetTypeOfReactComponent] = dotNetTypeOfReactComponent;
 
             instance[ON_COMPONENT_DESTROY] = [];
 
@@ -2280,6 +2307,11 @@ RegisterCoreFunction("GotoMethod", function (timeout, remoteMethodName, remoteMe
 
     setTimeout(() =>
     {
+        if (component.ComponentWillUnmountIsCalled)
+        {
+            return;
+        }
+
         const cachedMethodInfo = tryToFindCachedMethodInfo(component, remoteMethodName, remoteMethodArguments);
         if (cachedMethodInfo)
         {
@@ -2334,6 +2366,11 @@ RegisterCoreFunction("ListenEvent", function (eventName, remoteMethodName)
 
     const onEventFired = (eventArgumentsAsArray) =>
     {
+        if (component.ComponentWillUnmountIsCalled)
+        {
+            return;
+        }
+
         const actionArguments = {
             component: component,
             remoteMethodName: remoteMethodName,

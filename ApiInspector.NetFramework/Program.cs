@@ -186,7 +186,7 @@ static class Program
             }
         }
 
-        var invocationParameters = new List<object>();
+        
 
         var parameterInfoList = methodInfo.GetParameters();
 
@@ -210,9 +210,8 @@ static class Program
             }
         }
 
-        foreach (var parameterInfo in parameterInfoList)
+        static object calculateParameterValue(JObject map, IReadOnlyList<ParameterInfo> parameterInfoList, ParameterInfo parameterInfo)
         {
-            // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
             if (parameterInfo.Name is not null)
             {
                 var jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
@@ -227,23 +226,26 @@ static class Program
 
                     if (isSuccessfullyCreated)
                     {
-                        invocationParameters.Add(parameterInstance);
-                        continue;
+                        return parameterInstance;
                     }
 
-                    invocationParameters.Add(jProperty.Value.ToObject(parameterInfo.ParameterType));
-                    continue;
+                    return jProperty.Value.ToObject(parameterInfo.ParameterType);
                 }
             }
 
             if (parameterInfo.ParameterType.IsValueType)
             {
-                invocationParameters.Add(Activator.CreateInstance(parameterInfo.ParameterType));
+                return Activator.CreateInstance(parameterInfo.ParameterType);
             }
-            else
-            {
-                invocationParameters.Add(null);
-            }
+
+            return null;
+        }
+        
+        var invocationParameters = new List<object>();
+        
+        foreach (var parameterInfo in parameterInfoList)
+        {
+            invocationParameters.Add(calculateParameterValue(map, parameterInfoList, parameterInfo));
         }
 
         var methodParameters = invocationParameters.ToArray();
