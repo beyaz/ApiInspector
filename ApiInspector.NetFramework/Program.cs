@@ -195,6 +195,20 @@ static class Program
             try
             {
                 map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
+                
+                if (parameterInfoList.Length == 1 && 
+                    parameterInfoList[0].ParameterType.FullName == "System.String" && 
+                    parameterInfoList[0].Name is not null)
+                {
+                    var jProperty = map.Property(parameterInfoList[0].Name, StringComparison.OrdinalIgnoreCase);
+                    if (jProperty == null)
+                    {
+                        map = new JObject
+                        {
+                            [parameterInfoList[0].Name] = new JValue(jsonForParameters)
+                        };
+                    }
+                }
             }
             catch (Exception)
             {
@@ -215,7 +229,7 @@ static class Program
         
             foreach (var parameterInfo in parameterInfoList)
             {
-                invocationParameters.Add(calculateParameterValue(map, parameterInfoList, parameterInfo));
+                invocationParameters.Add(calculateParameterValue(map, parameterInfo));
             }
 
             methodParameters = invocationParameters.ToArray();
@@ -286,7 +300,7 @@ static class Program
 
         return ResponseToJson(response);
 
-        static object calculateParameterValue(JObject map, IReadOnlyList<ParameterInfo> parameterInfoList, ParameterInfo parameterInfo)
+        static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
             if (parameterInfo.Name is not null)
             {
