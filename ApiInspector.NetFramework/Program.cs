@@ -186,69 +186,41 @@ static class Program
             }
         }
 
-        
-
-        var parameterInfoList = methodInfo.GetParameters();
-
-        JObject map;
-        try
+        // calculate parameters
+        object[] methodParameters;
         {
-            map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
-        }
-        catch (Exception)
-        {
-            if (parameterInfoList.Length == 1 && parameterInfoList[0].ParameterType.FullName == "System.String" && parameterInfoList[0].Name is not null)
+            var parameterInfoList = methodInfo.GetParameters();
+
+            JObject map;
+            try
             {
-                map = new JObject
-                {
-                    [parameterInfoList[0].Name] = new JValue(jsonForParameters)
-                };
+                map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
             }
-            else
+            catch (Exception)
             {
-                throw;
-            }
-        }
-
-        static object calculateParameterValue(JObject map, IReadOnlyList<ParameterInfo> parameterInfoList, ParameterInfo parameterInfo)
-        {
-            if (parameterInfo.Name is not null)
-            {
-                var jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
-                if (jProperty != null)
+                if (parameterInfoList.Length == 1 && parameterInfoList[0].ParameterType.FullName == "System.String" && parameterInfoList[0].Name is not null)
                 {
-                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.ToString());
-
-                    if (occurredErrorWhenCreatingInstance != null)
+                    map = new JObject
                     {
-                        SaveExceptionAndExitWithFailure(occurredErrorWhenCreatingInstance);
-                    }
-
-                    if (isSuccessfullyCreated)
-                    {
-                        return parameterInstance;
-                    }
-
-                    return jProperty.Value.ToObject(parameterInfo.ParameterType);
+                        [parameterInfoList[0].Name] = new JValue(jsonForParameters)
+                    };
+                }
+                else
+                {
+                    throw;
                 }
             }
 
-            if (parameterInfo.ParameterType.IsValueType)
+            var invocationParameters = new List<object>();
+        
+            foreach (var parameterInfo in parameterInfoList)
             {
-                return Activator.CreateInstance(parameterInfo.ParameterType);
+                invocationParameters.Add(calculateParameterValue(map, parameterInfoList, parameterInfo));
             }
 
-            return null;
+            methodParameters = invocationParameters.ToArray();
         }
         
-        var invocationParameters = new List<object>();
-        
-        foreach (var parameterInfo in parameterInfoList)
-        {
-            invocationParameters.Add(calculateParameterValue(map, parameterInfoList, parameterInfo));
-        }
-
-        var methodParameters = invocationParameters.ToArray();
 
         object response = null;
 
@@ -313,6 +285,37 @@ static class Program
         }
 
         return ResponseToJson(response);
+
+        static object calculateParameterValue(JObject map, IReadOnlyList<ParameterInfo> parameterInfoList, ParameterInfo parameterInfo)
+        {
+            if (parameterInfo.Name is not null)
+            {
+                var jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
+                if (jProperty != null)
+                {
+                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.ToString());
+
+                    if (occurredErrorWhenCreatingInstance != null)
+                    {
+                        SaveExceptionAndExitWithFailure(occurredErrorWhenCreatingInstance);
+                    }
+
+                    if (isSuccessfullyCreated)
+                    {
+                        return parameterInstance;
+                    }
+
+                    return jProperty.Value.ToObject(parameterInfo.ParameterType);
+                }
+            }
+
+            if (parameterInfo.ParameterType.IsValueType)
+            {
+                return Activator.CreateInstance(parameterInfo.ParameterType);
+            }
+
+            return null;
+        }
     }
 
     public static void Main(string[] args)
