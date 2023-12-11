@@ -7227,6 +7227,11 @@
                 Invokes <paramref name="elementCreatorFunc" /> then adds return value to children.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Element.Add(System.Func{System.Threading.Tasks.Task{ReactWithDotNet.Element}})">
+            <summary>
+                Invokes <paramref name="elementCreatorFunc" /> then adds return value to children.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Element.GetEnumerator">
             <summary>
                 Gets the enumerator.

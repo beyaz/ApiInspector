@@ -307,7 +307,7 @@ static class Program
                 var jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
                 if (jProperty != null)
                 {
-                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.ToString());
+                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.Value.ToString());
 
                     if (occurredErrorWhenCreatingInstance != null)
                     {
