@@ -79,6 +79,11 @@ class EventBusImp
 
     publish(eventName, eventArgumentsAsArray)
     {
+        if (eventArgumentsAsArray == null)
+        {
+            throw CreateNewDeveloperError("Publish event arguments should be given in array. @Example: ReactWithDotNet.DispatchEvent('MovieNameChanged', ['The Shawshank Redemption']);");
+        }
+
         var listenerFunctions = this.map[eventName];
 
         if (!listenerFunctions)
@@ -99,20 +104,14 @@ const EventBus =
 
     On: function(event, callback)
     {
-        // window.addEventListener(event, callback);
-
         EventBus.bus.subscribe(event, callback);
     },
-    Dispatch: function(event, data)
+    Dispatch: function (eventName, eventArgumentsAsArray)
     {
-        // window.dispatchEvent(new CustomEvent(event, { detail: data }));
-
-        EventBus.bus.publish(event, data);
+        EventBus.bus.publish(eventName, eventArgumentsAsArray);
     },
     Remove: function(event, callback)
     {
-        // window.removeEventListener(event, callback);
-
         EventBus.bus.unsubscribe(event, callback);
     }
 };
@@ -876,7 +875,8 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
     const handlerComponentUniqueIdentifier = remoteMethodInfo.HandlerComponentUniqueIdentifier;
     const functionNameOfGrabEventArguments = remoteMethodInfo.FunctionNameOfGrabEventArguments;
     const stopPropagation = remoteMethodInfo.StopPropagation;
-
+    const htmlElementScrollDebounceTimeout = remoteMethodInfo.HtmlElementScrollDebounceTimeout;
+    const keyboardEventCallOnly = remoteMethodInfo.KeyboardEventCallOnly;
 
     NotNull(remoteMethodName);
     NotNull(handlerComponentUniqueIdentifier);
@@ -912,10 +912,21 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
             arguments[0].stopPropagation();
         }
 
-        const targetComponent = GetComponentByDotNetComponentUniqueIdentifier(handlerComponentUniqueIdentifier);
-
         let eventArguments = Array.prototype.slice.call(arguments);
 
+        if (keyboardEventCallOnly)
+        {
+            const key = arguments[0].key;
+            if (keyboardEventCallOnly.indexOf(key) < 0)
+            {
+                return;
+            }
+
+            eventArguments[0] = ConvertToSyntheticKeyboardEvent(eventArguments[0]);
+        }
+
+        const targetComponent = GetComponentByDotNetComponentUniqueIdentifier(handlerComponentUniqueIdentifier);
+        
         if (functionNameOfGrabEventArguments)
         {
             eventArguments = GetExternalJsObject(functionNameOfGrabEventArguments)(eventArguments);
@@ -930,6 +941,43 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
 
             return;
         }
+        
+        if (htmlElementScrollDebounceTimeout > 0)
+        {
+            var eventName = eventArguments[0]._reactName;
+
+            const executionQueueItemName = eventName + '-debounce-' + GetFirstAssignedUniqueIdentifierValueOfComponent(handlerComponentUniqueIdentifier);
+
+            if (FunctionExecutionQueueCurrentEntry &&
+                FunctionExecutionQueueCurrentEntry.name === executionQueueItemName)
+            {
+                FunctionExecutionQueueCurrentEntry.isValid = false;
+            }
+
+            const timeoutKey = eventName + '-debounceTimeoutId';
+
+            clearTimeout(targetComponent.state[timeoutKey]);
+
+            var newState = {};
+            newState[timeoutKey] = setTimeout(() =>
+            {
+                const actionArguments = {
+                    component: targetComponent,
+                    remoteMethodName: remoteMethodName,
+                    remoteMethodArguments: eventArguments
+                };
+                const executionEntry = StartAction(actionArguments);
+                executionEntry.name = executionQueueItemName;
+
+            }, htmlElementScrollDebounceTimeout);
+
+            newState[SyncId] = GetNextSequence();
+
+            targetComponent.setState(newState);
+
+            return;
+        }
+
 
         const actionArguments = {
             component: targetComponent,
@@ -1313,6 +1361,32 @@ function ConvertToSyntheticMouseEvent(e)
     };
 }
 
+function ConvertToSyntheticScrollEvent(e)
+{
+    return {
+        currentTarget: ConvertToShadowHtmlElement(e.currentTarget),
+        target: ConvertToShadowHtmlElement(e.target),
+        timeStamp: e.timeStamp,
+        type: e.type
+    };
+}
+
+function ConvertToSyntheticKeyboardEvent(e)
+{ 
+    return {
+        currentTarget: ConvertToShadowHtmlElement(e.currentTarget),
+        target: ConvertToShadowHtmlElement(e.target),
+        timeStamp: e.timeStamp,
+        type: e.type,
+        keyCode: e.keyCode,
+        key: e.key,
+        shiftKey: e.shiftKey,
+        ctrlKey: e.ctrlKey,
+        altKey: e.altKey,
+        which: e.which
+    };
+}
+
 
 function ConvertToSyntheticChangeEvent(e)
 {
@@ -1373,7 +1447,12 @@ function ConvertToShadowHtmlElement(htmlElement)
         selectionStart: selectionStart,
         tagName: htmlElement.tagName,
         value: value,
-        data: htmlElement.dataset
+        data: htmlElement.dataset,
+
+        scrollHeight: htmlElement.scrollHeight,
+        scrollLeft: htmlElement.scrollLeft,
+        scrollTop: htmlElement.scrollTop,
+        scrollWidth: htmlElement.scrollWidth
     };
 }
 
@@ -1423,9 +1502,21 @@ function ArrangeRemoteMethodArguments(remoteMethodArguments)
         {
             var prm = remoteMethodArguments[i];
 
-            if (IsSyntheticBaseEvent(prm) && prm._reactName && prm._reactName.indexOf('Mouse') > 0)
+            if (IsSyntheticBaseEvent(prm))
             {
-                remoteMethodArguments[i] = ConvertToSyntheticMouseEvent(prm);
+                if (prm._reactName)
+                {
+                    if (prm._reactName && prm._reactName.indexOf('Mouse') > 0)
+                    {
+                        remoteMethodArguments[i] = ConvertToSyntheticMouseEvent(prm);
+                        continue;
+                    }
+                    if (prm._reactName && prm._reactName === 'onScroll')
+                    {
+                        remoteMethodArguments[i] = ConvertToSyntheticScrollEvent(prm);
+                        continue;
+                    }
+                }
             }
         }
     }    
@@ -1820,6 +1911,8 @@ function DefineComponent(componentDeclaration)
                         remoteMethodArguments: []
                     };
                     StartAction(actionArguments);
+
+                    OnReactStateReady();
                 }
 
                 SetState(component, partialState, stateCallBack);

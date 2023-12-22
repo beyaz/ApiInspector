@@ -414,6 +414,11 @@
                 style.backdropFilter = blur(px)
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.BackgroundClipText">
+            <summary>
+                style.cackgroundClip = 'text'
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.BackgroundImage(System.String[])">
             <summary>
             The background-image property sets one or more background images for an element.
@@ -560,18 +565,6 @@
         <member name="M:ReactWithDotNet.Mixin.MinWidth(System.Double)">
             <summary>
                 style.minWidth = minWidth + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.OnScroll(System.String)">
-            <summary>
-                Handler <paramref name="jsMethodName" /> should be in client js codes.<br />
-                <br />
-                Sample Usage:<br />
-                <br />
-                ReactWithDotNet.RegisterExternalJsObject(<paramref name="jsMethodName" />, function(e){<br />
-                ...<br />
-                ...<br />
-                });
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Right(System.Double)">
@@ -5673,21 +5666,21 @@
                 The width of the stroke of the circle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.circle.Cx(System.String)">
+        <member name="M:ReactWithDotNet.circle.Cx(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 cx = <paramref name="value"/>
             <br/>
                 The x-coordinate of the center of the circle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.circle.Cy(System.String)">
+        <member name="M:ReactWithDotNet.circle.Cy(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 cy = <paramref name="value"/>
             <br/>
                 The y-coordinate of the center of the circle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.circle.R(System.String)">
+        <member name="M:ReactWithDotNet.circle.R(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 r = <paramref name="value"/>
             <br/>
@@ -6775,14 +6768,14 @@
                 An alternate text for the image, if the image for some reason cannot be displayed.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.img.Width(System.String)">
+        <member name="M:ReactWithDotNet.img.Width(ReactWithDotNet.UnionProp{System.String,System.Nullable{System.Double}})">
             <summary>
                 width = <paramref name="value"/>
             <br/>
                 The width of the image, in pixels.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.img.Height(System.String)">
+        <member name="M:ReactWithDotNet.img.Height(ReactWithDotNet.UnionProp{System.String,System.Nullable{System.Double}})">
             <summary>
                 height = <paramref name="value"/>
             <br/>
@@ -7088,7 +7081,7 @@
                 Specifies a short hint that describes the expected value of the textarea element.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.textarea.ReadOnly(System.String)">
+        <member name="M:ReactWithDotNet.textarea.ReadOnly(ReactWithDotNet.UnionProp{System.String,System.Boolean})">
             <summary>
                 readOnly = <paramref name="value"/>
             <br/>
@@ -7158,7 +7151,7 @@
                 A string. Specifies the initial value for a text area.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Func{System.Threading.Tasks.Task}}})">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Delegate}})">
             <summary>
                 Sample event declaration
                 <br />
@@ -7169,7 +7162,7 @@
                 DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Func{``0,System.Threading.Tasks.Task}}},``0)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Delegate}},``0)">
             <summary>
                 Sample event declaration
                 <br />
@@ -7180,7 +7173,7 @@
                 DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,System.Threading.Tasks.Task}}},``0,``1)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Delegate}},``0,``1)">
             <summary>
                 Sample event declaration
                 <br />
@@ -7191,7 +7184,7 @@
                 DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Func{``0,``1,``2,System.Threading.Tasks.Task}}},``0,``1,``2)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Delegate}},``0,``1,``2)">
             <summary>
                 Sample event declaration
                 <br />
@@ -7554,16 +7547,9 @@
                 Gets or sets the on click.
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.HtmlElement.onScroll">
+        <member name="P:ReactWithDotNet.HtmlElement.onScrollDebounceTimeout">
             <summary>
-                Handler <paramref name="value" /> should be in client js codes.<br />
-                <br />
-                Sample Usage:<br />
-                <br />
-                ReactWithDotNet.RegisterExternalJsObject(<paramref name="value" />, function(e){<br />
-                ...<br />
-                ...<br />
-                });
+                Default value: 400 <br />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.part">
