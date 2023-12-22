@@ -177,7 +177,7 @@ class MainWindow : Component<MainWindowModel>
                         SelectionChanged = x =>
                         {
                             state.AssemblyDirectory = x;
-                            Client.OnAssemblyChanged(AssemblyFileFullPath);
+                            Client.DispatchEvent(Event.OnAssemblyChanged,AssemblyFileFullPath);
                             
                             return Task.CompletedTask;
                         }
@@ -198,7 +198,7 @@ class MainWindow : Component<MainWindowModel>
                             SelectionChanged = x =>
                             {
                                 state.AssemblyFileName = x;
-                                Client.OnAssemblyChanged(AssemblyFileFullPath);
+                                Client.DispatchEvent(Event.OnAssemblyChanged,AssemblyFileFullPath);
                             
                                 return Task.CompletedTask;
                             },
@@ -632,7 +632,7 @@ class MainWindow : Component<MainWindowModel>
 
             OnAssemblyChanged(AssemblyFileFullPath);
 
-            Client.OnAssemblyChanged(OnAssemblyChanged);
+            Client.ListenEvent<string>(Event.OnAssemblyChanged, OnAssemblyChanged);
 
             return base.constructor();
         }
@@ -667,15 +667,7 @@ class MainWindow : Component<MainWindowModel>
     }
 }
 
-static class EventExtensions
+enum Event
 {
-    public static void OnAssemblyChanged(this Client client, string assemblyFileFullPath)
-    {
-        client.DispatchEvent(nameof(OnAssemblyChanged), assemblyFileFullPath);
-    }
-
-    public static void OnAssemblyChanged(this Client client, Func<string,Task> handlerAction)
-    {
-        client.ListenEvent(nameof(OnAssemblyChanged), handlerAction);
-    }
+    OnAssemblyChanged
 }
