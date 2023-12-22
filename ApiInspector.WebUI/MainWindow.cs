@@ -676,6 +676,6 @@ static class EventExtensions
 
     public static void OnAssemblyChanged(this Client client, Func<string,Task> handlerAction)
     {
-        client.ListenEvent(OnAssemblyChanged, handlerAction);
+        client.ListenEvent(nameof(OnAssemblyChanged), handlerAction);
     }
 }

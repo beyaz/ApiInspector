@@ -76,17 +76,7 @@ static partial class Extensions
     public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
 
     public static bool HasValue(this string value) => !string.IsNullOrWhiteSpace(value);
-
-    public static void OnBrowserInactive(this Client client)
-    {
-        client.DispatchEvent(nameof(OnBrowserInactive));
-    }
-
-    public static void OnBrowserInactive(this Client client, Func<Task> handlerAction)
-    {
-        client.ListenEvent(OnBrowserInactive, handlerAction);
-    }
-
+    
     public static readonly IModifier AutoHideScrollbar = FreeScrollBar.Modify(x => x.autohide = true);
 
 
