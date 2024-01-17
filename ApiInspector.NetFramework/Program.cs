@@ -191,10 +191,13 @@ static class Program
         {
             var parameterInfoList = methodInfo.GetParameters();
 
-            JObject map;
+            var map = new JObject();
             try
             {
-                map = (JObject)JsonConvert.DeserializeObject(jsonForParameters, typeof(JObject)) ?? new JObject();
+                if (!string.IsNullOrWhiteSpace(jsonForParameters))
+                {
+                    map = JsonConvert.DeserializeObject<JObject>(jsonForParameters);
+                }
                 
                 if (parameterInfoList.Length == 1 && 
                     parameterInfoList[0].ParameterType.FullName == "System.String" && 
