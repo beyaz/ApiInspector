@@ -922,6 +922,8 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
                 return;
             }
 
+            eventArguments[0].preventDefault();
+
             eventArguments[0] = ConvertToSyntheticKeyboardEvent(eventArguments[0]);
         }
 
@@ -1561,6 +1563,12 @@ function HandleAction(actionArguments)
         CallFunctionId: actionArguments.executionQueueEntry.id
     };
 
+    if (actionArguments.onlyUpdateState)
+    {
+        request.OnlyUpdateState = true;
+        request.CapturedStateTree = { "0": request.CapturedStateTree["0"] };
+    }
+
     ArrangeRemoteMethodArguments(actionArguments.remoteMethodArguments);
 
     request.EventArgumentsAsJsonArray = actionArguments.remoteMethodArguments.map(JSON.stringify);
@@ -1591,11 +1599,22 @@ function HandleAction(actionArguments)
             LastUsedComponentUniqueIdentifier = response.LastUsedComponentUniqueIdentifier;
         }
 
-        ProcessDynamicCssClasses(response.DynamicStyles);
-
+        const incomingDynamicStyles = response.DynamicStyles;
+        
         function stateCallback()
         {
+            ProcessDynamicCssClasses(incomingDynamicStyles);
+
             OnReactStateReady();
+        }
+
+        if (actionArguments.onlyUpdateState)
+        {
+            // note: setState not used here because this is special case. we don't want to trigger render.
+            component.state[DotNetState] = response.NewState;
+            component.state[DotNetProperties] = response.NewDotNetProperties;
+            stateCallback();
+            return;
         }
 
         const partialState = CalculateNewStateFromJsonElement(component.state, response.ElementAsJson);
@@ -1718,8 +1737,32 @@ class ComponentDestroyQueue
     }
 }
 
+// todo: check usage or rethink
 const ComponentDestroyQueueInstance = new ComponentDestroyQueue();
 
+/**
+ * @param {Int32Array} componentUniqueIdentifiers
+ */
+function RemoveComponentDynamicStyles(componentUniqueIdentifiers)
+{
+    var hasChange = false;
+
+    for (let i = 0; i < DynamicStyles.length; i++)
+    {
+        if (componentUniqueIdentifiers.indexOf(DynamicStyles[i].componentUniqueIdentifier) >= 0)
+        {
+            DynamicStyles.splice(i, 1);
+            i--;
+
+            hasChange = true;
+        }
+    }
+
+    if (hasChange)
+    {
+        ApplyDynamicStylesToDom();
+    }
+}
 
 function DestroyDotNetComponentInstance(instance)
 {
@@ -1729,15 +1772,7 @@ function DestroyDotNetComponentInstance(instance)
         instance[ON_COMPONENT_DESTROY][i]();
     }
 
-    // remove related dynamic styles
-    for (let i = 0; i < DynamicStyles.length; i++)
-    {
-        if (instance[DotNetComponentUniqueIdentifiers].indexOf(DynamicStyles[i].componentUniqueIdentifier) >= 0)
-        {
-            DynamicStyles.splice(i, 1);
-            i--;
-        }
-    }
+    RemoveComponentDynamicStyles(instance[DotNetComponentUniqueIdentifiers]);
 
     COMPONENT_CACHE.Unregister(instance);
 }
@@ -1752,42 +1787,14 @@ function HandleComponentClientTasks(component)
     }
 
     const freeSpace = COMPONENT_CACHE.GetFreeSpaceOfComponent(component[DotNetComponentUniqueIdentifiers][0]);
-    if (freeSpace.waitingClientTasks === clientTasks)
+    if (freeSpace.lastProcessedClientTasks === clientTasks)
     {
         return false;
     }
 
-    if (freeSpace.waitingClientTasks != null)
-    {
-        throw CreateNewDeveloperError('freeSpace.waitingClientTasks should be null at this point.');
-    }
+    freeSpace.lastProcessedClientTasks = clientTasks;
 
-    freeSpace.waitingClientTasks = clientTasks;
-
-    function shouldBeReferenceEquals()
-    {
-        if (freeSpace.waitingClientTasks !== clientTasks)
-        {
-            throw CreateNewDeveloperError('freeSpace.waitingClientTasks should be reference equals to clientTasks at this point.');
-        }
-    }
-
-    const partialState = {};
-
-    partialState[ClientTasks] = null;
-
-    function stateCallback()
-    {
-        shouldBeReferenceEquals();
-
-        ProcessClientTasks(clientTasks, component);
-
-        shouldBeReferenceEquals();
-
-        freeSpace.waitingClientTasks = null;
-    }
-
-    component.setState(partialState, stateCallback);
+    ProcessClientTasks(clientTasks, component);
 
     return true;
 }
@@ -2026,6 +2033,12 @@ function DefinePureComponent(componentDeclaration)
         {
             return ConvertToReactElement(this.props.$jsonNode[RootNode], this);
         }
+        componentWillUnmount()
+        {
+            const uid = NotNull(this.props.$jsonNode[DotNetComponentUniqueIdentifier]);
+            
+            RemoveComponentDynamicStyles([uid]);
+        }
     }
 
     ComponentDefinitions[dotNetTypeOfReactComponent] = NewPureComponent;
@@ -2058,7 +2071,7 @@ function SendRequest(request, onSuccess, onFail)
 
     if (ReactWithDotNet.BeforeSendRequest)
     {
-        options = ReactWithDotNet.BeforeSendRequest(options);
+        ReactWithDotNet.BeforeSendRequest(options);
     }
 
     window.fetch(url, options).then(response => response.json()).then(json => onSuccess(json)).catch(onFail);
@@ -2068,12 +2081,6 @@ var LastUsedComponentUniqueIdentifier = 1;
 
 function ConnectComponentFirstResponseToReactSystem(containerHtmlElementId, response)
 {
-    if (response.NavigateToUrl)
-    {
-        window.location.replace(location.origin + response.NavigateToUrl);
-        return;
-    }
-
     if (response.ErrorMessage != null)
     {
         throw response.ErrorMessage;
@@ -2362,14 +2369,40 @@ RegisterCoreFunction("CalculateSyntheticFocusEventArguments", (argumentsAsArray)
 
 });
 
-RegisterCoreFunction("SetCookie", function (cookieName, cookieValue, expiredays)
+function SetCookie(cookieName_StringNotNull, cookieValue_StringNotNull, expireDays_NumberNotNull)
 {
     var exdate = new Date();
 
-    exdate.setDate(exdate.getDate() + expiredays);
+    exdate.setDate(exdate.getDate() + expireDays_NumberNotNull);
 
-    document.cookie = cookieName + "=" + encodeURI(cookieValue) + ((expiredays == null) ? "" : "; expires=" + exdate.toUTCString());
-});
+    document.cookie = [
+        cookieName_StringNotNull + "=" + encodeURI(cookieValue_StringNotNull),
+        "expires" + "=" + exdate.toUTCString(),
+        "path=/"
+    ].join(";");
+}
+
+function GetCookie(cookieName)
+{
+    // Split cookie string and get all individual name=value pairs in an array
+    var cookieArr = document.cookie.split(";");
+    // Loop through the array elements
+    for (var i = 0; i < cookieArr.length; i++)
+    {
+        var cookiePair = cookieArr[i].split("=");
+        /* Removing whitespace at the beginning of the cookie name
+        and compare it with the given string */
+        if (cookieName == cookiePair[0].trim())
+        {
+            // Decode the cookie value and return
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+    // Return null if not found
+    return null;
+}
+
+RegisterCoreFunction("SetCookie", SetCookie);
 
 RegisterCoreFunction("HistoryBack", function ()
 {
@@ -2489,6 +2522,44 @@ RegisterCoreFunction("ListenEvent", function (eventName, remoteMethodName)
     EventBus.On(eventName, onEventFired);
 });
 
+RegisterCoreFunction("ListenEventThenOnlyUpdateState", function (eventName, remoteMethodName)
+{
+    const component = this;
+
+    const onEventFired = (eventArgumentsAsArray) =>
+    {
+        if (component.ComponentWillUnmountIsCalled)
+        {
+            return;
+        }
+
+        const actionArguments = {
+            component: component,
+            remoteMethodName: remoteMethodName,
+            remoteMethodArguments: eventArgumentsAsArray,
+            onlyUpdateState: true
+        };
+
+        const entry = StartAction(actionArguments);
+
+        // guard for removed node before send to server
+        component[ON_COMPONENT_DESTROY].push(() =>
+        {
+            entry.isValid = false;
+        });
+    };
+
+    NotNull(component[ON_COMPONENT_DESTROY]);
+
+    component[ON_COMPONENT_DESTROY].push(() =>
+    {
+        EventBus.Remove(eventName, onEventFired);
+    });
+
+    EventBus.On(eventName, onEventFired);
+});
+
+
 RegisterCoreFunction("ListenEventOnlyOnce", function (eventName, remoteMethodName)
 {
     const component = this;
@@ -2581,10 +2652,14 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSe
     EventBus.On(eventName, onEventFired);
 });
 
-RegisterCoreFunction("NavigateToUrl", function (url)
+function NavigateTo(path)
 {
-     window.location.replace(location.origin + url);
-});
+    var location = window.location;
+
+    location.assign(location.origin + path);
+}
+
+RegisterCoreFunction("NavigateTo", NavigateTo);
 
 RegisterCoreFunction("OnOutsideClicked", function (idOfElement, remoteMethodName, handlerComponentUniqueIdentifier)
 {
@@ -2644,6 +2719,25 @@ function CreateNewDeveloperError(message)
 const DynamicStyles = [];
 var ReactWithDotNetDynamicCssElement = null;
 
+/**
+ * 
+ * @param {String} cssSelector
+ * @returns {Number} ComponentUniqueIdentifier
+ */
+function GetComponentUniqueIdentifierFromCssSelector(cssSelector)
+{
+    let startIndex = cssSelector.indexOf('._rwd_');
+    let endIndex = cssSelector.indexOf('_', startIndex + 6);
+
+    const componentUniqueIdentifier = parseInt(cssSelector.substring(startIndex + 6, endIndex));
+    if (isNaN(componentUniqueIdentifier))
+    {
+        throw CreateNewDeveloperError('componentUniqueIdentifier cannot calculated from ' + cssSelector);
+    }
+
+    return componentUniqueIdentifier;
+}
+
 function ProcessDynamicCssClasses(dynamicStyles)
 {
     if (dynamicStyles == null || dynamicStyles.length === 0)
@@ -2651,8 +2745,28 @@ function ProcessDynamicCssClasses(dynamicStyles)
         return;
     }
 
-    let hasChange = false;
+    // remove all related css of component
+    for (var key in dynamicStyles)
+    {
+        if (dynamicStyles.hasOwnProperty(key))
+        {
+            const cssSelector = key;
 
+            var componentUniqueIdentifier = GetComponentUniqueIdentifierFromCssSelector(cssSelector);
+
+            // remove all related css of component
+            for (let i = 0; i < DynamicStyles.length; i++)
+            {
+                if (DynamicStyles[i].componentUniqueIdentifier === componentUniqueIdentifier)
+                {
+                    DynamicStyles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+
+    // Add new records
     for (var key in dynamicStyles)
     {
         if (dynamicStyles.hasOwnProperty(key))
@@ -2660,83 +2774,55 @@ function ProcessDynamicCssClasses(dynamicStyles)
             const cssSelector = key;
             const cssBody = dynamicStyles[key];
 
-            let shouldInsert = true;
-
-            for (var i = 0; i < DynamicStyles.length; i++)
-            {
-                if (DynamicStyles[i].cssSelector === cssSelector)
-                {
-                    if (DynamicStyles[i].cssBody === cssBody)
-                    {
-                        shouldInsert = false;
-                        break;
-                    }
-
-                    hasChange = true;
-                    DynamicStyles[i].cssBody = cssBody;
-                    break;
-                }
-            }
-
-            if (shouldInsert)
-            {
-                hasChange = true;
-
-                let startIndex = cssSelector.indexOf('._rwd_');
-                let endIndex = cssSelector.indexOf('_', startIndex + 6);
-
-                const componentUniqueIdentifier = parseInt(cssSelector.substring(startIndex + 6, endIndex));
-                if (isNaN(componentUniqueIdentifier))
-                {
-                    throw CreateNewDeveloperError('componentUniqueIdentifier cannot calculated from ' + cssSelector);
-                }
-
-                DynamicStyles.push({cssSelector: cssSelector, cssBody: cssBody, componentUniqueIdentifier: componentUniqueIdentifier});
-            }
+            DynamicStyles.push({
+                cssSelector: cssSelector,
+                cssBody: cssBody,
+                componentUniqueIdentifier: GetComponentUniqueIdentifierFromCssSelector(cssSelector)
+            });
         }
     }
 
-    if (hasChange)
+    ApplyDynamicStylesToDom();
+}
+
+function ApplyDynamicStylesToDom()
+{
+    if (ReactWithDotNetDynamicCssElement === null)
     {
-        if (ReactWithDotNetDynamicCssElement === null)
+        const idOfStyleElement = "ReactWithDotNetDynamicCss";
+
+        ReactWithDotNetDynamicCssElement = document.getElementById(idOfStyleElement);
+
+        if (ReactWithDotNetDynamicCssElement == null)
         {
-            const idOfStyleElement = "ReactWithDotNetDynamicCss";
-
-            ReactWithDotNetDynamicCssElement = document.getElementById(idOfStyleElement);
-
-            if (ReactWithDotNetDynamicCssElement == null)
-            {
-                ReactWithDotNetDynamicCssElement = document.createElement('style');
-                ReactWithDotNetDynamicCssElement.id = idOfStyleElement;
-                document.head.appendChild(ReactWithDotNetDynamicCssElement);
-            }
+            ReactWithDotNetDynamicCssElement = document.createElement('style');
+            ReactWithDotNetDynamicCssElement.id = idOfStyleElement;
+            document.head.appendChild(ReactWithDotNetDynamicCssElement);
         }
+    }
 
-        const arr = [];
-        for (var i = 0; i < DynamicStyles.length; i++)
+    const arr = [];
+    for (var i = 0; i < DynamicStyles.length; i++)
+    {
+        const cssSelector = DynamicStyles[i].cssSelector;
+        const cssBody = DynamicStyles[i].cssBody;
+
+        arr.push("");
+        arr.push(cssSelector);
+        arr.push("{");
+        arr.push(cssBody);
+        arr.push("}");
+        if (cssSelector.indexOf('@media ') === 0)
         {
-            const cssSelector = DynamicStyles[i].cssSelector;
-            const cssBody = DynamicStyles[i].cssBody;
-
-            arr.push("");
-            arr.push(cssSelector);
-            arr.push("{");
-            arr.push(cssBody);
-            arr.push("}");
-            if (cssSelector.indexOf('@media ') === 0)
-            {
-                arr.push("}"); // for closing media rule bracket
-            }
+            arr.push("}"); // for closing media rule bracket
         }
+    }
 
-        // try update if has change
-        {
-            const newStyle = arr.join("\n");
-            if (!IsTwoStringHasValueAndSame(ReactWithDotNetDynamicCssElement.innerHTML, newStyle))
-            {
-                ReactWithDotNetDynamicCssElement.innerHTML = newStyle;
-            } 
-        }              
+    // try update if has change
+    const newStyle = arr.join("\n");
+    if (!IsTwoStringHasValueAndSame(ReactWithDotNetDynamicCssElement.innerHTML, newStyle))
+    {
+        ReactWithDotNetDynamicCssElement.innerHTML = newStyle;
     }
 }
 
@@ -2794,7 +2880,12 @@ var ReactWithDotNet =
     IsMediaTablet: IsTablet,
     IsMediaDesktop: IsDesktop,
 
-    Call: InvokeJsFunctionInPath
+    Call: InvokeJsFunctionInPath,
+    Util:
+    {
+        SetCookie: SetCookie,
+        GetCookie: GetCookie
+    }
 };
 
 window.ReactWithDotNet = ReactWithDotNet;

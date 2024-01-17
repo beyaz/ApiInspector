@@ -122,34 +122,38 @@
                 Shorthand property for assign Flex properties
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WithClass``1(``0,ReactWithDotNet.Style)">
+        <member name="M:ReactWithDotNet.Mixin.WithStyle``1(``0,ReactWithDotNet.Style)">
             <summary>
-            Automatically generates a css class then adds class name to element.
-            <br/>
-            css class will be automatically remove when component destroyed.
-            <br/>
-            Example:
-            <code>
-            arrowDown.WithClass(new Style
-            {
-               Transform("rotate(-180deg)")
-            })
-            </code>
+                Automatically generates a css class then adds class name to element.
+                <br />
+                You can use transition css
+                <br />
+                Generated css class will be automatically remove when component destroyed.
+                <br />
+                Example:
+                <code>
+                arrowDown.WithStyle(new Style
+                {
+                   Transform("rotate(-180deg)")
+                })
+                </code>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WithClass``1(``0,ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.WithStyle``1(``0,System.Collections.Generic.IEnumerable{ReactWithDotNet.StyleModifier})">
             <summary>
-            Automatically generates a css class then adds class name to element.
-            <br/>
-            css class will be automatically remove when component destroyed.
-            <br/>
-            Example:
-            <code>
-            arrowDown.WithClass(new []
-            {
-               Transform("rotate(-180deg)")
-            })
-            </code>
+                Automatically generates a css class then adds class name to element.
+                <br />
+                You can use transition css
+                <br />
+                Generated css class will be automatically remove when component destroyed.
+                <br />
+                Example:
+                <code>
+                arrowDown.WithStyle(new []
+                {
+                   Transform("rotate(-180deg)")
+                })
+                </code>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Alt(System.String)">
@@ -160,6 +164,22 @@
         <member name="M:ReactWithDotNet.Mixin.Src(System.String)">
             <summary>
                 img.src = <paramref name="src" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.ListenEventThenOnlyUpdateState``1(ReactWithDotNet.Client,``0)">
+            <summary>
+                When event fired then updates only component state
+                <br/>
+                Do not calls c# render method. Updates state of react component in client.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.NavigateTo(ReactWithDotNet.Client,System.String)">
+            <summary>
+                Example:
+                <br/>
+                Client.NavigateTo("/") navigates to home page
+                <br/>
+                Client.NavigateTo("/AboutUs") navigates to About Us page
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.BackgroundColorTransparent">
@@ -1140,6 +1160,31 @@
                 (min-width: <paramref name="minWidthAsPixel"/> + 'px') and (max-width: <paramref name="maxWidthAsPixel"/> + 'px')
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.SM(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 640px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MD(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 768px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LG(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 1024px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.XL(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 1280px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.XXL(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: 1536px
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.TextIndent(System.Double)">
             <summary>
             specifies the indentation of the first line in a text-block
@@ -1189,6 +1234,11 @@
                 style.borderRight = <paramref name="borderValue"/>
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.BoxShadowNone">
+            <summary>
+                style.boxShadow = <strong>none</strong>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.Dashed(System.Double,System.String)">
             <summary>
                 Returns a string like <paramref name="widthAsPx" /><b> + px dashed + </b> <paramref name="color" />"
@@ -1202,6 +1252,11 @@
         <member name="M:ReactWithDotNet.Mixin.Solid(System.Double,System.String)">
             <summary>
                 Returns a string like <paramref name="widthAsPx" /><b> + px solid + </b> <paramref name="color" />"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.BorderWidth(System.Double)">
+            <summary>
+                style.borderWidth = <paramref name="widthAsPx" /> + 'px'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.url(System.String)">
@@ -1241,22 +1296,22 @@
         </member>
         <member name="F:ReactWithDotNet.Mixin.percent">
             <summary>
-                50|percent returns like '50%'
+                50*percent returns like '50%'
             </summary>
         </member>
         <member name="F:ReactWithDotNet.Mixin.rem">
             <summary>
-                2|rem returns like '2rem'
+                2*rem returns like '2rem'
             </summary>
         </member>
         <member name="F:ReactWithDotNet.Mixin.vh">
             <summary>
-                7|vh returns like '7vh'
+                7*vh returns like '7vh'
             </summary>
         </member>
         <member name="F:ReactWithDotNet.Mixin.vw">
             <summary>
-                7|vw returns like '7vw'
+                7*vw returns like '7vw'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.linear_gradient(System.Int32,System.String,System.String)">
@@ -1392,6 +1447,66 @@
                 style.width = <paramref name="width" /> + 'px'
                 <br/>
                 style.height = <paramref name="height" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Size(System.Double)">
+            <summary>
+                style.width = <paramref name="width_and_height" /> + 'px'
+                <br/>
+                style.height = <paramref name="width_and_height" /> + 'px'
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.w_full">
+            <summary>
+                width: 100%
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Width(System.Double,System.Double)">
+            <summary>
+                width: <paramref name="percentOfTotal"/> / <paramref name="total"/> * 100 + '%'
+                <br/>Example:<br/>
+                Width(3, 4) means Width("75%")
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Height(System.Double,System.Double)">
+            <summary>
+                height:  <paramref name="percentOfTotal"/> / <paramref name="total"/> * 100 + '%'
+                <br/>Example:<br/>
+                Height(3, 4) means Height("75%")
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.h_full">
+            <summary>
+                height: 100%
+            </summary>
+        </member>
+        <member name="F:ReactWithDotNet.Mixin.size_full">
+            <summary>
+                width: 100%
+                <br />
+                height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.SizeFull">
+            <summary>
+                width: 100%
+                <br />
+                height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.HeightFull">
+            <summary>
+                height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.WidthFull">
+            <summary>
+                width: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.Inset0">
+            <summary>
+                inset: "0"
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.AccentColor(System.String)">
@@ -4579,22 +4694,22 @@
                 Specifies independent, self-contained content.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.article.#ctor">
-            <summary>
-                Specifies independent, self-contained content.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Specifies independent, self-contained content.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.article.#ctor(System.String)">
             <summary>
                 Specifies independent, self-contained content.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.article.op_Implicit(System.String)~ReactWithDotNet.article">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Specifies independent, self-contained content.
             </summary>
@@ -4734,22 +4849,22 @@
                 Defines a paragraph
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.p.#ctor">
-            <summary>
-                Defines a paragraph
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Defines a paragraph
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.p.#ctor(System.String)">
             <summary>
                 Defines a paragraph
             </summary>
         </member>
         <member name="M:ReactWithDotNet.p.op_Implicit(System.String)~ReactWithDotNet.p">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Defines a paragraph
             </summary>
@@ -4769,22 +4884,22 @@
                 Preformatted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.pre.#ctor">
-            <summary>
-                Preformatted text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Preformatted text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.pre.#ctor(System.String)">
             <summary>
                 Preformatted text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.pre.op_Implicit(System.String)~ReactWithDotNet.pre">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Preformatted text
             </summary>
@@ -4804,22 +4919,22 @@
                 Define some text as computer code in a document
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.code.#ctor">
-            <summary>
-                Define some text as computer code in a document
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.code.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Define some text as computer code in a document
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.code.#ctor(System.String)">
             <summary>
                 Define some text as computer code in a document
             </summary>
         </member>
         <member name="M:ReactWithDotNet.code.op_Implicit(System.String)~ReactWithDotNet.code">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Define some text as computer code in a document
             </summary>
@@ -4839,22 +4954,22 @@
                 Ordered list
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ol.#ctor">
-            <summary>
-                Ordered list
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ol.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Ordered list
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.ol.#ctor(System.String)">
             <summary>
                 Ordered list
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ol.op_Implicit(System.String)~ReactWithDotNet.ol">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Ordered list
             </summary>
@@ -4874,22 +4989,22 @@
                 Unordered (bulleted) list
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ul.#ctor">
-            <summary>
-                Unordered (bulleted) list
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ul.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Unordered (bulleted) list
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.ul.#ctor(System.String)">
             <summary>
                 Unordered (bulleted) list
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ul.op_Implicit(System.String)~ReactWithDotNet.ul">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Unordered (bulleted) list
             </summary>
@@ -4909,22 +5024,22 @@
                 List item
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.li.#ctor">
-            <summary>
-                List item
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.li.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                List item
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.li.#ctor(System.String)">
             <summary>
                 List item
             </summary>
         </member>
         <member name="M:ReactWithDotNet.li.op_Implicit(System.String)~ReactWithDotNet.li">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 List item
             </summary>
@@ -4944,22 +5059,22 @@
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.span.#ctor">
-            <summary>
-                Inline container used to mark up a part of a text, or a part of a document.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.span.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Inline container used to mark up a part of a text, or a part of a document.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.span.#ctor(System.String)">
             <summary>
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.span.op_Implicit(System.String)~ReactWithDotNet.span">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
@@ -4979,22 +5094,22 @@
                 Superscript text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.sup.#ctor">
-            <summary>
-                Superscript text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.sup.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Superscript text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.sup.#ctor(System.String)">
             <summary>
                 Superscript text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.sup.op_Implicit(System.String)~ReactWithDotNet.sup">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Superscript text
             </summary>
@@ -5014,22 +5129,22 @@
                 Subscript text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.sub.#ctor">
-            <summary>
-                Subscript text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.sub.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Subscript text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.sub.#ctor(System.String)">
             <summary>
                 Subscript text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.sub.op_Implicit(System.String)~ReactWithDotNet.sub">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Subscript text
             </summary>
@@ -5049,22 +5164,22 @@
                 Inserted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ins.#ctor">
-            <summary>
-                Inserted text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ins.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Inserted text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.ins.#ctor(System.String)">
             <summary>
                 Inserted text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ins.op_Implicit(System.String)~ReactWithDotNet.ins">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Inserted text
             </summary>
@@ -5084,22 +5199,22 @@
                 Deleted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.del.#ctor">
-            <summary>
-                Deleted text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.del.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Deleted text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.del.#ctor(System.String)">
             <summary>
                 Deleted text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.del.op_Implicit(System.String)~ReactWithDotNet.del">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Deleted text
             </summary>
@@ -5119,22 +5234,22 @@
                 Smaller text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.small.#ctor">
-            <summary>
-                Smaller text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.small.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Smaller text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.small.#ctor(System.String)">
             <summary>
                 Smaller text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.small.op_Implicit(System.String)~ReactWithDotNet.small">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Smaller text
             </summary>
@@ -5154,22 +5269,22 @@
                 Marked text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.mark.#ctor">
-            <summary>
-                Marked text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.mark.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Marked text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.mark.#ctor(System.String)">
             <summary>
                 Marked text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.mark.op_Implicit(System.String)~ReactWithDotNet.mark">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Marked text
             </summary>
@@ -5189,22 +5304,22 @@
                 Emphasized text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.em.#ctor">
-            <summary>
-                Emphasized text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.em.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Emphasized text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.em.#ctor(System.String)">
             <summary>
                 Emphasized text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.em.op_Implicit(System.String)~ReactWithDotNet.em">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Emphasized text
             </summary>
@@ -5224,22 +5339,22 @@
                 Bold text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.b.#ctor">
-            <summary>
-                Bold text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.b.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Bold text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.b.#ctor(System.String)">
             <summary>
                 Bold text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.b.op_Implicit(System.String)~ReactWithDotNet.b">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Bold text
             </summary>
@@ -5259,22 +5374,22 @@
                 Italic text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.i.#ctor">
-            <summary>
-                Italic text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.i.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Italic text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.i.#ctor(System.String)">
             <summary>
                 Italic text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.i.op_Implicit(System.String)~ReactWithDotNet.i">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Italic text
             </summary>
@@ -5294,22 +5409,22 @@
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.u.#ctor">
-            <summary>
-                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.u.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.u.#ctor(System.String)">
             <summary>
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.u.op_Implicit(System.String)~ReactWithDotNet.u">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
@@ -5329,22 +5444,22 @@
                 Important text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.strong.#ctor">
-            <summary>
-                Important text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.strong.#ctor(ReactWithDotNet.IModifier[])">
-            <summary>
-                Important text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.strong.#ctor(System.String)">
             <summary>
                 Important text
             </summary>
         </member>
         <member name="M:ReactWithDotNet.strong.op_Implicit(System.String)~ReactWithDotNet.strong">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(ReactWithDotNet.IModifier[])">
             <summary>
                 Important text
             </summary>
@@ -6894,6 +7009,20 @@
                 svg.height = <paramref name="height" /> + 'px'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.svg.Size(System.Double,System.Double)">
+            <summary>
+                svg.width = <paramref name="width" /> + 'px'
+                <br/>
+                svg.height = <paramref name="height" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Size(System.Double)">
+            <summary>
+                svg.width = <paramref name="size" /> + 'px'
+                <br/>
+                svg.height = <paramref name="size" /> + 'px'
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.svg.ViewBox(System.Double,System.Double,System.Double,System.Double)">
             <summary>
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
@@ -7053,6 +7182,11 @@
                 A string. Specifies the initial value for a text area.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.textarea.onBlur">
+            <summary>
+                Occurs when an element loses focus.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.textarea.Name(System.String)">
             <summary>
                 name = <paramref name="value"/>
@@ -7151,6 +7285,121 @@
                 A string. Specifies the initial value for a text area.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.textarea.OnBlur(ReactWithDotNet.FocusEventHandler)">
+            <summary>
+                onBlur = <paramref name="value"/>
+            <br/>
+                Occurs when an element loses focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.autoFocus">
+            <summary>
+                Element must automatically get focus when the page loads.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.onBlur">
+            <summary>
+                Occurs when an element loses focus.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.input.AutoFocus(System.Nullable{System.Boolean})">
+            <summary>
+                autoFocus = <paramref name="value"/>
+            <br/>
+                Element must automatically get focus when the page loads.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.input.OnBlur(ReactWithDotNet.FocusEventHandler)">
+            <summary>
+                onBlur = <paramref name="value"/>
+            <br/>
+                Occurs when an element loses focus.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below<br />
+                component.valueBind = ()=>state.UserInfo.Name<br />
+                component.valueBindDebounceTimeout = 600 // milliseconds<br />
+                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.data">
+            <summary>
+                The data-* attribute is used to store custom data private to the page or application.
+                <br />
+                The data-* attribute gives us the ability to embed custom data attributes on all HTML elements.
+                <br />
+                The stored (custom) data can then be used in the page's JavaScript to create a more engaging user experience
+                (without any Ajax calls or server-side database queries).
+                <br />
+                The data-* attribute consist of two parts:
+                <br />
+                The attribute name should not contain any uppercase letters, and must be at least one character long after the
+                prefix "data-"<br />
+                The attribute value can be any string<br />
+                Note: Custom attributes prefixed with "data-" will be completely ignored by the user agent.<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.innerText">
+            <summary>
+                'innerText' property of element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.onClickPreview">
+            <summary>
+            TODO: comment here
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.onScrollDebounceTimeout">
+            <summary>
+                Default value: 400 <br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.style">
+            <summary>
+                Gets the style.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.Style">
+            <summary>
+                Imports filled values given style
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.HtmlElement.text">
+            <summary>
+                'innerText' property of element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.HtmlElement.AddClass(System.String)">
+            <summary>
+                Adds given cssClassName ot class attribute of html element
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Delegate}})">
             <summary>
                 Sample event declaration
@@ -7193,6 +7442,20 @@
                 <br />
                 Sample event dispatching <br />
                 DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.componentDidCatch(System.Exception)">
+            <summary>
+                When any exception occurred in render method then this method will be call.
+                <code>
+                protected override Element componentDidCatch(Exception exceptionOccurredInRender)
+                {
+                    return new div(Color("red"))
+                    {
+                        exceptionOccurredInRender.ToString()
+                    };
+                }
+                </code>
             </summary>
         </member>
         <member name="T:ReactWithDotNet.Element">
@@ -7476,164 +7739,6 @@
                 alignItems     = "center"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.HtmlElement.accesskey">
-            <summary>
-                Provides a hint for generating a keyboard shortcut for the current element. This attribute consists of a
-                space-separated list of characters. The browser should use the first one that exists on the computer keyboard
-                layout.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.draggable">
-            <summary>
-            Specifies whether an element is draggable or not.
-            <br/>
-            Tip: Links and images are draggable by default.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.contenteditable">
-            <summary>
-                Specifies whether the content of an element is editable or not.
-            <br/>
-                true|false
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.className">
-            <summary>
-                Gets or sets the name of the class.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.data">
-            <summary>
-                The data-* attribute is used to store custom data private to the page or application.
-                <br />
-                The data-* attribute gives us the ability to embed custom data attributes on all HTML elements.
-                <br />
-                The stored (custom) data can then be used in the page's JavaScript to create a more engaging user experience
-                (without any Ajax calls or server-side database queries).
-                <br />
-                The data-* attribute consist of two parts:
-                <br />
-                The attribute name should not contain any uppercase letters, and must be at least one character long after the
-                prefix "data-"<br />
-                The attribute value can be any string<br />
-                Note: Custom attributes prefixed with "data-" will be completely ignored by the user agent.<br />
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.dir">
-            <summary>
-                Specifies the text direction for the content in an element
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.innerText">
-            <summary>
-                'innerText' property of element.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.lang">
-            <summary>
-                Helps define the language of an element: the language that non-editable elements are in, or the language that
-                editable elements should be written in by the user. The attribute contains one "language tag" (made of
-                hyphen-separated "language subtags") in the format defined in RFC 5646: Tags for Identifying Languages (also known
-                as BCP 47). xml:lang has priority over it.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.onClick">
-            <summary>
-                Gets or sets the on click.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.onClickPreview">
-            <summary>
-                Gets or sets the on click.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.onScrollDebounceTimeout">
-            <summary>
-                Default value: 400 <br />
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.part">
-            <summary>
-                A space-separated list of the part names of the element. Part names allows CSS to select and style specific
-                elements in a shadow tree via the ::part pseudo-element.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.role">
-            <summary>
-                Roles define the semantic meaning of content, allowing screen readers and other tools to present and support
-                interaction with an object in a way that is consistent with user expectations of that type of object.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.spellcheck">
-            <summary>
-                An enumerated attribute defines whether the element may be checked for spelling errors. It may have the following
-                values:<br />
-                empty string or true, which indicates that the element should be, if possible, checked for spelling errors;<br />
-                false, which indicates that the element should not be checked for spelling errors.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.style">
-            <summary>
-                Gets the style.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.Style">
-            <summary>
-                Imports filled values given style
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.text">
-            <summary>
-                'innerText' property of element.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.translate">
-            <summary>
-                An enumerated attribute that is used to specify whether an element's attribute values and the values of its Text
-                node children are to be translated when the page is localized, or whether to leave them unchanged. It can have the
-                following values:
-                <br />
-                empty string or yes, which indicates that the element will be translated.
-                <br />
-                no, which indicates that the element will not be translated.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.HtmlElement.AddClass(System.String)">
-            <summary>
-                Adds given cssClassName ot class attribute of html element
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.autoFocus">
-            <summary>
-                Element must automatically get focus when the page loads.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.onBlur">
-            <summary>
-                Occurs when an element loses focus.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.onFocus">
-            <summary>
-                occurs when an element gets focus.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
-            <summary>
-                if you want to handle when user iteraction finished see example below<br />
-                component.valueBind = ()=>state.UserInfo.Name<br />
-                component.valueBindDebounceTimeout = 600 // milliseconds<br />
-                component.valueBindDebounceHandler = OnUserIterationFinished<br />
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
-            <summary>
-                if you want to handle when user iteraction finished see example below<br />
-                component.valueBind = ()=>state.UserInfo.Name<br />
-                component.valueBindDebounceTimeout = 600 // milliseconds<br />
-                component.valueBindDebounceHandler = OnUserIterationFinished<br />
-            </summary>
-        </member>
         <member name="F:ReactWithDotNet.CssUnit.em">
             <summary>
                 2|em returns like '2em'
@@ -7644,6 +7749,20 @@
             PureComponent is similar to Component but it skips re-renders for same props and state.
             <br/>
             https://react.dev/reference/react/PureComponent
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.PureComponent.componentDidCatch(System.Exception)">
+            <summary>
+                When any exception occurred in render method then this method will be call.
+                <code>
+                protected override Element componentDidCatch(Exception exceptionOccurredInRender)
+                {
+                    return new div(Color("red"))
+                    {
+                        exceptionOccurredInRender.ToString()
+                    };
+                }
+                </code>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Style.op_Addition(ReactWithDotNet.Style,ReactWithDotNet.StyleModifier)">

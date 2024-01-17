@@ -1,4 +1,7 @@
-﻿namespace ApiInspector.WebUI;
+﻿using System.IO;
+using System.Text;
+
+namespace ApiInspector.WebUI;
 
 class MainLayout : Component, IPageLayout
 {
@@ -6,9 +9,13 @@ class MainLayout : Component, IPageLayout
     
     public string ContainerDomElementId => "app";
 
+    static string LastWriteTimeOfIndexJsFile;
+    
     protected override Element render()
     {
         const string root = "wwwroot";
+        
+        LastWriteTimeOfIndexJsFile ??= new FileInfo($"/{root}/dist/index.js").LastWriteTime.Ticks.ToString();
 
         return new html
         {
@@ -48,25 +55,29 @@ class MainLayout : Component, IPageLayout
                 // After page first rendered in client then connect with react system in background.
                 // So user first iteraction time will be minimize.
 
-                new script
+                new script(script.Type("module"))
                 {
-                    type = "module",
-                    text = 
-                        $@"
-
-import {{ReactWithDotNet}} from './{root}/dist/index.js?v={Guid.NewGuid():N}';
-
-ReactWithDotNet.StrictMode = false;
-ReactWithDotNet.RenderComponentIn({{
-  idOfContainerHtmlElement: '{ContainerDomElementId}',
-  renderInfo: {RenderInfo.ToJsonString()}
-}});
-
-"
+                    calculateInitialScript()
                 }
 
 
             }
         };
+        
+        StringBuilder calculateInitialScript()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"import {{ReactWithDotNet}} from './{root}/dist/index.js?v={LastWriteTimeOfIndexJsFile}';");
+            sb.AppendLine("ReactWithDotNet.StrictMode = false;");
+            
+            sb.AppendLine("ReactWithDotNet.RenderComponentIn({");
+            sb.AppendLine($"  idOfContainerHtmlElement: '{ContainerDomElementId}',");
+            sb.AppendLine("  renderInfo: ");
+            sb.Append(RenderInfo.ToJsonString());
+            sb.AppendLine("});");
+            
+            return sb;
+        }
     }
 }
