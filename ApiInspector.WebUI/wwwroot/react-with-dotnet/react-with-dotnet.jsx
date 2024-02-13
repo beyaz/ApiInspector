@@ -15,10 +15,9 @@ const RootNode = '$RootNode';
 const ClientTasks = '$ClientTasks';
 const SyncId = '$SyncId';
 const DotNetState = '$State';
-const HasComponentDidMountMethod = '$HasComponentDidMountMethod';
+const ComponentDidMountMethod = '$ComponentDidMountMethod';
 const DotNetComponentUniqueIdentifier = '$DotNetComponentUniqueIdentifier';
 const DotNetComponentUniqueIdentifiers = '$DotNetComponentUniqueIdentifiers';
-
 const ON_COMPONENT_DESTROY = '$ON_COMPONENT_DESTROY';
 const CUSTOM_EVENT_LISTENER_MAP = '$CUSTOM_EVENT_LISTENER_MAP';
 const DotNetProperties = 'DotNetProperties';
@@ -91,9 +90,16 @@ class EventBusImp
             return;
         }
 
-        for (var i = 0; i < listenerFunctions.length; i++)
+        // NOTE: maybe user removed some listeners so we need to protect array modification
+
+        const functionArray = listenerFunctions.slice(0);
+
+        for (var i = 0; i < functionArray.length; i++)
         {
-            listenerFunctions[i].apply(null, [eventArgumentsAsArray]);
+            if (listenerFunctions.indexOf(functionArray[i]) >= 0)
+            {
+                functionArray[i].apply(null, [eventArgumentsAsArray]);
+            }
         }
     }
 }
@@ -252,6 +258,8 @@ function IsEmptyObject(obj)
     return true;
 }
 
+const EventDispatchingFinishCallbackFunctionsQueue = [];
+
 const FunctionExecutionQueue = [];
 
 var ReactIsBusy = false;
@@ -274,6 +282,11 @@ function EmitNextFunctionInFunctionExecutionQueue()
     if (ReactIsBusy === true)
     {
         throw CreateNewDeveloperError("ReactWithDotNet event queue problem occured.");
+    }
+
+    if (FunctionExecutionQueue.length === 0 && EventDispatchingFinishCallbackFunctionsQueue.length > 0)
+    {
+        PushToFunctionExecutionQueue(EventDispatchingFinishCallbackFunctionsQueue.shift())
     }
 
     if (FunctionExecutionQueue.length > 0)
@@ -461,15 +474,15 @@ const VisitFiberNodeForCaptureState = (parentScope, fiberNode) =>
 {
     var scope = parentScope;
 
+    var breadcrumb = parentScope.breadcrumb + ',' + fiberNode.key;
+
+    scope = { map: parentScope.map, breadcrumb: breadcrumb };
+
     var isFiberNodeRelatedWithDotNetComponent = fiberNode.type && fiberNode.type[DotNetTypeOfReactComponent];
     if (isFiberNodeRelatedWithDotNetComponent)
     {
         var map = parentScope.map;
-
-        var breadcrumb = parentScope.breadcrumb + ',' + parentScope.index;
-
-        parentScope.index++;
-
+        
         if (map[breadcrumb] !== undefined)
         {
             throw CreateNewDeveloperError('Problem when traversing nodes');
@@ -483,8 +496,6 @@ const VisitFiberNodeForCaptureState = (parentScope, fiberNode) =>
         };
 
         map[breadcrumb] = stateInfo;
-
-        scope = { map: map, index: 0, breadcrumb: breadcrumb };
     }
 
     var child = fiberNode.child;
@@ -503,14 +514,16 @@ const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
         rootFiberNode = rootFiberNode.alternate;
     }
 
+    const rootNodeKey = rootFiberNode.key;
+
     var map = {};
 
-    map['0'] =
+    map[rootNodeKey] =
     {
         StateAsJson: JSON.stringify(rootFiberNode.stateNode.state[DotNetState])
     };
 
-    var rootScope = { map: map, index: 0, breadcrumb: '0' };
+    var rootScope = { map: map, breadcrumb: rootNodeKey };
 
     var child = rootFiberNode.child;
     while (child)
@@ -519,18 +532,18 @@ const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
         child = child.sibling;
     }
 
-    map['0'][DotNetProperties] = Object.assign({}, NotNull(rootFiberNode.stateNode.state[DotNetProperties]));
+    map[rootNodeKey][DotNetProperties] = Object.assign({}, NotNull(rootFiberNode.stateNode.state[DotNetProperties]));
 
     // calculate $LogicalChildrenCount
     {
         const logicalChildrenCountCalculation = TryGetValueInPath(rootFiberNode.stateNode, "props.$jsonNode.$LogicalChildrenCount");
         if (logicalChildrenCountCalculation.success)
         {
-            map['0'][DotNetProperties].$LogicalChildrenCount = logicalChildrenCountCalculation.value;
+            map[rootNodeKey][DotNetProperties].$LogicalChildrenCount = logicalChildrenCountCalculation.value;
         }
     }
 
-    return map;
+    return { stateTree: map, rootNodeKey: rootNodeKey };
 };
 
 const GetNextSequence = (() =>
@@ -1549,13 +1562,17 @@ function HandleAction(actionArguments)
         throw capturedStateTreeResponse.exception;
     }
 
+    const capturedStateTree = capturedStateTreeResponse.value.stateTree;
+    const capturedStateTreeRootNodeKey = capturedStateTreeResponse.value.rootNodeKey;
+    
     const request =
     {
         MethodName: "HandleComponentEvent",
 
         EventHandlerMethodName: NotNull(remoteMethodName),
         FullName: NotNull(component.constructor)[DotNetTypeOfReactComponent],
-        CapturedStateTree: capturedStateTreeResponse.value,
+        CapturedStateTree: capturedStateTree,
+        CapturedStateTreeRootNodeKey: capturedStateTreeRootNodeKey,
         ComponentKey: parseInt(NotNull(component.props.$jsonNode.key)),
         LastUsedComponentUniqueIdentifier: LastUsedComponentUniqueIdentifier,
         ComponentUniqueIdentifier: NotNull(component.state[DotNetComponentUniqueIdentifier]),
@@ -1563,11 +1580,15 @@ function HandleAction(actionArguments)
         CallFunctionId: actionArguments.executionQueueEntry.id
     };
 
+
     if (actionArguments.onlyUpdateState)
     {
         request.OnlyUpdateState = true;
-        request.CapturedStateTree = { "0": request.CapturedStateTree["0"] };
+        request.CapturedStateTree = { };
+        request.CapturedStateTree[capturedStateTreeRootNodeKey] = capturedStateTree[capturedStateTreeRootNodeKey];
+
     }
+    
 
     ArrangeRemoteMethodArguments(actionArguments.remoteMethodArguments);
 
@@ -1613,7 +1634,15 @@ function HandleAction(actionArguments)
             // note: setState not used here because this is special case. we don't want to trigger render.
             component.state[DotNetState] = response.NewState;
             component.state[DotNetProperties] = response.NewDotNetProperties;
+            if (response.ClientTaskList)
+            {
+                component.state[ClientTasks] = response.ClientTaskList;
+
+                HandleComponentClientTasks(component);
+            }
+            
             stateCallback();
+
             return;
         }
 
@@ -1826,24 +1855,6 @@ function DefineComponent(componentDeclaration)
                 initialState[SyncId] = ShouldBeNumber(props[SyncId]);
             }
 
-            // old way todo: check and remove
-            //initialState[DotNetState]      = NotNull(props.$jsonNode[DotNetState]);
-            //initialState[SyncId]           = ShouldBeNumber(props[SyncId]);
-            //initialState[RootNode]         = props.$jsonNode[RootNode];
-            //initialState[DotNetProperties] = NotNull(props.$jsonNode[DotNetProperties]);
-            //initialState[DotNetComponentUniqueIdentifier] = NotNull(props.$jsonNode[DotNetComponentUniqueIdentifier]);
-
-            //if (props.$jsonNode[HasComponentDidMountMethod]) {
-            //    initialState[HasComponentDidMountMethod] = props.$jsonNode[HasComponentDidMountMethod];
-            //}
-
-            //if (props.$jsonNode[ClientTasks]) {
-            //    initialState[ClientTasks] = props.$jsonNode[ClientTasks];
-            //}
-
-            //initialState.$CachedMethods = props.$jsonNode.$CachedMethods;
-           
-
             instance.state = initialState;
 
             initialState[DotNetTypeOfReactComponent] = instance[DotNetTypeOfReactComponent] = dotNetTypeOfReactComponent;
@@ -1870,8 +1881,8 @@ function DefineComponent(componentDeclaration)
 
             function HandleHasComponentDidMount(isDirectCall)
             {
-                const hasComponentDidMountMethod = component.state[HasComponentDidMountMethod];
-                if (hasComponentDidMountMethod !== true)
+                const componentDidMountMethod = component.state[ComponentDidMountMethod];
+                if (componentDidMountMethod === undefined || componentDidMountMethod === null)
                 {
                     if (isDirectCall !== true)
                     {
@@ -1890,7 +1901,7 @@ function DefineComponent(componentDeclaration)
 
                         const clientTasks = newState[ClientTasks];
 
-                        newState[HasComponentDidMountMethod] = null;
+                        newState[ComponentDidMountMethod] = null;
                         newState[ClientTasks] = null;
 
                         function stateCallback()
@@ -1908,13 +1919,13 @@ function DefineComponent(componentDeclaration)
 
                 const partialState = {};
 
-                partialState[HasComponentDidMountMethod] = null;
+                partialState[ComponentDidMountMethod] = null;
 
                 function stateCallBack()
                 {
                     const actionArguments = {
                         component: component,
-                        remoteMethodName: 'componentDidMount',
+                        remoteMethodName: componentDidMountMethod,
                         remoteMethodArguments: []
                     };
                     StartAction(actionArguments);
@@ -2461,7 +2472,14 @@ RegisterCoreFunction("GotoMethod", function (timeout, remoteMethodName, remoteMe
 
 RegisterCoreFunction("DispatchEvent", function(eventName, eventArguments)
 {
-    EventBus.Dispatch(eventName, eventArguments);
+    EventBus.Dispatch(eventName, eventArguments);    
+
+    EventDispatchingFinishCallbackFunctionsQueue.push(function ()
+    {
+        EventBus.Dispatch("$<<finished>>$" + eventName + "$<<finished>>$", eventArguments);
+
+        OnReactStateReady();
+    });    
 });
 
 /**
@@ -2713,7 +2731,7 @@ RegisterCoreFunction("OnOutsideClicked", function (idOfElement, remoteMethodName
 
 function CreateNewDeveloperError(message)
 {
-    return new Error('ReactWithDotNet developer error occured.' + message);
+    return new Error('\nReactWithDotNet developer error occured.\n' + message);
 }
 
 const DynamicStyles = [];

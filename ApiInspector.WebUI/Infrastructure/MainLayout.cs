@@ -9,13 +9,28 @@ class MainLayout : Component, IPageLayout
     
     public string ContainerDomElementId => "app";
 
-    static string LastWriteTimeOfIndexJsFile;
+    static readonly string LastWriteTimeOfIndexJsFile = CalculateLastWriteTimeOfIndexJsFile();
     
+    static string CalculateLastWriteTimeOfIndexJsFile()
+    {
+        const string root = "wwwroot";
+            
+        var directoryName = Path.GetDirectoryName(typeof(MainLayout).Assembly.Location);
+
+        if (Directory.Exists(directoryName))
+        {
+            var fileInfo = new FileInfo(Path.Combine(directoryName,root,"dist","index.js"));
+            if (fileInfo.Exists)
+            {
+                return fileInfo.LastWriteTime.Ticks.ToString();
+            }
+        }
+
+        throw new IOException("index.js file not found");
+    }
     protected override Element render()
     {
         const string root = "wwwroot";
-        
-        LastWriteTimeOfIndexJsFile ??= new FileInfo($"/{root}/dist/index.js").LastWriteTime.Ticks.ToString();
 
         return new html
         {

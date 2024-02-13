@@ -55,19 +55,28 @@ static partial class Extensions
     {
         var CompiledNetCoreRegex      = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
         var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
+        var CompiledNetstandard= new Regex("netstandard+", RegexOptions.Compiled);
 
         var contents = File.ReadAllText(dll.FullName);
 
-        var match = CompiledNetCoreRegex.Match(contents);
+       
+
+        var match = CompiledNetFrameworkRegex.Match(contents);
+        if (match.Success)
+        {
+            return (false, true);
+        }
+        
+        match = CompiledNetCoreRegex.Match(contents);
         if (match.Success)
         {
             return (true, false);
         }
-
-        match = CompiledNetFrameworkRegex.Match(contents);
+        
+        match = CompiledNetstandard.Match(contents);
         if (match.Success)
         {
-            return (false, true);
+            return (true, false);
         }
 
         return (false, false);

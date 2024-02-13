@@ -45,6 +45,142 @@
                 &amp;nbsp;
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.DispatchEvent(ReactWithDotNet.IFunctionalComponent,System.Delegate,System.String)">
+            <summary>
+               Dispatch given <paramref name="handlerFunc"/>
+               <br/>
+               Sample usage:
+            <code> 
+               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
+               {
+                   var count = Count;
+                  
+                   return cmp =>
+                   {
+                       return new FlexColumn
+                       {
+                           new button(Padding(10))
+                           {
+                               $"{count}",
+                               OnClick(OnClickHandler)
+                           }
+                       };
+                  
+                       Task OnClickHandler(MouseEvent e)
+                       {
+                           count++;
+                   
+                           cmp.DispatchEvent(OnValueChange, count);
+                  
+                           return Task.CompletedTask;
+                       }
+                   };
+               }
+            </code>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.DispatchEvent``1(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,System.String)">
+            <summary>
+               Dispatch given <paramref name="handlerFunc"/>
+               <br/>
+               Sample usage:
+            <code> 
+               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
+               {
+                   var count = Count;
+                  
+                   return cmp =>
+                   {
+                       return new FlexColumn
+                       {
+                           new button(Padding(10))
+                           {
+                               $"{count}",
+                               OnClick(OnClickHandler)
+                           }
+                       };
+                  
+                       Task OnClickHandler(MouseEvent e)
+                       {
+                           count++;
+                   
+                           cmp.DispatchEvent(OnValueChange, count);
+                  
+                           return Task.CompletedTask;
+                       }
+                   };
+               }
+            </code>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.DispatchEvent``2(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,``1,System.String)">
+            <summary>
+               Dispatch given <paramref name="handlerFunc"/>
+               <br/>
+               Sample usage:
+            <code> 
+               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
+               {
+                   var count = Count;
+                  
+                   return cmp =>
+                   {
+                       return new FlexColumn
+                       {
+                           new button(Padding(10))
+                           {
+                               $"{count}",
+                               OnClick(OnClickHandler)
+                           }
+                       };
+                  
+                       Task OnClickHandler(MouseEvent e)
+                       {
+                           count++;
+                   
+                           cmp.DispatchEvent(OnValueChange, count);
+                  
+                           return Task.CompletedTask;
+                       }
+                   };
+               }
+            </code>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.DispatchEvent``3(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,``1,``2,System.String)">
+            <summary>
+               Dispatch given <paramref name="handlerFunc"/>
+               <br/>
+               Sample usage:
+            <code> 
+               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
+               {
+                   var count = Count;
+                  
+                   return cmp =>
+                   {
+                       return new FlexColumn
+                       {
+                           new button(Padding(10))
+                           {
+                               $"{count}",
+                               OnClick(OnClickHandler)
+                           }
+                       };
+                  
+                       Task OnClickHandler(MouseEvent e)
+                       {
+                           count++;
+                   
+                           cmp.DispatchEvent(OnValueChange, count);
+                  
+                           return Task.CompletedTask;
+                       }
+                   };
+               }
+            </code>
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumn">
             <summary>
                 display = "flex"
@@ -122,7 +258,7 @@
                 Shorthand property for assign Flex properties
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WithStyle``1(``0,ReactWithDotNet.Style)">
+        <member name="M:ReactWithDotNet.Mixin.WithStyle(ReactWithDotNet.Style)">
             <summary>
                 Automatically generates a css class then adds class name to element.
                 <br />
@@ -132,27 +268,12 @@
                 <br />
                 Example:
                 <code>
-                arrowDown.WithStyle(new Style
+                new ComponentX
                 {
-                   Transform("rotate(-180deg)")
-                })
-                </code>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WithStyle``1(``0,System.Collections.Generic.IEnumerable{ReactWithDotNet.StyleModifier})">
-            <summary>
-                Automatically generates a css class then adds class name to element.
-                <br />
-                You can use transition css
-                <br />
-                Generated css class will be automatically remove when component destroyed.
-                <br />
-                Example:
-                <code>
-                arrowDown.WithStyle(new []
-                {
-                   Transform("rotate(-180deg)")
-                })
+                   WithStyle([
+                       Transition(nameof(Style.rotate), 400)
+                   ])
+                }
                 </code>
             </summary>
         </member>
@@ -164,6 +285,11 @@
         <member name="M:ReactWithDotNet.Mixin.Src(System.String)">
             <summary>
                 img.src = <paramref name="src" />
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OnDispatchEventFinished``1(ReactWithDotNet.Client,``0)">
+            <summary>
+                Occurs when event dispatching finished.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.ListenEventThenOnlyUpdateState``1(ReactWithDotNet.Client,``0)">
@@ -1447,6 +1573,20 @@
                 style.width = <paramref name="width" /> + 'px'
                 <br/>
                 style.height = <paramref name="height" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinSize(System.Double,System.Double)">
+            <summary>
+                style.minWidth = <paramref name="minWidth" /> + 'px'
+                <br/>
+                style.minHeight = <paramref name="minHeight" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.MinSize(System.Double)">
+            <summary>
+                style.minWidth = <paramref name="width_and_height" /> + 'px'
+                <br/>
+                style.minHeight = <paramref name="width_and_height" /> + 'px'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Size(System.Double)">
@@ -5576,7 +5716,7 @@
                 The stroke color of the ellipse.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ellipse.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.ellipse.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -5668,7 +5808,7 @@
                 The stroke (outline) color of the line.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.line.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.line.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -5744,7 +5884,7 @@
                 The stroke (outline) color of the polyline.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.polyline.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.polyline.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -5816,7 +5956,7 @@
                 The stroke color of the circle.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.circle.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.circle.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -5879,7 +6019,7 @@
                 Specifies the stroke color of the polygon.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.polygon.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.polygon.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -6200,7 +6340,7 @@
                 Stroke color
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.path.StrokeWidth(System.String)">
+        <member name="M:ReactWithDotNet.path.StrokeWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 strokeWidth = <paramref name="value"/>
             <br/>
@@ -7400,6 +7540,50 @@
                 Adds given cssClassName ot class attribute of html element
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Func{System.Threading.Tasks.Task},System.String)">
+            <summary>
+                Sample event declaration
+                <br />
+                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Func{``0,System.Threading.Tasks.Task},``0,System.String)">
+            <summary>
+                Sample event declaration
+                <br />
+                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Func{``0,System.Threading.Tasks.Task},``0,``1,System.String)">
+            <summary>
+                Sample event declaration
+                <br />
+                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Func{``0,System.Threading.Tasks.Task},``0,``1,``2,System.String)">
+            <summary>
+                Sample event declaration
+                <br />
+                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
+                <br />
+                <br />
+                Sample event dispatching <br />
+                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Delegate}})">
             <summary>
                 Sample event declaration
@@ -7521,6 +7705,11 @@
         <member name="M:ReactWithDotNet.Extensions.RemoveFromStart(System.String,System.String,System.StringComparison)">
             <summary>
                 Removes value from start of str
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.FunctionalComponent.State.Scope">
+            <summary>
+                Scope means value of auto generated fields of CompilerGeneratedType instance.
             </summary>
         </member>
         <member name="T:ReactWithDotNet.FlexRow">
