@@ -79,6 +79,40 @@
             </code>
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.DispatchEvent(ReactWithDotNet.IFunctionalComponent,System.Delegate,System.Object[],System.String)">
+            <summary>
+               Dispatch given <paramref name="handlerFunc"/>
+               <br/>
+               Sample usage:
+            <code> 
+               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
+               {
+                   var count = Count;
+                  
+                   return cmp =>
+                   {
+                       return new FlexColumn
+                       {
+                           new button(Padding(10))
+                           {
+                               $"{count}",
+                               OnClick(OnClickHandler)
+                           }
+                       };
+                  
+                       Task OnClickHandler(MouseEvent e)
+                       {
+                           count++;
+                   
+                           cmp.DispatchEvent(OnValueChange, [count]);
+                  
+                           return Task.CompletedTask;
+                       }
+                   };
+               }
+            </code>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.DispatchEvent``1(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,System.String)">
             <summary>
                Dispatch given <paramref name="handlerFunc"/>
