@@ -38,7 +38,7 @@ public class AssemblySelector
                 if (AssemblyDirectoryPath is not null &&
                     File.Exists(Path.Combine(AssemblyDirectoryPath, AssemblyFileName)))
                 {
-                    cmp.DispatchEvent(SelectionChanged, AssemblyFileName);
+                    cmp.DispatchEvent<string>(SelectionChanged, AssemblyFileName);
                 }
 
                 return Task.CompletedTask;
