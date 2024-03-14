@@ -555,6 +555,16 @@
                 width: 100%
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.WidthFitContent">
+            <summary>
+                width: fit-content
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.HeightFitContent">
+            <summary>
+                height: fit-content
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.BackdropFilterBlur(System.Double)">
             <summary>
                 style.backdropFilter = blur(px)
@@ -678,17 +688,17 @@
                 style.bottom = <paramref name="value" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.ListStyleInside">
+        <member name="P:ReactWithDotNet.Mixin.ListStyleInside">
             <summary>
                 style.listStyle = 'inside'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.ListStyleNone">
+        <member name="P:ReactWithDotNet.Mixin.ListStyleNone">
             <summary>
                 style.listStyle = 'none'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.ListStyleSquare">
+        <member name="P:ReactWithDotNet.Mixin.ListStyleSquare">
             <summary>
                 style.listStyle = 'square'
             </summary>
@@ -916,20 +926,6 @@
         <member name="M:ReactWithDotNet.Mixin.pb(System.String)">
             <summary>
                 style.paddingBottom = <paramref name="paddingBottom" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.px(System.Double)">
-            <summary>
-                style.paddingLeft = <paramref name="value" /> + 'px'
-                <br />
-                style.paddingRight = <paramref name="value" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.px(System.String)">
-            <summary>
-                style.paddingLeft = <paramref name="value" />
-                <br />
-                style.paddingRight = <paramref name="value" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.py(System.Double)">
@@ -1440,6 +1436,11 @@
                 7*vw returns like '7vw'
             </summary>
         </member>
+        <member name="F:ReactWithDotNet.Mixin.px">
+            <summary>
+                2*px returns like '2px'
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.linear_gradient(System.Int32,System.String,System.String)">
             <summary>
                 'linear-gradient(<paramref name="degree" /><b>+deg</b>, <paramref name="fromColor" />, <paramref name="toColor" />
@@ -1456,6 +1457,13 @@
             <summary>
                 'linear-gradient(<b>to </b> <paramref name="targetDirection" />,
                 <paramref name="fromColor" />, <paramref name="toColor" />)'
+                <code>
+                 Example:
+                    new div
+                    {
+                        BackgroundImage(linear_gradientTo("right","#8490ff","#a3eeff"))
+                    }
+                </code>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.rgb(System.Double,System.Double,System.Double)">
@@ -4829,6 +4837,29 @@
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Client.Height">
+            <summary>
+                Client size information will be available after the first request.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Client.Width">
+            <summary>
+                Client size information will be available after the first request.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Client.WidthHasMatch(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier})">
+            <summary>
+             Sample usage:
+                <code>
+                
+                 if (Client.WidthHasMatch(SM))
+                 {
+                     // 
+                 }
+                
+                </code>
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.article">
             <summary>
                 Specifies independent, self-contained content.
@@ -5017,6 +5048,158 @@
         <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.StyleModifier[])">
             <summary>
                 Defines a paragraph
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.time.datetime">
+            <summary>
+                Represent a machine-readable format of the 'time' element
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.time.Datetime(System.String)">
+            <summary>
+                datetime = <paramref name="value"/>
+            <br/>
+                Represent a machine-readable format of the 'time' element
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.dl">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(System.String)">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.op_Implicit(System.String)~ReactWithDotNet.dl">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.dt">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(System.String)">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.op_Implicit(System.String)~ReactWithDotNet.dt">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.dd">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(System.String)">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.op_Implicit(System.String)~ReactWithDotNet.dd">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.kbd">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(System.String)">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.op_Implicit(System.String)~ReactWithDotNet.kbd">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(ReactWithDotNet.IModifier[])">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(ReactWithDotNet.Style)">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
             </summary>
         </member>
         <member name="T:ReactWithDotNet.pre">
@@ -7935,9 +8118,9 @@
         </member>
         <member name="T:ReactWithDotNet.PureComponent">
             <summary>
-            PureComponent is similar to Component but it skips re-renders for same props and state.
-            <br/>
-            https://react.dev/reference/react/PureComponent
+                PureComponent is similar to Component but it skips re-renders for same props and state.
+                <br />
+                https://react.dev/reference/react/PureComponent
             </summary>
         </member>
         <member name="M:ReactWithDotNet.PureComponent.componentDidCatch(System.Exception)">
@@ -7951,6 +8134,29 @@
                         exceptionOccurredInRender.ToString()
                     };
                 }
+                </code>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ClientForPureComponent.Height">
+            <summary>
+                Client size information will be available after the first request.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ClientForPureComponent.Width">
+            <summary>
+                Client size information will be available after the first request.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ClientForPureComponent.WidthHasMatch(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier})">
+            <summary>
+             Sample usage:
+                <code>
+                
+                 if (Client.WidthHasMatch(SM))
+                 {
+                     // 
+                 }
+                
                 </code>
             </summary>
         </member>
@@ -7978,6 +8184,20 @@
         <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">
             <summary>
                 this is the id of first element id which is 'has id value'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Tailwind.px(System.Double)">
+            <summary>
+                style.paddingLeft = <paramref name="value" /> + 'px'
+                <br />
+                style.paddingRight = <paramref name="value" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Tailwind.px(System.String)">
+            <summary>
+                style.paddingLeft = <paramref name="value" />
+                <br />
+                style.paddingRight = <paramref name="value" />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact.Editor.valueBindDebounceHandler">

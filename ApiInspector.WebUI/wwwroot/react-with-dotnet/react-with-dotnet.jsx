@@ -329,6 +329,23 @@ function PushToFunctionExecutionQueue(fn, forceWait)
     return entry;
 }
 
+function InvalidateQueuedFunctionsByName(name)
+{
+    if (FunctionExecutionQueueCurrentEntry &&
+        FunctionExecutionQueueCurrentEntry.name === name)
+    {
+        FunctionExecutionQueueCurrentEntry.isValid = false;
+    }
+
+    for (var i = 0; i < FunctionExecutionQueue.length; i++)
+    {
+        if (FunctionExecutionQueue[i].name === name)
+        {
+            FunctionExecutionQueue[i].isValid = false;
+        }
+    }
+}
+
 function SetState(component, partialState, stateCallback)
 {
     ReactIsBusy = true;
@@ -684,6 +701,8 @@ class ComponentCacheItem
     {
         this.component = null;
         this.freeSpace = {};
+        this.freeSpace[CUSTOM_EVENT_LISTENER_MAP] = {};
+        this.freeSpace[ON_COMPONENT_DESTROY] = [];
     }
 }
 
@@ -779,6 +798,11 @@ class ComponentCache
 }
 
 const COMPONENT_CACHE = new ComponentCache();
+
+function GetFreeSpaceOfComponent(component)
+{
+    return COMPONENT_CACHE.GetFreeSpaceOfComponent(component[DotNetComponentUniqueIdentifiers][0]);
+}
 
 function GetComponentByDotNetComponentUniqueIdentifier(dotNetComponentUniqueIdentifier)
 {
@@ -963,11 +987,7 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
 
             const executionQueueItemName = eventName + '-debounce-' + GetFirstAssignedUniqueIdentifierValueOfComponent(handlerComponentUniqueIdentifier);
 
-            if (FunctionExecutionQueueCurrentEntry &&
-                FunctionExecutionQueueCurrentEntry.name === executionQueueItemName)
-            {
-                FunctionExecutionQueueCurrentEntry.isValid = false;
-            }
+            InvalidateQueuedFunctionsByName(executionQueueItemName);
 
             const timeoutKey = eventName + '-debounceTimeoutId';
 
@@ -1199,11 +1219,7 @@ function ConvertToReactElement(jsonNode, component)
                     {
                         const executionQueueItemName = eventName + '-debounce-' + GetFirstAssignedUniqueIdentifierValueOfComponent(handlerComponentUniqueIdentifier);
 
-                        if (FunctionExecutionQueueCurrentEntry &&
-                            FunctionExecutionQueueCurrentEntry.name === executionQueueItemName)
-                        {
-                            FunctionExecutionQueueCurrentEntry.isValid = false;
-                        }
+                        InvalidateQueuedFunctionsByName(executionQueueItemName);
 
                         const timeoutKey = eventName + '-debounceTimeoutId';
 
@@ -1793,13 +1809,40 @@ function RemoveComponentDynamicStyles(componentUniqueIdentifiers)
     }
 }
 
+// Custom Event
+function HasCustomEventListener(component, customEventListenerMapKey)
+{
+    const freeSpace = GetFreeSpaceOfComponent(component);
+
+    return freeSpace[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey] === 1;
+}
+
+function MarkCustomEventListener(component, customEventListenerMapKey)
+{
+    const freeSpace = GetFreeSpaceOfComponent(component);
+
+    return freeSpace[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey] = 1;
+}
+
+// DESTROY UTILITY
+function InvokeComponentDestroyListeners(componentInstance)
+{
+    const functionArray = GetFreeSpaceOfComponent(componentInstance)[ON_COMPONENT_DESTROY];
+
+    for (var i = 0; i < functionArray.length; i++)
+    {
+        functionArray[i]();
+    }
+}
+
+function OnComponentDestroy(component, fn)
+{
+    GetFreeSpaceOfComponent(component)[ON_COMPONENT_DESTROY].push(fn);
+}
+
 function DestroyDotNetComponentInstance(instance)
 {
-    const length = instance[ON_COMPONENT_DESTROY].length;
-    for (var i = 0; i < length; i++)
-    {
-        instance[ON_COMPONENT_DESTROY][i]();
-    }
+    InvokeComponentDestroyListeners(instance);
 
     RemoveComponentDynamicStyles(instance[DotNetComponentUniqueIdentifiers]);
 
@@ -1810,12 +1853,12 @@ function HandleComponentClientTasks(component)
 {
     const clientTasks = component.state[ClientTasks];
 
-    if (clientTasks == null || clientTasks.length === 0)
+    if (clientTasks == null || clientTasks.length === 0 || component.ComponentWillUnmountIsCalled === true)
     {
         return false;
     }
 
-    const freeSpace = COMPONENT_CACHE.GetFreeSpaceOfComponent(component[DotNetComponentUniqueIdentifiers][0]);
+    const freeSpace = GetFreeSpaceOfComponent(component);
     if (freeSpace.lastProcessedClientTasks === clientTasks)
     {
         return false;
@@ -1830,13 +1873,19 @@ function HandleComponentClientTasks(component)
 
 function DefineComponent(componentDeclaration)
 {
-    const dotNetTypeOfReactComponent = componentDeclaration[DotNetTypeOfReactComponent];
+    var cacheKeyForComponentDefinitions = componentDeclaration[DotNetTypeOfReactComponent];
 
-    const component = ComponentDefinitions[dotNetTypeOfReactComponent];
+    if (cacheKeyForComponentDefinitions === 'ReactWithDotNet.FunctionalComponent,ReactWithDotNet')
+    {
+        cacheKeyForComponentDefinitions = componentDeclaration[DotNetProperties].RenderMethodNameWithToken;
+    }
+    const component = ComponentDefinitions[cacheKeyForComponentDefinitions];
     if (component)
     {
         return component;
     }
+
+    const dotNetTypeOfReactComponent = componentDeclaration[DotNetTypeOfReactComponent];
 
     class NewComponent extends React.Component
     {
@@ -1858,11 +1907,7 @@ function DefineComponent(componentDeclaration)
             instance.state = initialState;
 
             initialState[DotNetTypeOfReactComponent] = instance[DotNetTypeOfReactComponent] = dotNetTypeOfReactComponent;
-
-            instance[ON_COMPONENT_DESTROY] = [];
-
-            instance[CUSTOM_EVENT_LISTENER_MAP] = {};
-
+                        
             instance[DotNetComponentUniqueIdentifiers] = [NotNull(props.$jsonNode[DotNetComponentUniqueIdentifier])];
 
             InitializeDotNetComponentInstanceId(instance);
@@ -2021,9 +2066,13 @@ function DefineComponent(componentDeclaration)
 
     NewComponent[DotNetTypeOfReactComponent] = dotNetTypeOfReactComponent;
 
-    ComponentDefinitions[dotNetTypeOfReactComponent] = NewComponent;
+    ComponentDefinitions[cacheKeyForComponentDefinitions] = NewComponent;
 
     NewComponent.displayName = dotNetTypeOfReactComponent.split(',')[0].split('.').pop();
+    if (NewComponent.displayName === 'FunctionalComponent')
+    {
+        NewComponent.displayName = componentDeclaration[DotNetProperties].Name;
+    }
 
     return NewComponent;
 }
@@ -2524,15 +2573,13 @@ RegisterCoreFunction("ListenEvent", function (eventName, remoteMethodName)
         const entry = StartAction(actionArguments);
 
         // guard for removed node before send to server
-        component[ON_COMPONENT_DESTROY].push(() =>
+        OnComponentDestroy(component, () =>
         {
             entry.isValid = false;
         });
     };
 
-    NotNull(component[ON_COMPONENT_DESTROY]);
-
-    component[ON_COMPONENT_DESTROY].push(() =>
+    OnComponentDestroy(component, () =>
     {
         EventBus.Remove(eventName, onEventFired);
     });
@@ -2561,15 +2608,13 @@ RegisterCoreFunction("ListenEventThenOnlyUpdateState", function (eventName, remo
         const entry = StartAction(actionArguments);
 
         // guard for removed node before send to server
-        component[ON_COMPONENT_DESTROY].push(() =>
+        OnComponentDestroy(component, () =>
         {
             entry.isValid = false;
         });
     };
-
-    NotNull(component[ON_COMPONENT_DESTROY]);
-
-    component[ON_COMPONENT_DESTROY].push(() =>
+    
+    OnComponentDestroy(component, () =>
     {
         EventBus.Remove(eventName, onEventFired);
     });
@@ -2595,15 +2640,13 @@ RegisterCoreFunction("ListenEventOnlyOnce", function (eventName, remoteMethodNam
         const entry = StartAction(actionArguments);
 
         // guard for removed node before send to server
-        component[ON_COMPONENT_DESTROY].push(() =>
+        OnComponentDestroy(component, () =>
         {
             entry.isValid = false;
         });
     };
-
-    NotNull(component[ON_COMPONENT_DESTROY]);
-
-    component[ON_COMPONENT_DESTROY].push(() =>
+    
+    OnComponentDestroy(component, () =>
     {
         EventBus.Remove(eventName, onEventFired);
     });
@@ -2633,12 +2676,13 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSe
             'handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier
         ].join(',');
 
-        if (component[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey])
+
+        if (HasCustomEventListener(component, customEventListenerMapKey))
         {
             return;
         }
 
-        component[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey] = 1;
+        MarkCustomEventListener(component, customEventListenerMapKey);
     }
 
     const eventName = GetRealNameOfDotNetEvent(senderPropertyFullName, senderComponentUniqueIdentifier);
@@ -2656,13 +2700,13 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSe
         const entry = StartAction(actionArguments);
 
         // guard for removed node before send to server
-        handlerComponent[ON_COMPONENT_DESTROY].push(() =>
+        OnComponentDestroy(handlerComponent, () =>
         {
             entry.isValid = false;
         });
     };
 
-    component[ON_COMPONENT_DESTROY].push(() =>
+    OnComponentDestroy(component, () =>
     {
         EventBus.Remove(eventName, onEventFired);
     });
@@ -2689,12 +2733,12 @@ RegisterCoreFunction("OnOutsideClicked", function (idOfElement, remoteMethodName
     {
         const customEventListenerMapKey = 'OnOutsideClicked(IdOfElement:' + idOfElement + ', remoteMethodName:' + remoteMethodName + ', @handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier + ')';
 
-        if (component[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey])
+        if (HasCustomEventListener(component, customEventListenerMapKey))
         {
             return;
         }
 
-        component[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey] = 1;
+        MarkCustomEventListener(component, customEventListenerMapKey);
     }
 
     function onDocumentClick(e)
@@ -2720,7 +2764,7 @@ RegisterCoreFunction("OnOutsideClicked", function (idOfElement, remoteMethodName
 
     document.addEventListener('click', onDocumentClick);
 
-    component[ON_COMPONENT_DESTROY].push(() =>
+    OnComponentDestroy(component, () =>
     {
         document.removeEventListener('click', onDocumentClick);
     });

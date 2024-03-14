@@ -36,7 +36,7 @@ public class AssemblySelector : Component
 
         if (File.Exists(Path.Combine(AssemblyDirectoryPath, AssemblyFileName)))
         {
-            DispatchEvent(() => SelectionChanged, AssemblyFileName);
+            DispatchEvent(SelectionChanged, AssemblyFileName);
         }
         
         return Task.CompletedTask;

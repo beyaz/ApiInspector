@@ -29,7 +29,7 @@ public class DirectorySelector : Component
             return Task.CompletedTask;
         }
 
-        DispatchEvent(() => SelectionChanged, DirectoryPath);
+        DispatchEvent(SelectionChanged, DirectoryPath);
         
         return Task.CompletedTask;
     }
