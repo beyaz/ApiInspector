@@ -191,19 +191,14 @@ class MainWindow : Component<MainWindowModel>
                     {
                         new Label { Text = "Assembly" },
 
-                        new AssemblySelector
+                        AssemblySelector.CreateAssemblySelectorInput(state.AssemblyDirectory, state.AssemblyFileName, x =>
                         {
-                            AssemblyDirectoryPath = state.AssemblyDirectory,
-                            AssemblyFileName      = state.AssemblyFileName,
-                            SelectionChanged = x =>
-                            {
-                                state.AssemblyFileName = x;
-                                Client.DispatchEvent(Event.OnAssemblyChanged,AssemblyFileFullPath);
+                            state.AssemblyFileName = x;
                             
-                                return Task.CompletedTask;
-                            },
-                            style = {ComponentBoxShadow}
-                        }
+                            Client.DispatchEvent(Event.OnAssemblyChanged,AssemblyFileFullPath);
+                            
+                            return Task.CompletedTask;
+                        })
                     }
                 },
                 new FlexColumn

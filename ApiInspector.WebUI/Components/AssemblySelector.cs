@@ -3,42 +3,44 @@ using ReactWithDotNet.ThirdPartyLibraries.ReactSuite;
 
 namespace ApiInspector.WebUI.Components;
 
-public class AssemblySelector : Component
+public class AssemblySelector
 {
-    public string AssemblyDirectoryPath { get; set; }
-
-    public string AssemblyFileName { get; set; }
-
-    [ReactCustomEvent]
-    public Func<string,Task> SelectionChanged { get; set; }
-
-    protected override Element render()
+    public static Element CreateAssemblySelectorInput(string AssemblyDirectoryPath, string AssemblyFileName, Func<string, Task> SelectionChanged)
     {
-        var suggestions = Enumerable.Empty<string>();
-
-        if (Directory.Exists(AssemblyDirectoryPath))
+        return FC(cmp =>
         {
-            suggestions = Directory.GetFiles(AssemblyDirectoryPath).Where(x => Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe").Where(x => x.Contains(AssemblyFileName ?? string.Empty, StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).Take(7);
+            var suggestions = Enumerable.Empty<string>();
+
+            if (Directory.Exists(AssemblyDirectoryPath))
+            {
+                suggestions = Directory.GetFiles(AssemblyDirectoryPath).Where(ExeOrDllFile).Where(x => x.Contains(AssemblyFileName ?? string.Empty, StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).Take(7);
+            }
+
+            return new AutoComplete
+            {
+                value    = AssemblyFileName,
+                data     = suggestions,
+                onChange = OnChange,
+                style    = { BorderRadius(5), ComponentBoxShadow }
+            };
+
+            Task OnChange(string selectedValue)
+            {
+                AssemblyFileName = selectedValue;
+
+                if (AssemblyDirectoryPath is not null &&
+                    File.Exists(Path.Combine(AssemblyDirectoryPath, AssemblyFileName)))
+                {
+                    cmp.DispatchEvent(SelectionChanged, AssemblyFileName);
+                }
+
+                return Task.CompletedTask;
+            }
+        });
+
+        static bool ExeOrDllFile(string x)
+        {
+            return Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe";
         }
-
-        return new AutoComplete
-        {
-            value    = AssemblyFileName,
-            data     = suggestions,
-            onChange = OnChange,
-            style    = { BorderRadius(5) }
-        };
-    }
-
-    Task OnChange(string selectedValue)
-    {
-        AssemblyFileName = selectedValue;
-
-        if (File.Exists(Path.Combine(AssemblyDirectoryPath, AssemblyFileName)))
-        {
-            DispatchEvent(SelectionChanged, AssemblyFileName);
-        }
-        
-        return Task.CompletedTask;
     }
 }
