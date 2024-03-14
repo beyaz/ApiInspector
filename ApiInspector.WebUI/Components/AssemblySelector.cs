@@ -13,7 +13,14 @@ public class AssemblySelector
 
             if (Directory.Exists(AssemblyDirectoryPath))
             {
-                suggestions = Directory.GetFiles(AssemblyDirectoryPath).Where(ExeOrDllFile).Where(x => x.Contains(AssemblyFileName ?? string.Empty, StringComparison.OrdinalIgnoreCase)).Select(Path.GetFileName).Take(7);
+
+                var assemblyFileName = (AssemblyFileName ?? string.Empty).Replace("\"", string.Empty).Replace("\"", string.Empty);
+                
+                suggestions = Directory.GetFiles(AssemblyDirectoryPath)
+                    .Select(Path.GetFileName)
+                    .Where(ExeOrDllFile)
+                    .Where(x => x.Contains(assemblyFileName, StringComparison.OrdinalIgnoreCase))
+                    .Take(7);
             }
 
             return new AutoComplete
