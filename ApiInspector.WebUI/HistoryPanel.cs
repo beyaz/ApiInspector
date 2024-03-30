@@ -70,7 +70,7 @@ class HistoryPanel : Component
 
     Task OnClose(MouseEvent obj)
     {
-        DispatchEvent(() => Closed);
+        DispatchEvent(Closed);
         
         return Task.CompletedTask;
     }

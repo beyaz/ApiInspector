@@ -47,7 +47,7 @@ public class ActionButton : Component
 
         IsProcessing = true;
 
-        DispatchEvent(() => OnClick);
+        DispatchEvent(OnClick);
 
         return Task.CompletedTask;
     }
