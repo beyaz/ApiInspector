@@ -219,25 +219,25 @@
                 img.src = <paramref name="src" />
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.OnDispatchEventFinished``1(ReactWithDotNet.Client,``0)">
-            <summary>
-                Occurs when event dispatching finished.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.ListenEventThenOnlyUpdateState``1(ReactWithDotNet.Client,``0)">
             <summary>
                 When event fired then updates only component state
-                <br/>
+                <br />
                 Do not calls c# render method. Updates state of react component in client.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.NavigateTo(ReactWithDotNet.Client,System.String)">
             <summary>
                 Example:
-                <br/>
+                <br />
                 Client.NavigateTo("/") navigates to home page
-                <br/>
+                <br />
                 Client.NavigateTo("/AboutUs") navigates to About Us page
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.OnDispatchEventFinished``1(ReactWithDotNet.Client,``0)">
+            <summary>
+                Occurs when event dispatching finished.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DesignMode">
