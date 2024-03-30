@@ -480,16 +480,14 @@
                 style.width = "100vw"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.WidthHeightMaximized">
+        <member name="P:ReactWithDotNet.Mixin.WidthMax">
             <summary>
                 width: 100%
-                <br />
-                height: 100%
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.WidthMaximized">
+        <member name="P:ReactWithDotNet.Mixin.HeightMax">
             <summary>
-                width: 100%
+                height: 100%
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.WidthFitContent">

@@ -43,10 +43,10 @@ class MainWindow : Component<MainWindowModel>
 
     protected override Element render()
     {
-        return new FlexRow(Padding(10), WidthHeightMaximized, Background("#eff3f8"))
+        return new FlexRow(Padding(10), SizeFull, Background("#eff3f8"))
         {
             new FlexColumn(Border(Solid(1, borderColor)),
-                           WidthHeightMaximized,
+                           SizeFull,
                            Background(rgba(255, 255, 255, 0.4)),
                            BorderRadius(10),
                            BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15)),
@@ -274,7 +274,7 @@ class MainWindow : Component<MainWindowModel>
 
             return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
             {
-                new FlexRow(WidthMaximized)
+                new FlexRow(WidthFull)
                 {
                     ComponentBoxShadow,
                     MarginTop(5),
@@ -298,7 +298,7 @@ class MainWindow : Component<MainWindowModel>
                             Height(300), PaddingBottom(10),
                             BorderTop(Solid(1, "#d9d9d9")),
                             BorderBottomLeftRadius(3),
-                            WidthMaximized,
+                            WidthFull,
                             FlexGrow(1),
 
                             NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
@@ -323,7 +323,7 @@ class MainWindow : Component<MainWindowModel>
                             Height(300), PaddingBottom(10),
                             BorderTop(Solid(1, "#d9d9d9")),
                             BorderBottomRightRadius(3),
-                            WidthMaximized,
+                            WidthFull,
                             FlexGrow(1),
 
                             NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
@@ -352,7 +352,7 @@ class MainWindow : Component<MainWindowModel>
                         new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
                     },
 
-                    new FlexColumn(WidthHeightMaximized)
+                    new FlexColumn(SizeFull)
                     {
                         new Label { Text = "Response as json" },
 
@@ -364,7 +364,7 @@ class MainWindow : Component<MainWindowModel>
                             Height("calc(100% - 28px)"), PaddingBottom(10),
                             Border("1px solid #d9d9d9"),
                             BorderRadius(5),
-                            WidthMaximized,
+                            WidthFull,
 
                             NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
                         }
