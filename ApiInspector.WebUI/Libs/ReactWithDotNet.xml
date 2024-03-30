@@ -365,11 +365,6 @@
                 style.height = "auto"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.HeightMaximized">
-            <summary>
-                height: 100%
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.JustifyContentCenter">
             <summary>
                 <para>justifyContent = "center"</para>
@@ -1524,11 +1519,6 @@
                 style.height = <paramref name="width_and_height" /> + 'px'
             </summary>
         </member>
-        <member name="F:ReactWithDotNet.Mixin.w_full">
-            <summary>
-                width: 100%
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.Width(System.Double,System.Double)">
             <summary>
                 width: <paramref name="percentOfTotal"/> / <paramref name="total"/> * 100 + '%'
@@ -1541,18 +1531,6 @@
                 height:  <paramref name="percentOfTotal"/> / <paramref name="total"/> * 100 + '%'
                 <br/>Example:<br/>
                 Height(3, 4) means Height("75%")
-            </summary>
-        </member>
-        <member name="F:ReactWithDotNet.Mixin.h_full">
-            <summary>
-                height: 100%
-            </summary>
-        </member>
-        <member name="F:ReactWithDotNet.Mixin.size_full">
-            <summary>
-                width: 100%
-                <br />
-                height: 100%
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.SizeFull">
