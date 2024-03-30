@@ -83,7 +83,7 @@ class HistoryPanel : Component
 
         var methodReference = JsonConvert.DeserializeObject<MainWindowModel>(fileContent).SelectedMethod;
 
-        DispatchEvent(() => SelectionChanged, methodReference);
+        DispatchEvent(SelectionChanged,[methodReference]);
         
         return Task.CompletedTask;
     }

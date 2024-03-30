@@ -137,7 +137,7 @@ class MainWindow : Component<MainWindowModel>
                     },
                     TooltipText = "Add new test scenario"
                 },
-                When(state.ScenarioList.Count > 1, new CircleButton
+                state.ScenarioList.Count > 1 ?new CircleButton
                 {
                     Label = "-", 
                     Clicked = _ =>
@@ -148,7 +148,7 @@ class MainWindow : Component<MainWindowModel>
                         return Task.CompletedTask;
                     },
                     TooltipText = "Remove selected test scenario"
-                })
+                } : null
             };
         }
 
@@ -177,7 +177,7 @@ class MainWindow : Component<MainWindowModel>
                         SelectionChanged = x =>
                         {
                             state.AssemblyDirectory = x;
-                            Client.DispatchEvent(Event.OnAssemblyChanged,AssemblyFileFullPath);
+                            Client.DispatchEvent2(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
                             
                             return Task.CompletedTask;
                         }
@@ -195,7 +195,7 @@ class MainWindow : Component<MainWindowModel>
                         {
                             state.AssemblyFileName = x;
                             
-                            Client.DispatchEvent(Event.OnAssemblyChanged,AssemblyFileFullPath);
+                            Client.DispatchEvent2(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
                             
                             return Task.CompletedTask;
                         })

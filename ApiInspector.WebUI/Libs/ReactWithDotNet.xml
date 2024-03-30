@@ -113,108 +113,6 @@
             </code>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.DispatchEvent``1(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,System.String)">
-            <summary>
-               Dispatch given <paramref name="handlerFunc"/>
-               <br/>
-               Sample usage:
-            <code> 
-               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
-               {
-                   var count = Count;
-                  
-                   return cmp =>
-                   {
-                       return new FlexColumn
-                       {
-                           new button(Padding(10))
-                           {
-                               $"{count}",
-                               OnClick(OnClickHandler)
-                           }
-                       };
-                  
-                       Task OnClickHandler(MouseEvent e)
-                       {
-                           count++;
-                   
-                           cmp.DispatchEvent(OnValueChange, count);
-                  
-                           return Task.CompletedTask;
-                       }
-                   };
-               }
-            </code>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.DispatchEvent``2(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,``1,System.String)">
-            <summary>
-               Dispatch given <paramref name="handlerFunc"/>
-               <br/>
-               Sample usage:
-            <code> 
-               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
-               {
-                   var count = Count;
-                  
-                   return cmp =>
-                   {
-                       return new FlexColumn
-                       {
-                           new button(Padding(10))
-                           {
-                               $"{count}",
-                               OnClick(OnClickHandler)
-                           }
-                       };
-                  
-                       Task OnClickHandler(MouseEvent e)
-                       {
-                           count++;
-                   
-                           cmp.DispatchEvent(OnValueChange, count);
-                  
-                           return Task.CompletedTask;
-                       }
-                   };
-               }
-            </code>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.DispatchEvent``3(ReactWithDotNet.IFunctionalComponent,System.Delegate,``0,``1,``2,System.String)">
-            <summary>
-               Dispatch given <paramref name="handlerFunc"/>
-               <br/>
-               Sample usage:
-            <code> 
-               static FC Counter(int Count, Func&lt;int, Task&gt; OnValueChange)
-               {
-                   var count = Count;
-                  
-                   return cmp =>
-                   {
-                       return new FlexColumn
-                       {
-                           new button(Padding(10))
-                           {
-                               $"{count}",
-                               OnClick(OnClickHandler)
-                           }
-                       };
-                  
-                       Task OnClickHandler(MouseEvent e)
-                       {
-                           count++;
-                   
-                           cmp.DispatchEvent(OnValueChange, count);
-                  
-                           return Task.CompletedTask;
-                       }
-                   };
-               }
-            </code>
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumn">
             <summary>
                 display = "flex"
@@ -340,6 +238,11 @@
                 Client.NavigateTo("/") navigates to home page
                 <br/>
                 Client.NavigateTo("/AboutUs") navigates to About Us page
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DesignMode">
+            <summary>
+              Indicates component is in design mode.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.BackgroundColorTransparent">
@@ -812,21 +715,6 @@
         <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,ReactWithDotNet.StyleModifier[])">
             <summary>
                 Apply given modifiers when condition is true
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,ReactWithDotNet.Element)">
-            <summary>
-                Returns given <paramref name="element" /> when condition is true otherwise returns null
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.When(System.Nullable{System.Boolean},ReactWithDotNet.Element)">
-            <summary>
-                Returns given <paramref name="element" /> when condition is true otherwise returns null
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,System.Func{ReactWithDotNet.Element})">
-            <summary>
-                Calls given <paramref name="elementFunc" /> when condition is true otherwise returns null
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.When(System.Nullable{System.Boolean},System.Func{ReactWithDotNet.Element})">
@@ -7757,92 +7645,24 @@
                 Adds given cssClassName ot class attribute of html element
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Func{System.Threading.Tasks.Task},System.String)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Delegate,System.String)">
             <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
+               Dispatch given <paramref name="handlerFunc"/> as event.
+               <br/>
+               Sample usage:
+            <code> 
+               DispatchEvent(OnUserChanged, [new UserInfo { Name = '..'}] );
+            </code>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Func{``0,System.Threading.Tasks.Task},``0,System.String)">
+        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Delegate,System.Object[],System.String)">
             <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Func{``0,System.Threading.Tasks.Task},``0,``1,System.String)">
-            <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Func{``0,System.Threading.Tasks.Task},``0,``1,``2,System.String)">
-            <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(OnUserChanged, new UserInfo { Name = '..'});
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Linq.Expressions.Expression{System.Func{System.Delegate}})">
-            <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``1(System.Linq.Expressions.Expression{System.Func{System.Delegate}},``0)">
-            <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``2(System.Linq.Expressions.Expression{System.Func{System.Delegate}},``0,``1)">
-            <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent``3(System.Linq.Expressions.Expression{System.Func{System.Delegate}},``0,``1,``2)">
-            <summary>
-                Sample event declaration
-                <br />
-                [ReactCustomEvent] public Func&lt;UserInfo,Task&gt; OnUserChanged { get; set; }
-                <br />
-                <br />
-                Sample event dispatching <br />
-                DispatchEvent(()=> OnUserChanged, new UserInfo { Name = '..'});
+               Dispatch given <paramref name="handlerFunc"/> as event.
+               <br/>
+               Sample usage:
+            <code> 
+               DispatchEvent(OnUserChanged, [new UserInfo { Name = '..'}] );
+            </code>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.componentDidCatch(System.Exception)">
