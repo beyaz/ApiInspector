@@ -177,7 +177,7 @@ class MainWindow : Component<MainWindowModel>
                         SelectionChanged = x =>
                         {
                             state.AssemblyDirectory = x;
-                            Client.DispatchEvent2(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
+                            Client.DispatchEvent(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
                             
                             return Task.CompletedTask;
                         }
@@ -195,7 +195,7 @@ class MainWindow : Component<MainWindowModel>
                         {
                             state.AssemblyFileName = x;
                             
-                            Client.DispatchEvent2(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
+                            Client.DispatchEvent(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
                             
                             return Task.CompletedTask;
                         })
