@@ -56,7 +56,7 @@ class MainWindow : Component<MainWindowModel>
                 applicationHeader,
 
                 HistoryDialogVisible
-                    ? new FlexColumnCentered(HeightMaximized)
+                    ? new FlexColumnCentered(HeightFull)
                     {
                         new HistoryPanel
                         {
@@ -79,7 +79,7 @@ class MainWindow : Component<MainWindowModel>
                         SpaceY(200)
                         
                     }
-                    : new FlexRow(HeightMaximized)
+                    : new FlexRow(HeightFull)
                     {
                         searchPanel,
                         ActiveSelectedMethod,
