@@ -240,6 +240,13 @@
                 Occurs when event dispatching finished.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.OnDispatchEventFinishedOnlyOnce``1(ReactWithDotNet.Client,``0)">
+            <summary>
+                Occurs when event dispatching finished.
+                <br/>
+                After first call then do not listen finished event again
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.DesignMode">
             <summary>
               Indicates component is in design mode.
@@ -1187,9 +1194,25 @@
                 min-width: <paramref name="widthAsPixel"/> + 'px'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Sample Usage:
+                <code>
+                 WhenMediaSizeIsGreaterThan(SM, BorderRadius(8))
+                </code>
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsLessThan(System.Int32,ReactWithDotNet.StyleModifier[])">
             <summary>
                 max-width: <paramref name="widthAsPixel"/> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsLessThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Sample Usage:
+                <code>
+                 WhenMediaSizeIsLessThan(SM, BorderRadius(8))
+                </code>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeBetween(System.Int32,System.Int32,ReactWithDotNet.StyleModifier[])">
@@ -4778,7 +4801,7 @@
                 Specifies independent, self-contained content.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Specifies independent, self-contained content.
             </summary>
@@ -4933,7 +4956,7 @@
                 Defines a paragraph
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.p.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Defines a paragraph
             </summary>
@@ -4980,7 +5003,7 @@
                 Defines a description list.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.dl.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.dl.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Defines a description list.
             </summary>
@@ -5015,7 +5038,7 @@
                 Defines a term/name in a description list.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.dt.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.dt.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Defines a term/name in a description list.
             </summary>
@@ -5050,7 +5073,7 @@
                 Describe a term/name in a description list.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.dd.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.dd.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Describe a term/name in a description list.
             </summary>
@@ -5085,7 +5108,7 @@
                 tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.kbd.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.kbd.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
             </summary>
@@ -5120,7 +5143,7 @@
                 Preformatted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.pre.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Preformatted text
             </summary>
@@ -5155,7 +5178,7 @@
                 Define some text as computer code in a document
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.code.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.code.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Define some text as computer code in a document
             </summary>
@@ -5190,7 +5213,7 @@
                 Ordered list
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ol.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.ol.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Ordered list
             </summary>
@@ -5225,7 +5248,7 @@
                 Unordered (bulleted) list
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ul.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.ul.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Unordered (bulleted) list
             </summary>
@@ -5260,7 +5283,7 @@
                 List item
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.li.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.li.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 List item
             </summary>
@@ -5295,7 +5318,7 @@
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.span.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.span.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
@@ -5330,7 +5353,7 @@
                 Superscript text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.sup.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.sup.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Superscript text
             </summary>
@@ -5365,7 +5388,7 @@
                 Subscript text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.sub.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.sub.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Subscript text
             </summary>
@@ -5400,7 +5423,7 @@
                 Inserted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ins.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.ins.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Inserted text
             </summary>
@@ -5435,7 +5458,7 @@
                 Deleted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.del.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.del.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Deleted text
             </summary>
@@ -5470,7 +5493,7 @@
                 Smaller text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.small.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.small.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Smaller text
             </summary>
@@ -5505,7 +5528,7 @@
                 Marked text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.mark.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.mark.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Marked text
             </summary>
@@ -5540,7 +5563,7 @@
                 Emphasized text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.em.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.em.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Emphasized text
             </summary>
@@ -5575,7 +5598,7 @@
                 Bold text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.b.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.b.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Bold text
             </summary>
@@ -5610,7 +5633,7 @@
                 Italic text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.i.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.i.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Italic text
             </summary>
@@ -5645,7 +5668,7 @@
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.u.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.u.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
@@ -5680,7 +5703,7 @@
                 Important text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.strong.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.strong.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Important text
             </summary>
@@ -5705,7 +5728,7 @@
                 Section in a document
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.section.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.section.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 Section in a document
             </summary>
@@ -7732,7 +7755,7 @@
                 flexDirection  = "row"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.FlexRow.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.FlexRow.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "flex"
                 <br />
@@ -7753,7 +7776,7 @@
                 flexDirection  = "row"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.InlineFlexRow.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.InlineFlexRow.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "inline-flex"
                 <br />
@@ -7774,7 +7797,7 @@
                 flexDirection  = "column"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.FlexColumn.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.FlexColumn.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "flex"
                 <br />
@@ -7795,7 +7818,7 @@
                 flexDirection  = "column"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.InlineFlexColumn.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.InlineFlexColumn.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "inline-flex"
                 <br />
@@ -7831,7 +7854,7 @@
                 alignItems     = "center"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.FlexRowCentered.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.FlexRowCentered.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "flex"
                 <br />
@@ -7864,7 +7887,7 @@
                 alignItems     = "center"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.InlineFlexRowCentered.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.InlineFlexRowCentered.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "inline-flex"
                 <br />
@@ -7897,7 +7920,7 @@
                 alignItems     = "center"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "flex"
                 <br />
@@ -7930,7 +7953,7 @@
                 alignItems     = "center"
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.InlineFlexColumnCentered.#ctor(ReactWithDotNet.IModifier[])">
+        <member name="M:ReactWithDotNet.InlineFlexColumnCentered.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "inline-flex"
                 <br />
@@ -7944,6 +7967,24 @@
         <member name="F:ReactWithDotNet.CssUnit.em">
             <summary>
                 2|em returns like '2em'
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.Modifier">
+            <summary>
+                Designed for modify an element by functional way <br/>
+                Example: <br/>
+                <code>
+                -- normal aproach 
+                var element = new div();
+                element.style.width = "50px";
+            
+                -- better approach
+                new div { Width(50) } 
+                </code>
+                <br/>
+                Inherited types : <br/>
+                <see cref="T:ReactWithDotNet.StyleModifier"/> <br/>
+                <see cref="T:ReactWithDotNet.ElementModifier"/>
             </summary>
         </member>
         <member name="T:ReactWithDotNet.PureComponent">

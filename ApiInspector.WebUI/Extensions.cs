@@ -86,7 +86,7 @@ static partial class Extensions
 
     public static bool HasValue(this string value) => !string.IsNullOrWhiteSpace(value);
     
-    public static readonly IModifier AutoHideScrollbar = FreeScrollBar.Modify(x => x.autohide = true);
+    public static readonly Modifier AutoHideScrollbar = FreeScrollBar.Modify(x => x.autohide = true);
 
 
     public static readonly IEnumerable<MetadataNode> EmptyMetadataNodes = new ImmutableArray<MetadataNode>();

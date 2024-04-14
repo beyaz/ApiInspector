@@ -37,13 +37,11 @@ static class ReactWithDotNetIntegration
     {
         endpoints.MapGet("/" + nameof(ReactWithDotNetDesigner), httpContext =>
         {
-            DesignMode = true;
 
             return WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(ReactWithDotNetDesigner));
         });
         endpoints.MapGet("/" + nameof(ReactWithDotNetDesignerComponentPreview), httpContext =>
         {
-            DesignMode = true;
 
             return WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(ReactWithDotNetDesignerComponentPreview));
         });

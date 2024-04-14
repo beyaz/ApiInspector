@@ -1081,6 +1081,11 @@ function ConvertToReactElement(jsonNode, component)
             $jsonNode: jsonNode
         };
 
+        if (jsonNode.$props)
+        {
+            Object.assign(cmpProps, jsonNode.$props);
+        }
+
         return createElement(cmp, cmpProps);
     }
 
@@ -1107,7 +1112,23 @@ function ConvertToReactElement(jsonNode, component)
             }
         }
 
-        cmpProps[SyncId] = GetNextSequence();
+        const currentComponent = COMPONENT_CACHE.FindComponentByDotNetComponentUniqueIdentifier(jsonNode[DotNetComponentUniqueIdentifier]);
+        if (currentComponent)
+        {
+            const syncIdInState = ShouldBeNumber(currentComponent.state[SyncId]);
+            const syncIdInProp = ShouldBeNumber(currentComponent.props[SyncId]);
+
+            cmpProps[SyncId] = Math.max(syncIdInProp, syncIdInState);
+        }
+        else
+        {
+            cmpProps[SyncId] = GetNextSequence();
+        }
+
+        if (jsonNode.$props)
+        {
+            Object.assign(cmpProps, jsonNode.$props);
+        }
 
         return createElement(cmp, cmpProps);
     }
