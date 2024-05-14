@@ -6,6 +6,9 @@ using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 
 namespace ApiInspector.WebUI;
 
+/// <summary>
+/// Deneme
+/// </summary>
 static partial class Extensions
 {
     public static string BluePrimary => "#1976d2";
