@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Net.Http.Headers;
-using ReactWithDotNet.UIDesigner;
 
 namespace ApiInspector.WebUI;
 
@@ -13,8 +11,6 @@ static class ReactWithDotNetIntegration
     {
         endpoints.MapGet("/", HomePage);
         endpoints.MapPost("/" + nameof(HandleReactWithDotNetRequest), HandleReactWithDotNetRequest);
-
-        RegisterReactWithDotNetDevelopmentTools(endpoints);
     }
 
     static Task HandleReactWithDotNetRequest(HttpContext httpContext)
@@ -31,22 +27,7 @@ static class ReactWithDotNetIntegration
     {
         return WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(MainWindow));
     }
-
-    [Conditional("DEBUG")]
-    static void RegisterReactWithDotNetDevelopmentTools(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet("/" + nameof(ReactWithDotNetDesigner), httpContext =>
-        {
-
-            return WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(ReactWithDotNetDesigner));
-        });
-        endpoints.MapGet("/" + nameof(ReactWithDotNetDesignerComponentPreview), httpContext =>
-        {
-
-            return WriteHtmlResponse(httpContext, typeof(MainLayout), typeof(ReactWithDotNetDesignerComponentPreview));
-        });
-    }
-
+    
     static Task WriteHtmlResponse(HttpContext httpContext, Type layoutType, Type mainContentType)
     {
         httpContext.Response.ContentType = "text/html; charset=UTF-8";
