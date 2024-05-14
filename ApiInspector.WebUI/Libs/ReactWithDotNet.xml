@@ -11,7 +11,7 @@
         </member>
         <member name="M:ReactWithDotNet.Mixin.Href(System.String)">
             <summary>
-                a.href = <paramref name="href" />
+                (a or link).href = <paramref name="href" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Target(System.String)">
@@ -21,7 +21,7 @@
         </member>
         <member name="M:ReactWithDotNet.Mixin.Rel(System.String)">
             <summary>
-                a.href = <paramref name="value" />;
+                (a or link).href = <paramref name="value" />;
                 <br/>
                 <br/>
                 Specifies the relationship between the current document and the linked document.
@@ -245,11 +245,6 @@
                 Occurs when event dispatching finished.
                 <br/>
                 After first call then do not listen finished event again
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.DesignMode">
-            <summary>
-              Indicates component is in design mode.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.BackgroundColorTransparent">
@@ -600,6 +595,34 @@
                 initialize id attribute of html element
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.LeftBottom(System.String)">
+            <summary>
+                left = <paramref name="value"/>
+                <br/>
+                bottom = <paramref name="value"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.LeftBottom(System.Double)">
+            <summary>
+                left = <paramref name="value"/> + 'px'
+                <br/>
+                bottom = <paramref name="value"/> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.RightBottom(System.String)">
+            <summary>
+                right = <paramref name="value"/>
+                <br/>
+                bottom = <paramref name="value"/>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.RightBottom(System.Double)">
+            <summary>
+                right = <paramref name="value"/> + 'px'
+                <br/>
+                bottom = <paramref name="value"/> + 'px'
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.LeftRight(System.Double)">
             <summary>
                 style.left = <paramref name="pixelValue" /> + 'px'
@@ -679,6 +702,16 @@
         <member name="M:ReactWithDotNet.Mixin.SpaceY(System.Double)">
             <summary>
                 Creates new div element wihth given height
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.SpaceY(System.Double,System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},System.Double)">
+            <summary>
+                Creates new div element wihth given height
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.SpaceX(System.Double,System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},System.Double)">
+            <summary>
+                Creates new div element wihth given width
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.DangerouslySetInnerHTML(System.String)">
@@ -1119,110 +1152,9 @@
                 <paramref name="easingFunction" />} {<paramref name="delayAsMilliseconds" />}ms
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.Style)">
+        <member name="M:ReactWithDotNet.Mixin.LG(ReactWithDotNet.StyleModifier[])">
             <summary>
                 min-width: 1024px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnDesktop(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 1024px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.Style)">
-            <summary>
-                max-width: 767px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobile(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                max-width: 767px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.Style)">
-            <summary>
-                max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnMobileOrTablet(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.Style)">
-            <summary>
-                min-width: 768px and max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTablet(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 768px and max-width: 1023px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.Style)">
-            <summary>
-                min-width: 768px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.MediaQueryOnTabletOrDesktop(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 768px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsMobile(ReactWithDotNet.Style)">
-            <summary>
-                max-width: 767px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsMobile(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                max-width: 767px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThanMobile(ReactWithDotNet.Style)">
-            <summary>
-                min-width: 768px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThanMobile(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 768px
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThan(System.Int32,ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: <paramref name="widthAsPixel"/> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsGreaterThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
-            <summary>
-                Sample Usage:
-                <code>
-                 WhenMediaSizeIsGreaterThan(SM, BorderRadius(8))
-                </code>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsLessThan(System.Int32,ReactWithDotNet.StyleModifier[])">
-            <summary>
-                max-width: <paramref name="widthAsPixel"/> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeIsLessThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
-            <summary>
-                Sample Usage:
-                <code>
-                 WhenMediaSizeIsLessThan(SM, BorderRadius(8))
-                </code>
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeBetween(System.Int32,System.Int32,ReactWithDotNet.StyleModifier[])">
-            <summary>
-                (min-width: <paramref name="minWidthAsPixel"/> + 'px') and (max-width: <paramref name="maxWidthAsPixel"/> + 'px')
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.SM(ReactWithDotNet.StyleModifier[])">
-            <summary>
-                min-width: 640px
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.MD(ReactWithDotNet.StyleModifier[])">
@@ -1230,9 +1162,40 @@
                 min-width: 768px
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.LG(ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.SM(ReactWithDotNet.StyleModifier[])">
             <summary>
-                min-width: 1024px
+                min-width: 640px
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeBetween(System.Int32,System.Int32,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                (min-width: <paramref name="minWidthAsPixel" /> + 'px') and (max-width: <paramref name="maxWidthAsPixel" /> + 'px')
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeGreaterThan(System.Int32,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                min-width: <paramref name="widthAsPixel" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeGreaterThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Sample Usage:
+                <code>
+                 WhenMediaSizeGreaterThan(SM, BorderRadius(8))
+                </code>
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeLessThan(System.Int32,ReactWithDotNet.StyleModifier[])">
+            <summary>
+                max-width: <paramref name="widthAsPixel" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeLessThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Sample Usage:
+                <code>
+                 WhenMediaSizeLessThan(SM, BorderRadius(8))
+                </code>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.XL(ReactWithDotNet.StyleModifier[])">
@@ -7272,6 +7235,21 @@
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.svg.FocusableFalse">
+            <summary>
+                svg.focusable = false
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.svg.FocusableTrue">
+            <summary>
+                svg.focusable = true
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.svg.FocusableAuto">
+            <summary>
+                svg.focusable = auto
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.form.action">
             <summary>
                 Specifies the URL of the page where the form data will be submitted.
@@ -7431,6 +7409,22 @@
                 Occurs when an element loses focus.
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.textarea.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.textarea.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.textarea.Name(System.String)">
             <summary>
                 name = <paramref name="value"/>
@@ -7536,25 +7530,45 @@
                 Occurs when an element loses focus.
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.textarea.valueBindDebounceHandler">
+        <member name="M:ReactWithDotNet.textarea.ValueBindDebounceTimeout(System.Nullable{System.Int32})">
             <summary>
-                if you want to handle when user iteraction finished see example below<br />
-                component.valueBind = ()=>state.UserInfo.Name<br />
-                component.valueBindDebounceTimeout = 600 // milliseconds<br />
-                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+                valueBindDebounceTimeout = <paramref name="value"/>
+            <br/>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.textarea.valueBindDebounceTimeout">
+        <member name="M:ReactWithDotNet.textarea.ValueBindDebounceHandler(System.Func{System.Threading.Tasks.Task})">
             <summary>
-                if you want to handle when user iteraction finished see example below<br />
-                component.valueBind = ()=>state.UserInfo.Name<br />
-                component.valueBindDebounceTimeout = 600 // milliseconds<br />
-                component.valueBindDebounceHandler = OnUserIterationFinished<br />
+                valueBindDebounceHandler = <paramref name="value"/>
+            <br/>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
             </summary>
         </member>
         <member name="P:ReactWithDotNet.input.autoFocus">
             <summary>
                 Element must automatically get focus when the page loads.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
             </summary>
         </member>
         <member name="P:ReactWithDotNet.input.onBlur">
@@ -7569,27 +7583,31 @@
                 Element must automatically get focus when the page loads.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.input.ValueBindDebounceTimeout(System.Nullable{System.Int32})">
+            <summary>
+                valueBindDebounceTimeout = <paramref name="value"/>
+            <br/>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.input.ValueBindDebounceHandler(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+                valueBindDebounceHandler = <paramref name="value"/>
+            <br/>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.input.OnBlur(ReactWithDotNet.FocusEventHandler)">
             <summary>
                 onBlur = <paramref name="value"/>
             <br/>
                 Occurs when an element loses focus.
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.valueBindDebounceHandler">
-            <summary>
-                if you want to handle when user iteraction finished see example below<br />
-                component.valueBind = ()=>state.UserInfo.Name<br />
-                component.valueBindDebounceTimeout = 600 // milliseconds<br />
-                component.valueBindDebounceHandler = OnUserIterationFinished<br />
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.input.valueBindDebounceTimeout">
-            <summary>
-                if you want to handle when user iteraction finished see example below<br />
-                component.valueBind = ()=>state.UserInfo.Name<br />
-                component.valueBindDebounceTimeout = 600 // milliseconds<br />
-                component.valueBindDebounceHandler = OnUserIterationFinished<br />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.data">
@@ -7642,6 +7660,11 @@
         <member name="M:ReactWithDotNet.HtmlElement.AddClass(System.String)">
             <summary>
                 Adds given cssClassName ot class attribute of html element
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ReactComponentBase.DesignMode">
+            <summary>
+              Indicates component is in design mode.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.ReactComponentBase.DispatchEvent(System.Delegate,System.String)">
@@ -7994,6 +8017,11 @@
                 https://react.dev/reference/react/PureComponent
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.PureComponent.DesignMode">
+            <summary>
+              Indicates component is in design mode.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.PureComponent.componentDidCatch(System.Exception)">
             <summary>
                 When any exception occurred in render method then this method will be call.
@@ -8029,6 +8057,20 @@
                  }
                 
                 </code>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Style.leftBottom">
+            <summary>
+                left = <paramref name="value"/>
+                <br/>
+                bottom = <paramref name="value"/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Style.rightBottom">
+            <summary>
+                right = <paramref name="value"/>
+                <br/>
+                bottom = <paramref name="value"/>
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Style.op_Addition(ReactWithDotNet.Style,ReactWithDotNet.StyleModifier)">
@@ -10670,6 +10712,22 @@
                 component.valueBindDebounceHandler = OnUserIterationFinished<br />
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries._ReactQuill_.ReactQuill.valueBindDebounceHandler">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries._ReactQuill_.ReactQuill.valueBindDebounceTimeout">
+            <summary>
+            if you want to handle when user iteraction finished see example below<br/>
+            component.valueBind = ()=>state.UserInfo.Name<br/>
+            component.valueBindDebounceTimeout = 600 // milliseconds<br/>
+            component.valueBindDebounceHandler = OnUserIterationFinished<br/>
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries._Swiper_.Swiper.breakpoints">
             <summary>
             Sample: <br/>
@@ -10704,6 +10762,11 @@
                 When react component fully loaded then this element will be replace by original component.
                 <br />
                 Default value is simple empty div element
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.UIDesigner.ReactWithDotNetDesigner.IsInDesignMode(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+                Indicates component is in design mode.
             </summary>
         </member>
     </members>
