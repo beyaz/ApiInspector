@@ -21,8 +21,8 @@ public class ActionButton : Component
         {
             children =
             {
-                IsProcessing is false ? null: new LoadingIcon { wh(20), mr(10) },
-                !IsProcessing && SvgFileName.HasValue()? new img { Src(GetSvgUrl(SvgFileName)), wh(20), MarginRight(5) } : null,
+                IsProcessing is false ? null: new LoadingIcon { Size(20), MarginRight(10) },
+                !IsProcessing && SvgFileName.HasValue()? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null,
                 new div(Label)
             },
             onClick = ActionButtonOnClick,

@@ -452,11 +452,6 @@
                 overflowX: scroll
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.StretchWidthHeight">
-            <summary>
-                width = '100%' , height = '100%'
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.TextDecorationLineThrough">
             <summary>
                 textDecoration = 'line-through'
@@ -738,13 +733,6 @@
                 new div{ style = {height = <paramref name="valueInPx" />}}
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.wh(System.Double)">
-            <summary>
-                style.width = <paramref name="pixelValue" /> + 'px'
-                <br />
-                style.height = <paramref name="pixelValue" /> + 'px'
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,ReactWithDotNet.StyleModifier[])">
             <summary>
                 Apply given modifiers when condition is true
@@ -753,148 +741,6 @@
         <member name="M:ReactWithDotNet.Mixin.When(System.Nullable{System.Boolean},System.Func{ReactWithDotNet.Element})">
             <summary>
                 Calls given <paramref name="elementFunc" /> when condition is true otherwise returns null
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.m(System.Double)">
-            <summary>
-                style.margin = <paramref name="margin" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.m(System.String)">
-            <summary>
-                style.margin = <paramref name="margin" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mr(System.Double)">
-            <summary>
-                style.marginRight = <paramref name="marginRight" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mr(System.String)">
-            <summary>
-                style.marginRight = <paramref name="marginRight" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.ml(System.Double)">
-            <summary>
-                style.marginLeft = <paramref name="marginLeft" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.ml(System.String)">
-            <summary>
-                style.marginLeft = <paramref name="marginLeft" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mt(System.Double)">
-            <summary>
-                style.marginTop = <paramref name="marginTop" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mt(System.String)">
-            <summary>
-                style.marginTop = <paramref name="marginTop" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mb(System.Double)">
-            <summary>
-                style.marginBottom = <paramref name="marginBottom" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mb(System.String)">
-            <summary>
-                style.marginBottom = <paramref name="marginBottom" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mx(System.Double)">
-            <summary>
-                style.marginLeft = <paramref name="value" /> + 'px'
-                <br />
-                style.marginRight = <paramref name="value" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.mx(System.String)">
-            <summary>
-                style.marginLeft = <paramref name="value" />
-                <br />
-                style.marginRight = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.my(System.Double)">
-            <summary>
-                style.marginTop = <paramref name="value" /> + 'px'
-                <br />
-                style.marginBottom = <paramref name="value" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.my(System.String)">
-            <summary>
-                style.marginTop = <paramref name="value" />
-                <br />
-                style.marginBottom = <paramref name="value" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.p(System.Double)">
-            <summary>
-                style.padding = <paramref name="padding" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.p(System.String)">
-            <summary>
-                style.padding = <paramref name="padding" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pr(System.Double)">
-            <summary>
-                style.paddingRight = <paramref name="paddingRight" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pr(System.String)">
-            <summary>
-                style.paddingRight = <paramref name="paddingRight" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pl(System.Double)">
-            <summary>
-                style.paddingLeft = <paramref name="paddingLeft" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pl(System.String)">
-            <summary>
-                style.paddingLeft = <paramref name="paddingLeft" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pt(System.Double)">
-            <summary>
-                style.paddingTop = <paramref name="paddingTop" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pt(System.String)">
-            <summary>
-                style.paddingTop = <paramref name="paddingTop" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pb(System.Double)">
-            <summary>
-                style.paddingBottom = <paramref name="paddingBottom" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.pb(System.String)">
-            <summary>
-                style.paddingBottom = <paramref name="paddingBottom" />
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.py(System.Double)">
-            <summary>
-                style.paddingTop = <paramref name="value" /> + 'px'
-                <br />
-                style.paddingBottom = <paramref name="value" /> + 'px'
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.py(System.String)">
-            <summary>
-                style.paddingTop = <paramref name="value" />
-                <br />
-                style.paddingBottom = <paramref name="value" />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.FontSizeLarge">

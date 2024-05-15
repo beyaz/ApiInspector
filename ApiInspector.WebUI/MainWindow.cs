@@ -266,7 +266,7 @@ class MainWindow : Component<MainWindowModel>
             {
                 return new FlexRowCentered(FlexGrow(1))
                 {
-                    new LoadingIcon { wh(100) }
+                    new LoadingIcon { Size(100) }
                 };
             }
 
@@ -586,7 +586,7 @@ class MainWindow : Component<MainWindowModel>
                 Label,
                 Border(Solid(1, borderColor)),
                 BorderRadius("50%"),
-                WidthHeight(30),
+                Size(30),
                 CursorPointer,
                 Hover(Border(Solid(1, "#b8b8ea"))),
                 When(IsSelected, FontWeightExtraBold, Background(rgb(212, 212, 230)))

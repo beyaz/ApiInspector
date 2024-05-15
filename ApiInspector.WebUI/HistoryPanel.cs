@@ -48,7 +48,7 @@ class HistoryPanel : Component
                         Id(x.storageKey),
                         OnClick(OnClickHandler),
 
-                        new img { Src(GetSvgUrl("Method")), wh(14), mt(5) },
+                        new img { Src(GetSvgUrl("Method")), Size(14), MarginTop(5) },
 
                         new div
                         {
@@ -61,7 +61,7 @@ class HistoryPanel : Component
                     new img
                     {
                         Id(x.storageKey),
-                        Src(GetSvgUrl("trash")), mr(4), wh(24), Hover(wh(26)), Title("Remove From History"), OnClick(OnDeleteClicked)
+                        Src(GetSvgUrl("trash")), MarginRight(4), Size(24), Hover(Size(26)), Title("Remove From History"), OnClick(OnDeleteClicked)
                     }
                 })
             }
