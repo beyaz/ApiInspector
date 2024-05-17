@@ -82,8 +82,11 @@ class MainWindow : Component<MainWindowModel>
                     : new FlexRow(HeightFull)
                     {
                         searchPanel,
-                        ActiveSelectedMethod,
-                        addRemovePanel
+                        new FlexRow(SizeFull)
+                        {
+                            ActiveSelectedMethod,
+                            addRemovePanel
+                        }
                     }
             }
         };
