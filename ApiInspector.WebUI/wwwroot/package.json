@@ -1,29 +1,31 @@
 {
-  "name": "api-inspector-web-ui",
-  "version": "1.0.0",
-  "scripts": {
-    "dev":   "esbuild index.jsx --bundle --format=esm --outfile=dist/index.js",
-    "build": "esbuild index.jsx --bundle --format=esm --outfile=dist/index.js --analyze --minify --target=es2016"
-  },
-  "dependencies": {
-    "@monaco-editor/react": "^4.5.2",
+    "name": "api-inspector-web-ui",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "esbuild index.jsx --bundle --format=esm --outfile=dist/index.js",
+        "build": "esbuild index.jsx --bundle --format=esm --outfile=dist/index.js --analyze --minify --target=es2016"
+    },
+    "dependencies": {
+        "@monaco-editor/react": "^4.5.2",
 
-    "esbuild": "^0.14.48",
-    "install": "^0.13.0",
-    "npm": "^8.15.0",
+        "esbuild": "^0.14.48",
+        "install": "^0.13.0",
+        "npm": "^8.15.0",
 
-    "primeicons": "^5.0.0",
-    "primereact": "^8.7.3",
+        "primeicons": "^5.0.0",
+        "primereact": "^8.7.3",
 
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-free-scrollbar": "^0.3.4",
-    "react-transition-group": "^4.4.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-free-scrollbar": "^0.3.4",
+        "react-transition-group": "^4.4.2",
 
-    "rsuite": "^5.19.1",
-	
-	"@mui/material": "^5.11.7",
-	"@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5"
-  }
+        "rsuite": "^5.19.1",
+
+        "react-split": "^2.0.14",
+
+        "@mui/material": "^5.11.7",
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5"
+    }
 }
