@@ -6,15 +6,15 @@ namespace ApiInspector.WebUI;
 public sealed class MetadataNode 
 {
     public List<MetadataNode> children { get; set; }
-    public bool IsClass { get; set; }
-    public bool IsMethod { get; set; }
-    public bool IsNamespace { get; set; }
-    public MethodReference MethodReference { get; set; }
+    public bool IsClass { get; init; }
+    public bool IsMethod { get; init; }
+    public bool IsNamespace { get; init; }
+    public MethodReference MethodReference { get; init; }
 
-    public string NamespaceReference { get; set; }
-    public TypeReference TypeReference { get; set; }
+    public string NamespaceReference { get; init; }
+    public TypeReference TypeReference { get; init; }
     
-    public string label { get; set; }
+    public string label { get; init; }
 }
 
 [Serializable]
