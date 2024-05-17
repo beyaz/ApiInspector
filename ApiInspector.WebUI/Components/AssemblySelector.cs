@@ -13,9 +13,8 @@ public class AssemblySelector
 
             if (Directory.Exists(AssemblyDirectoryPath))
             {
-
                 var assemblyFileName = (AssemblyFileName ?? string.Empty).Replace("\"", string.Empty).Replace("\"", string.Empty);
-                
+
                 suggestions = Directory.GetFiles(AssemblyDirectoryPath)
                     .Select(Path.GetFileName)
                     .Where(ExeOrDllFile)
@@ -29,21 +28,19 @@ public class AssemblySelector
                 data     = suggestions,
                 onChange = OnChange,
                 style    = { BorderRadius(5), ComponentBoxShadow },
-                renderMenuItem = x=>new FlexRow(AlignItemsCenter, Gap(4))
+                renderMenuItem = x => new FlexRow(AlignItemsCenter, Gap(4))
                 {
                     new div
                     {
-                        Size(24,16),
+                        Size(24, 16),
                         BorderRadius(4),
-                        Border(1,solid,rgb(164, 179, 200)),
-                        BackgroundImage(linear_gradient(-45,rgb(203, 212, 226),rgb(164, 179, 200)))
+                        Border(1, solid, rgb(164, 179, 200)),
+                        BackgroundImage(linear_gradient(-45, rgb(203, 212, 226), rgb(164, 179, 200)))
                     },
                     new span
                     {
                         x
                     }
-                    
-                    
                 }
             };
 
@@ -56,7 +53,7 @@ public class AssemblySelector
                 {
                     cmp.DispatchEvent(SelectionChanged, [AssemblyFileName]);
                 }
-                
+
                 return Task.CompletedTask;
             }
         });
