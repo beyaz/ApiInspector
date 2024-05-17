@@ -14,7 +14,7 @@ sealed class TwoRowSplittedForm : PureComponent
             {
                 new CssClass("gutter",
                 [
-                    Background(Theme.BackgroundColor),
+                    PaddingLeftRight(8),
                     BackgroundRepeatNoRepeat,
                     BackgroundPosition("50%")
                 ]),
@@ -29,7 +29,7 @@ sealed class TwoRowSplittedForm : PureComponent
             {
                 sizes      = sizes,
                 gutterSize = 12,
-                style      = { WidthFull, DisplayFlexRow },
+                style      = { SizeFull, DisplayFlexRow },
 
                 children =
                 {

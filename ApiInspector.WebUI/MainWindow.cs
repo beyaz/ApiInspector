@@ -49,7 +49,7 @@ class MainWindow : Component<MainWindowModel>
         {
             new FlexColumn(Border(Solid(1, borderColor)),
                            SizeFull,
-                           Background(rgba(255, 255, 255, 0.4)),
+                           Background(Theme.WindowBackgroundColor),
                            BorderRadius(10),
                            BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15)),
                            BackdropFilterBlur(30)
@@ -81,13 +81,17 @@ class MainWindow : Component<MainWindowModel>
                         SpaceY(200)
                         
                     }
-                    : new FlexRow(HeightFull)
+                    : new TwoRowSplittedForm
                     {
-                        searchPanel,
-                        new FlexRow(SizeFull)
+                        sizes = [30,70],
+                        children =
                         {
-                            ActiveSelectedMethod,
-                            addRemovePanel
+                            searchPanel,
+                            new FlexRow(SizeFull)
+                            {
+                                ActiveSelectedMethod,
+                                addRemovePanel
+                            }
                         }
                     }
             }
@@ -159,7 +163,7 @@ class MainWindow : Component<MainWindowModel>
 
         Element searchPanel()
         {
-            return new FlexColumn(Width(500), Gap(10), Padding(10), MarginTop(20), PositionRelative)
+            return new FlexColumn(Width(500), Gap(10), Padding(10,0,10,10), MarginTop(20), PositionRelative)
             {
                 new HistoryButton
                 {
