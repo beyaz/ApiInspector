@@ -2,7 +2,7 @@
 
 namespace ApiInspector.WebUI.Components;
 
-sealed class TwoRowSplittedForm : PureComponent
+sealed class TwoRowSplittedForm : Component
 {
     public int[] sizes { get; init; } = [50, 50];
 

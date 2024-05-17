@@ -83,16 +83,6 @@ class MainWindow : Component<MainWindowModel>
                 },
                 SpaceY(200)
             };
-
-            bodyContent = TwoRowSplittedForm.Create([
-                                                        searchPanel(),
-                                                        new FlexRow(SizeFull)
-                                                        {
-                                                            ActiveSelectedMethod,
-                                                            addRemovePanel
-                                                        }
-                                                    ],
-                                                    [30, 70]);
         }
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
         {
