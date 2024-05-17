@@ -41,9 +41,11 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
+    
+    
     protected override Element render()
     {
-        return new FlexRow(Padding(10), SizeFull, Background("#eff3f8"))
+        return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
         {
             new FlexColumn(Border(Solid(1, borderColor)),
                            SizeFull,
