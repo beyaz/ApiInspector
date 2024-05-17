@@ -1330,6 +1330,13 @@
                 style.height = <paramref name="height" /> + 'px'
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.Size(System.String,System.String)">
+            <summary>
+                style.width = <paramref name="width" />
+                <br/>
+                style.height = <paramref name="height" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.MinSize(System.Double,System.Double)">
             <summary>
                 style.minWidth = <paramref name="minWidth" /> + 'px'
@@ -7067,6 +7074,13 @@
                 svg.width = <paramref name="width" /> + 'px'
                 <br/>
                 svg.height = <paramref name="height" /> + 'px'
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.svg.Size(System.String,System.String)">
+            <summary>
+                svg.width = <paramref name="width" />
+                <br/>
+                svg.height = <paramref name="height" />
             </summary>
         </member>
         <member name="M:ReactWithDotNet.svg.Size(System.Double)">
