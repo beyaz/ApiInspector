@@ -23,12 +23,28 @@ public class AssemblySelector
                     .Take(7);
             }
 
-            return new AutoComplete
+            return new AutoComplete<string>
             {
                 value    = AssemblyFileName,
                 data     = suggestions,
                 onChange = OnChange,
-                style    = { BorderRadius(5), ComponentBoxShadow }
+                style    = { BorderRadius(5), ComponentBoxShadow },
+                renderMenuItem = x=>new FlexRow(AlignItemsCenter, Gap(4))
+                {
+                    new div
+                    {
+                        Size(24,16),
+                        BorderRadius(4),
+                        Border(1,solid,rgb(164, 179, 200)),
+                        BackgroundImage(linear_gradient(-45,rgb(203, 212, 226),rgb(164, 179, 200)))
+                    },
+                    new span
+                    {
+                        x
+                    }
+                    
+                    
+                }
             };
 
             Task OnChange(string selectedValue)
