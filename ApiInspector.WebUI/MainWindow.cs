@@ -45,45 +45,6 @@ class MainWindow : Component<MainWindowModel>
     
     protected override Element render()
     {
-        Element bodyContent = new TwoRowSplittedForm
-        {
-            sizes = [30, 70],
-            children =
-            {
-                searchPanel,
-                new FlexRow(SizeFull)
-                {
-                    ActiveSelectedMethod,
-                    addRemovePanel
-                }
-            }
-        };
-
-        if (HistoryDialogVisible)
-        {
-            bodyContent = new FlexColumnCentered(HeightFull)
-            {
-                new HistoryPanel
-                {
-                    Closed = () =>
-                    {
-
-                        HistoryDialogVisible = false;
-
-                        return Task.CompletedTask;
-                    },
-                    SelectionChanged = selectedMethod =>
-                    {
-                        HistoryDialogVisible = false;
-
-                        state = StateCache.TryRead(selectedMethod) ?? state;
-
-                        return Task.CompletedTask;
-                    }
-                },
-                SpaceY(200)
-            };
-        }
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
         {
             new FlexColumn(Border(Solid(1, borderColor)),
@@ -95,9 +56,52 @@ class MainWindow : Component<MainWindowModel>
                           )
             {
                 applicationHeader,
-                bodyContent
+                createContent
             }
         };
+
+        Element createContent()
+        {
+            if (HistoryDialogVisible)
+            {
+                return new FlexColumnCentered(HeightFull)
+                {
+                    new HistoryPanel
+                    {
+                        Closed = () =>
+                        {
+
+                            HistoryDialogVisible = false;
+
+                            return Task.CompletedTask;
+                        },
+                        SelectionChanged = selectedMethod =>
+                        {
+                            HistoryDialogVisible = false;
+
+                            state = StateCache.TryRead(selectedMethod) ?? state;
+
+                            return Task.CompletedTask;
+                        }
+                    },
+                    SpaceY(200)
+                };
+            }
+            
+            return new TwoRowSplittedForm
+            {
+                sizes = [30, 70],
+                children =
+                {
+                    searchPanel,
+                    new FlexRow(SizeFull)
+                    {
+                        ActiveSelectedMethod,
+                        addRemovePanel
+                    }
+                }
+            };
+        }
 
         Element applicationHeader()
         {
