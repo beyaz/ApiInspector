@@ -9,13 +9,14 @@ public class LoadingIcon : PureComponent
         {
             new style
             {
-                text = @"
+                @"
 
 .loader {
   border: 1px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 1px solid #A08139;
-
+  border-top: 1px solid #3498db;
+  width:100%;
+height:100%;
   -webkit-animation: spin 1s linear infinite; /* Safari */
   animation: spin 1s linear infinite;
 }

@@ -130,6 +130,11 @@ class MethodSelectionView : Component<MethodSelectionViewState>
 
     Element AsTreeItem(MetadataNode node)
     {
+        return AsTreeItem(node, SelectedMethodTreeNodeKey, OnTreeItemClicked);
+    }
+    
+    static Element AsTreeItem(MetadataNode node, string SelectedMethodTreeNodeKey, MouseEventHandler OnTreeItemClicked)
+    {
         if (node.IsMethod)
         {
             return new FlexRow(AlignItemsCenter)
@@ -168,12 +173,16 @@ class MethodSelectionView : Component<MethodSelectionViewState>
 
         void arrangeBackground(HtmlElement el)
         {
-            el += new[]
+            var isSelected = HasMatch(node, SelectedMethodTreeNodeKey);
+            
+            if (isSelected)
             {
-                Hover(BackgroundImage(linear_gradient(90, "#d5d5c1", "whitesmoke")), BorderRadius(3)),
-
-                When(HasMatch(node, state.SelectedMethodTreeNodeKey), BackgroundImage(linear_gradient(90, "#d1d1c8", "whitesmoke")), BorderRadius(3))
-            };
+                el += BackgroundImage(linear_gradient(90,  rgb(136, 195, 242), rgb(242, 246, 249))) + BorderRadius(3);
+            }
+            else
+            {
+                el += Hover(BackgroundImage(linear_gradient(90, rgb(190, 220, 244), rgb(242, 246, 249)))+ BorderRadius(3));
+            }
 
             el.onClick = OnTreeItemClicked;
         }
@@ -250,7 +259,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     
     Task OnTreeItemClicked(MouseEvent e)
     {
-        DispatchEvent(SelectionChanged, e.FirstNotEmptyId);
+        DispatchEvent(SelectionChanged, [e.currentTarget.id]);
         
         return Task.CompletedTask;
     }
