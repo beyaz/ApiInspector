@@ -25,8 +25,6 @@ class MainWindow : Component<MainWindowModel>
 
     public bool IsInitializingSelectedMethod { get; set; }
 
-    
-
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
     protected override Task constructor()
@@ -41,8 +39,6 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
-    
-    
     protected override Element render()
     {
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
@@ -70,7 +66,6 @@ class MainWindow : Component<MainWindowModel>
                     {
                         Closed = () =>
                         {
-
                             HistoryDialogVisible = false;
 
                             return Task.CompletedTask;
@@ -87,7 +82,7 @@ class MainWindow : Component<MainWindowModel>
                     SpaceY(200)
                 };
             }
-            
+
             return new TwoRowSplittedForm
             {
                 sizes = [30, 70],
@@ -123,6 +118,7 @@ class MainWindow : Component<MainWindowModel>
                 }
             };
         }
+
         Element addRemovePanel()
         {
             return new FlexColumn(Width(30), PaddingRight(10), Gap(10), JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
@@ -132,7 +128,7 @@ class MainWindow : Component<MainWindowModel>
                     Index      = i,
                     Label      = i.ToString(),
                     IsSelected = i == state.ScenarioListSelectedIndex,
-                    Clicked    = e =>
+                    Clicked = e =>
                     {
                         state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId);
                         return Task.CompletedTask;
@@ -141,25 +137,25 @@ class MainWindow : Component<MainWindowModel>
 
                 new CircleButton
                 {
-                    Label = "+", 
+                    Label = "+",
                     Clicked = _ =>
                     {
-                        state.ScenarioList              = state.ScenarioList.Add(new ScenarioModel());
+                        state.ScenarioList              = state.ScenarioList.Add(new());
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
                         TryInitializeDefaultJsonInputs();
-                        
+
                         return Task.CompletedTask;
                     },
                     TooltipText = "Add new test scenario"
                 },
-                state.ScenarioList.Count > 1 ?new CircleButton
+                state.ScenarioList.Count > 1 ? new CircleButton
                 {
-                    Label = "-", 
+                    Label = "-",
                     Clicked = _ =>
                     {
                         state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
                         state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
-                        
+
                         return Task.CompletedTask;
                     },
                     TooltipText = "Remove selected test scenario"
@@ -169,14 +165,14 @@ class MainWindow : Component<MainWindowModel>
 
         Element searchPanel()
         {
-            return new FlexColumn(Width(500), Gap(10), Padding(10,0,10,10), MarginTop(20), PositionRelative)
+            return new FlexColumn(Width(500), Gap(10), Padding(10, 0, 10, 10), MarginTop(20), PositionRelative)
             {
                 new HistoryButton
                 {
                     Click = _ =>
                     {
                         HistoryDialogVisible = true;
-                        
+
                         return Task.CompletedTask;
                     },
                     style = { PositionAbsolute, Right(10), Top(-13), ComponentBoxShadow }
@@ -192,8 +188,8 @@ class MainWindow : Component<MainWindowModel>
                         SelectionChanged = x =>
                         {
                             state.AssemblyDirectory = x;
-                            Client.DispatchEvent(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
-                            
+                            Client.DispatchEvent(Event.OnAssemblyChanged, [AssemblyFileFullPath]);
+
                             return Task.CompletedTask;
                         }
                     }
@@ -209,9 +205,9 @@ class MainWindow : Component<MainWindowModel>
                         AssemblySelector.CreateAssemblySelectorInput(state.AssemblyDirectory, state.AssemblyFileName, x =>
                         {
                             state.AssemblyFileName = x;
-                            
-                            Client.DispatchEvent(Event.OnAssemblyChanged,[AssemblyFileFullPath]);
-                            
+
+                            Client.DispatchEvent(Event.OnAssemblyChanged, [AssemblyFileFullPath]);
+
                             return Task.CompletedTask;
                         })
                     }
@@ -219,23 +215,23 @@ class MainWindow : Component<MainWindowModel>
                 new FlexColumn
                 {
                     new Label { Text = "Filter by class name" },
-                    
+
                     new input
                     {
-                        type                     ="text",
+                        type                     = "text",
                         valueBind                = () => state.ClassFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
-                        style                    = {InputStyle }
+                        style                    = { InputStyle }
                     }
                 },
                 new FlexColumn
                 {
                     new Label { Text = "Filter by method name" },
-                    
+
                     new input
                     {
-                        type                     ="text",
+                        type                     = "text",
                         valueBind                = () => state.MethodFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
@@ -270,7 +266,7 @@ class MainWindow : Component<MainWindowModel>
                     formatOnPaste       = true,
                     formatOnType        = true,
                     automaticLayout     = true,
-                    lineNumbers = false
+                    lineNumbers         = false
                 }
             };
         }
@@ -320,7 +316,7 @@ class MainWindow : Component<MainWindowModel>
                         }
                     },
 
-                    new FlexColumn(AlignItemsCenter,FlexGrow(1))
+                    new FlexColumn(AlignItemsCenter, FlexGrow(1))
                     {
                         new Label
                         {
@@ -389,8 +385,6 @@ class MainWindow : Component<MainWindowModel>
         }
     }
 
-  
-
     Task ClearActionButtonStates()
     {
         DebugButtonStatusIsFail    = false;
@@ -398,7 +392,7 @@ class MainWindow : Component<MainWindowModel>
 
         ExecuteButtonStatusIsFail    = false;
         ExecuteButtonStatusIsSuccess = false;
-        
+
         return Task.CompletedTask;
     }
 
@@ -459,7 +453,7 @@ class MainWindow : Component<MainWindowModel>
         IsInitializingSelectedMethod = true;
 
         Client.GotoMethod(OnElementSelected);
-        
+
         return Task.CompletedTask;
     }
 
@@ -469,7 +463,7 @@ class MainWindow : Component<MainWindowModel>
 
         state.SelectedMethod = null;
 
-        state.ScenarioList              = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
+        state.ScenarioList              = ImmutableList<ScenarioModel>.Empty.Add(new());
         state.ScenarioListSelectedIndex = 0;
 
         var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
@@ -512,7 +506,7 @@ class MainWindow : Component<MainWindowModel>
 
         scenario.ResponseAsJson = null;
 
-       await ClearActionButtonStates();
+        await ClearActionButtonStates();
 
         if (IsExecutionStarted)
         {
@@ -590,7 +584,7 @@ class MainWindow : Component<MainWindowModel>
         public string Label { get; set; }
 
         public string TooltipText { get; set; }
-        
+
         protected override Element render()
         {
             return ArrangeTooltip(new FlexRowCentered
@@ -622,6 +616,7 @@ class MainWindow : Component<MainWindowModel>
                     }
                 };
             }
+
             return content;
         }
     }
@@ -638,7 +633,7 @@ class MainWindow : Component<MainWindowModel>
 
         protected override Task constructor()
         {
-            state = new EnvironmentInfoState();
+            state = new();
 
             OnAssemblyChanged(AssemblyFileFullPath);
 
@@ -671,7 +666,7 @@ class MainWindow : Component<MainWindowModel>
             state.AssemblyFileFullPath = assemblyFileFullPath;
 
             Flow(assemblyFileFullPath, External.GetEnvironment, str => state.Text = str);
-            
+
             return Task.CompletedTask;
         }
     }
