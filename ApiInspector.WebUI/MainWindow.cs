@@ -82,7 +82,6 @@ class MainWindow : Component<MainWindowModel>
                     }
                 },
                 SpaceY(200)
-
             };
         }
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
