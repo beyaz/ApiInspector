@@ -2,9 +2,9 @@
 
 namespace ApiInspector;
 
-sealed class MetadataNode
+sealed record MetadataNode
 {
-    public List<MetadataNode> Children { get; set; }
+    public IReadOnlyList<MetadataNode> Children { get; init; } = new List<MetadataNode>();
 
     public bool IsClass { get; init; }
 
@@ -19,32 +19,19 @@ sealed class MetadataNode
     public string NamespaceReference { get; init; }
 
     public TypeReference TypeReference { get; init; }
-    
+
     public bool HasChild => Children.Count > 0;
 }
 
 static class MetadataHelper
 {
-    static void AddChild(this MetadataNode node, MetadataNode child)
-    {
-        (node.Children ??= new List<MetadataNode>()).Add(child);
-    }
-    
-   
-    
     public static MethodInfo FindMethodInfo(Assembly assembly, MetadataNode node)
     {
         MethodInfo returnMethodInfo = null;
 
         VisitTypes(assembly, visitType);
 
-        void visitType(Type type)
-        {
-            if (returnMethodInfo == null)
-            {
-                VisitMethods(type, visitMethodInfo);
-            }
-        }
+        return returnMethodInfo;
 
         void visitMethodInfo(MethodInfo methodInfo)
         {
@@ -57,14 +44,20 @@ static class MetadataHelper
             }
         }
 
-        return returnMethodInfo;
+        void visitType(Type type)
+        {
+            if (returnMethodInfo == null)
+            {
+                VisitMethods(type, visitMethodInfo);
+            }
+        }
     }
 
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
         return getNamespaceNodes(GetAllTypes(LoadAssembly(assemblyFilePath), classFilter));
 
-        IReadOnlyList<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
+        IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
         {
             var items = new List<MetadataNode>();
 
@@ -79,12 +72,12 @@ static class MetadataHelper
 
                 if (classNodes.Count > 0)
                 {
-                    items.Add(new MetadataNode
+                    items.Add(new()
                     {
                         NamespaceReference = namespaceName,
                         IsNamespace        = true,
                         label              = namespaceName,
-                        Children = classNodes
+                        Children           = classNodes
                     });
                 }
             }
@@ -105,18 +98,18 @@ static class MetadataHelper
             {
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    if (classNode.Children is null || classNode.Children?.Count < 5)
+                    if (classNode.Children.Count < 5)
                     {
                         if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            classNode.AddChild(ConvertToMetadataNode(m));
+                            classNode = classNode.AddChild(ConvertToMetadataNode(m));
                         }
                     }
 
                     return;
                 }
 
-                classNode.AddChild(ConvertToMetadataNode(m));
+                classNode = classNode.AddChild(ConvertToMetadataNode(m));
             });
 
             return classNode;
@@ -129,9 +122,14 @@ static class MetadataHelper
         return Assembly.LoadFrom(assemblyFilePath);
     }
 
+    static MetadataNode AddChild(this MetadataNode node, MetadataNode child)
+    {
+        return node with { Children = new List<MetadataNode>(node.Children) { child } };
+    }
+
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)
     {
-        return new MetadataNode
+        return new()
         {
             IsMethod        = true,
             MethodReference = methodInfo.AsReference(),
@@ -142,21 +140,6 @@ static class MetadataHelper
     static List<Type> GetAllTypes(Assembly assembly, string classFilter)
     {
         var types = new List<Type>();
-
-        void visit(Type type)
-        {
-            if (!string.IsNullOrWhiteSpace(classFilter))
-            {
-                if (type.Name.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    types.Add(type);
-                }
-
-                return;
-            }
-
-            types.Add(type);
-        }
 
         VisitTypes(assembly, visit);
 
@@ -176,6 +159,21 @@ static class MetadataHelper
         }
 
         return types;
+
+        void visit(Type type)
+        {
+            if (!string.IsNullOrWhiteSpace(classFilter))
+            {
+                if (type.Name.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    types.Add(type);
+                }
+
+                return;
+            }
+
+            types.Add(type);
+        }
     }
 
     static bool IsValidForExport(MethodInfo methodInfo)
