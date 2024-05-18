@@ -190,7 +190,7 @@ static class AssemblyModelHelper
         }
 
         var sameNames = new List<MethodInfo>();
-        var fullSame  = new List<MethodInfo>();
+        var fullSame = new List<MethodInfo>();
 
         assembly.VisitTypes(type =>
         {
@@ -203,7 +203,7 @@ static class AssemblyModelHelper
                         try
                         {
                             var asReference = methodInfo.AsReference();
-                            
+
                             if (methodReference.Equals(asReference))
                             {
                                 fullSame.Add(methodInfo);
@@ -218,8 +218,6 @@ static class AssemblyModelHelper
                         {
                             // ignored
                         }
-
-                        
                     }
                 });
             }
@@ -321,13 +319,13 @@ static class AssemblyModelHelper
 
         static bool isValidForAnalyze(Type type)
         {
-            var skipTypeList = new []
+            var skipTypeList = new[]
             {
                 "Microsoft.CodeAnalysis.EmbeddedAttribute",
                 "System.Runtime.CompilerServices.RefSafetyRulesAttribute"
             };
-            
-            if (skipTypeList.Contains(type.FullName) )
+
+            if (skipTypeList.Contains(type.FullName))
             {
                 return false;
             }
