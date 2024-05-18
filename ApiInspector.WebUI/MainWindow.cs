@@ -198,6 +198,7 @@ class MainWindow : Component<MainWindowModel>
                 new Tooltip
                 {
                     Tooltip.Title("Type any .dll or .exe file name"),
+                    Tooltip.Placement("top-start"),
                     new FlexColumn
                     {
                         new Label { Text = "Assembly" },
