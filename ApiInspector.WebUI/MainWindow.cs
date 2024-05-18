@@ -11,7 +11,6 @@ namespace ApiInspector.WebUI;
 
 class MainWindow : Component<MainWindowModel>
 {
-    const string borderColor = "#d5d5d8";
     public bool DebugButtonStatusIsFail { get; set; }
 
     public bool DebugButtonStatusIsSuccess { get; set; }
@@ -43,7 +42,7 @@ class MainWindow : Component<MainWindowModel>
     {
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
         {
-            new FlexColumn(Border(Solid(1, borderColor)),
+            new FlexColumn(Border(Solid(1, Theme.BorderColor)),
                            SizeFull,
                            Background(Theme.WindowBackgroundColor),
                            BorderRadius(10),
@@ -100,7 +99,7 @@ class MainWindow : Component<MainWindowModel>
 
         Element applicationHeader()
         {
-            return new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom(Solid(1, borderColor)))
+            return new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom(Solid(1, Theme.BorderColor)))
             {
                 JustifyContentSpaceBetween,
                 AlignItemsCenter,
@@ -594,7 +593,7 @@ class MainWindow : Component<MainWindowModel>
                 ComponentBoxShadow,
                 OnClick(Clicked),
                 Label,
-                Border(Solid(1, borderColor)),
+                Border(Solid(1, Theme.BorderColor)),
                 BorderRadius("50%"),
                 Size(30),
                 CursorPointer,
@@ -630,7 +629,7 @@ class MainWindow : Component<MainWindowModel>
 
     class EnvironmentInfoView : Component<EnvironmentInfoState>
     {
-        public string AssemblyFileFullPath { get; set; }
+        public string AssemblyFileFullPath { get; init; }
 
         protected override Task constructor()
         {

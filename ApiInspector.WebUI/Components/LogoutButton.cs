@@ -9,7 +9,7 @@ sealed class LogoutButton : Component<LogoutButton.State>
     {
         var theme = new
         {
-            Color      = "#853a51",
+            Color      = Theme.BorderColor,
             ColorHover = "#db081b"
         };
 
