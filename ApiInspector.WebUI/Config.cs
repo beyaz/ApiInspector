@@ -1,30 +1,29 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace ApiInspector.WebUI;
 
-class ConfigInfo
+sealed record ConfigInfo
 {
-    public string BrowserExeArguments { get; set; }
-    public string BrowserExePath { get; set; }
-    public bool HideConsoleWindow { get; set; }
-    public int NextAvailablePortFrom { get; set; }
-    public bool UseUrls { get; set; }
+    public string BrowserExeArguments { get; init; }
+    public string BrowserExePath { get; init; }
+    public bool HideConsoleWindow { get; init; }
+    public int NextAvailablePortFrom { get; init; }
+    public bool UseUrls { get; init; }
 
-    public FileStorageInfo FileStorage { get; set; }
-    
+    public FileStorageInfo FileStorage { get; init; }
+
     internal class FileStorageInfo
     {
-        public bool IsActive { get; set; }
-        public string CacheDirectoryFormat { get; set; }
+        public string CacheDirectoryFormat { get; init; }
+        public bool IsActive { get; init; }
     }
-    
 }
 
 partial class Extensions
 {
     static readonly bool IsRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
-
     public static readonly ConfigInfo Config = ReadConfig();
 
     public static string AppFolder
@@ -45,13 +44,12 @@ partial class Extensions
     {
         get
         {
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
-
                 var app = AppFolder.Replace(@"\ApiInspector.WebUI\", @"\ApiInspector.NetCore\");
                 return Path.Combine(app, "ApiInspector.exe");
             }
-            
+
             return Path.Combine(AppFolder, "ApiInspector.NetCore", "ApiInspector.exe");
         }
     }
@@ -64,7 +62,7 @@ partial class Extensions
 
         if (IsRunningInVS)
         {
-            config.UseUrls = false;
+            config = config with { UseUrls = false };
         }
 
         return config;
