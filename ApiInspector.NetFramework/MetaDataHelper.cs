@@ -4,7 +4,7 @@ namespace ApiInspector;
 
 sealed class MetadataNode
 {
-    public List<MetadataNode> children { get; set; }
+    public List<MetadataNode> Children { get; set; }
 
     public bool IsClass { get; init; }
 
@@ -19,19 +19,18 @@ sealed class MetadataNode
     public string NamespaceReference { get; init; }
 
     public TypeReference TypeReference { get; init; }
+    
+    public bool HasChild => Children.Count > 0;
 }
 
 static class MetadataHelper
 {
     static void AddChild(this MetadataNode node, MetadataNode child)
     {
-        (node.children ??= new List<MetadataNode>()).Add(child);
+        (node.Children ??= new List<MetadataNode>()).Add(child);
     }
     
-    static bool HasChild(this MetadataNode node)
-    {
-        return node.children?.Count > 0;
-    }
+   
     
     public static MethodInfo FindMethodInfo(Assembly assembly, MetadataNode node)
     {
@@ -75,7 +74,7 @@ static class MetadataHelper
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    classNodes = classNodes.Where(classNode => classNode.HasChild()).Take(5).OrderByDescending(classNode => classNode.children.Count).ToList();
+                    classNodes = classNodes.Where(classNode => classNode.HasChild).Take(5).OrderByDescending(classNode => classNode.Children.Count).ToList();
                 }
 
                 if (classNodes.Count > 0)
@@ -85,7 +84,7 @@ static class MetadataHelper
                         NamespaceReference = namespaceName,
                         IsNamespace        = true,
                         label              = namespaceName,
-                        children = classNodes
+                        Children = classNodes
                     });
                 }
             }
@@ -106,7 +105,7 @@ static class MetadataHelper
             {
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    if (classNode.children is null || classNode.children?.Count < 5)
+                    if (classNode.Children is null || classNode.Children?.Count < 5)
                     {
                         if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
