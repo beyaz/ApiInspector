@@ -3,31 +3,14 @@ using System.Text;
 
 namespace ApiInspector.WebUI;
 
-class MainLayout : Component, IPageLayout
+sealed class MainLayout : Component, IPageLayout
 {
-    public ComponentRenderInfo RenderInfo { get; set; }
-    
+    static readonly string LastWriteTimeOfIndexJsFile = CalculateLastWriteTimeOfIndexJsFile();
+
     public string ContainerDomElementId => "app";
 
-    static readonly string LastWriteTimeOfIndexJsFile = CalculateLastWriteTimeOfIndexJsFile();
-    
-    static string CalculateLastWriteTimeOfIndexJsFile()
-    {
-        const string root = "wwwroot";
-            
-        var directoryName = Path.GetDirectoryName(typeof(MainLayout).Assembly.Location);
+    public ComponentRenderInfo RenderInfo { get; set; }
 
-        if (Directory.Exists(directoryName))
-        {
-            var fileInfo = new FileInfo(Path.Combine(directoryName,root,"dist","index.js"));
-            if (fileInfo.Exists)
-            {
-                return fileInfo.LastWriteTime.Ticks.ToString();
-            }
-        }
-
-        throw new IOException("index.js file not found");
-    }
     protected override Element render()
     {
         const string root = "wwwroot";
@@ -39,14 +22,14 @@ class MainLayout : Component, IPageLayout
 
             new head
             {
-                new meta{charset = "utf-8"},
-                new meta{name    = "viewport", content = "width=device-width, initial-scale=1"},
-                new title{ "Api Inspector" },
-                new link{rel ="icon" , href = $"{root}/favicon.ico"},
+                new meta { charset = "utf-8" },
+                new meta { name    = "viewport", content = "width=device-width, initial-scale=1" },
+                new title { "Api Inspector" },
+                new link { rel = "icon", href = $"{root}/favicon.ico" },
                 new style
                 {
                     """
-                    
+
                     * {
                         margin: 0;
                         padding: 0;
@@ -68,8 +51,16 @@ class MainLayout : Component, IPageLayout
                     """
                 },
 
-                new link{rel ="stylesheet" , href = "https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap", media ="all"},
-                new link{href = "https://fonts.cdnfonts.com/css/ibm-plex-mono-3", rel = "stylesheet"}
+                new link
+                {
+                    rel  = "stylesheet",
+                    href = "https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap", media = "all"
+                },
+                new link
+                {
+                    href = "https://fonts.cdnfonts.com/css/ibm-plex-mono-3", 
+                    rel = "stylesheet"
+                }
             },
             new body
             {
@@ -82,25 +73,41 @@ class MainLayout : Component, IPageLayout
                 {
                     calculateInitialScript()
                 }
-
-
             }
         };
-        
+
         StringBuilder calculateInitialScript()
         {
             var sb = new StringBuilder();
 
             sb.AppendLine($"import {{ReactWithDotNet}} from './{root}/dist/index.js?v={LastWriteTimeOfIndexJsFile}';");
             sb.AppendLine("ReactWithDotNet.StrictMode = false;");
-            
+
             sb.AppendLine("ReactWithDotNet.RenderComponentIn({");
             sb.AppendLine($"  idOfContainerHtmlElement: '{ContainerDomElementId}',");
             sb.AppendLine("  renderInfo: ");
             sb.Append(RenderInfo.ToJsonString());
             sb.AppendLine("});");
-            
+
             return sb;
         }
+    }
+
+    static string CalculateLastWriteTimeOfIndexJsFile()
+    {
+        const string root = "wwwroot";
+
+        var directoryName = Path.GetDirectoryName(typeof(MainLayout).Assembly.Location);
+
+        if (Directory.Exists(directoryName))
+        {
+            var fileInfo = new FileInfo(Path.Combine(directoryName, root, "dist", "index.js"));
+            if (fileInfo.Exists)
+            {
+                return fileInfo.LastWriteTime.Ticks.ToString();
+            }
+        }
+
+        throw new IOException("index.js file not found");
     }
 }
