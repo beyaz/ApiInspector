@@ -51,9 +51,9 @@ public sealed class MethodReference
 
     public int MetadataToken { get; init; }
 
-    public string Name { get; set; }
+    public string Name { get; init; }
 
-    public IReadOnlyList<ParameterReference> Parameters { get; set; }
+    public IReadOnlyList<ParameterReference> Parameters { get; init; }
 
     public bool Equals(MethodReference other)
     {
@@ -82,9 +82,9 @@ public sealed class MethodReference
 [Serializable]
 public sealed class ParameterReference
 {
-    public string Name { get; set; }
+    public string Name { get; init; }
 
-    public TypeReference ParameterType { get; set; }
+    public TypeReference ParameterType { get; init; }
 
     public override string ToString()
     {
@@ -96,12 +96,12 @@ static class AssemblyModelHelper
 {
     public static AssemblyReference AsReference(this Assembly assembly)
     {
-        return new AssemblyReference { Name = assembly.GetName().Name };
+        return new() { Name = assembly.GetName().Name };
     }
 
     public static TypeReference AsReference(this Type x)
     {
-        return new TypeReference
+        return new()
         {
             FullName      = x.FullName,
             Name          = GetName(x),
@@ -122,7 +122,7 @@ static class AssemblyModelHelper
 
     public static MethodReference AsReference(this MethodInfo methodInfo)
     {
-        return new MethodReference
+        return new()
         {
             Name     = methodInfo.Name,
             IsStatic = methodInfo.IsStatic,
@@ -142,7 +142,7 @@ static class AssemblyModelHelper
 
     public static ParameterReference AsReference(this ParameterInfo parameterInfo)
     {
-        return new ParameterReference
+        return new()
         {
             Name          = parameterInfo.Name,
             ParameterType = parameterInfo.ParameterType.AsReference()
@@ -289,6 +289,8 @@ static class AssemblyModelHelper
         {
             visitType(type);
         }
+
+        return;
 
         void visitType(Type type)
         {
