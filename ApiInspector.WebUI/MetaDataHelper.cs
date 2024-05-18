@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Reflection;
 
 namespace ApiInspector.WebUI;
 
@@ -9,6 +10,8 @@ static class MetadataHelper
         MethodInfo returnMethodInfo = null;
 
         VisitTypes(assembly, visitType);
+
+        return returnMethodInfo;
 
         void visitType(Type type)
         {
@@ -28,15 +31,13 @@ static class MetadataHelper
                 }
             }
         }
-
-        return returnMethodInfo;
     }
 
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath)
     {
         return getNamespaceNodes(GetAllTypes(LoadAssembly(assemblyFilePath)));
 
-        static IReadOnlyList<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
+        static IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
         {
             var items = new List<MetadataNode>();
 
@@ -47,10 +48,8 @@ static class MetadataHelper
                     NamespaceReference = namespaceName,
                     IsNamespace        = true,
                     label              = namespaceName,
-                    children = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToList()
+                    Children           = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToImmutableList()
                 };
-
-                
 
                 items.Add(nodeForNamespace);
             }
@@ -67,10 +66,17 @@ static class MetadataHelper
                 label         = x.Name
             };
 
+            if (x.IsNested)
+            {
+                classNode = classNode with { label = x.DeclaringType?.Name + "+" + classNode.label };
+            }
+
             VisitMethods(x, m =>
             {
-                classNode.children ??= new List<MetadataNode>();
-                classNode.children.Add(ConvertToMetadataNode(m));
+                classNode = classNode with
+                {
+                    Children = classNode.Children.Add(ConvertToMetadataNode(m))
+                };
             });
 
             return classNode;
@@ -89,7 +95,7 @@ static class MetadataHelper
 
     static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)
     {
-        return new MetadataNode
+        return new()
         {
             IsMethod        = true,
             MethodReference = methodInfo.AsReference(),
@@ -101,11 +107,14 @@ static class MetadataHelper
     {
         var types = new List<Type>();
 
-        void visit(Type type) => types.Add(type);
-
         VisitTypes(assembly, visit);
 
         return types;
+
+        void visit(Type type)
+        {
+            types.Add(type);
+        }
     }
 
     static bool IsValidForExport(MethodInfo methodInfo)
@@ -184,6 +193,7 @@ static class MetadataHelper
                 visit(type);
             }
         });
+        return;
 
         static bool isValidForExport(Type type)
         {

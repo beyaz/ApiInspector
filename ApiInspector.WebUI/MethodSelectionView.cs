@@ -1,11 +1,13 @@
-﻿using System.IO;
+﻿using System.Collections.Immutable;
+using System.IO;
 
 namespace ApiInspector.WebUI;
 
 [Serializable]
-public sealed class MetadataNode 
+public record MetadataNode 
 {
-    public List<MetadataNode> children { get; set; }
+    public ImmutableList<MetadataNode> Children { get; init; } = ImmutableList.Create<MetadataNode>();
+    
     public bool IsClass { get; init; }
     public bool IsMethod { get; init; }
     public bool IsNamespace { get; init; }
@@ -15,6 +17,8 @@ public sealed class MetadataNode
     public TypeReference TypeReference { get; init; }
     
     public string label { get; init; }
+    
+    public bool HasChild => Children.Count > 0;
 }
 
 [Serializable]
@@ -110,7 +114,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             return node;
         }
 
-        return FindTreeNode(node.children, hasMatch);
+        return FindTreeNode(node.Children, hasMatch);
     }
 
     static bool HasMatch(MetadataNode node, string treeNodeKey)
@@ -197,10 +201,10 @@ class MethodSelectionView : Component<MethodSelectionViewState>
 
         Element toItem(MetadataNode node)
         {
-            if (node.children?.Count > 0)
+            if (node.HasChild)
             {
                 var parent = AsTreeItem(node);
-                var chldrn = AsTreeView(node.children);
+                var chldrn = AsTreeView(node.Children);
 
                 return new Fragment
                 {
