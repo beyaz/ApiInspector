@@ -45,19 +45,27 @@ class MainLayout : Component, IPageLayout
                 new link{rel ="icon" , href = $"{root}/favicon.ico"},
                 new style
                 {
-                    @"
-                   html, body {
-                       height: 100vh;
-                       margin: 0;
-                       font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                       font-size: 13px;
-                       color: rgb(51, 51, 51);
-                   }
-                   
-                   input:focus, textarea:focus, select:focus {
-                       outline: none;
-                   }
-"
+                    """
+                    
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                       
+                    html, body {
+                        height: 100vh;
+                        margin: 0;
+                        font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        font-size: 13px;
+                        color: rgb(51, 51, 51);
+                    }
+                       
+                    input:focus, textarea:focus, select:focus {
+                        outline: none;
+                    }
+
+                    """
                 },
 
                 new link{rel ="stylesheet" , href = "https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,800,900&amp;display=swap", media ="all"},
