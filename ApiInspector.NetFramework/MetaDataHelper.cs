@@ -12,7 +12,7 @@ sealed class MetadataNode
 
     public bool IsNamespace { get; init; }
 
-    public string label { get; set; }
+    public string label { get; init; }
 
     public MethodReference MethodReference { get; init; }
 
