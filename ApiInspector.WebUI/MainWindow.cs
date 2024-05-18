@@ -50,7 +50,7 @@ class MainWindow : Component<MainWindowModel>
                            BackdropFilterBlur(30)
                           )
             {
-                applicationHeader,
+                applicationTopPanel,
                 createContent
             }
         };
@@ -97,16 +97,12 @@ class MainWindow : Component<MainWindowModel>
             };
         }
 
-        Element applicationHeader()
+        Element applicationTopPanel()
         {
-            return new FlexRow(PaddingLeftRight(30), PaddingTopBottom(5), BorderBottom(Solid(1, Theme.BorderColor)))
+            return new FlexRow
             {
-                JustifyContentSpaceBetween,
-                AlignItemsCenter,
-
-                new FlexRow(Gap(5))
+                new FlexRow(AlignItemsCenter, Gap(5))
                 {
-                    AlignItemsCenter,
                     new h3 { "Api Inspector" }, new h5 { " (.net method invoker) ", MarginTop(5) }
                 },
 
@@ -114,6 +110,14 @@ class MainWindow : Component<MainWindowModel>
                 {
                     GetEnvironment,
                     new LogoutButton()
+                },
+
+                new Style
+                {
+                    JustifyContentSpaceBetween,
+                    AlignItemsCenter,
+                    BorderBottom(Solid(1, Theme.BorderColor)),
+                    Padding(5, 30)
                 }
             };
         }
