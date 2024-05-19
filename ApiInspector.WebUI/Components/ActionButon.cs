@@ -2,14 +2,14 @@
 
 namespace ApiInspector.WebUI.Components;
 
-public class ActionButton : Component
+sealed class ActionButton : Component
 {
     public bool IsProcessing { get; set; }
 
     public string Label { get; init; }
 
     [CustomEvent]
-    public Func<Task> OnClick { get; init; }
+    public Func<Task> OnClicked { get; init; }
 
     public string SvgFileName { get; init; }
 
@@ -17,37 +17,37 @@ public class ActionButton : Component
 
     protected override Element render()
     {
-        return ArrangeTooltip(new FlexRowCentered
+        var loadingIcon = IsProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) };
+
+        var icon = !IsProcessing && SvgFileName.HasValue() ? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null;
+
+        var buttonStyle = new Style
         {
-            children =
-            {
-                IsProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) },
-                !IsProcessing && SvgFileName.HasValue() ? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null,
-                new div(Label)
-            },
-            onClick = ActionButtonOnClick,
-            style =
-            {
-                Color(BluePrimary),
-                Border(1, solid, BluePrimary),
-                Background(transparent),
-                BorderRadius(5),
-                Padding(10, 20),
-                CursorPointer
-            }
-        });
+            Color(BluePrimary),
+            Border(1, solid, BluePrimary),
+            Background(transparent),
+            BorderRadius(5),
+            Padding(10, 20),
+            CursorPointer
+        };
+
+        var onClick = IsProcessing ? null : OnClick(ActionButtonOnClick);
+
+        var content = new FlexRowCentered(buttonStyle, onClick)
+        {
+            loadingIcon,
+            icon,
+            new div(Label)
+        };
+
+        return ArrangeTooltip(content);
     }
 
     Task ActionButtonOnClick(MouseEvent _)
     {
-        if (IsProcessing)
-        {
-            throw new InvalidOperationException("Action button already processing...");
-        }
-
         IsProcessing = true;
 
-        DispatchEvent(OnClick);
+        DispatchEvent(OnClicked);
 
         return Task.CompletedTask;
     }

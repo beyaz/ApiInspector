@@ -1,14 +1,14 @@
 ﻿namespace ApiInspector.WebUI.Components;
 
-class DebugButton : ReactComponent
+sealed class DebugButton : Component
 {
-    public Func<Task> Click { get; set; }
+    public Func<Task> Click { get; init; }
 
-    public bool IsProcessing { get; set; }
+    public bool IsProcessing { get; init; }
 
-    public bool ShowStatusAsFail { get; set; }
+    public bool ShowStatusAsFail { get; init; }
 
-    public bool ShowStatusAsSuccess { get; set; }
+    public bool ShowStatusAsSuccess { get; init; }
 
     protected override Element render()
     {
@@ -28,9 +28,9 @@ class DebugButton : ReactComponent
         {
             Label        = "Debug",
             SvgFileName  = svgFileName,
-            OnClick      = Click,
+            OnClicked      = Click,
             IsProcessing = IsProcessing,
-            TooltipText        = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide."
+            TooltipText  = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide."
         };
     }
 }
