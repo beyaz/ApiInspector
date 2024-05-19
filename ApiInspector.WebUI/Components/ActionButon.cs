@@ -2,9 +2,9 @@
 
 namespace ApiInspector.WebUI.Components;
 
-sealed class ActionButton : Component
+sealed class ActionButton : Component<ActionButton.State>
 {
-    public bool IsProcessing { get; set; }
+    public bool IsProcessing { get; init; }
 
     public string Label { get; init; }
 
@@ -15,11 +15,24 @@ sealed class ActionButton : Component
 
     public string TooltipText { get; init; }
 
+    protected override Task constructor()
+    {
+        state = new()
+        {
+            IsProcessingInitialValue = IsProcessing,
+            IsProcessing             = IsProcessing
+        };
+
+        return Task.CompletedTask;
+    }
+
     protected override Element render()
     {
-        var loadingIcon = IsProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) };
+        var isProcessing = state.IsProcessing;
 
-        var icon = !IsProcessing && SvgFileName.HasValue() ? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null;
+        var loadingIcon = isProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) };
+
+        var icon = !isProcessing && SvgFileName.HasValue() ? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null;
 
         var buttonStyle = new Style
         {
@@ -31,7 +44,7 @@ sealed class ActionButton : Component
             CursorPointer
         };
 
-        var onClick = IsProcessing ? null : OnClick(ActionButtonOnClick);
+        var onClick = isProcessing ? null : OnClick(ActionButtonOnClick);
 
         var content = new FlexRowCentered(buttonStyle, onClick)
         {
@@ -45,7 +58,7 @@ sealed class ActionButton : Component
 
     Task ActionButtonOnClick(MouseEvent _)
     {
-        IsProcessing = true;
+        state = state with { IsProcessing = true };
 
         DispatchEvent(OnClicked);
 
@@ -68,5 +81,12 @@ sealed class ActionButton : Component
         }
 
         return content;
+    }
+
+    internal record State
+    {
+        public bool IsProcessing { get; init; }
+
+        public bool IsProcessingInitialValue { get; init; }
     }
 }
