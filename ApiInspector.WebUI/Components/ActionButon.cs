@@ -8,7 +8,7 @@ public class ActionButton : Component
 
     public string Label { get; init; }
 
-    [ReactCustomEvent]
+    [CustomEvent]
     public Func<Task> OnClick { get; init; }
 
     public string SvgFileName { get; init; }

@@ -6,10 +6,10 @@ class HistoryPanel : Component
 {
     public string FilterText { get; set; }
 
-    [ReactCustomEvent]
+    [CustomEvent]
     public Func<MethodReference, Task> SelectionChanged { get; set; }
     
-    [ReactCustomEvent]
+    [CustomEvent]
     public Func<Task> Closed { get; set; }
 
     protected override Element render()

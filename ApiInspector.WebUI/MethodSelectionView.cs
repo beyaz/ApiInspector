@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.IO;
 
 namespace ApiInspector.WebUI;
 
@@ -80,7 +79,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         return Task.CompletedTask;
     }
 
-    [ReactCustomEvent]
+    [CustomEvent]
     public Func<string,Task> SelectionChanged { get; set; }
 
     static MetadataNode FindTreeNode(IEnumerable<MetadataNode> nodes, Func<MetadataNode, bool> hasMatch)

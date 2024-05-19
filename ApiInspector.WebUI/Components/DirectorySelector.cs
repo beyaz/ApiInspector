@@ -1,12 +1,10 @@
-﻿using System.IO;
-
-namespace ApiInspector.WebUI.Components;
+﻿namespace ApiInspector.WebUI.Components;
 
 public class DirectorySelector : Component
 {
     public string DirectoryPath { get; set; }
 
-    [ReactCustomEvent]
+    [CustomEvent]
     public Func<string,Task> SelectionChanged { get; set; }
 
     protected override Element render()
