@@ -21,8 +21,8 @@ public class ActionButton : Component
         {
             children =
             {
-                IsProcessing is false ? null: new LoadingIcon { Size(20), MarginRight(10) },
-                !IsProcessing && SvgFileName.HasValue()? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null,
+                IsProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) },
+                !IsProcessing && SvgFileName.HasValue() ? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null,
                 new div(Label)
             },
             onClick = ActionButtonOnClick,
@@ -51,7 +51,7 @@ public class ActionButton : Component
 
         return Task.CompletedTask;
     }
-    
+
     Element ArrangeTooltip(Element content)
     {
         if (TooltipText.HasValue())
@@ -66,6 +66,7 @@ public class ActionButton : Component
                 }
             };
         }
+
         return content;
     }
 }
