@@ -2,7 +2,7 @@
 
 namespace ApiInspector.WebUI.Components;
 
-sealed class SplitColumn : Component
+sealed class SplitRow : Component
 {
     public int[] sizes { get; init; } = [50, 50];
 

@@ -85,7 +85,7 @@ class MainWindow : Component<MainWindowModel>
                 };
             }
 
-            return new SplitColumn
+            return new SplitRow
             {
                 sizes = [30, 70],
                 children =
