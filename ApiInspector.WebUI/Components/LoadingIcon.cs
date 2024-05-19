@@ -10,15 +10,16 @@ public class LoadingIcon : PureComponent
             new style
             {
                 """
-                /* Safari */
-                @-webkit-keyframes spin {
-                  0% { -webkit-transform: rotate(0deg); }
-                  100% { -webkit-transform: rotate(360deg); }
+                @-webkit-keyframes spin
+                {
+                    0% { -webkit-transform: rotate(0deg); }
+                    100% { -webkit-transform: rotate(360deg); }
                 }
 
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
+                @keyframes spin
+                {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
                 """,
 
@@ -26,14 +27,14 @@ public class LoadingIcon : PureComponent
                 [
                     Border(1, solid, "#f3f3f3"),
                     BorderRadius("50%"),
-                    BorderTop(1,solid,"#3498db"),
+                    BorderTop(1, solid, "#3498db"),
                     SizeFull,
                     WebkitAnimation("spin 1s linear infinite"),
                     Animation("spin 1s linear infinite")
                 ])
             },
 
-            new div { className = "loader", style = { Size("100%") } }
+            new div { className = "loader" }
         };
     }
 }
