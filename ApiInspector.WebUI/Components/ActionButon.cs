@@ -6,14 +6,14 @@ public class ActionButton : Component
 {
     public bool IsProcessing { get; set; }
 
-    public string Label { get; set; }
+    public string Label { get; init; }
 
     [ReactCustomEvent]
-    public Func<Task> OnClick { get; set; }
+    public Func<Task> OnClick { get; init; }
 
-    public string SvgFileName { get; set; }
+    public string SvgFileName { get; init; }
 
-    public string TooltipText { get; set; }
+    public string TooltipText { get; init; }
 
     protected override Element render()
     {
@@ -29,8 +29,8 @@ public class ActionButton : Component
             style =
             {
                 Color(BluePrimary),
-                Border($"1px solid {BluePrimary}"),
-                Background("transparent"),
+                Border(1, solid, BluePrimary),
+                Background(transparent),
                 BorderRadius(5),
                 Padding(10, 20),
                 CursorPointer
