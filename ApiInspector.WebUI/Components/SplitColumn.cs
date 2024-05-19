@@ -2,7 +2,7 @@
 
 namespace ApiInspector.WebUI.Components;
 
-sealed class TwoRowSplittedForm : Component
+sealed class SplitColumn : Component
 {
     public int[] sizes { get; init; } = [50, 50];
 
@@ -21,7 +21,6 @@ sealed class TwoRowSplittedForm : Component
                 new CssClass("gutter.gutter-horizontal",
                 [
                     BackgroundImage("url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==')"),
-                    Cursor("col-resize")
                 ])
             },
 
