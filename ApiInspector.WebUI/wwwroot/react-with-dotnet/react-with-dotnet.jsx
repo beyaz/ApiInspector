@@ -8,7 +8,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 
 
-var createElement = React.createElement;
+const createElement = React.createElement;
 
 const DotNetTypeOfReactComponent = '$Type';
 const RootNode = '$RootNode';
@@ -61,7 +61,7 @@ class EventBusImp
 
     subscribe(eventName, callback)
     {
-        var listenerFunctions = this.map[eventName];
+        let listenerFunctions = this.map[eventName];
 
         if (!listenerFunctions)
         {
@@ -83,7 +83,7 @@ class EventBusImp
             throw CreateNewDeveloperError("Publish event arguments should be given in array. @Example: ReactWithDotNet.DispatchEvent('MovieNameChanged', ['The Shawshank Redemption']);");
         }
 
-        var listenerFunctions = this.map[eventName];
+        const listenerFunctions = this.map[eventName];
 
         if (!listenerFunctions)
         {
@@ -94,7 +94,7 @@ class EventBusImp
 
         const functionArray = listenerFunctions.slice(0);
 
-        for (var i = 0; i < functionArray.length; i++)
+        for (let i = 0; i < functionArray.length; i++)
         {
             if (listenerFunctions.indexOf(functionArray[i]) >= 0)
             {
@@ -126,7 +126,7 @@ const Before3rdPartyComponentAccessListeners = [];
 
 function Before3rdPartyComponentAccess(dotNetFullClassNameOf3rdPartyComponent)
 {
-    for (var i = 0; i < Before3rdPartyComponentAccessListeners.length; i++)
+    for (let i = 0; i < Before3rdPartyComponentAccessListeners.length; i++)
     {
         Before3rdPartyComponentAccessListeners[i](dotNetFullClassNameOf3rdPartyComponent);
     }
@@ -151,7 +151,7 @@ function OnThirdPartyComponentPropsCalculated(dotNetFullNameOfThirdPartyComponen
         throw CreateNewDeveloperError("Missing argument. @fn cannot be null.");
     }
 
-    var arr = ThirdPartyComponentPropsCalculatedListeners[dotNetFullNameOfThirdPartyComponent];
+    let arr = ThirdPartyComponentPropsCalculatedListeners[dotNetFullNameOfThirdPartyComponent];
     if (!arr)
     {
         arr = ThirdPartyComponentPropsCalculatedListeners[dotNetFullNameOfThirdPartyComponent] = [];
@@ -167,10 +167,10 @@ function OnThirdPartyComponentPropsCalculatedTryFire(dotNetFullNameOfThirdPartyC
         throw CreateNewDeveloperError("Missing argument. @dotNetFullNameOfThirdPartyComponent cannot be null.");
     }
 
-    var arr = ThirdPartyComponentPropsCalculatedListeners[dotNetFullNameOfThirdPartyComponent];
+    const arr = ThirdPartyComponentPropsCalculatedListeners[dotNetFullNameOfThirdPartyComponent];
     if (arr)
     {
-        for (var i = 0; i < arr.length; i++)
+        for (let i = 0; i < arr.length; i++)
         {
             props = arr[i](props, callerComponent);
         }
@@ -229,7 +229,7 @@ function GoUpwardFindFirst(htmlElement, findFunc)
 
 function OnDocumentReady(callback)
 {
-    var stateCheck = setInterval(function ()
+    const stateCheck = setInterval(function ()
     {
         if (document.readyState === "complete")
         {
@@ -247,7 +247,7 @@ function IsEmptyObject(obj)
         return false;
     }
 
-    for (var key in obj)
+    for (const key in obj)
     {
         if (Object.prototype.hasOwnProperty.call(obj, key))
         {
@@ -262,8 +262,8 @@ const EventDispatchingFinishCallbackFunctionsQueue = [];
 
 const FunctionExecutionQueue = [];
 
-var ReactIsBusy = false;
-var IsWaitingRemoteResponse = false;
+let ReactIsBusy = false;
+let IsWaitingRemoteResponse = false;
 
 function OnReactStateReady()
 {
@@ -276,6 +276,8 @@ function OnReactStateReady()
 
     EmitNextFunctionInFunctionExecutionQueue();
 }
+
+let FunctionExecutionQueueCurrentEntry = null;
 
 function EmitNextFunctionInFunctionExecutionQueue()
 {
@@ -307,8 +309,8 @@ function EmitNextFunctionInFunctionExecutionQueue()
     }
 }
 
-var FunctionExecutionQueueEntryUniqueIdentifier = 1;
-var FunctionExecutionQueueCurrentEntry = null;
+let FunctionExecutionQueueEntryUniqueIdentifier = 1;
+FunctionExecutionQueueCurrentEntry = null;
 
 function PushToFunctionExecutionQueue(fn, forceWait)
 {
@@ -337,7 +339,7 @@ function InvalidateQueuedFunctionsByName(name)
         FunctionExecutionQueueCurrentEntry.isValid = false;
     }
 
-    for (var i = 0; i < FunctionExecutionQueue.length; i++)
+    for (let i = 0; i < FunctionExecutionQueue.length; i++)
     {
         if (FunctionExecutionQueue[i].name === name)
         {
@@ -356,9 +358,9 @@ function TryGetValueInPath(obj, steps)
 {
     steps = typeof steps === "string" ? steps.split(".") : steps;
 
-    var len = steps.length;
+    const len = steps.length;
 
-    for (var i = 0; i < len; i++)
+    for (let i = 0; i < len; i++)
     {
         if (obj == null)
         {
@@ -398,11 +400,11 @@ function SetValueInPath(obj, steps, value)
         throw CreateNewDeveloperError("SetValueInPath->" + value);
     }
 
-    var len = steps.length;
+    const len = steps.length;
 
-    for (var i = 0; i < len; i++)
+    for (let i = 0; i < len; i++)
     {
-        var step = steps[i];
+        let step = steps[i];
 
         if (len === i + 3 && steps[i] === '[' && steps[i + 2] === ']')
         {
@@ -489,38 +491,33 @@ function IfNull(value, defaultValue)
 
 const VisitFiberNodeForCaptureState = (parentScope, fiberNode) =>
 {
-    if (fiberNode.key === null)
+    let breadcrumb = parentScope.breadcrumb;
+
+    if (fiberNode.key !== null)
     {
-        return;
+        breadcrumb = breadcrumb + ',' + fiberNode.key;
     }
 
-    var scope = parentScope;
+    const scope = {map: parentScope.map, breadcrumb: breadcrumb};
 
-    var breadcrumb = parentScope.breadcrumb + ',' + fiberNode.key;
-
-    scope = { map: parentScope.map, breadcrumb: breadcrumb };
-
-    var isFiberNodeRelatedWithDotNetComponent = fiberNode.type && fiberNode.type[DotNetTypeOfReactComponent];
+    const isFiberNodeRelatedWithDotNetComponent = fiberNode.type && fiberNode.type[DotNetTypeOfReactComponent];
     if (isFiberNodeRelatedWithDotNetComponent)
     {
-        var map = parentScope.map;
-        
+        const map = parentScope.map;
+
         if (map[breadcrumb] !== undefined)
         {
             throw CreateNewDeveloperError('Problem when traversing nodes');
         }
 
-        const stateInfo =
-        {
+        map[breadcrumb] = {
             StateAsJson: JSON.stringify(fiberNode.stateNode.state[DotNetState]),
             FullTypeNameOfComponent: fiberNode.stateNode.state[DotNetTypeOfReactComponent],
             ComponentUniqueIdentifier: fiberNode.stateNode.state[DotNetComponentUniqueIdentifier]
         };
-
-        map[breadcrumb] = stateInfo;
     }
 
-    var child = fiberNode.child;
+    let child = fiberNode.child;
     while (child)
     {
         VisitFiberNodeForCaptureState(scope, child);
@@ -530,7 +527,7 @@ const VisitFiberNodeForCaptureState = (parentScope, fiberNode) =>
 
 const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
 {
-    // I'dont know what is going here :)
+    // I haven't known what is going here :)
     if (rootFiberNode.alternate && rootFiberNode.actualStartTime < rootFiberNode.alternate.actualStartTime)
     {
         rootFiberNode = rootFiberNode.alternate;
@@ -538,16 +535,16 @@ const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
 
     const rootNodeKey = rootFiberNode.key;
 
-    var map = {};
+    const map = {};
 
     map[rootNodeKey] =
     {
         StateAsJson: JSON.stringify(rootFiberNode.stateNode.state[DotNetState])
     };
 
-    var rootScope = { map: map, breadcrumb: rootNodeKey };
+    const rootScope = {map: map, breadcrumb: rootNodeKey};
 
-    var child = rootFiberNode.child;
+    let child = rootFiberNode.child;
     while (child)
     {
         VisitFiberNodeForCaptureState(rootScope, child);
@@ -570,13 +567,14 @@ const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
 
 const GetNextSequence = (() =>
 {
-    var sequence = 1;
+    let sequence = 1;
 
     return () => { return sequence++; };
 })();
 
 
-var DotNetComponentInstanceId_Next_Value = 1;
+let DotNetComponentInstanceId_Next_Value = 1;
+
 function InitializeDotNetComponentInstanceId(component)
 {
     component['$DotNetComponentInstanceId'] = DotNetComponentInstanceId_Next_Value++;
@@ -601,11 +599,11 @@ class LinkedList
 
     add(data)
     {
-	    var node = new LinkedListNode(data);
+        const node = new LinkedListNode(data);
 
-	    var current;
+        let current;
 
-	    if (this.head == null)
+        if (this.head == null)
         {
             this.head = node;
         }
@@ -627,8 +625,8 @@ class LinkedList
 
     removeFirst(isMatch)
     {
-	    var current = this.head;
-	    var prev = null;
+        let current = this.head;
+        let prev = null;
 
         while (current != null)
         {
@@ -653,9 +651,9 @@ class LinkedList
 
     first(isMatch)
     {
-	    var current = this.head;
+        let current = this.head;
 
-	    // iterate over the list
+        // iterate over the list
         while (current != null)
         {
             if (isMatch(current.data) === true)
@@ -667,29 +665,13 @@ class LinkedList
 
 	    return null;
     }
-
-    visitAll(action)
-    {
-        if (this.head == null)
-        {
-            return;
-        }
-
-	    let current = this.head;
-
-        while (current.next)
-        {
-            action(current.data);
-			current = current.next;
-		}
-    }
 }
 
 function MergeDotNetComponentUniqueIdentifiers(sourceIdList, targetIdList)
 {
     for (let i = 0; i < sourceIdList.length; i++)
     {
-        var value = sourceIdList[i];
+        const value = sourceIdList[i];
 
         if (targetIdList.indexOf(value) >= 0)
         {
@@ -795,11 +777,6 @@ class ComponentCache
     {
         this.linkedList.removeFirst(item => item.component === component);
     }
-
-    PrintAll()
-    {
-        this.linkedList.visitAll(console.log);
-    }
 }
 
 const COMPONENT_CACHE = new ComponentCache();
@@ -828,7 +805,7 @@ function GetFirstAssignedUniqueIdentifierValueOfComponent(componentUniqueIdentif
     return GetComponentByDotNetComponentUniqueIdentifier(componentUniqueIdentifier)[DotNetComponentUniqueIdentifiers][0];
 }
 
-function isEquivent(a, b)
+function isEquals(a, b)
 {
 	if(a === b)
 	{
@@ -842,27 +819,28 @@ function isEquivent(a, b)
 
 	if(typeof a === 'object' && typeof b === 'object')
 	{
-		return isTwoLiteralObjectEquivent(a, b);
+		return isTwoLiteralObjectEquals(a, b);
 	}
 }
-function isTwoLiteralObjectEquivent(o1, o2)
+function isTwoLiteralObjectEquals(o1, o2)
 {
-    for(var p in o1)
+    let p;
+    for(p in o1)
 	{
         if(o1.hasOwnProperty(p))
 		{
-            if(!isEquivent(o1[p], o2[p]))
+            if(!isEquals(o1[p], o2[p]))
 			{
                 return false;
             }
         }
     }
 
-    for(var p in o2)
+    for(p in o2)
 	{
         if(o2.hasOwnProperty(p))
 		{
-            if(!isEquivent(o1[p], o2[p]))
+            if(!isEquals(o1[p], o2[p]))
 			{
                 return false;
             }
@@ -870,7 +848,7 @@ function isTwoLiteralObjectEquivent(o1, o2)
     }
 
     return true;
-};
+}
 
 function GetAllCachedMethodsOfComponent(component)
 {
@@ -885,7 +863,7 @@ function tryToFindCachedMethodInfo(component, remoteMethodName, eventArguments)
         return null;
     }
 
-    for (var i = 0; i < cachedMethods.length; i++)
+    for (let i = 0; i < cachedMethods.length; i++)
     {
         const cachedMethodInfo = cachedMethods[i];
 
@@ -901,7 +879,7 @@ function tryToFindCachedMethodInfo(component, remoteMethodName, eventArguments)
 
         if (cachedMethodInfo.MethodName === remoteMethodName && eventArguments.length === 1)
         {
-            if (isEquivent(eventArguments[0], cachedMethodInfo.Parameter))
+            if (isEquals(eventArguments[0], cachedMethodInfo.Parameter))
             {
                 return cachedMethodInfo;
             }
@@ -988,7 +966,7 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
         
         if (htmlElementScrollDebounceTimeout > 0)
         {
-            var eventName = eventArguments[0]._reactName;
+            const eventName = eventArguments[0]._reactName;
 
             const executionQueueItemName = eventName + '-debounce-' + GetFirstAssignedUniqueIdentifierValueOfComponent(handlerComponentUniqueIdentifier);
 
@@ -998,7 +976,7 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
 
             clearTimeout(targetComponent.state[timeoutKey]);
 
-            var newState = {};
+            const newState = {};
             newState[timeoutKey] = setTimeout(() =>
             {
                 const actionArguments = {
@@ -1042,9 +1020,9 @@ function FindRealNodeByFakeChild(fakeChildIndex, rootNodeInState, jsonNodeInProp
     {
         const length = childrenInState.length;
 
-        for (var i = 0; i < length; i++)
+        for (let i = 0; i < length; i++)
         {
-            var record = FindRealNodeByFakeChild(fakeChildIndex, childrenInState[i], childrenInProps[i]);
+            const record = FindRealNodeByFakeChild(fakeChildIndex, childrenInState[i], childrenInProps[i]);
             if (record != null)
             {
                 return record;
@@ -1140,13 +1118,13 @@ function ConvertToReactElement(jsonNode, component)
 
     let props = null;
 
-    var elementType = jsonNode.$tag;
+    let elementType = jsonNode.$tag;
     if (!elementType)
     {
         throw CreateNewDeveloperError('ReactNode is not recognized');
     }
 
-    var isThirdPartyComponent = false;
+    let isThirdPartyComponent = false;
 
     if (/* is component */elementType.indexOf('.') > 0)
     {
@@ -1555,23 +1533,23 @@ function ArrangeRemoteMethodArguments(remoteMethodArguments)
 {
     if (remoteMethodArguments)
     {
-        for (var i = 0; i < remoteMethodArguments.length; i++)
+        for (let i = 0; i < remoteMethodArguments.length; i++)
         {
-            var prm = remoteMethodArguments[i];
+            const prm = remoteMethodArguments[i];
 
             if (IsSyntheticBaseEvent(prm))
             {
-                if (prm._reactName)
+                const reactName = prm._reactName;
+
+                if (reactName)
                 {
-                    if (prm._reactName && prm._reactName.indexOf('Mouse') > 0)
+                    if (reactName.indexOf('Mouse') > 0)
                     {
                         remoteMethodArguments[i] = ConvertToSyntheticMouseEvent(prm);
-                        continue;
                     }
-                    if (prm._reactName && prm._reactName === 'onScroll')
+                    else if (reactName === 'onScroll')
                     {
                         remoteMethodArguments[i] = ConvertToSyntheticScrollEvent(prm);
-                        continue;
                     }
                 }
             }
@@ -1584,6 +1562,15 @@ function HandleAction(actionArguments)
     const remoteMethodName = actionArguments.remoteMethodName;
     let component = NotNull(actionArguments.component);
 
+    if (component.ComponentWillUnmountIsCalled)
+    {
+        IsWaitingRemoteResponse = false;
+
+        OnReactStateReady();
+
+        return;
+    }
+
     component = GetComponentByDotNetComponentUniqueIdentifier(component[DotNetComponentUniqueIdentifiers][0]);
 
     if (component._reactInternals == null)
@@ -1593,7 +1580,7 @@ function HandleAction(actionArguments)
 
     const isComponentPreview = component[DotNetTypeOfReactComponent] === 'ReactWithDotNet.UIDesigner.ReactWithDotNetDesignerComponentPreview,ReactWithDotNet';
 
-    var capturedStateTreeResponse = SafeExecute(() => CaptureStateTreeFromFiberNode(component._reactInternals));
+    const capturedStateTreeResponse = SafeExecute(() => CaptureStateTreeFromFiberNode(component._reactInternals));
     if (capturedStateTreeResponse.fail)
     {
         if (isComponentPreview)
@@ -1731,92 +1718,19 @@ function CalculateNewStateFromJsonElement(componentState, jsonElement)
 
     // new way
     jsonElement[SyncId] = GetNextSequence();
+
     return jsonElement;
-
-
-    // old way  todo: check usage
-    const newState = {};
-
-    newState[DotNetState]     = NotNull(jsonElement[DotNetState]);
-    newState[SyncId]          = GetNextSequence();
-    newState[RootNode]        = jsonElement[RootNode];
-    newState[ClientTasks]     = jsonElement[ClientTasks];
-    newState[DotNetProperties] = jsonElement[DotNetProperties];
-    newState[DotNetComponentUniqueIdentifier] = jsonElement[DotNetComponentUniqueIdentifier];
-
-    return newState;
 }
 
 const ComponentDefinitions = {};
 
-
-class ComponentDestroyQueue
-{
-    constructor()
-    {
-        this.queue = new LinkedList();
-    }
-
-    add(component)
-    {
-        const me = this;
-
-        var dotNetComponentUniqueIdentifiers = component[DotNetComponentUniqueIdentifiers].concat([]);
-
-        const queuedFunction = function ()
-        {
-            DestroyDotNetComponentInstance(component);
-            me.remove(component);
-        }
-
-        this.queue.add({
-            idArray: dotNetComponentUniqueIdentifiers,
-            queueFunctionAccess: PushToFunctionExecutionQueue(queuedFunction)
-        });
-    }
-
-    remove(component)
-    {
-        var dotNetComponentUniqueIdentifiers = component[DotNetComponentUniqueIdentifiers].concat([]);
-
-        const hasAnyIdMatch = (item) =>
-        {
-            for (let i = 0; i < dotNetComponentUniqueIdentifiers.length; i++)
-            {
-                const id = dotNetComponentUniqueIdentifiers[i];
-
-                if (item.idArray.indexOf(id) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        const item = this.queue.first(hasAnyIdMatch);
-        if (item)
-        {
-            item.queueFunctionAccess.isValid = false;
-
-            this.queue.removeFirst(hasAnyIdMatch);
-
-            return true;
-        }
-
-        return false;
-    }
-}
-
-// todo: check usage or rethink
-const ComponentDestroyQueueInstance = new ComponentDestroyQueue();
 
 /**
  * @param {Int32Array} componentUniqueIdentifiers
  */
 function RemoveComponentDynamicStyles(componentUniqueIdentifiers)
 {
-    var hasChange = false;
+    let hasChange = false;
 
     for (let i = 0; i < DynamicStyles.length; i++)
     {
@@ -1835,27 +1749,12 @@ function RemoveComponentDynamicStyles(componentUniqueIdentifiers)
     }
 }
 
-// Custom Event
-function HasCustomEventListener(component, customEventListenerMapKey)
-{
-    const freeSpace = GetFreeSpaceOfComponent(component);
-
-    return freeSpace[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey] === 1;
-}
-
-function MarkCustomEventListener(component, customEventListenerMapKey)
-{
-    const freeSpace = GetFreeSpaceOfComponent(component);
-
-    return freeSpace[CUSTOM_EVENT_LISTENER_MAP][customEventListenerMapKey] = 1;
-}
-
 // DESTROY UTILITY
 function InvokeComponentDestroyListeners(componentInstance)
 {
     const functionArray = GetFreeSpaceOfComponent(componentInstance)[ON_COMPONENT_DESTROY];
 
-    for (var i = 0; i < functionArray.length; i++)
+    for (let i = 0; i < functionArray.length; i++)
     {
         functionArray[i]();
     }
@@ -1899,7 +1798,7 @@ function HandleComponentClientTasks(component)
 
 function DefineComponent(componentDeclaration)
 {
-    var cacheKeyForComponentDefinitions = componentDeclaration[DotNetTypeOfReactComponent];
+    let cacheKeyForComponentDefinitions = componentDeclaration[DotNetTypeOfReactComponent];
 
     if (cacheKeyForComponentDefinitions === 'ReactWithDotNet.FunctionalComponent,ReactWithDotNet')
     {
@@ -2163,7 +2062,7 @@ function SendRequest(request, onSuccess, onFail)
     window.fetch(url, options).then(response => response.json()).then(json => onSuccess(json)).catch(onFail);
 }
 
-var LastUsedComponentUniqueIdentifier = 1;
+let LastUsedComponentUniqueIdentifier = 1;
 
 function ConnectComponentFirstResponseToReactSystem(containerHtmlElementId, response)
 {
@@ -2193,13 +2092,13 @@ function ConnectComponentFirstResponseToReactSystem(containerHtmlElementId, resp
 
     props[SyncId] = GetNextSequence();
 
-    const reactElement = React.createElement(component, props);
+    const reactElement = createElement(component, props);
 
     const root = createRoot(document.getElementById(containerHtmlElementId));
 
     if (ReactWithDotNet.StrictMode)
     {
-        root.render(React.createElement(React.StrictMode, null, reactElement));
+        root.render(createElement(React.StrictMode, null, reactElement));
     }
     else
     {
@@ -2222,8 +2121,8 @@ function RenderComponentIn(input)
         return;
     }
 
-    var fullTypeNameOfReactComponent = input.fullTypeNameOfReactComponent;
-    var containerHtmlElementId       = input.containerHtmlElementId;
+    const fullTypeNameOfReactComponent = input.fullTypeNameOfReactComponent;
+    const containerHtmlElementId = input.containerHtmlElementId;
 
     OnDocumentReady(function()
     {
@@ -2276,7 +2175,7 @@ function RegisterExternalJsObject(key, value)
 }
 function GetExternalJsObject(key)
 {
-    var findResponse = TryFindExternalObject(key);
+    const findResponse = TryFindExternalObject(key);
     if (findResponse != null)
     {
         if (findResponse.isCacheEnabled === true)
@@ -2311,13 +2210,13 @@ function OnFindExternalObject(fn)
 
 function TryFindExternalObject(name)
 {
-    var items = FindExternalObjectFnList;
+    const items = FindExternalObjectFnList;
 
-    var length = items.length;
+    const length = items.length;
 
-    for (var i = 0; i < length; i++)
+    for (let i = 0; i < length; i++)
     {
-        var response = items[i](name);
+        const response = items[i](name);
         if (response == null)
         {
             continue;
@@ -2336,7 +2235,7 @@ function RegisterCoreFunction(name, fn)
 ExternalJsObjectMap["ReactWithDotNet.GetExternalJsObject"] = GetExternalJsObject;
 
 RegisterCoreFunction('RegExp', (x) => new RegExp(x));
-RegisterCoreFunction('IsTwoObjectEquivent', isEquivent);
+RegisterCoreFunction('IsTwoObjectEquals', isEquals);
 
 RegisterCoreFunction('CopyToClipboard', function (text)
 {
@@ -2355,7 +2254,7 @@ RegisterCoreFunction('CopyToClipboard', function (text)
 
     if (document.queryCommandSupported && document.queryCommandSupported("copy"))
     {
-        var textarea = document.createElement("textarea");
+        const textarea = document.createElement("textarea");
         textarea.textContent = text;
         textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
         document.body.appendChild(textarea);
@@ -2408,7 +2307,7 @@ RegisterCoreFunction('ReplaceEmptyStringWhenIsNull', function(value)
 
 RegisterCoreFunction('ListenWindowResizeEvent', function (resizeTimeout)
 {
-    var timeout = null;
+    let timeout = null;
     window.addEventListener('resize', function ()
     {
         clearTimeout(timeout);
@@ -2457,7 +2356,7 @@ RegisterCoreFunction("CalculateSyntheticFocusEventArguments", (argumentsAsArray)
 
 function SetCookie(cookieName_StringNotNull, cookieValue_StringNotNull, expireDays_NumberNotNull)
 {
-    var exdate = new Date();
+    const exdate = new Date();
 
     exdate.setDate(exdate.getDate() + expireDays_NumberNotNull);
 
@@ -2471,14 +2370,14 @@ function SetCookie(cookieName_StringNotNull, cookieValue_StringNotNull, expireDa
 function GetCookie(cookieName)
 {
     // Split cookie string and get all individual name=value pairs in an array
-    var cookieArr = document.cookie.split(";");
+    const cookieArr = document.cookie.split(";");
     // Loop through the array elements
-    for (var i = 0; i < cookieArr.length; i++)
+    for (let i = 0; i < cookieArr.length; i++)
     {
-        var cookiePair = cookieArr[i].split("=");
+        const cookiePair = cookieArr[i].split("=");
         /* Removing whitespace at the beginning of the cookie name
         and compare it with the given string */
-        if (cookieName == cookiePair[0].trim())
+        if (cookieName === cookiePair[0].trim())
         {
             // Decode the cookie value and return
             return decodeURIComponent(cookiePair[1]);
@@ -2695,35 +2594,19 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSe
         return;
     }
 
+    const map = GetFreeSpaceOfComponent(component)[CUSTOM_EVENT_LISTENER_MAP];
+
     const senderPropertyFullName = eventSenderInfo.SenderPropertyFullName;
     const senderComponentUniqueIdentifier = GetFirstAssignedUniqueIdentifierValueOfComponent(eventSenderInfo.SenderComponentUniqueIdentifier);
 
     handlerComponentUniqueIdentifier = GetFirstAssignedUniqueIdentifierValueOfComponent(handlerComponentUniqueIdentifier);
 
-    // avoid multiple attach we need to ensure attach a listener at once
-    {
-        const customEventListenerMapKey = [
-            'senderPropertyFullName:' + senderPropertyFullName,
-            'senderComponentUniqueIdentifier:' + senderComponentUniqueIdentifier,
-            'handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier
-        ].join(',');
-
-
-        if (HasCustomEventListener(component, customEventListenerMapKey))
-        {
-            return;
-        }
-
-        MarkCustomEventListener(component, customEventListenerMapKey);
-    }
-
-    const eventName = GetRealNameOfDotNetEvent(senderPropertyFullName, senderComponentUniqueIdentifier);
-
     const onEventFired = (eventArgumentsAsArray) =>
     {
         const handlerComponent = GetComponentByDotNetComponentUniqueIdentifier(handlerComponentUniqueIdentifier);
 
-        const actionArguments = {
+        const actionArguments =
+        {
             component: handlerComponent,
             remoteMethodName: remoteMethodName,
             remoteMethodArguments: eventArgumentsAsArray
@@ -2738,9 +2621,27 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSe
         });
     };
 
+    // avoid multiple attach we need to ensure attach a listener at once
+    const key = [
+        'senderPropertyFullName:' + senderPropertyFullName,
+        'senderComponentUniqueIdentifier:' + senderComponentUniqueIdentifier,
+        'handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier
+    ].join(',');
+
+    if (map[key])
+    {
+        return;
+    }
+
+    map[key] = onEventFired;
+
+    const eventName = GetRealNameOfDotNetEvent(senderPropertyFullName, senderComponentUniqueIdentifier);
+
     OnComponentDestroy(component, () =>
     {
         EventBus.Remove(eventName, onEventFired);
+
+        map[key] = null;
     });
 
     EventBus.On(eventName, onEventFired);
@@ -2748,62 +2649,98 @@ RegisterCoreFunction("InitializeDotnetComponentEventListener", function (eventSe
 
 function NavigateTo(path)
 {
-    var location = window.location;
+    const location = window.location;
 
     location.assign(location.origin + path);
 }
 
 RegisterCoreFunction("NavigateTo", NavigateTo);
 
-RegisterCoreFunction("OnOutsideClicked", function (idOfElement, remoteMethodName, handlerComponentUniqueIdentifier)
+function OnOutsideClicked(component, operationType, idOfElement, remoteMethodName, handlerComponentUniqueIdentifier)
 {
+    const map = GetFreeSpaceOfComponent(component)[CUSTOM_EVENT_LISTENER_MAP];
+
+    const isRemove = operationType === "remove";
+
     handlerComponentUniqueIdentifier = GetFirstAssignedUniqueIdentifierValueOfComponent(handlerComponentUniqueIdentifier);
-
-    const component = this;
-
-    // avoid multiple attach we need to ensure attach a listener at once
-    {
-        const customEventListenerMapKey = 'OnOutsideClicked(IdOfElement:' + idOfElement + ', remoteMethodName:' + remoteMethodName + ', @handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier + ')';
-
-        if (HasCustomEventListener(component, customEventListenerMapKey))
-        {
-            return;
-        }
-
-        MarkCustomEventListener(component, customEventListenerMapKey);
-    }
 
     function onDocumentClick(e)
     {
         const element = document.getElementById(idOfElement);
         if (element == null)
         {
-            throw CreateNewDeveloperError("Element not found for calculating OnOutsideClicked operation. id: " + idOfElement);
+            return;
         }
         const isClickedOutside = !element.contains(e.target)
         if (isClickedOutside)
         {
             const handlerComponent = GetComponentByDotNetComponentUniqueIdentifier(handlerComponentUniqueIdentifier);
 
-            const actionArguments = {
+            const actionArguments =
+            {
                 component: handlerComponent,
                 remoteMethodName: remoteMethodName,
-                remoteMethodArguments: []
+                remoteMethodArguments: [ConvertToSyntheticMouseEvent(e)]
             };
             StartAction(actionArguments);
         }
     }
+
+    // avoid multiple attach we need to ensure attach a listener at once
+    
+    const key = 'OnOutsideClicked(IdOfElement:' + idOfElement + ', remoteMethodName:' + remoteMethodName + ', @handlerComponentUniqueIdentifier:' + handlerComponentUniqueIdentifier + ')';
+
+    if (map[key])
+    {
+        if (isRemove)
+        {
+            document.removeEventListener('click', map[key]);
+
+            map[key] = null;
+        }
+
+        return;
+    }
+
+    if (isRemove)
+    {
+        return;
+    }
+
+    map[key] = onDocumentClick;    
 
     document.addEventListener('click', onDocumentClick);
 
     OnComponentDestroy(component, () =>
     {
         document.removeEventListener('click', onDocumentClick);
+
+        map[key] = null;
     });
+}
+
+RegisterCoreFunction("AddEventListener", function (idOfElement, eventName, remoteMethodName, handlerComponentUniqueIdentifier)
+{
+    if (eventName === "OutsideClick")
+    {
+        OnOutsideClicked(this, "add", idOfElement, remoteMethodName, handlerComponentUniqueIdentifier)
+    }
+    else
+    {
+        throw CreateNewDeveloperError("InvalidUsageOfAddEventListener");
+    }
 });
-
-
-
+RegisterCoreFunction("RemoveEventListener", function (idOfElement, eventName, remoteMethodName, handlerComponentUniqueIdentifier)
+{
+    if (eventName === "OutsideClick")
+    {
+        OnOutsideClicked(this, "remove", idOfElement, remoteMethodName, handlerComponentUniqueIdentifier)
+    }
+    else
+    {
+        throw CreateNewDeveloperError("InvalidUsageOfRemoveEventListener");
+    }
+});
 
 function CreateNewDeveloperError(message)
 {
@@ -2811,7 +2748,7 @@ function CreateNewDeveloperError(message)
 }
 
 const DynamicStyles = [];
-var ReactWithDotNetDynamicCssElement = null;
+let ReactWithDotNetDynamicCssElement = null;
 
 /**
  * 
@@ -2839,14 +2776,14 @@ function ProcessDynamicCssClasses(dynamicStyles)
         return;
     }
 
-    // remove all related css of component
-    for (var key in dynamicStyles)
-    {
-        if (dynamicStyles.hasOwnProperty(key))
-        {
-            const cssSelector = key;
+    let cssSelector;
 
-            var componentUniqueIdentifier = GetComponentUniqueIdentifierFromCssSelector(cssSelector);
+    // remove all related css of component
+    for (cssSelector in dynamicStyles)
+    {
+        if (dynamicStyles.hasOwnProperty(cssSelector))
+        {
+            const componentUniqueIdentifier = GetComponentUniqueIdentifierFromCssSelector(cssSelector);
 
             // remove all related css of component
             for (let i = 0; i < DynamicStyles.length; i++)
@@ -2861,12 +2798,11 @@ function ProcessDynamicCssClasses(dynamicStyles)
     }
 
     // Add new records
-    for (var key in dynamicStyles)
+    for (cssSelector in dynamicStyles)
     {
-        if (dynamicStyles.hasOwnProperty(key))
+        if (dynamicStyles.hasOwnProperty(cssSelector))
         {
-            const cssSelector = key;
-            const cssBody = dynamicStyles[key];
+            const cssBody = dynamicStyles[cssSelector];
 
             DynamicStyles.push({
                 cssSelector: cssSelector,
@@ -2896,7 +2832,7 @@ function ApplyDynamicStylesToDom()
     }
 
     const arr = [];
-    for (var i = 0; i < DynamicStyles.length; i++)
+    for (let i = 0; i < DynamicStyles.length; i++)
     {
         const cssSelector = DynamicStyles[i].cssSelector;
         const cssBody = DynamicStyles[i].cssBody;
@@ -2931,7 +2867,7 @@ function IsTwoStringHasValueAndSame(a, b)
         return false;
     }
 
-    var anyWhiteSpaceRegex = /\s/g;
+    const anyWhiteSpaceRegex = /\s/g;
 
     a = a.replace(anyWhiteSpaceRegex, '');
     b = b.replace(anyWhiteSpaceRegex, '');
@@ -2954,7 +2890,7 @@ function IsDesktop()
     return IsMobile() === false && IsTablet() === false;
 }
 
-var ReactWithDotNet =
+const ReactWithDotNet =
 {
     StrictMode: false,
     RequestHandlerUrl: '/HandleReactWithDotNetRequest',
