@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.IO;
 using System.Linq.Expressions;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
@@ -411,6 +410,8 @@ class MainWindow : Component<MainWindowModel>
         };
     }
 
+    Task OnDebugClicked(MouseEvent _) => OnDebugClicked();
+    
     async Task OnDebugClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
@@ -499,6 +500,8 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
+    Task OnExecuteClicked(MouseEvent _) => OnExecuteClicked();
+    
     async Task OnExecuteClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];

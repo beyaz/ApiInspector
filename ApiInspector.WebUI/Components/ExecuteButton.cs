@@ -2,7 +2,7 @@
 
 sealed class ExecuteButton : PureComponent
 {
-    public Func<Task> Click { get; init; }
+    public MouseEventHandler Click { get; init; }
 
     public bool IsProcessing { get; init; }
 
