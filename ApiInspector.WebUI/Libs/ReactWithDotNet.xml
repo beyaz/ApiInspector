@@ -120,6 +120,13 @@
                 flexDirection  = "column"
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumnReverse">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "column-reverse"
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexColumnCentered">
             <summary>
                 display = "flex"
@@ -136,6 +143,13 @@
                 display = "flex"
                 <br />
                 flexDirection  = "row"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.DisplayFlexRowReverse">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "row-reverse"
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DisplayFlexRowCentered">
@@ -5577,6 +5591,18 @@
         <member name="M:ReactWithDotNet.section.#ctor(ReactWithDotNet.StyleModifier[])">
             <summary>
                 Section in a document
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.th.scope">
+            <summary>
+                specifies whether a header cell is a header for a column, row, or group of columns or rows.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.th.Scope(System.String)">
+            <summary>
+                scope = <paramref name="value"/>
+            <br/>
+                specifies whether a header cell is a header for a column, row, or group of columns or rows.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ellipse.cx">
