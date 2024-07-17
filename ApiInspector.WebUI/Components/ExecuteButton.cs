@@ -1,14 +1,14 @@
 ﻿namespace ApiInspector.WebUI.Components;
 
-class ExecuteButton : ReactComponent
+sealed class ExecuteButton : PureComponent
 {
-    public Func<Task> Click { get; set; }
+    public Func<Task> Click { get; init; }
 
-    public bool IsProcessing { get; set; }
+    public bool IsProcessing { get; init; }
 
-    public bool ShowStatusAsFail { get; set; }
+    public bool ShowStatusAsFail { get; init; }
 
-    public bool ShowStatusAsSuccess { get; set; }
+    public bool ShowStatusAsSuccess { get; init; }
 
     protected override Element render()
     {
