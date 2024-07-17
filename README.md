@@ -12,7 +12,7 @@ Press 'Debug' button then attach to process 'ApiInspector' from your ide.
 
 
 
-Note: Minimum required platform is '.Net 6.0'.
+Note: Minimum required platform is '.Net 7.0'.
 
 https://dotnet.microsoft.com/en-us/download/dotnet/7.0
 
@@ -20,6 +20,7 @@ https://dotnet.microsoft.com/en-us/download/dotnet/7.0
 
 >Note: if there is an error like '..Unable to configure HTTPS endpoint. No server certificate was specified...'\
 >You can  fix:\
+>dotnet dev-certs https --trust
 >dotnet dev-certs https --clean\
 >dotnet dev-certs https --verbose
 
