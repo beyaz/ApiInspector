@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using static ApiInspector.FpExtensions;
 
 namespace ApiInspector;
@@ -93,23 +92,18 @@ static class ReflectionHelper
 
     public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
     {
-        var CompiledNetCoreRegex      = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
-        var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
-
-        var contents = File.ReadAllText(dll.FullName);
-
-        var match = CompiledNetCoreRegex.Match(contents);
-        if (match.Success)
+        var fileContent = File.ReadAllText(dll.FullName);
+        
+        if (fileContent.IndexOf(".NETFramework,Version=v", StringComparison.OrdinalIgnoreCase) >= 0)
         {
-            return (true, false);
+            return (isDotNetCore: false, isDotNetFramework: true);
         }
-
-        match = CompiledNetFrameworkRegex.Match(contents);
-        if (match.Success)
+        
+        if (fileContent.IndexOf(".NETCoreApp,Version=v", StringComparison.OrdinalIgnoreCase) >= 0)
         {
-            return (false, true);
+            return (isDotNetCore: true, isDotNetFramework: false);
         }
-
+        
         return (false, false);
     }
 

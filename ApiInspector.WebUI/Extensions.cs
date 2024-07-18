@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
@@ -60,29 +59,27 @@ static partial class Extensions
         var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
         var CompiledNetstandard= new Regex("netstandard+", RegexOptions.Compiled);
 
-        var contents = File.ReadAllText(dll.FullName);
+        var fileContent = File.ReadAllText(dll.FullName);
 
-       
-
-        var match = CompiledNetFrameworkRegex.Match(contents);
+        var match = CompiledNetFrameworkRegex.Match(fileContent);
         if (match.Success)
         {
-            return (false, true);
+            return (isDotNetCore: false, isDotNetFramework: true);
         }
         
-        match = CompiledNetCoreRegex.Match(contents);
+        match = CompiledNetCoreRegex.Match(fileContent);
         if (match.Success)
         {
-            return (true, false);
+            return (isDotNetCore: true, isDotNetFramework: false);
         }
         
-        match = CompiledNetstandard.Match(contents);
+        match = CompiledNetstandard.Match(fileContent);
         if (match.Success)
         {
-            return (true, false);
+            return (isDotNetCore: true, isDotNetFramework: false);
         }
 
-        return (false, false);
+        return (isDotNetCore: false, isDotNetFramework: false);
     }
 
     public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
