@@ -66,7 +66,8 @@ static class Program
                 {
                     File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
                 }
-                else
+                
+                if (file.IndexOf("NetCore", StringComparison.OrdinalIgnoreCase) > 0)
                 {
                     File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
                 }
