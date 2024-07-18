@@ -1,30 +1,31 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <AssemblyName>ApiInspector</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <AssemblyName>ApiInspector</AssemblyName>
+    </PropertyGroup>
 
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\FpExtensions.cs" Link="FpExtensions.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\GlobalUsings.cs" Link="GlobalUsings.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\MetaDataHelper.cs" Link="MetaDataHelper.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\Plugin.cs" Link="Plugin.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\ProcessHelper.cs" Link="ProcessHelper.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\Program.cs" Link="Program.cs" />
-    <Compile Include="..\ApiInspector.NetFramework\ReflectionHelper.cs" Link="ReflectionHelper.cs" />
-	<Compile Include="..\ApiInspector.NetFramework\JsonConverterForPropertyInfo.cs" Link="JsonConverterForPropertyInfo.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\FpExtensions.cs" Link="FpExtensions.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\GlobalUsings.cs" Link="GlobalUsings.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\MetaDataHelper.cs" Link="MetaDataHelper.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\Plugin.cs" Link="Plugin.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\ProcessHelper.cs" Link="ProcessHelper.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\Program.cs" Link="Program.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\ReflectionHelper.cs" Link="ReflectionHelper.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\JsonConverterForPropertyInfo.cs" Link="JsonConverterForPropertyInfo.cs" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    </ItemGroup>
 
 </Project>
