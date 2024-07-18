@@ -205,7 +205,14 @@ static class Program
     {
         Console.WriteLine("Starting...");
 
-        var process = Process.Start(Path.Combine(appFolder, "ApiInspector.WebUI.exe"));
+        var filePath = Path.Combine(appFolder, "ApiInspector.WebUI.exe");
+
+        var processStartInfo = new ProcessStartInfo(filePath)
+        {
+            WorkingDirectory = appFolder
+        };
+        
+        var process = Process.Start(processStartInfo);
 
         if (process?.HasExited == true)
         {
