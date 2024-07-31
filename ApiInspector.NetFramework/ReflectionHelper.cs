@@ -107,11 +107,40 @@ static class ReflectionHelper
         return (false, false);
     }
 
+    
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
+        var requestedAssemblyName = new AssemblyName(e.Name);
+
+        var currentEnvironmentIsDotNetFramework = GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetFramework;
+
+        if (requestedAssemblyName.Name.StartsWith("System.",StringComparison.OrdinalIgnoreCase))
+        {
+            if (currentEnvironmentIsDotNetFramework)
+            {
+                if (Directory.Exists("C:\\Program Files\\dotnet\\sdk\\"))
+                {
+                    foreach (var folderPath in Directory.GetDirectories("C:\\Program Files\\dotnet\\sdk\\").OrderByDescending(x=>x))
+                    {
+                        if (Path.GetFileName(folderPath).StartsWith(requestedAssemblyName.Version.Major.ToString(),StringComparison.OrdinalIgnoreCase))
+                        {
+                            var finalFolderPath = Path.Combine(folderPath, "Containers", "tasks", "net472");
+
+                            var finalFilePath = Path.Combine(finalFolderPath, requestedAssemblyName.Name + ".dll");
+                            if (File.Exists(finalFilePath))
+                            {
+                                return LoadAssemblyFile(finalFilePath);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
         var searchDirectories = new List<string>();
 
-        var fileNameWithoutExtension = new AssemblyName(e.Name).Name;
+        var fileNameWithoutExtension = requestedAssemblyName.Name;
 
         SafeInvoke(() => Path.GetDirectoryName(e.RequestingAssembly?.Location)).Then(directoryName =>
         {
