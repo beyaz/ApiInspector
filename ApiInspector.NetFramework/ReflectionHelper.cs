@@ -111,69 +111,41 @@ static class ReflectionHelper
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
 
-        var (success, assembly) = tryLoadSystemAssembliesFromSdk(requestedAssemblyName);
+        var fileNameWithoutExtension = requestedAssemblyName.Name;
+
+        var (success, assembly) = pipe(new[]
+        {
+            () => tryLoadSystemAssembliesFromSdk(requestedAssemblyName),
+            () => tryFindAssemblyByUsingPlugins(fileNameWithoutExtension),
+            () => tryLoadFromSearchDirectories(e, fileNameWithoutExtension)
+        });
+
         if (success)
         {
             return assembly;
         }
 
-        var searchDirectories = new List<string>();
-
-        var fileNameWithoutExtension = requestedAssemblyName.Name;
-
-        SafeInvoke(() => Path.GetDirectoryName(e.RequestingAssembly?.Location)).Then(directoryName =>
-        {
-            if (directoryName != null)
-            {
-                searchDirectories.Insert(0, directoryName);
-            }
-        });
-
-        if (GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetCore)
-        {
-            var version = Environment.Version.ToString();
-
-            var folders = new[]
-            {
-                $"C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App\\{version}",
-                $"C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\{version}",
-                $"C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\{version}"
-            };
-
-            foreach (var folder in folders)
-            {
-                searchDirectories.Add(folder);
-            }
-        }
-
-        var extensions = new[] { ".dll", ".exe" };
-
-        foreach (var searchDirectory in searchDirectories)
-        {
-            foreach (var fileExtension in extensions)
-            {
-                var filePath = Path.Combine(searchDirectory, fileNameWithoutExtension + fileExtension);
-                if (File.Exists(filePath))
-                {
-                    return LoadAssemblyFile(filePath);
-                }
-            }
-        }
-
-        foreach (var fileExtension in extensions)
-        {
-            var fileName = fileNameWithoutExtension + fileExtension;
-
-            var fullFilePath = Plugin.TryFindFullFilePathOfAssembly(fileName);
-            if (fullFilePath is not null)
-            {
-                return LoadAssemblyFile(fullFilePath);
-            }
-        }
-
         FileHelper.WriteLog($"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}");
 
         return null;
+
+        static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
+        {
+            var extensions = new[] { ".dll", ".exe" };
+
+            foreach (var fileExtension in extensions)
+            {
+                var fileName = fileNameWithoutExtension + fileExtension;
+
+                var fullFilePath = Plugin.TryFindFullFilePathOfAssembly(fileName);
+                if (fullFilePath is not null && File.Exists(fullFilePath))
+                {
+                    return (true, LoadAssemblyFile(fullFilePath));
+                }
+            }
+
+            return default;
+        }
 
         static (bool success, Assembly assembly) tryLoadSystemAssembliesFromSdk(AssemblyName requestedAssemblyName)
         {
@@ -202,6 +174,71 @@ static class ReflectionHelper
                             }
                         }
                     }
+                }
+            }
+
+            return default;
+        }
+
+        static (bool success, Assembly assembly) tryLoadFromSearchDirectories(ResolveEventArgs e, string fileNameWithoutExtension)
+        {
+            var extensions = new[] { ".dll", ".exe" };
+
+            foreach (var searchDirectory in getSearchDirectories(e.RequestingAssembly))
+            {
+                foreach (var fileExtension in extensions)
+                {
+                    var filePath = Path.Combine(searchDirectory, fileNameWithoutExtension + fileExtension);
+                    if (File.Exists(filePath))
+                    {
+                        return (success: true, LoadAssemblyFile(filePath));
+                    }
+                }
+            }
+
+            return default;
+
+            static IReadOnlyList<string> getSearchDirectories(Assembly requestingAssembly)
+            {
+                var searchDirectories = new List<string>();
+
+                SafeInvoke(() => Path.GetDirectoryName(requestingAssembly?.Location)).Then(directoryName =>
+                {
+                    if (directoryName != null)
+                    {
+                        searchDirectories.Insert(0, directoryName);
+                    }
+                });
+
+                if (GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetCore)
+                {
+                    var version = Environment.Version.ToString();
+
+                    var folders = new[]
+                    {
+                        $"C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App\\{version}",
+                        $"C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\{version}",
+                        $"C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\{version}"
+                    };
+
+                    foreach (var folder in folders)
+                    {
+                        searchDirectories.Add(folder);
+                    }
+                }
+
+                return searchDirectories;
+            }
+        }
+
+        static (bool success, T2 value) pipe<T2>(Func<(bool success, T2 value)>[] methods)
+        {
+            foreach (var method in methods)
+            {
+                var (success, value) = method();
+                if (success)
+                {
+                    return (true, value);
                 }
             }
 
