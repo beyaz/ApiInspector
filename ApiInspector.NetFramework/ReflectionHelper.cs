@@ -83,6 +83,23 @@ static class ReflectionHelper
         }
     }
 
+    public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
+    {
+        var fileContent = File.ReadAllText(dll.FullName);
+
+        if (fileContent.IndexOf(".NETFramework,Version=v", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return (isDotNetCore: false, isDotNetFramework: true);
+        }
+
+        if (fileContent.IndexOf(".NETCoreApp,Version=v", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return (isDotNetCore: true, isDotNetFramework: false);
+        }
+
+        return (false, false);
+    }
+
     static Assembly LoadAssemblyFile(string filePath)
     {
         return SafeInvoke(() => Assembly.LoadFrom(filePath)).TraceError(traceError).Unwrap();
@@ -90,54 +107,16 @@ static class ReflectionHelper
         void traceError(Exception exception) => FileHelper.WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }
 
-    public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
-    {
-        var fileContent = File.ReadAllText(dll.FullName);
-        
-        if (fileContent.IndexOf(".NETFramework,Version=v", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            return (isDotNetCore: false, isDotNetFramework: true);
-        }
-        
-        if (fileContent.IndexOf(".NETCoreApp,Version=v", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            return (isDotNetCore: true, isDotNetFramework: false);
-        }
-        
-        return (false, false);
-    }
-
-    
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
 
-        var currentEnvironmentIsDotNetFramework = GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetFramework;
-
-        if (requestedAssemblyName.Name.StartsWith("System.",StringComparison.OrdinalIgnoreCase))
+        var (success, assembly) = tryLoadSystemAssembliesFromSdk(requestedAssemblyName);
+        if (success)
         {
-            if (currentEnvironmentIsDotNetFramework)
-            {
-                if (Directory.Exists("C:\\Program Files\\dotnet\\sdk\\"))
-                {
-                    foreach (var folderPath in Directory.GetDirectories("C:\\Program Files\\dotnet\\sdk\\").OrderByDescending(x=>x))
-                    {
-                        if (Path.GetFileName(folderPath).StartsWith(requestedAssemblyName.Version.Major.ToString(),StringComparison.OrdinalIgnoreCase))
-                        {
-                            var finalFolderPath = Path.Combine(folderPath, "Containers", "tasks", "net472");
-
-                            var finalFilePath = Path.Combine(finalFolderPath, requestedAssemblyName.Name + ".dll");
-                            if (File.Exists(finalFilePath))
-                            {
-                                return LoadAssemblyFile(finalFilePath);
-                            }
-                            
-                        }
-                    }
-                }
-            }
+            return assembly;
         }
-        
+
         var searchDirectories = new List<string>();
 
         var fileNameWithoutExtension = requestedAssemblyName.Name;
@@ -160,7 +139,7 @@ static class ReflectionHelper
                 $"C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\{version}",
                 $"C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\{version}"
             };
-            
+
             foreach (var folder in folders)
             {
                 searchDirectories.Add(folder);
@@ -195,5 +174,38 @@ static class ReflectionHelper
         FileHelper.WriteLog($"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}");
 
         return null;
+
+        static (bool success, Assembly assembly) tryLoadSystemAssembliesFromSdk(AssemblyName requestedAssemblyName)
+        {
+            if (requestedAssemblyName.Name?.StartsWith("System.", StringComparison.OrdinalIgnoreCase) is true)
+            {
+                var currentEnvironmentIsDotNetFramework = GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetFramework;
+
+                if (currentEnvironmentIsDotNetFramework)
+                {
+                    if (Directory.Exists("C:\\Program Files\\dotnet\\sdk\\"))
+                    {
+                        foreach (var folderPath in Directory.GetDirectories("C:\\Program Files\\dotnet\\sdk\\").OrderByDescending(x => x))
+                        {
+                            var majorVersion = requestedAssemblyName.Version?.Major.ToString();
+
+                            var folderNameHasMatchMajorVersion = !string.IsNullOrWhiteSpace(majorVersion) && Path.GetFileName(folderPath).StartsWith(majorVersion, StringComparison.OrdinalIgnoreCase);
+                            if (folderNameHasMatchMajorVersion)
+                            {
+                                var finalFolderPath = Path.Combine(folderPath, "Containers", "tasks", "net472");
+
+                                var finalFilePath = Path.Combine(finalFolderPath, requestedAssemblyName.Name + ".dll");
+                                if (File.Exists(finalFilePath))
+                                {
+                                    return (true, LoadAssemblyFile(finalFilePath));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return default;
+        }
     }
 }
