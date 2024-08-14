@@ -4,6 +4,7 @@
   "HideConsoleWindow": true,
   "NextAvailablePortFrom": 5005,
   "UseUrls": true,
+  "UseDotNetFrameworkRuntimeWhenInvokingNetStandardAssemblies": false,
 
   "FileStorage": {
     "IsActive": true,

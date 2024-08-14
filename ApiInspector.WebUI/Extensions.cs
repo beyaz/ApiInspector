@@ -10,17 +10,20 @@ namespace ApiInspector.WebUI;
 /// </summary>
 static partial class Extensions
 {
+    public static readonly Modifier AutoHideScrollbar = FreeScrollBar.Modify(x => x.autohide = true);
+
+    public static readonly IEnumerable<MetadataNode> EmptyMetadataNodes = new ImmutableArray<MetadataNode>();
     public static string BluePrimary => "#1976d2";
 
-    public static StyleModifier PrimaryBackground => Background("rgb(249, 249, 249)");
-    
     public static StyleModifier ComponentBoxShadow => BoxShadow("6px 6px 20px 0px rgb(69 42 124 / 15%)");
 
     public static StyleModifier InputStyle => new Style
     {
-        Hover(Border(Solid(1,"#3498ff"))),
+        Hover(Border(Solid(1, "#3498ff"))),
         ComponentBoxShadow, FontSize12, Padding(8), Border(Solid(1, "#ced4da")), Focus(OutlineNone), BorderRadius(3), Color("#495057")
     };
+
+    public static StyleModifier PrimaryBackground => Background("rgb(249, 249, 249)");
 
     public static string GetSvgUrl(string svgFileName)
     {
@@ -55,9 +58,9 @@ static partial class Extensions
 
     public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
     {
-        var CompiledNetCoreRegex      = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
+        var CompiledNetCoreRegex = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
         var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
-        var CompiledNetstandard= new Regex("netstandard+", RegexOptions.Compiled);
+        var CompiledNetstandard = new Regex("netstandard+", RegexOptions.Compiled);
 
         var fileContent = File.ReadAllText(dll.FullName);
 
@@ -66,16 +69,21 @@ static partial class Extensions
         {
             return (isDotNetCore: false, isDotNetFramework: true);
         }
-        
+
         match = CompiledNetCoreRegex.Match(fileContent);
         if (match.Success)
         {
             return (isDotNetCore: true, isDotNetFramework: false);
         }
-        
+
         match = CompiledNetstandard.Match(fileContent);
         if (match.Success)
         {
+            if (Config.UseDotNetFrameworkRuntimeWhenInvokingNetStandardAssemblies)
+            {
+                return (isDotNetCore: false, isDotNetFramework: true);
+            }
+
             return (isDotNetCore: true, isDotNetFramework: false);
         }
 
@@ -85,13 +93,28 @@ static partial class Extensions
     public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
 
     public static bool HasValue(this string value) => !string.IsNullOrWhiteSpace(value);
-    
-    public static readonly Modifier AutoHideScrollbar = FreeScrollBar.Modify(x => x.autohide = true);
 
+    /// <summary>
+    ///     Removes value from end of str
+    /// </summary>
+    public static string RemoveFromEnd(this string data, string value)
+    {
+        return RemoveFromEnd(data, value, StringComparison.OrdinalIgnoreCase);
+    }
 
-    public static readonly IEnumerable<MetadataNode> EmptyMetadataNodes = new ImmutableArray<MetadataNode>();
-    
-    
+    /// <summary>
+    ///     Removes from end.
+    /// </summary>
+    public static string RemoveFromEnd(this string data, string value, StringComparison comparison)
+    {
+        if (data.EndsWith(value, comparison))
+        {
+            return data.Substring(0, data.Length - value.Length);
+        }
+
+        return data;
+    }
+
     /// <summary>
     ///     Removes value from start of str
     /// </summary>
@@ -113,28 +136,6 @@ static partial class Extensions
         if (data.StartsWith(value, comparison))
         {
             return data.Substring(value.Length, data.Length - value.Length);
-        }
-
-        return data;
-    }
-    
-    
-    /// <summary>
-    ///     Removes value from end of str
-    /// </summary>
-    public static string RemoveFromEnd(this string data, string value)
-    {
-        return RemoveFromEnd(data, value, StringComparison.OrdinalIgnoreCase);
-    }
-
-    /// <summary>
-    ///     Removes from end.
-    /// </summary>
-    public static string RemoveFromEnd(this string data, string value, StringComparison comparison)
-    {
-        if (data.EndsWith(value, comparison))
-        {
-            return data.Substring(0, data.Length - value.Length);
         }
 
         return data;
