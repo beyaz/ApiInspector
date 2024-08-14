@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using static ApiInspector.FpExtensions;
 
 namespace ApiInspector;
@@ -108,6 +107,16 @@ static class ReflectionHelper
         void traceError(Exception exception) => FileHelper.WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }
 
+    static (bool success, T value) OnFail<T>(this (bool success, T value) tuple, Action action)
+    {
+        if (!tuple.success)
+        {
+            action();
+        }
+
+        return tuple;
+    }
+
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
@@ -120,11 +129,13 @@ static class ReflectionHelper
             () => tryFindAssemblyByUsingPlugins(fileNameWithoutExtension),
             () => tryLoadFromSearchDirectories(e, fileNameWithoutExtension)
         };
-        return run(pipe).ValueOrDefault();
 
-        FileHelper.WriteLog($"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}");
+        return run(pipe).OnFail(onFail).ValueOrDefault();
 
-        return null;
+        void onFail()
+        {
+            FileHelper.WriteLog($"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}");
+        }
 
         static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
         {
@@ -241,8 +252,6 @@ static class ReflectionHelper
 
             return default;
         }
-        
-        
     }
 
     static T ValueOrDefault<T>(this (bool success, T value) tuple)
