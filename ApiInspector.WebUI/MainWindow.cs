@@ -569,7 +569,7 @@ class MainWindow : Component<MainWindowModel>
 
             if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                SafeInvoke(() => External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties))
+                External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties)
                     .Then(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
 

@@ -24,23 +24,23 @@ static class External
         return Execute<string>(runtime.IsDotNetCore, nameof(GetEnvironment), parameter);
     }
     
-    public static string GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
+    public static (string value, Exception exception) GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
         {
-            return null;
+            return (default, new FileNotFoundException(assemblyFileFullPath));
         }
 
         var runtime = GetTargetFramework(fileInfo);
         if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
-            return null;
+            return (default, RuntimeNotDetectedException(assemblyFileFullPath)); 
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(GetInstanceEditorJsonText), parameter).Unwrap();
+        return Execute<string>(runtime.IsDotNetCore, nameof(GetInstanceEditorJsonText), parameter);
     }
 
     public static (string value, Exception exception) GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
@@ -54,7 +54,7 @@ static class External
         var runtime = GetTargetFramework(fileInfo);
         if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
-            return (default, RuntimeNotDetectedException(assemblyFileFullPath)); ;
+            return (default, RuntimeNotDetectedException(assemblyFileFullPath)); 
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
