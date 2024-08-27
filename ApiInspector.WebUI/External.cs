@@ -13,15 +13,15 @@ static class External
             return (null, new Exception("File not exist."));
         }
 
-        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
-        if (isDotNetCore is false && isDotNetFramework is false)
+        var runtime = GetTargetFramework(fileInfo);
+        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
             return (null, new Exception("Environment not correct."));
         }
 
         var parameter = assemblyFileFullPath;
 
-        return Execute<string>(isDotNetCore, nameof(GetEnvironment), parameter);
+        return Execute<string>(runtime.IsDotNetCore, nameof(GetEnvironment), parameter);
     }
     
     public static string GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
@@ -32,15 +32,15 @@ static class External
             return null;
         }
 
-        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
-        if (isDotNetCore is false && isDotNetFramework is false)
+        var runtime = GetTargetFramework(fileInfo);
+        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
             return null;
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
-        return Execute<string>(isDotNetCore, nameof(GetInstanceEditorJsonText), parameter).Unwrap();
+        return Execute<string>(runtime.IsDotNetCore, nameof(GetInstanceEditorJsonText), parameter).Unwrap();
     }
 
     public static string GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
@@ -51,15 +51,15 @@ static class External
             return null;
         }
 
-        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
-        if (isDotNetCore is false && isDotNetFramework is false)
+        var runtime = GetTargetFramework(fileInfo);
+        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
             return null;
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
 
-        return Execute<string>(isDotNetCore, nameof(GetParametersEditorJsonText), parameter).Unwrap();
+        return Execute<string>(runtime.IsDotNetCore, nameof(GetParametersEditorJsonText), parameter).Unwrap();
     }
     
 
@@ -71,15 +71,15 @@ static class External
             return Enumerable.Empty<MetadataNode>();
         }
 
-        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
-        if (isDotNetCore is false && isDotNetFramework is false)
+        var runtime = GetTargetFramework(fileInfo);
+        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
             return Enumerable.Empty<MetadataNode>();
         }
 
         var parameter = (assemblyFileFullPath, classFilter, methodFilter);
 
-        return Execute<IEnumerable<MetadataNode>>(isDotNetCore, nameof(GetMetadataNodes), parameter).Unwrap();
+        return Execute<IEnumerable<MetadataNode>>(runtime.IsDotNetCore, nameof(GetMetadataNodes), parameter).Unwrap();
     }
 
     public static string InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
@@ -90,15 +90,15 @@ static class External
             return $"Assembly not exists. Assembly File: {assemblyFileFullPath}";
         }
 
-        var (isDotNetCore, isDotNetFramework) = GetTargetFramework(fileInfo);
-        if (isDotNetCore is false && isDotNetFramework is false)
+        var runtime = GetTargetFramework(fileInfo);
+        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
             return $"File is not support .net Core or .net Framework. File: {assemblyFileFullPath}";
         }
 
         var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
 
-        return Execute<string>(isDotNetCore, nameof(InvokeMethod), parameter, waitForDebugger).Unwrap();
+        return Execute<string>(runtime.IsDotNetCore, nameof(InvokeMethod), parameter, waitForDebugger).Unwrap();
     }
 
     static (TResponse response, Exception exception) Execute<TResponse>(bool runCoreApp, string methodName, object parameter, bool waitForDebugger = false)

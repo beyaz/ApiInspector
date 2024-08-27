@@ -56,7 +56,7 @@ static partial class Extensions
         }
     }
 
-    public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
+    public static TargetRuntimeInfo GetTargetFramework(FileInfo dll)
     {
         var CompiledNetCoreRegex = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
         var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
@@ -67,13 +67,13 @@ static partial class Extensions
         var match = CompiledNetFrameworkRegex.Match(fileContent);
         if (match.Success)
         {
-            return (isDotNetCore: false, isDotNetFramework: true);
+            return new() { IsDotNetFramework = true };
         }
 
         match = CompiledNetCoreRegex.Match(fileContent);
         if (match.Success)
         {
-            return (isDotNetCore: true, isDotNetFramework: false);
+            return new() { IsDotNetCore = true };
         }
 
         match = CompiledNetstandard.Match(fileContent);
@@ -81,13 +81,13 @@ static partial class Extensions
         {
             if (Config.UseDotNetFrameworkRuntimeWhenInvokingNetStandardAssemblies)
             {
-                return (isDotNetCore: false, isDotNetFramework: true);
+                return new() { IsDotNetFramework = true };
             }
 
-            return (isDotNetCore: true, isDotNetFramework: false);
+            return new() { IsDotNetCore = true };
         }
 
-        return (isDotNetCore: false, isDotNetFramework: false);
+        return new();
     }
 
     public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
@@ -140,4 +140,10 @@ static partial class Extensions
 
         return data;
     }
+}
+
+sealed class TargetRuntimeInfo
+{
+    public bool IsDotNetCore { get; init; }
+    public bool IsDotNetFramework { get; init; }
 }
