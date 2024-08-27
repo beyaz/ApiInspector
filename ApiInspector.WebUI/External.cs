@@ -111,12 +111,14 @@ static class External
             return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
         }
 
+        var messagePrefix = runCoreApp ? "(NetCore)" : "(NetFramework)";
+        
         if (exitCode == 0)
         {
-            return (default, new Exception(FileHelper.TakeResponseAsFail()));
+            return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail()));
         }
 
-        return (default, new Exception($"Unexpected exitCode: {exitCode}"));
+        return (default, new Exception($"{messagePrefix} Unexpected exitCode: {exitCode}"));
     }
 
     static int RunProcess(bool runCoreApp, string methodName, bool waitForDebugger)
