@@ -14,14 +14,14 @@ static class External
         }
 
         var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false)
         {
             return (default, RuntimeNotDetectedException(assemblyFileFullPath));
         }
 
         var parameter = assemblyFileFullPath;
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(GetEnvironment), parameter);
+        return Execute<string>(runtime.IsNetCore, nameof(GetEnvironment), parameter);
     }
     
     public static (string value, Exception exception) GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
@@ -33,14 +33,14 @@ static class External
         }
 
         var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false)
         {
             return (default, RuntimeNotDetectedException(assemblyFileFullPath)); 
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(GetInstanceEditorJsonText), parameter);
+        return Execute<string>(runtime.IsNetCore, nameof(GetInstanceEditorJsonText), parameter);
     }
 
     public static (string value, Exception exception) GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
@@ -52,14 +52,14 @@ static class External
         }
 
         var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false)
         {
             return (default, RuntimeNotDetectedException(assemblyFileFullPath)); 
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(GetParametersEditorJsonText), parameter);
+        return Execute<string>(runtime.IsNetCore, nameof(GetParametersEditorJsonText), parameter);
     }
 
     static Exception RuntimeNotDetectedException(string assemblyFileFullPath)
@@ -76,14 +76,14 @@ static class External
         }
 
         var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false)
         {
             return new MetadataNode[] { };
         }
 
         var parameter = (assemblyFileFullPath, classFilter, methodFilter);
 
-        return Execute<IEnumerable<MetadataNode>>(runtime.IsDotNetCore, nameof(GetMetadataNodes), parameter);
+        return Execute<IEnumerable<MetadataNode>>(runtime.IsNetCore, nameof(GetMetadataNodes), parameter);
     }
 
     public static Result<string> InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
@@ -95,14 +95,14 @@ static class External
         }
 
         var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false)
         {
             return $"File is not support .net Core or .net Framework. File: {assemblyFileFullPath}";
         }
 
         var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(InvokeMethod), parameter, waitForDebugger);
+        return Execute<string>(runtime.IsNetCore, nameof(InvokeMethod), parameter, waitForDebugger);
     }
 
     static (TResponse response, Exception exception) Execute<TResponse>(bool runCoreApp, string methodName, object parameter, bool waitForDebugger = false)

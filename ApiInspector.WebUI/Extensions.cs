@@ -67,13 +67,13 @@ static partial class Extensions
         var match = CompiledNetFrameworkRegex.Match(fileContent);
         if (match.Success)
         {
-            return new() { IsDotNetFramework = true };
+            return new() { IsNetFramework = true };
         }
 
         match = CompiledNetCoreRegex.Match(fileContent);
         if (match.Success)
         {
-            return new() { IsDotNetCore = true };
+            return new() { IsNetCore = true };
         }
 
         match = CompiledNetstandard.Match(fileContent);
@@ -81,10 +81,10 @@ static partial class Extensions
         {
             if (Config.UseDotNetFrameworkRuntimeWhenInvokingNetStandardAssemblies)
             {
-                return new() { IsDotNetFramework = true };
+                return new() { IsNetFramework = true };
             }
 
-            return new() { IsDotNetCore = true };
+            return new() { IsNetCore = true };
         }
 
         return new();
@@ -144,6 +144,7 @@ static partial class Extensions
 
 sealed class TargetRuntimeInfo
 {
-    public bool IsDotNetCore { get; init; }
-    public bool IsDotNetFramework { get; init; }
+    public bool IsNetCore { get; init; }
+    public bool IsNetFramework { get; init; }
+    public bool IsNetStandard { get; init; }
 }
