@@ -1,4 +1,6 @@
-﻿namespace ApiInspector.WebUI;
+﻿using System.Collections.Immutable;
+
+namespace ApiInspector.WebUI;
 
 partial class Extensions
 {
@@ -25,7 +27,7 @@ partial class Extensions
         return false;
     }
 
-    public static (T value, Exception exception) SafeInvoke<T>(Func<T> func)
+    public static (T value, Exception exception) Try<T>(Func<T> func)
     {
         try
         {
@@ -68,5 +70,89 @@ partial class Extensions
         }
 
         return default;
+    }
+}
+
+sealed class ExecutionException : Exception
+{
+    public IReadOnlyList<Info> InfoList { get; init; }
+}
+
+sealed record Info
+{
+    public int Code{ get; init; }
+
+    public string Message { get; set; }
+
+    public bool IsError { get; init; }
+
+    public Exception Exception { get; init; }
+    
+    public static implicit operator Info(Exception exception)
+    {
+        return new Info { Exception = exception, IsError = true};
+    }
+}
+
+sealed record Result<T>
+{
+    public T Value { get; init; }
+
+    public ImmutableList<Info> InfoList { get; init; }
+
+    public bool Success
+    {
+        get
+        {
+            if (InfoList is not null)
+            {
+                if (InfoList.Any(x=>x.IsError))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public static implicit operator Result<T>(T value)
+    {
+        return new() { Value = value };
+    }
+    public static implicit operator Result<T>(Exception exception)
+    {
+        Info info = exception;
+
+        return new Result<T> { InfoList = new[] { info }.ToImmutableList() };
+    }
+
+    public static implicit operator Result<T>((T value, Exception exception) tuple)
+    {
+        if (tuple.exception is not null)
+        {
+            Info info = tuple.exception;
+
+            return new Result<T>
+            {
+                Value = tuple.value,
+                InfoList = new[] { info }.ToImmutableList()
+            };
+        }
+
+        return tuple.value;
+    }
+
+    public T Unwrap()
+    {
+        if (Success)
+        {
+            return Value;
+        }
+
+        throw new ExecutionException
+        {
+            InfoList = InfoList
+        };
     }
 }

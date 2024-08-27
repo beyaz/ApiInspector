@@ -86,7 +86,7 @@ static class External
         return Execute<IEnumerable<MetadataNode>>(runtime.IsDotNetCore, nameof(GetMetadataNodes), parameter).Unwrap();
     }
 
-    public static string InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
+    public static Result<string> InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
@@ -102,7 +102,7 @@ static class External
 
         var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(InvokeMethod), parameter, waitForDebugger).Unwrap();
+        return Execute<string>(runtime.IsDotNetCore, nameof(InvokeMethod), parameter, waitForDebugger);
     }
 
     static (TResponse response, Exception exception) Execute<TResponse>(bool runCoreApp, string methodName, object parameter, bool waitForDebugger = false)

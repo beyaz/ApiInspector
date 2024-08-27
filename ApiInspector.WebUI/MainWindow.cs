@@ -434,7 +434,7 @@ class MainWindow : Component<MainWindowModel>
 
             try
             {
-                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true);
+                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true).Unwrap();
 
                 DebugButtonStatusIsSuccess = true;
             }
@@ -524,7 +524,7 @@ class MainWindow : Component<MainWindowModel>
 
             try
             {
-                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false);
+                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Unwrap();
 
                 ExecuteButtonStatusIsSuccess = true;
             }
