@@ -23,6 +23,8 @@
 
         "@mui/material": "^5.11.7",
         "@emotion/react": "^11.10.5",
-        "@emotion/styled": "^11.10.5"
+        "@emotion/styled": "^11.10.5",
+
+         "framer-motion": "^10.16.0"
     }
 }

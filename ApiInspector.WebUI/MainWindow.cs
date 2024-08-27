@@ -53,7 +53,8 @@ class MainWindow : Component<MainWindowModel>
                     Background(Theme.WindowBackgroundColor),
                     BorderRadius(10),
                     BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15))
-                }
+                },
+                NotificationHost
             }
         };
 
@@ -477,7 +478,7 @@ class MainWindow : Component<MainWindowModel>
         var nodeResult = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
         if (nodeResult.Fail)
         {
-            // todo: bunu hata olarak göster nodeResult.InfoCollection;
+            this.FailNotification(nodeResult.InfoCollection);
         }
 
         var node = nodeResult.Value;
@@ -504,6 +505,7 @@ class MainWindow : Component<MainWindowModel>
         }
 
         TryInitializeDefaultJsonInputs();
+        
         return Task.CompletedTask;
     }
 
