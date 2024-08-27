@@ -43,25 +43,29 @@ static class External
         return Execute<string>(runtime.IsDotNetCore, nameof(GetInstanceEditorJsonText), parameter).Unwrap();
     }
 
-    public static string GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
+    public static (string value, Exception exception) GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
         {
-            return null;
+            return (default, new FileNotFoundException(assemblyFileFullPath));
         }
 
         var runtime = GetTargetFramework(fileInfo);
         if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
-            return null;
+            return (default, RuntimeNotDetectedException(assemblyFileFullPath)); ;
         }
 
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
 
-        return Execute<string>(runtime.IsDotNetCore, nameof(GetParametersEditorJsonText), parameter).Unwrap();
+        return Execute<string>(runtime.IsDotNetCore, nameof(GetParametersEditorJsonText), parameter);
     }
-    
+
+    static Exception RuntimeNotDetectedException(string assemblyFileFullPath)
+    {
+        return new Exception($"Runtime not detected. @{assemblyFileFullPath}");
+    }
 
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFileFullPath, string classFilter, string methodFilter)
     {

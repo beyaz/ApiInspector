@@ -575,7 +575,7 @@ class MainWindow : Component<MainWindowModel>
 
             if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                SafeInvoke(() => External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters))
+                External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters)
                     .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 
