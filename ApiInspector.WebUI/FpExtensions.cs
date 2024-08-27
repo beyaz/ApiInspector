@@ -76,6 +76,8 @@ partial class Extensions
 sealed class ExecutionException : Exception
 {
     public InfoCollection InfoCollection { get; init; }
+    
+    public override string Message => InfoCollection;
 }
 
 sealed record Info
@@ -125,7 +127,7 @@ sealed record InfoCollection
         return new InfoCollection { records = ImmutableList<Info>.Empty.Add(info) };
     }
 
-    public bool Success => records.Any(x => x.IsError);
+    public bool Success => !records.Any(x => x.IsError);
 
     public override string ToString()
     {
