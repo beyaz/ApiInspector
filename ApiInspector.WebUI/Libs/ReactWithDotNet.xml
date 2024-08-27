@@ -233,11 +233,14 @@
                 img.src = <paramref name="src" />
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.ListenEventThenOnlyUpdateState``1(ReactWithDotNet.Client,``0)">
+        <member name="P:ReactWithDotNet.Mixin.LoadingLazy">
             <summary>
-                When event fired then updates only component state
-                <br />
-                Do not calls c# render method. Updates state of react component in client.
+                img.loading = 'lazy'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.LoadingEager">
+            <summary>
+                img.loading = 'eager'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.NavigateTo(ReactWithDotNet.Client,System.String)">
@@ -247,18 +250,6 @@
                 Client.NavigateTo("/") navigates to home page
                 <br />
                 Client.NavigateTo("/AboutUs") navigates to About Us page
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.OnDispatchEventFinished``1(ReactWithDotNet.Client,``0)">
-            <summary>
-                Occurs when event dispatching finished.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.Mixin.OnDispatchEventFinishedOnlyOnce``1(ReactWithDotNet.Client,``0)">
-            <summary>
-                Occurs when event dispatching finished.
-                <br/>
-                After first call then do not listen finished event again
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.BackgroundColorTransparent">
@@ -379,6 +370,11 @@
         <member name="P:ReactWithDotNet.Mixin.HeightAuto">
             <summary>
                 style.height = "auto"
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.JustifyContentNormal">
+            <summary>
+                <para>justifyContent = "normal"</para>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.JustifyContentCenter">
@@ -807,6 +803,11 @@
         <member name="M:ReactWithDotNet.Mixin.LetterSpacing(System.Double)">
             <summary>
                 style.letterSpacing = <paramref name="letterSpacingAsPixel" /> + 'px'
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.AlignItemsNormal">
+            <summary>
+                <para>style.alignItems = "normal"</para>
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.AlignItemsCenter">
@@ -3313,6 +3314,11 @@
                 style.scrollbarGutter = <paramref name="value" />
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.ScrollbarWidth(System.String)">
+            <summary>
+                style.scrollbarWidth = <paramref name="value" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.ShapeImageThreshold(System.String)">
             <summary>
                 style.shapeImageThreshold = <paramref name="value" />
@@ -4606,6 +4612,11 @@
         <member name="M:ReactWithDotNet.Mixin.ViewBox(System.Double,System.Double,System.Double,System.Double)">
             <summary>
                 svg.viewBox = '<paramref name="minX" /> <paramref name="minY" /> <paramref name="width" /> <paramref name="height" />'
+            </summary>
+        </member>
+        <member name="T:ReactWithDotNet.SkipRenderAttribute">
+            <summary>
+                Skips call c# render method of component.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Client.Height">
@@ -7156,6 +7167,284 @@
                 svg.focusable = auto
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.symbol.viewBox">
+            <summary>
+                Defines the position and dimension, in user space, of an SVG viewport.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.symbol.preserveAspectRatio">
+            <summary>
+                Indicates how an element should preserve its aspect ratio when the viewBox is different from the viewport.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ReactWithDotNet.symbol.externalResourcesRequired" -->
+        <member name="P:ReactWithDotNet.symbol.transform">
+            <summary>
+                Applies a transformation to the element, such as scaling, rotating, or translating.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.symbol.ViewBox(System.String)">
+            <summary>
+                viewBox = <paramref name="value"/>
+            <br/>
+                Defines the position and dimension, in user space, of an SVG viewport.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.symbol.PreserveAspectRatio(System.String)">
+            <summary>
+                preserveAspectRatio = <paramref name="value"/>
+            <br/>
+                Indicates how an element should preserve its aspect ratio when the viewBox is different from the viewport.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:ReactWithDotNet.symbol.ExternalResourcesRequired(System.String)" -->
+        <member name="M:ReactWithDotNet.symbol.Transform(System.String)">
+            <summary>
+                transform = <paramref name="value"/>
+            <br/>
+                Applies a transformation to the element, such as scaling, rotating, or translating.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.src">
+            <summary>
+                Specifies the URL of the video file.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.controls">
+            <summary>
+                Specifies that video controls (play, pause, etc.) should be displayed.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.autoplay">
+            <summary>
+                Specifies that the video will start playing as soon as it is ready.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.loop">
+            <summary>
+                Specifies that the video will start over again, every time it is finished.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.muted">
+            <summary>
+                Specifies that the audio output of the video should be muted.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.poster">
+            <summary>
+                Specifies an image to be shown while the video is downloading or until the user hits the play button.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.preload">
+            <summary>
+                Specifies how the video should be loaded when the page loads. Values include 'auto', 'metadata', or 'none'.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.width">
+            <summary>
+                Sets the width of the video player.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.height">
+            <summary>
+                Sets the height of the video player.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.playsinline">
+            <summary>
+                Specifies that the video should play inline on mobile devices instead of going fullscreen.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.video.crossorigin">
+            <summary>
+                Specifies how the element handles cross-origin requests for the video.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Src(System.String)">
+            <summary>
+                src = <paramref name="value"/>
+            <br/>
+                Specifies the URL of the video file.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Controls(System.String)">
+            <summary>
+                controls = <paramref name="value"/>
+            <br/>
+                Specifies that video controls (play, pause, etc.) should be displayed.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Autoplay(System.String)">
+            <summary>
+                autoplay = <paramref name="value"/>
+            <br/>
+                Specifies that the video will start playing as soon as it is ready.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Loop(System.String)">
+            <summary>
+                loop = <paramref name="value"/>
+            <br/>
+                Specifies that the video will start over again, every time it is finished.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Muted(System.String)">
+            <summary>
+                muted = <paramref name="value"/>
+            <br/>
+                Specifies that the audio output of the video should be muted.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Poster(System.String)">
+            <summary>
+                poster = <paramref name="value"/>
+            <br/>
+                Specifies an image to be shown while the video is downloading or until the user hits the play button.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Preload(System.String)">
+            <summary>
+                preload = <paramref name="value"/>
+            <br/>
+                Specifies how the video should be loaded when the page loads. Values include 'auto', 'metadata', or 'none'.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Width(System.String)">
+            <summary>
+                width = <paramref name="value"/>
+            <br/>
+                Sets the width of the video player.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Height(System.String)">
+            <summary>
+                height = <paramref name="value"/>
+            <br/>
+                Sets the height of the video player.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Playsinline(System.String)">
+            <summary>
+                playsinline = <paramref name="value"/>
+            <br/>
+                Specifies that the video should play inline on mobile devices instead of going fullscreen.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.video.Crossorigin(System.String)">
+            <summary>
+                crossorigin = <paramref name="value"/>
+            <br/>
+                Specifies how the element handles cross-origin requests for the video.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.src">
+            <summary>
+                Specifies the URL of the media file.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.type">
+            <summary>
+                Specifies the MIME type of the media resource.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.srcset">
+            <summary>
+                Specifies a list of image sources for responsive images.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.sizes">
+            <summary>
+                Specifies the sizes of images for different viewport widths.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.media">
+            <summary>
+                Specifies the media condition that must be met for the resource to be used.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.width">
+            <summary>
+                Specifies the width of the image for the srcset attribute.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.height">
+            <summary>
+                Specifies the height of the image for the srcset attribute.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.keytype">
+            <summary>
+                Specifies the type of key for media encryption (used in some DRM scenarios).
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.source.referrerpolicy">
+            <summary>
+                Specifies the referrer information to send when fetching the resource.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Src(System.String)">
+            <summary>
+                src = <paramref name="value"/>
+            <br/>
+                Specifies the URL of the media file.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Type(System.String)">
+            <summary>
+                type = <paramref name="value"/>
+            <br/>
+                Specifies the MIME type of the media resource.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Srcset(System.String)">
+            <summary>
+                srcset = <paramref name="value"/>
+            <br/>
+                Specifies a list of image sources for responsive images.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Sizes(System.String)">
+            <summary>
+                sizes = <paramref name="value"/>
+            <br/>
+                Specifies the sizes of images for different viewport widths.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Media(System.String)">
+            <summary>
+                media = <paramref name="value"/>
+            <br/>
+                Specifies the media condition that must be met for the resource to be used.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Width(System.String)">
+            <summary>
+                width = <paramref name="value"/>
+            <br/>
+                Specifies the width of the image for the srcset attribute.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Height(System.String)">
+            <summary>
+                height = <paramref name="value"/>
+            <br/>
+                Specifies the height of the image for the srcset attribute.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Keytype(System.String)">
+            <summary>
+                keytype = <paramref name="value"/>
+            <br/>
+                Specifies the type of key for media encryption (used in some DRM scenarios).
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.source.Referrerpolicy(System.String)">
+            <summary>
+                referrerpolicy = <paramref name="value"/>
+            <br/>
+                Specifies the referrer information to send when fetching the resource.
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.form.action">
             <summary>
                 Specifies the URL of the page where the form data will be submitted.
@@ -7456,6 +7745,198 @@
                 component.valueBindDebounceHandler = OnUserIterationFinished
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.iframe.src">
+            <summary>
+                Specifies the URL of the document to embed in the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.srcDoc">
+            <summary>
+                Provides the HTML content to be embedded directly within the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.name">
+            <summary>
+                Assigns a name to the iframe, which can be used for targeting links
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.width">
+            <summary>
+                Defines the width of the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.height">
+            <summary>
+                Defines the height of the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.sandbox">
+            <summary>
+                Enables an extra set of restrictions for the content in the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.allow">
+            <summary>
+                Controls features within the iframe, such as fullscreen, camera, microphone, etc.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.allowFullScreen">
+            <summary>
+                Allows the iframe to display content in fullscreen mode
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.referrerPolicy">
+            <summary>
+                Controls how much referrer information should be included with requests
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.loading">
+            <summary>
+                Specifies whether the iframe should be loaded lazily or eagerly
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.csp">
+            <summary>
+                Adds a Content Security Policy for the iframe's content
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.title">
+            <summary>
+                Provides advisory information about the content of the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.iframe.hidden">
+            <summary>
+                Hides the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Src(System.String)">
+            <summary>
+                src = <paramref name="value"/>
+            <br/>
+                Specifies the URL of the document to embed in the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.SrcDoc(System.String)">
+            <summary>
+                srcDoc = <paramref name="value"/>
+            <br/>
+                Provides the HTML content to be embedded directly within the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Name(System.String)">
+            <summary>
+                name = <paramref name="value"/>
+            <br/>
+                Assigns a name to the iframe, which can be used for targeting links
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Width(System.String)">
+            <summary>
+                width = <paramref name="value"/>
+            <br/>
+                Defines the width of the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Height(System.String)">
+            <summary>
+                height = <paramref name="value"/>
+            <br/>
+                Defines the height of the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Sandbox(System.String)">
+            <summary>
+                sandbox = <paramref name="value"/>
+            <br/>
+                Enables an extra set of restrictions for the content in the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Allow(System.String)">
+            <summary>
+                allow = <paramref name="value"/>
+            <br/>
+                Controls features within the iframe, such as fullscreen, camera, microphone, etc.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.AllowFullScreen(System.String)">
+            <summary>
+                allowFullScreen = <paramref name="value"/>
+            <br/>
+                Allows the iframe to display content in fullscreen mode
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.ReferrerPolicy(System.String)">
+            <summary>
+                referrerPolicy = <paramref name="value"/>
+            <br/>
+                Controls how much referrer information should be included with requests
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Loading(System.String)">
+            <summary>
+                loading = <paramref name="value"/>
+            <br/>
+                Specifies whether the iframe should be loaded lazily or eagerly
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Csp(System.String)">
+            <summary>
+                csp = <paramref name="value"/>
+            <br/>
+                Adds a Content Security Policy for the iframe's content
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Title(System.String)">
+            <summary>
+                title = <paramref name="value"/>
+            <br/>
+                Provides advisory information about the content of the iframe
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.iframe.Hidden(System.String)">
+            <summary>
+                hidden = <paramref name="value"/>
+            <br/>
+                Hides the iframe
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.select.valueBindDebounceTimeout">
+            <summary>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.select.valueBindDebounceHandler">
+            <summary>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.select.ValueBindDebounceTimeout(System.Nullable{System.Int32})">
+            <summary>
+                valueBindDebounceTimeout = <paramref name="value"/>
+            <br/>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.select.ValueBindDebounceHandler(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+                valueBindDebounceHandler = <paramref name="value"/>
+            <br/>
+                if you want to handle when user iteraction finished see example below
+                component.valueBind = ()=>state.UserInfo.Name
+                component.valueBindDebounceTimeout = 600 // milliseconds
+                component.valueBindDebounceHandler = OnUserIterationFinished
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.input.autoFocus">
             <summary>
                 Element must automatically get focus when the page loads.
@@ -7541,11 +8022,6 @@
         <member name="P:ReactWithDotNet.HtmlElement.onClickPreview">
             <summary>
             TODO: comment here
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.HtmlElement.onScrollDebounceTimeout">
-            <summary>
-                Default value: 400 <br />
             </summary>
         </member>
         <member name="P:ReactWithDotNet.HtmlElement.style">

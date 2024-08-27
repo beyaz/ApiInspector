@@ -85,7 +85,7 @@ class EventBusImp
 
         const listenerFunctions = this.map[eventName];
 
-        if (!listenerFunctions)
+        if (listenerFunctions == null || listenerFunctions.length === 0)
         {
             return;
         }
@@ -258,8 +258,6 @@ function IsEmptyObject(obj)
     return true;
 }
 
-const EventDispatchingFinishCallbackFunctionsQueue = [];
-
 const FunctionExecutionQueue = [];
 
 let ReactIsBusy = false;
@@ -284,11 +282,6 @@ function EmitNextFunctionInFunctionExecutionQueue()
     if (ReactIsBusy === true)
     {
         throw CreateNewDeveloperError("ReactWithDotNet event queue problem occured.");
-    }
-
-    if (FunctionExecutionQueue.length === 0 && EventDispatchingFinishCallbackFunctionsQueue.length > 0)
-    {
-        PushToFunctionExecutionQueue(EventDispatchingFinishCallbackFunctionsQueue.shift())
     }
 
     if (FunctionExecutionQueue.length > 0)
@@ -921,8 +914,8 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
     const handlerComponentUniqueIdentifier = remoteMethodInfo.HandlerComponentUniqueIdentifier;
     const functionNameOfGrabEventArguments = remoteMethodInfo.FunctionNameOfGrabEventArguments;
     const stopPropagation = remoteMethodInfo.StopPropagation;
-    const htmlElementScrollDebounceTimeout = remoteMethodInfo.HtmlElementScrollDebounceTimeout;
     const keyboardEventCallOnly = remoteMethodInfo.KeyboardEventCallOnly;
+    const debounceTimeout = remoteMethodInfo.DebounceTimeout;
 
     NotNull(remoteMethodName);
     NotNull(handlerComponentUniqueIdentifier);
@@ -989,8 +982,8 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
 
             return;
         }
-        
-        if (htmlElementScrollDebounceTimeout > 0)
+
+        if (debounceTimeout > 0)
         {
             const eventName = eventArguments[0]._reactName;
 
@@ -1013,7 +1006,7 @@ function ConvertToEventHandlerFunction(parentJsonNode, remoteMethodInfo)
                 const executionEntry = StartAction(actionArguments);
                 executionEntry.name = executionQueueItemName;
 
-            }, htmlElementScrollDebounceTimeout);
+            }, debounceTimeout);
 
             newState[SyncId] = GetNextSequence();
 
@@ -1292,6 +1285,11 @@ function ConvertToReactElement(jsonNode, component)
             {
                 props[propName] = function(item)
                 {
+                    if (React.isValidElement(item))
+                    {
+                        return item;
+                    }
+
                     if (item == null && itemTemplateForNull)
                     {
                         return ConvertToReactElement(itemTemplateForNull);
@@ -1452,6 +1450,11 @@ function ConvertToSyntheticKeyboardEvent(e)
 function ConvertToSyntheticChangeEvent(e)
 {
     const target = ConvertToShadowHtmlElement(e.target);
+
+    if (e._reactName === 'onInput')
+    {
+        target.textContent = e.target.textContent;
+    }
 
     return {
         bubbles:   e.bubbles,
@@ -1635,16 +1638,6 @@ function HandleAction(actionArguments)
         CallFunctionId: actionArguments.executionQueueEntry.id
     };
 
-
-    if (actionArguments.onlyUpdateState)
-    {
-        request.OnlyUpdateState = true;
-        request.CapturedStateTree = { };
-        request.CapturedStateTree[capturedStateTreeRootNodeKey] = capturedStateTree[capturedStateTreeRootNodeKey];
-
-    }
-    
-
     ArrangeRemoteMethodArguments(actionArguments.remoteMethodArguments);
 
     request.EventArgumentsAsJsonArray = actionArguments.remoteMethodArguments.map(JSON.stringify);
@@ -1684,7 +1677,7 @@ function HandleAction(actionArguments)
             OnReactStateReady();
         }
 
-        if (actionArguments.onlyUpdateState)
+        if (response.SkipRender)
         {
             // note: setState not used here because this is special case. we don't want to trigger render.
             component.state[DotNetState] = response.NewState;
@@ -2476,13 +2469,6 @@ function DispatchEvent(eventName, eventArguments, timeout)
     {
         EventBus.Dispatch(eventName, eventArguments || []);
 
-        EventDispatchingFinishCallbackFunctionsQueue.push(function ()
-        {
-            EventBus.Dispatch("$<<finished>>$" + eventName + "$<<finished>>$", eventArguments || []);
-
-            OnReactStateReady();
-        });
-
     }, timeout)
    
 }
@@ -2543,42 +2529,6 @@ RegisterCoreFunction("ListenEvent", function (eventName, remoteMethodName)
 
     EventBus.On(eventName, onEventFired);
 });
-
-RegisterCoreFunction("ListenEventThenOnlyUpdateState", function (eventName, remoteMethodName)
-{
-    const component = this;
-
-    const onEventFired = (eventArgumentsAsArray) =>
-    {
-        if (component.ComponentWillUnmountIsCalled)
-        {
-            return;
-        }
-
-        const actionArguments = {
-            component: component,
-            remoteMethodName: remoteMethodName,
-            remoteMethodArguments: eventArgumentsAsArray,
-            onlyUpdateState: true
-        };
-
-        const entry = StartAction(actionArguments);
-
-        // guard for removed node before send to server
-        OnComponentDestroy(component, () =>
-        {
-            entry.isValid = false;
-        });
-    };
-    
-    OnComponentDestroy(component, () =>
-    {
-        EventBus.Remove(eventName, onEventFired);
-    });
-
-    EventBus.On(eventName, onEventFired);
-});
-
 
 RegisterCoreFunction("ListenEventOnlyOnce", function (eventName, remoteMethodName)
 {
