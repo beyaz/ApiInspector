@@ -49,27 +49,54 @@ static class External
         }
 
         var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsNetCore is false && runtime.IsNetFramework is false)
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false && runtime.IsNetStandard is false)
         {
             return (default, RuntimeNotDetectedException(assemblyFileFullPath));
         }
 
-        FileHelper.WriteInput(JsonConvert.SerializeObject(parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore }));
+        
+        var inputAsJson = JsonConvert.SerializeObject(parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
 
-        var exitCode = RunProcess(runtime.IsNetCore, methodName, waitForDebugger);
-        if (exitCode == 1)
+        var isNetCore = runtime.IsNetCore;
+
+        int exitCode;
+        
         {
-            return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
+            FileHelper.WriteInput(inputAsJson);
+
+            exitCode = RunProcess(isNetCore, methodName, waitForDebugger);
+            if (exitCode == 1)
+            {
+                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
+            }
+
+            var messagePrefix = isNetCore ? "(NetCore)" : "(NetFramework)";
+
+            if (exitCode == 0)
+            {
+                return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail()));
+            }
         }
 
-        var messagePrefix = runtime.IsNetCore ? "(NetCore)" : "(NetFramework)";
-
-        if (exitCode == 0)
+        // try to invoke netstandard code on netcore app
+        if (runtime.IsNetStandard)
         {
-            return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail()));
+            FileHelper.WriteInput(inputAsJson);
+
+            exitCode = RunProcess(runCoreApp: true, methodName, waitForDebugger);
+            if (exitCode == 1)
+            {
+                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
+            }
+
+            if (exitCode == 0)
+            {
+                return (default, new Exception("(NetCore)" + FileHelper.TakeResponseAsFail()));
+            }
         }
 
-        return (default, new Exception($"{messagePrefix} Unexpected exitCode: {exitCode}"));
+
+        return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
 
     static int RunProcess(bool runCoreApp, string methodName, bool waitForDebugger)
