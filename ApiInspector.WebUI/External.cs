@@ -10,13 +10,13 @@ static class External
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
         {
-            return (null, new Exception("File not exist."));
+            return (default, new FileNotFoundException(assemblyFileFullPath));
         }
 
         var runtime = GetTargetFramework(fileInfo);
         if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
-            return (null, new Exception("Environment not correct."));
+            return (default, RuntimeNotDetectedException(assemblyFileFullPath));
         }
 
         var parameter = assemblyFileFullPath;
