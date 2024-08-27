@@ -79,12 +79,7 @@ static partial class Extensions
         match = CompiledNetstandard.Match(fileContent);
         if (match.Success)
         {
-            if (Config.UseDotNetFrameworkRuntimeWhenInvokingNetStandardAssemblies)
-            {
-                return new() { IsNetFramework = true };
-            }
-
-            return new() { IsNetCore = true };
+            return new() { IsNetStandard = true };
         }
 
         return new();

@@ -18,8 +18,6 @@ sealed record ConfigInfo
         public string CacheDirectoryFormat { get; init; }
         public bool IsActive { get; init; }
     }
-    
-    public bool UseDotNetFrameworkRuntimeWhenInvokingNetStandardAssemblies { get; set; }
 }
 
 partial class Extensions
