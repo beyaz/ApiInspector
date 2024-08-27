@@ -4,6 +4,17 @@ namespace ApiInspector.WebUI;
 
 partial class Extensions
 {
+    public static C Flow<A, B, C>(A value, Func<A, (B, Exception)> nextFunc, Func<B, C> onSuccess)
+    {
+        var (b, exception) = nextFunc(value);
+        if (exception is null)
+        {
+            return onSuccess(b);
+        }
+
+        return default;
+    }
+
     public static void IgnoreException(Action action)
     {
         try
@@ -27,18 +38,6 @@ partial class Extensions
         return false;
     }
 
-    public static (T value, Exception exception) Try<T>(Func<T> func)
-    {
-        try
-        {
-            return (func(), null);
-        }
-        catch (Exception exception)
-        {
-            return (default, exception);
-        }
-    }
-
     public static void Then<T>(this (T value, Exception exception) response, Action<T> onSuccess, Action<Exception> onFail)
     {
         if (response.exception is null)
@@ -51,7 +50,7 @@ partial class Extensions
         }
     }
 
-    public static B Then<T,B>(this (T value, Exception exception) response, Func<T,B> onSuccess, Func<Exception,B> onFail)
+    public static B Then<T, B>(this (T value, Exception exception) response, Func<T, B> onSuccess, Func<Exception, B> onFail)
     {
         if (response.exception is null)
         {
@@ -61,36 +60,86 @@ partial class Extensions
         return onFail(response.exception);
     }
 
-    public static C Flow<A,B,C>(A value, Func<A,(B, Exception)> nextFunc, Func<B,C> onSuccess)
+    public static (T value, Exception exception) Try<T>(Func<T> func)
     {
-        var (b, exception) = nextFunc(value);
-        if (exception is null)
+        try
         {
-            return onSuccess(b);
+            return (func(), null);
         }
-
-        return default;
+        catch (Exception exception)
+        {
+            return (default, exception);
+        }
     }
 }
 
 sealed class ExecutionException : Exception
 {
-    public IReadOnlyList<Info> InfoList { get; init; }
+    public InfoCollection InfoCollection { get; init; }
 }
 
 sealed record Info
 {
-    public int Code{ get; init; }
+    public string Code { get; init; }
 
     public string Message { get; set; }
 
     public bool IsError { get; init; }
 
     public Exception Exception { get; init; }
-    
+
     public static implicit operator Info(Exception exception)
     {
-        return new Info { Exception = exception, IsError = true};
+        return new Info { Exception = exception, IsError = true };
+    }
+
+    public override string ToString()
+    {
+        var items = new List<string>();
+
+        if (Code is not null)
+        {
+            items.Add($"{nameof(Code)}:{Code}");
+        }
+
+        if (Message is not null)
+        {
+            items.Add($"{nameof(Message)}:{Message}");
+        }
+
+        if (Exception is not null)
+        {
+            items.Add($"{nameof(Exception)}:{Exception}");
+        }
+
+        return string.Join(", ", items);
+    }
+}
+
+sealed record InfoCollection
+{
+    ImmutableList<Info> records = ImmutableList<Info>.Empty;
+
+    public static implicit operator InfoCollection(Info info)
+    {
+        return new InfoCollection { records = ImmutableList<Info>.Empty.Add(info) };
+    }
+
+    public bool Success => records.Any(x => x.IsError);
+
+    public override string ToString()
+    {
+        return string.Join(Environment.NewLine, records);
+    }
+
+    public static implicit operator InfoCollection(Info[] infoArray)
+    {
+        return new InfoCollection { records = ImmutableList<Info>.Empty.AddRange(infoArray) };
+    }
+
+    public static implicit operator string(InfoCollection infoCollection)
+    {
+        return infoCollection?.ToString();
     }
 }
 
@@ -98,18 +147,17 @@ sealed record Result<T>
 {
     public T Value { get; init; }
 
-    public ImmutableList<Info> InfoList { get; init; }
+    public InfoCollection InfoCollection { get; init; }
 
+    public bool Fail => !Success;
+    
     public bool Success
     {
         get
         {
-            if (InfoList is not null)
+            if (InfoCollection is not null)
             {
-                if (InfoList.Any(x=>x.IsError))
-                {
-                    return false;
-                }
+                return InfoCollection.Success;
             }
 
             return true;
@@ -120,11 +168,22 @@ sealed record Result<T>
     {
         return new() { Value = value };
     }
+
     public static implicit operator Result<T>(Exception exception)
     {
         Info info = exception;
 
-        return new Result<T> { InfoList = new[] { info }.ToImmutableList() };
+        return new Result<T> { InfoCollection = info };
+    }
+
+    public static implicit operator Result<T>(InfoCollection infoCollection)
+    {
+        return new Result<T> { InfoCollection = infoCollection };
+    }
+
+    public static implicit operator Result<T>(Info[] infoArray)
+    {
+        return new Result<T> { InfoCollection = infoArray };
     }
 
     public static implicit operator Result<T>((T value, Exception exception) tuple)
@@ -135,8 +194,8 @@ sealed record Result<T>
 
             return new Result<T>
             {
-                Value = tuple.value,
-                InfoList = new[] { info }.ToImmutableList()
+                Value          = tuple.value,
+                InfoCollection = info
             };
         }
 
@@ -152,7 +211,28 @@ sealed record Result<T>
 
         throw new ExecutionException
         {
-            InfoList = InfoList
+            InfoCollection = InfoCollection
         };
+    }
+
+    public Result<A> Then<A>(Func<T, A> next)
+    {
+        if (Success)
+        {
+            return next(Value);
+        }
+
+        return InfoCollection;
+    }
+
+    public void Then(Action<T> ok, Action<InfoCollection> nok)
+    {
+        if (Success)
+        {
+            ok(Value);
+            return;
+        }
+
+        nok(InfoCollection);
     }
 }

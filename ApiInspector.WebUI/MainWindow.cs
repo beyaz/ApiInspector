@@ -474,7 +474,14 @@ class MainWindow : Component<MainWindowModel>
         state.ScenarioList              = ImmutableList<ScenarioModel>.Empty.Add(new());
         state.ScenarioListSelectedIndex = 0;
 
-        var node = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
+        var nodeResult = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
+        if (nodeResult.Fail)
+        {
+            // todo: bunu hata olarak göster nodeResult.InfoCollection;
+        }
+
+        var node = nodeResult.Value;
+        
         if (node is not null)
         {
             if (node.IsMethod)

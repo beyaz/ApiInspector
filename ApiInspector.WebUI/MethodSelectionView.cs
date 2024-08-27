@@ -32,26 +32,34 @@ public sealed class MethodSelectionViewState
     public string SelectedMethodTreeNodeKey { get; set; }
     
     public IReadOnlyList<MetadataNode> Nodes{ get; set; }
+
+    public string ErrorMessage { get; set; }
 }
 
 class MethodSelectionView : Component<MethodSelectionViewState>
 {
     
-    public static MetadataNode FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
+    public static Result<MetadataNode> FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
     {
-        if (string.IsNullOrWhiteSpace(AssemblyFilePath) || string.IsNullOrWhiteSpace(treeNodeKey))
+        if (string.IsNullOrWhiteSpace(AssemblyFilePath))
         {
-            return null;
+            return new ArgumentNullException(nameof(AssemblyFilePath));
+        }
+        
+        if (string.IsNullOrWhiteSpace(treeNodeKey))
+        {
+            return new ArgumentNullException(nameof(treeNodeKey));
         }
 
         if (!File.Exists(AssemblyFilePath))
         {
-            return null;
+            return new FileNotFoundException(AssemblyFilePath);
         }
 
-        var nodes = External.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter).ToArray();
+        return External.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
+                       .Then(nodes => FindTreeNode(nodes, x => HasMatch(x, treeNodeKey)));
 
-        return FindTreeNode(nodes, x => HasMatch(x, treeNodeKey));
+        
     }
     
     
@@ -74,7 +82,8 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         };
 
 
-        state.Nodes = FetchNodes(state.AssemblyFilePath, state.ClassFilter, state.MethodFilter);
+        FetchNodes(state.AssemblyFilePath, state.ClassFilter, state.MethodFilter)
+           .Then(ok: x => state.Nodes = x, nok: x => state.ErrorMessage = x);
         
         return Task.CompletedTask;
     }
@@ -228,7 +237,9 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             state.ClassFilter               = ClassFilter;
             state.MethodFilter              = MethodFilter;
             state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
-            state.Nodes                     = FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter);
+
+            FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter)
+               .Then(ok: x => state.Nodes = x, x => state.ErrorMessage = x);
         }
 
         return Task.CompletedTask;
@@ -248,11 +259,11 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     }
 
     
-    static IReadOnlyList<MetadataNode> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
+    static Result<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
-            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter).ToList();
+            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter).Then(x=>(IReadOnlyList<MetadataNode>)x.ToList());
         }
 
         return Array.Empty<MetadataNode>();

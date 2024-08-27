@@ -67,23 +67,23 @@ static class External
         return new Exception($"Runtime not detected. @{assemblyFileFullPath}");
     }
 
-    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFileFullPath, string classFilter, string methodFilter)
+    public static Result<IEnumerable<MetadataNode>> GetMetadataNodes(string assemblyFileFullPath, string classFilter, string methodFilter)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
         {
-            return Enumerable.Empty<MetadataNode>();
+            return new MetadataNode[]{};
         }
 
         var runtime = GetTargetFramework(fileInfo);
         if (runtime.IsDotNetCore is false && runtime.IsDotNetFramework is false)
         {
-            return Enumerable.Empty<MetadataNode>();
+            return new MetadataNode[] { };
         }
 
         var parameter = (assemblyFileFullPath, classFilter, methodFilter);
 
-        return Execute<IEnumerable<MetadataNode>>(runtime.IsDotNetCore, nameof(GetMetadataNodes), parameter).Unwrap();
+        return Execute<IEnumerable<MetadataNode>>(runtime.IsDotNetCore, nameof(GetMetadataNodes), parameter);
     }
 
     public static Result<string> InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
@@ -136,15 +136,7 @@ static class External
         return process.ExitCode;
     }
 
-    static TResponse Unwrap<TResponse>(this (TResponse response, Exception exception) tuple)
-    {
-        if (tuple.exception != null)
-        {
-            throw tuple.exception;
-        }
-
-        return tuple.response;
-    }
+    
 }
 
 
