@@ -53,7 +53,20 @@ partial class Extensions
         }
     }
 
-    public static string DotNetFrameworkInvokerExePath => Path.Combine(AppFolder, "ApiInspector.NetFramework", "ApiInspector.exe");
+    public static string DotNetFrameworkInvokerExePath
+    {
+        get
+        {
+            if (Debugger.IsAttached)
+            {
+                var app = AppFolder.Replace(@"\ApiInspector.WebUI\", @"\ApiInspector.NetFramework\");
+                
+                return Path.Combine(app, "ApiInspector.exe");
+            }
+            
+            return Path.Combine(AppFolder, "ApiInspector.NetFramework", "ApiInspector.exe");
+        }    
+    }
 
     static ConfigInfo ReadConfig()
     {
