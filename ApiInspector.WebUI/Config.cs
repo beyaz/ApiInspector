@@ -46,6 +46,7 @@ partial class Extensions
             if (Debugger.IsAttached)
             {
                 var app = AppFolder.Replace(@"\ApiInspector.WebUI\", @"\ApiInspector.NetCore\");
+
                 return Path.Combine(app, "ApiInspector.exe");
             }
 
@@ -60,12 +61,12 @@ partial class Extensions
             if (Debugger.IsAttached)
             {
                 var app = AppFolder.Replace(@"\ApiInspector.WebUI\", @"\ApiInspector.NetFramework\");
-                
+
                 return Path.Combine(app, "ApiInspector.exe");
             }
-            
+
             return Path.Combine(AppFolder, "ApiInspector.NetFramework", "ApiInspector.exe");
-        }    
+        }
     }
 
     static ConfigInfo ReadConfig()
