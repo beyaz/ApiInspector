@@ -60,7 +60,7 @@ partial class Extensions
         {
             if (Debugger.IsAttached)
             {
-                var app = AppFolder.Replace(@"\ApiInspector.WebUI\", @"\ApiInspector.NetFramework\");
+                var app = AppFolder.Replace(@"\ApiInspector.WebUI\bin\Debug\net8.0", @"\ApiInspector.NetFramework\bin\Debug\");
 
                 return Path.Combine(app, "ApiInspector.exe");
             }
