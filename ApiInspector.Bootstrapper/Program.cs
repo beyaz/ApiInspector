@@ -97,9 +97,7 @@ static class Program
     {
         using var httpClient = new HttpClient();
 
-        var str = await httpClient.GetStringAsync(url);
-
-        return str;
+        return await httpClient.GetStringAsync(url);
     }
 
     static void KillAllNamedProcess(string processName)
@@ -121,8 +119,6 @@ static class Program
         KillAllNamedProcess("ApiInspector");
 
         trace("Checking version...");
-
-        using var client = new HttpClient();
 
         var versionUrl = config.VersionUrl;
         var newVersionZipFileUrl = config.NewVersionZipFileUrl;
