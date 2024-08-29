@@ -49,44 +49,8 @@ static class Program
         return config;
     }
 
-    static void CopyPlugins(string appFolder)
-    {
-        var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-        if (string.IsNullOrWhiteSpace(directory))
-        {
-            return;
-        }
-
-        foreach (var file in Directory.GetFiles(directory, "*.json"))
-        {
-            if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
-            {
-                if (file.IndexOf("NetFramework", StringComparison.OrdinalIgnoreCase) > 0)
-                {
-                    File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
-                }
-
-                if (file.IndexOf("NetCore", StringComparison.OrdinalIgnoreCase) > 0)
-                {
-                    File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
-                }
-            }
-        }
-    }
-
     static async Task DownloadFileAsync(string url, string localFilePath)
     {
-        // clear local
-        {
-            File.Delete(localFilePath);
-
-            var directory = Path.GetDirectoryName(localFilePath);
-            if (Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-        }
-
         if (IsWebUrl(url))
         {
             using var httpClient = new HttpClient();
@@ -143,13 +107,11 @@ static class Program
 
         installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
 
-        var appFolder = Path.Combine(installationFolder, "Api Inspector (.net method invoker)");
-
         var shouldUpdate = true;
 
-        trace("AppFolder: " + appFolder);
+        trace("Installation Folder: " + installationFolder);
 
-        var localVersionFilePath = Path.Combine(appFolder, "Version.txt");
+        var localVersionFilePath = Path.Combine(installationFolder, "Version.txt");
 
         if (File.Exists(localVersionFilePath))
         {
@@ -170,13 +132,13 @@ static class Program
         {
             trace("Updating to new version...");
 
-            if (Directory.Exists(appFolder))
+            if (Directory.Exists(installationFolder))
             {
-                trace($"Deleting previous version...{appFolder}");
-                var isDeleted = await TryDeleteDirectory(appFolder);
+                trace($"Deleting previous version...{installationFolder}");
+                var isDeleted = await TryDeleteDirectory(installationFolder);
                 if (!isDeleted)
                 {
-                    trace($"Please remove folder manually. {appFolder}");
+                    trace($"Please remove folder manually. {installationFolder}");
                     Console.Read();
                     return;
                 }
@@ -184,7 +146,7 @@ static class Program
                 trace("Previous version successfully removed.");
             }
 
-            Directory.CreateDirectory(appFolder);
+            Directory.CreateDirectory(installationFolder);
 
             var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
             if (File.Exists(localZipFilePath))
@@ -208,9 +170,7 @@ static class Program
             await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
         }
 
-        CopyPlugins(appFolder);
-
-        StartWebApplication(appFolder);
+        StartWebApplication(installationFolder);
     }
 
     static void StartWebApplication(string appFolder)
