@@ -95,9 +95,14 @@ static class Program
 
     static async Task<string> DownloadStringAsync(string url)
     {
-        using var httpClient = new HttpClient();
+        if (url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            using var httpClient = new HttpClient();
 
-        return await httpClient.GetStringAsync(url);
+            return await httpClient.GetStringAsync(url);
+        }
+
+        return await File.ReadAllTextAsync(url);
     }
 
     static void KillAllNamedProcess(string processName)
