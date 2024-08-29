@@ -76,26 +76,36 @@ static class Program
 
     static async Task DownloadFileAsync(string url, string localFilePath)
     {
-        using var httpClient = new HttpClient();
-
-        File.Delete(localFilePath);
-
-        var directory = Path.GetDirectoryName(localFilePath);
-        if (Directory.Exists(directory))
+        // clear local
         {
-            Directory.CreateDirectory(directory);
+            File.Delete(localFilePath);
+
+            var directory = Path.GetDirectoryName(localFilePath);
+            if (Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
 
-        await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
+        if (IsWebUrl(url))
+        {
+            using var httpClient = new HttpClient();
 
-        var response = await httpClient.GetAsync(url);
+            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
 
-        await response.Content.CopyToAsync(fs);
+            var response = await httpClient.GetAsync(url);
+
+            await response.Content.CopyToAsync(fs);
+
+            return;
+        }
+
+        File.Copy(url, localFilePath);
     }
 
     static async Task<string> DownloadStringAsync(string url)
     {
-        if (url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        if (IsWebUrl(url))
         {
             using var httpClient = new HttpClient();
 
@@ -104,6 +114,8 @@ static class Program
 
         return await File.ReadAllTextAsync(url);
     }
+
+    static bool IsWebUrl(string url) => url.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
 
     static void KillAllNamedProcess(string processName)
     {
