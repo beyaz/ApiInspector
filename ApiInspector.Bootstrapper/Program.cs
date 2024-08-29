@@ -24,30 +24,29 @@ static class Program
 
     static Config CalculateConfig()
     {
-        var versionUrl = (string)AppContext.GetData("VersionUrl");
-        if (versionUrl == null)
+        var config = new Config
         {
-            throw new Exception($"Value @{nameof(versionUrl)} cannot be empty.");
-        }
-
-        var newVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl");
-        if (newVersionZipFileUrl == null)
-        {
-            throw new Exception($"Value @{nameof(newVersionZipFileUrl)} cannot be empty.");
-        }
-
-        var installationFolder = (string)AppContext.GetData("InstallationFolder");
-        if (installationFolder == null)
-        {
-            throw new Exception($"Value @{nameof(installationFolder)} cannot be empty.");
-        }
-
-        return new Config
-        {
-            VersionUrl           = versionUrl,
-            NewVersionZipFileUrl = newVersionZipFileUrl,
-            InstallationFolder   = installationFolder
+            VersionUrl           = (string)AppContext.GetData("VersionUrl"),
+            NewVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl"),
+            InstallationFolder   = (string)AppContext.GetData("InstallationFolder"),
         };
+
+        if (config.InstallationFolder is null)
+        {
+            throw new Exception($"Value @{nameof(config.InstallationFolder)} cannot be empty.");
+        }
+
+        if (config.VersionUrl is null)
+        {
+            throw new Exception($"Value @{nameof(config.VersionUrl)} cannot be empty.");
+        }
+
+        if (config.NewVersionZipFileUrl is null)
+        {
+            throw new Exception($"Value @{nameof(config.NewVersionZipFileUrl)} cannot be empty.");
+        }
+
+        return config;
     }
 
     static void CopyPlugins(string appFolder)
@@ -66,7 +65,7 @@ static class Program
                 {
                     File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetFramework", Path.GetFileName(file)), true);
                 }
-                
+
                 if (file.IndexOf("NetCore", StringComparison.OrdinalIgnoreCase) > 0)
                 {
                     File.Copy(file, Path.Combine(appFolder, "ApiInspector.NetCore", Path.GetFileName(file)), true);
@@ -211,7 +210,7 @@ static class Program
         {
             WorkingDirectory = appFolder
         };
-        
+
         var process = Process.Start(processStartInfo);
 
         if (process?.HasExited == true)
@@ -264,7 +263,7 @@ static class Program
         return false;
     }
 
-    class Config
+    sealed class Config
     {
         public string InstallationFolder { get; init; }
         public string NewVersionZipFileUrl { get; init; }
