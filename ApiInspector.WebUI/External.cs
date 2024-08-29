@@ -58,8 +58,9 @@ static class External
         var inputAsJson = JsonConvert.SerializeObject(parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
 
         var isNetCore = runtime.IsNetCore;
-
+        
         int exitCode;
+        
         
         {
             FileHelper.WriteInput(inputAsJson);
@@ -77,24 +78,6 @@ static class External
                 return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail()));
             }
         }
-
-        // try to invoke netstandard code on netcore app
-        if (runtime.IsNetStandard)
-        {
-            FileHelper.WriteInput(inputAsJson);
-
-            exitCode = RunProcess(runCoreApp: true, methodName, waitForDebugger);
-            if (exitCode == 1)
-            {
-                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
-            }
-
-            if (exitCode == 0)
-            {
-                return (default, new Exception("(NetCore)" + FileHelper.TakeResponseAsFail()));
-            }
-        }
-
 
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
