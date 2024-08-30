@@ -54,14 +54,12 @@ static class External
             return (default, RuntimeNotDetectedException(assemblyFileFullPath));
         }
 
-        
         var inputAsJson = JsonConvert.SerializeObject(parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
 
         var isNetCore = runtime.IsNetCore;
-        
+
         int exitCode;
-        
-        
+
         {
             FileHelper.WriteInput(inputAsJson);
 
