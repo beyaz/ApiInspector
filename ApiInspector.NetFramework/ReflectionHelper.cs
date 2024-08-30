@@ -27,7 +27,7 @@ static class ReflectionHelper
                 return null;
             }
 
-            var path = directoryInfo.FullName + fileNameWithoutExtension + ".dll";
+            var path = Path.Combine(directoryInfo.FullName, fileNameWithoutExtension + ".dll");
             if (File.Exists(path))
             {
                 return Assembly.LoadFrom(path);
