@@ -100,6 +100,22 @@ static class Plugin
         return default;
     }
 
+    public static bool? ShouldNetStandardAssemblyRunOnNetFramework(string assemblyFileName)
+    {
+        if (PluginInstance is null)
+        {
+            return default;
+        }
+
+        var (isInvoked, value) = TryInvokeStaticMethodFromPlugin<bool?>(PluginInstance, nameof(ShouldNetStandardAssemblyRunOnNetFramework), assemblyFileName);
+        if (isInvoked && value != null)
+        {
+            return value;
+        }
+
+        return default;
+    }
+
     public static (Exception occurredErrorWhenCreatingInstance, bool isSuccessfullyCreated, object instance) TryCreateInstance(Type type, string json)
     {
         if (PluginInstance is null)

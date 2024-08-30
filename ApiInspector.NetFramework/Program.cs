@@ -10,9 +10,6 @@ namespace ApiInspector;
 
 static class Program
 {
-    
-     
-     
     public static string GetEnvironment(string assemblyFileFullPath)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
@@ -213,9 +210,9 @@ static class Program
                 {
                     map = JsonConvert.DeserializeObject<JObject>(jsonForParameters);
                 }
-                
-                if (parameterInfoList.Length == 1 && 
-                    parameterInfoList[0].ParameterType.FullName == "System.String" && 
+
+                if (parameterInfoList.Length == 1 &&
+                    parameterInfoList[0].ParameterType.FullName == "System.String" &&
                     parameterInfoList[0].Name is not null)
                 {
                     var jProperty = map.Property(parameterInfoList[0].Name, StringComparison.OrdinalIgnoreCase);
@@ -244,7 +241,7 @@ static class Program
             }
 
             var invocationParameters = new List<object>();
-        
+
             foreach (var parameterInfo in parameterInfoList)
             {
                 invocationParameters.Add(calculateParameterValue(map, parameterInfo));
@@ -252,7 +249,6 @@ static class Program
 
             methodParameters = invocationParameters.ToArray();
         }
-        
 
         object response = null;
 
@@ -417,6 +413,14 @@ static class Program
 
             SaveExceptionAndExitWithFailure(exception);
         }
+    }
+
+    public static bool? ShouldNetStandardAssemblyRunOnNetFramework(string assemblyFileName)
+    {
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileName);
+        ReflectionHelper.AttachAssemblyResolver();
+
+        return Plugin.ShouldNetStandardAssemblyRunOnNetFramework(assemblyFileName);
     }
 
     internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)

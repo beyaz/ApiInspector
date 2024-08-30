@@ -60,6 +60,25 @@ static class External
 
         int exitCode;
 
+        if (runtime.IsNetStandard)
+        {
+            isNetCore = true;
+
+            // default pattern: run standard dlls on net core application
+            // But sometimes we need to run standard dlls on .netframework application
+
+            FileHelper.WriteInput(JsonConvert.SerializeObject(assemblyFileFullPath, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore }));
+            exitCode = RunProcess(runCoreApp: false, "ShouldNetStandardAssemblyRunOnNetFramework", waitForDebugger: false);
+            if (exitCode == 1)
+            {
+                var shouldNetStandardAssemblyRunOnNetFramework = JsonConvert.DeserializeObject<bool?>(FileHelper.ReadResponse());
+                if (shouldNetStandardAssemblyRunOnNetFramework is true)
+                {
+                    isNetCore = false;
+                }
+            }
+        }
+
         {
             FileHelper.WriteInput(inputAsJson);
 
