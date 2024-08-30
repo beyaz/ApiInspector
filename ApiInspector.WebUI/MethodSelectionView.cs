@@ -3,10 +3,10 @@
 namespace ApiInspector.WebUI;
 
 [Serializable]
-public record MetadataNode 
+public record MetadataNode
 {
     public ImmutableList<MetadataNode> Children { get; init; } = ImmutableList.Create<MetadataNode>();
-    
+
     public bool IsClass { get; init; }
     public bool IsMethod { get; init; }
     public bool IsNamespace { get; init; }
@@ -14,9 +14,9 @@ public record MetadataNode
 
     public string NamespaceReference { get; init; }
     public TypeReference TypeReference { get; init; }
-    
+
     public string label { get; init; }
-    
+
     public bool HasChild => Children.Count > 0;
 }
 
@@ -27,25 +27,35 @@ public sealed class MethodSelectionViewState
 
     public string ClassFilter { get; set; }
 
+    public string ErrorMessage { get; set; }
+
     public string MethodFilter { get; set; }
 
-    public string SelectedMethodTreeNodeKey { get; set; }
-    
-    public IReadOnlyList<MetadataNode> Nodes{ get; set; }
+    public IReadOnlyList<MetadataNode> Nodes { get; set; }
 
-    public string ErrorMessage { get; set; }
+    public string SelectedMethodTreeNodeKey { get; set; }
 }
 
 class MethodSelectionView : Component<MethodSelectionViewState>
 {
-    
+    public string AssemblyFilePath { get; set; }
+
+    public string ClassFilter { get; set; }
+
+    public string MethodFilter { get; set; }
+
+    public string SelectedMethodTreeNodeKey { get; set; }
+
+    [CustomEvent]
+    public Func<string, Task> SelectionChanged { get; set; }
+
     public static Result<MetadataNode> FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
     {
         if (string.IsNullOrWhiteSpace(AssemblyFilePath))
         {
             return new ArgumentNullException(nameof(AssemblyFilePath));
         }
-        
+
         if (string.IsNullOrWhiteSpace(treeNodeKey))
         {
             return new ArgumentNullException(nameof(treeNodeKey));
@@ -58,38 +68,118 @@ class MethodSelectionView : Component<MethodSelectionViewState>
 
         return External.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
                        .Then(nodes => FindTreeNode(nodes, x => HasMatch(x, treeNodeKey)));
-
-        
     }
-    
-    
-    public string AssemblyFilePath { get; set; }
-
-    public string ClassFilter { get; set; }
-
-    public string MethodFilter { get; set; }
-
-    public string SelectedMethodTreeNodeKey { get; set; }
 
     protected override Task constructor()
     {
         state = new MethodSelectionViewState
         {
-            AssemblyFilePath = AssemblyFilePath,
-            ClassFilter      = ClassFilter,
-            MethodFilter     = MethodFilter,
+            AssemblyFilePath          = AssemblyFilePath,
+            ClassFilter               = ClassFilter,
+            MethodFilter              = MethodFilter,
             SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey
         };
 
-
         FetchNodes(state.AssemblyFilePath, state.ClassFilter, state.MethodFilter)
            .Then(ok: x => state.Nodes = x, nok: x => state.ErrorMessage = x);
-        
+
         return Task.CompletedTask;
     }
 
-    [CustomEvent]
-    public Func<string,Task> SelectionChanged { get; set; }
+    protected override Task OverrideStateFromPropsBeforeRender()
+    {
+        if (state.AssemblyFilePath != AssemblyFilePath ||
+            state.ClassFilter != ClassFilter ||
+            state.MethodFilter != MethodFilter ||
+            state.SelectedMethodTreeNodeKey != SelectedMethodTreeNodeKey)
+        {
+            state.AssemblyFilePath          = AssemblyFilePath;
+            state.ClassFilter               = ClassFilter;
+            state.MethodFilter              = MethodFilter;
+            state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
+
+            FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter)
+               .Then(ok: x => state.Nodes = x, x => state.ErrorMessage = x);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    protected override Element render()
+    {
+        var nodes = state.Nodes;
+
+        return new div(MarginLeftRight(3), OverflowYScroll, CursorPointer, Padding(5), Border(Solid(1, rgb(217, 217, 217))), BorderRadius(3))
+        {
+            state.ErrorMessage.HasValue() ? new pre { state.ErrorMessage } : AsTreeView(nodes),
+            WidthFull, HeightFull
+        };
+    }
+
+    static Element AsTreeItem(MetadataNode node, string SelectedMethodTreeNodeKey, MouseEventHandler OnTreeItemClicked)
+    {
+        if (node.IsMethod)
+        {
+            return new FlexRow(AlignItemsCenter)
+            {
+                new img { Src(GetSvgUrl("Method")), Size(11), MarginTop(5), MarginLeft(20) },
+
+                new div { Text(node.label), MarginLeft(5), FontSize13 },
+
+                Id(node.MethodReference.MetadataToken),
+
+                arrangeBackground
+            };
+        }
+
+        if (node.IsClass)
+        {
+            return new FlexRow(AlignItemsCenter)
+            {
+                new img { Src(GetSvgUrl("Class")), Size(14), MarginLeft(10) },
+
+                new div { Text(node.label), MarginLeft(5), FontSize13 }
+            };
+        }
+
+        if (node.IsNamespace)
+        {
+            return new FlexRow(AlignItemsCenter)
+            {
+                new img { Src(GetSvgUrl("Namespace")), Size(14) },
+
+                new div { Text(node.label), MarginLeft(5), FontSize13 }
+            };
+        }
+
+        return new div();
+
+        void arrangeBackground(HtmlElement el)
+        {
+            var isSelected = HasMatch(node, SelectedMethodTreeNodeKey);
+
+            if (isSelected)
+            {
+                el += BackgroundImage(linear_gradient(90, rgb(136, 195, 242), rgb(242, 246, 249))) + BorderRadius(3);
+            }
+            else
+            {
+                el += Hover(BackgroundImage(linear_gradient(90, rgb(190, 220, 244), rgb(242, 246, 249))) + BorderRadius(3));
+            }
+
+            el.onClick = OnTreeItemClicked;
+        }
+    }
+
+    static Result<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
+    {
+        if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
+        {
+            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter).Then(x => (IReadOnlyList<MetadataNode>)x.ToList());
+        }
+
+        return Array.Empty<MetadataNode>();
+    }
 
     static MetadataNode FindTreeNode(IEnumerable<MetadataNode> nodes, Func<MetadataNode, bool> hasMatch)
     {
@@ -144,61 +234,6 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     {
         return AsTreeItem(node, SelectedMethodTreeNodeKey, OnTreeItemClicked);
     }
-    
-    static Element AsTreeItem(MetadataNode node, string SelectedMethodTreeNodeKey, MouseEventHandler OnTreeItemClicked)
-    {
-        if (node.IsMethod)
-        {
-            return new FlexRow(AlignItemsCenter)
-            {
-                new img { Src(GetSvgUrl("Method")), Size(11), MarginTop(5), MarginLeft(20) },
-
-                new div { Text(node.label), MarginLeft(5), FontSize13 },
-
-                Id(node.MethodReference.MetadataToken),
-
-                arrangeBackground
-            };
-        }
-
-        if (node.IsClass)
-        {
-            return new FlexRow(AlignItemsCenter)
-            {
-                new img { Src(GetSvgUrl("Class")), Size(14), MarginLeft(10) },
-
-                new div { Text(node.label), MarginLeft(5), FontSize13 }
-            };
-        }
-
-        if (node.IsNamespace)
-        {
-            return new FlexRow(AlignItemsCenter)
-            {
-                new img { Src(GetSvgUrl("Namespace")), Size(14) },
-
-                new div { Text(node.label), MarginLeft(5), FontSize13 }
-            };
-        }
-
-        return new div();
-
-        void arrangeBackground(HtmlElement el)
-        {
-            var isSelected = HasMatch(node, SelectedMethodTreeNodeKey);
-            
-            if (isSelected)
-            {
-                el += BackgroundImage(linear_gradient(90,  rgb(136, 195, 242), rgb(242, 246, 249))) + BorderRadius(3);
-            }
-            else
-            {
-                el += Hover(BackgroundImage(linear_gradient(90, rgb(190, 220, 244), rgb(242, 246, 249)))+ BorderRadius(3));
-            }
-
-            el.onClick = OnTreeItemClicked;
-        }
-    }
 
     Element AsTreeView(IReadOnlyList<MetadataNode> nodes)
     {
@@ -225,56 +260,10 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         }
     }
 
-    protected override Task OverrideStateFromPropsBeforeRender()
-    {
-        
-        if (state.AssemblyFilePath != AssemblyFilePath||
-            state.ClassFilter != ClassFilter||
-            state.MethodFilter != MethodFilter||
-            state.SelectedMethodTreeNodeKey != SelectedMethodTreeNodeKey)
-        {
-            state.AssemblyFilePath          = AssemblyFilePath;
-            state.ClassFilter               = ClassFilter;
-            state.MethodFilter              = MethodFilter;
-            state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
-
-            FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter)
-               .Then(ok: x => state.Nodes = x, x => state.ErrorMessage = x);
-        }
-
-        return Task.CompletedTask;
-    }
-    
-   
-    
-    protected override Element render()
-    {
-        var nodes = state.Nodes;
-        
-        return new div(MarginLeftRight(3), OverflowYScroll, CursorPointer, Padding(5), Border(Solid(1, "rgb(217, 217, 217)")), BorderRadius(3))
-        {
-            AsTreeView(nodes),
-            WidthFull, HeightFull
-        };
-    }
-
-    
-    static Result<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
-    {
-        if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
-        {
-            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter).Then(x=>(IReadOnlyList<MetadataNode>)x.ToList());
-        }
-
-        return Array.Empty<MetadataNode>();
-    }
-
-    
-    
     Task OnTreeItemClicked(MouseEvent e)
     {
         DispatchEvent(SelectionChanged, [e.currentTarget.id]);
-        
+
         return Task.CompletedTask;
     }
 }
