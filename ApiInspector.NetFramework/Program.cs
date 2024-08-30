@@ -16,7 +16,8 @@ static class Program
     public static string GetEnvironment(string assemblyFileFullPath)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
-        
+        ReflectionHelper.AttachAssemblyResolver();
+
         return Plugin.GetEnvironment(assemblyFileFullPath);
     }
 
@@ -36,7 +37,8 @@ static class Program
         var (fullAssemblyPath, methodReference, jsonForInstance) = state;
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        
+        ReflectionHelper.AttachAssemblyResolver();
+
         if (methodReference is null || methodReference.IsStatic)
         {
             return jsonForInstance;
@@ -116,7 +118,8 @@ static class Program
         var (fullAssemblyPath, methodReference, jsonForParameters) = state;
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        
+        ReflectionHelper.AttachAssemblyResolver();
+
         if (methodReference is null || methodReference.Parameters.Count == 0)
         {
             return jsonForParameters;
@@ -158,6 +161,7 @@ static class Program
         var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
+        ReflectionHelper.AttachAssemblyResolver();
 
         var assembly = MetadataHelper.LoadAssembly(fullAssemblyPath);
 
@@ -348,8 +352,6 @@ static class Program
 
     public static void Main(string[] args)
     {
-        ReflectionHelper.AttachAssemblyResolver();
-
         KillAllNamedProcess(nameof(ApiInspector));
 
         FileHelper.ClearLog();
@@ -420,7 +422,8 @@ static class Program
     internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(prm.assemblyFilePath);
-        
+        ReflectionHelper.AttachAssemblyResolver();
+
         return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
     }
 
