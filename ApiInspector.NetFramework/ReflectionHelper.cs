@@ -13,6 +13,30 @@ static class ReflectionHelper
         AppDomain.CurrentDomain.AssemblyResolve += ResolveAssemblyInSameFolder;
     }
 
+    public static void AttachToAssemblyResolveSameDirectory(string fullAssemblyPath)
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
+        {
+            var requestedAssemblyName = new AssemblyName(e.Name);
+
+            var fileNameWithoutExtension = requestedAssemblyName.Name;
+
+            var directoryInfo = Directory.GetParent(fullAssemblyPath);
+            if (directoryInfo is null)
+            {
+                return null;
+            }
+
+            var path = directoryInfo.FullName + fileNameWithoutExtension + ".dll";
+            if (File.Exists(path))
+            {
+                return Assembly.LoadFrom(path);
+            }
+
+            return null;
+        };
+    }
+
     public static object CreateDefaultValue(Type type)
     {
         if (type == typeof(string))

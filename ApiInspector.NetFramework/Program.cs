@@ -10,8 +10,13 @@ namespace ApiInspector;
 
 static class Program
 {
+    
+     
+     
     public static string GetEnvironment(string assemblyFileFullPath)
     {
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
+        
         return Plugin.GetEnvironment(assemblyFileFullPath);
     }
 
@@ -30,6 +35,8 @@ static class Program
     {
         var (fullAssemblyPath, methodReference, jsonForInstance) = state;
 
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
+        
         if (methodReference is null || methodReference.IsStatic)
         {
             return jsonForInstance;
@@ -108,6 +115,8 @@ static class Program
     {
         var (fullAssemblyPath, methodReference, jsonForParameters) = state;
 
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
+        
         if (methodReference is null || methodReference.Parameters.Count == 0)
         {
             return jsonForParameters;
@@ -147,6 +156,8 @@ static class Program
     public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
     {
         var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
+
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
 
         var assembly = MetadataHelper.LoadAssembly(fullAssemblyPath);
 
@@ -408,6 +419,8 @@ static class Program
 
     internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
     {
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(prm.assemblyFilePath);
+        
         return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
     }
 
