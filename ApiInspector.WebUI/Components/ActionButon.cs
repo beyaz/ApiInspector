@@ -40,7 +40,7 @@ sealed class ActionButton : PureComponent
         {
             loadingIcon,
             icon,
-            new div(Label)
+            new div{Label}
         };
 
         return ArrangeTooltip(content);

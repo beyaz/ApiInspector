@@ -252,21 +252,6 @@
                 Client.NavigateTo("/AboutUs") navigates to About Us page
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.BackgroundColorTransparent">
-            <summary>
-                style.backgroundColor = 'transparent'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.BackgroundTransparent">
-            <summary>
-                style.background = 'transparent'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.BackgroundWhite">
-            <summary>
-                style.background = 'white'
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.ClearBoth">
             <summary>
                 style.clear = 'both'
@@ -280,16 +265,6 @@
         <member name="P:ReactWithDotNet.Mixin.ClearRight">
             <summary>
                 style.clear = 'right'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.ColorWhite">
-            <summary>
-                style.color = 'white'
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.ColorInherit">
-            <summary>
-                style.color = 'inherit'
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.DirectionLtr">
@@ -736,13 +711,6 @@
                 style.bottom = <paramref name="pixelValue" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.VSpace(System.Double)">
-            <summary>
-                Creates a new div with given height
-                <br />
-                new div{ style = {height = <paramref name="valueInPx" />}}
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.Mixin.When(System.Boolean,ReactWithDotNet.StyleModifier[])">
             <summary>
                 Apply given modifiers when condition is true
@@ -1002,6 +970,12 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Mixin.Transition(System.String,System.Double,System.String)">
+            <summary>
+                style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms {
+                <paramref name="easingFunction" />}
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.Mixin.Transition(System.Func{System.String,ReactWithDotNet.StyleModifier},System.Double,System.String)">
             <summary>
                 style.transition = {<paramref name="propertyName" />} {<paramref name="durationAsMilliseconds" />}ms {
                 <paramref name="easingFunction" />}
@@ -4647,11 +4621,6 @@
                 Specifies independent, self-contained content.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.article.#ctor(System.String)">
-            <summary>
-                Specifies independent, self-contained content.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.article.op_Implicit(System.String)~ReactWithDotNet.article">
             <summary>
                 Specifies independent, self-contained content.
@@ -4802,11 +4771,6 @@
                 Defines a paragraph
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.p.#ctor(System.String)">
-            <summary>
-                Defines a paragraph
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.p.op_Implicit(System.String)~ReactWithDotNet.p">
             <summary>
                 Defines a paragraph
@@ -4849,11 +4813,6 @@
                 Defines a description list.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.dl.#ctor(System.String)">
-            <summary>
-                Defines a description list.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.dl.op_Implicit(System.String)~ReactWithDotNet.dl">
             <summary>
                 Defines a description list.
@@ -4880,11 +4839,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.dt">
-            <summary>
-                Defines a term/name in a description list.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.dt.#ctor(System.String)">
             <summary>
                 Defines a term/name in a description list.
             </summary>
@@ -4919,11 +4873,6 @@
                 Describe a term/name in a description list.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.dd.#ctor(System.String)">
-            <summary>
-                Describe a term/name in a description list.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.dd.op_Implicit(System.String)~ReactWithDotNet.dd">
             <summary>
                 Describe a term/name in a description list.
@@ -4950,11 +4899,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.kbd">
-            <summary>
-                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.kbd.#ctor(System.String)">
             <summary>
                 tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
             </summary>
@@ -4989,11 +4933,6 @@
                 Preformatted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.pre.#ctor(System.String)">
-            <summary>
-                Preformatted text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.pre.op_Implicit(System.String)~ReactWithDotNet.pre">
             <summary>
                 Preformatted text
@@ -5020,11 +4959,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.code">
-            <summary>
-                Define some text as computer code in a document
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.code.#ctor(System.String)">
             <summary>
                 Define some text as computer code in a document
             </summary>
@@ -5059,11 +4993,6 @@
                 Ordered list
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ol.#ctor(System.String)">
-            <summary>
-                Ordered list
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.ol.op_Implicit(System.String)~ReactWithDotNet.ol">
             <summary>
                 Ordered list
@@ -5090,11 +5019,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.ul">
-            <summary>
-                Unordered (bulleted) list
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.ul.#ctor(System.String)">
             <summary>
                 Unordered (bulleted) list
             </summary>
@@ -5129,11 +5053,6 @@
                 List item
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.li.#ctor(System.String)">
-            <summary>
-                List item
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.li.op_Implicit(System.String)~ReactWithDotNet.li">
             <summary>
                 List item
@@ -5160,11 +5079,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.span">
-            <summary>
-                Inline container used to mark up a part of a text, or a part of a document.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.span.#ctor(System.String)">
             <summary>
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
@@ -5199,11 +5113,6 @@
                 Superscript text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.sup.#ctor(System.String)">
-            <summary>
-                Superscript text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.sup.op_Implicit(System.String)~ReactWithDotNet.sup">
             <summary>
                 Superscript text
@@ -5230,11 +5139,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.sub">
-            <summary>
-                Subscript text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.sub.#ctor(System.String)">
             <summary>
                 Subscript text
             </summary>
@@ -5269,11 +5173,6 @@
                 Inserted text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.ins.#ctor(System.String)">
-            <summary>
-                Inserted text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.ins.op_Implicit(System.String)~ReactWithDotNet.ins">
             <summary>
                 Inserted text
@@ -5300,11 +5199,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.del">
-            <summary>
-                Deleted text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.del.#ctor(System.String)">
             <summary>
                 Deleted text
             </summary>
@@ -5339,11 +5233,6 @@
                 Smaller text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.small.#ctor(System.String)">
-            <summary>
-                Smaller text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.small.op_Implicit(System.String)~ReactWithDotNet.small">
             <summary>
                 Smaller text
@@ -5370,11 +5259,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.mark">
-            <summary>
-                Marked text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.mark.#ctor(System.String)">
             <summary>
                 Marked text
             </summary>
@@ -5409,11 +5293,6 @@
                 Emphasized text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.em.#ctor(System.String)">
-            <summary>
-                Emphasized text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.em.op_Implicit(System.String)~ReactWithDotNet.em">
             <summary>
                 Emphasized text
@@ -5440,11 +5319,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.b">
-            <summary>
-                Bold text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.b.#ctor(System.String)">
             <summary>
                 Bold text
             </summary>
@@ -5479,11 +5353,6 @@
                 Italic text
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.i.#ctor(System.String)">
-            <summary>
-                Italic text
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.i.op_Implicit(System.String)~ReactWithDotNet.i">
             <summary>
                 Italic text
@@ -5514,11 +5383,6 @@
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.u.#ctor(System.String)">
-            <summary>
-                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
-            </summary>
-        </member>
         <member name="M:ReactWithDotNet.u.op_Implicit(System.String)~ReactWithDotNet.u">
             <summary>
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
@@ -5545,11 +5409,6 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.strong">
-            <summary>
-                Important text
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.strong.#ctor(System.String)">
             <summary>
                 Important text
             </summary>
@@ -5750,28 +5609,28 @@
                 The opacity (transparency) of the line's stroke.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.line.X1(System.String)">
+        <member name="M:ReactWithDotNet.line.X1(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 x1 = <paramref name="value"/>
             <br/>
                 The x-coordinate of the start point of the line.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.line.Y1(System.String)">
+        <member name="M:ReactWithDotNet.line.Y1(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 y1 = <paramref name="value"/>
             <br/>
                 The y-coordinate of the start point of the line.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.line.X2(System.String)">
+        <member name="M:ReactWithDotNet.line.X2(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 x2 = <paramref name="value"/>
             <br/>
                 The x-coordinate of the end point of the line.
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.line.Y2(System.String)">
+        <member name="M:ReactWithDotNet.line.Y2(ReactWithDotNet.UnionProp{System.String,System.Double})">
             <summary>
                 y2 = <paramref name="value"/>
             <br/>
@@ -6154,6 +6013,114 @@
                 strokeLinejoin = <paramref name="value"/>
             <br/>
                 The linejoin style of the rectangle's stroke.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.id">
+            <summary>
+                Defines a unique identifier (ID) for the marker element.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.markerHeight">
+            <summary>
+                Specifies the height of the marker viewport.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.markerUnits">
+            <summary>
+                Specifies the coordinate system for the marker width and height. Possible values are 'strokeWidth' or 'userSpaceOnUse'.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.markerWidth">
+            <summary>
+                Specifies the width of the marker viewport.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.orient">
+            <summary>
+                Defines the rotation angle for the marker, in degrees. Accepts 'auto', 'auto-start-reverse', or a specific angle.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.preserveAspectRatio">
+            <summary>
+                Indicates how the marker should scale its dimensions.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.refX">
+            <summary>
+                Defines the x-coordinate in the marker’s coordinate system.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.refY">
+            <summary>
+                Defines the y-coordinate in the marker’s coordinate system.
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.marker.viewBox">
+            <summary>
+                Specifies the position and dimension of the marker’s viewport.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.Id(System.String)">
+            <summary>
+                id = <paramref name="value"/>
+            <br/>
+                Defines a unique identifier (ID) for the marker element.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.MarkerHeight(ReactWithDotNet.UnionProp{System.String,System.Double})">
+            <summary>
+                markerHeight = <paramref name="value"/>
+            <br/>
+                Specifies the height of the marker viewport.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.MarkerUnits(System.String)">
+            <summary>
+                markerUnits = <paramref name="value"/>
+            <br/>
+                Specifies the coordinate system for the marker width and height. Possible values are 'strokeWidth' or 'userSpaceOnUse'.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.MarkerWidth(ReactWithDotNet.UnionProp{System.String,System.Double})">
+            <summary>
+                markerWidth = <paramref name="value"/>
+            <br/>
+                Specifies the width of the marker viewport.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.Orient(System.String)">
+            <summary>
+                orient = <paramref name="value"/>
+            <br/>
+                Defines the rotation angle for the marker, in degrees. Accepts 'auto', 'auto-start-reverse', or a specific angle.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.PreserveAspectRatio(System.String)">
+            <summary>
+                preserveAspectRatio = <paramref name="value"/>
+            <br/>
+                Indicates how the marker should scale its dimensions.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.RefX(ReactWithDotNet.UnionProp{System.String,System.Double})">
+            <summary>
+                refX = <paramref name="value"/>
+            <br/>
+                Defines the x-coordinate in the marker’s coordinate system.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.RefY(ReactWithDotNet.UnionProp{System.String,System.Double})">
+            <summary>
+                refY = <paramref name="value"/>
+            <br/>
+                Defines the y-coordinate in the marker’s coordinate system.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.marker.ViewBox(System.String)">
+            <summary>
+                viewBox = <paramref name="value"/>
+            <br/>
+                Specifies the position and dimension of the marker’s viewport.
             </summary>
         </member>
         <member name="P:ReactWithDotNet.radialGradient.cx">
@@ -11125,6 +11092,11 @@
               slidesPerView: 3, <br/>
               spaceBetween: 30 <br/>
             }<br/>
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries._Swiper_.SwiperGridOption.fill">
+            <summary>
+                Can be 'column' or 'row'. Defines how slides should fill rows, by column or by row
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyReactComponent.className">
