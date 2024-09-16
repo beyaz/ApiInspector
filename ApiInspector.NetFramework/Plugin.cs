@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
 
 namespace ApiInspector;
 
@@ -21,11 +20,15 @@ static class Plugin
                 return null;
             }
 
-            foreach (var file in Directory.GetFiles(directory, "*.json"))
+            foreach (var file in Directory.GetFiles(directory, "*.dll"))
             {
                 if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
                 {
-                    return JsonConvert.DeserializeObject<PluginInfo>(File.ReadAllText(file));
+                    return new PluginInfo
+                    {
+                        FullClassName          = "ApiInspector.Plugin",
+                        FullFilePathOfAssembly = file
+                    };
                 }
             }
 
@@ -92,6 +95,22 @@ static class Plugin
         if ((isInvoked && response.exception is not null) || response.isInvoked)
         {
             return response;
+        }
+
+        return default;
+    }
+
+    public static bool? ShouldNetStandardAssemblyRunOnNetFramework(string assemblyFileName)
+    {
+        if (PluginInstance is null)
+        {
+            return default;
+        }
+
+        var (isInvoked, value) = TryInvokeStaticMethodFromPlugin<bool?>(PluginInstance, nameof(ShouldNetStandardAssemblyRunOnNetFramework), assemblyFileName);
+        if (isInvoked && value != null)
+        {
+            return value;
         }
 
         return default;

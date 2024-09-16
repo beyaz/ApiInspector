@@ -54,13 +54,31 @@ static class External
             return (default, RuntimeNotDetectedException(assemblyFileFullPath));
         }
 
-        
         var inputAsJson = JsonConvert.SerializeObject(parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
 
         var isNetCore = runtime.IsNetCore;
 
         int exitCode;
-        
+
+        if (runtime.IsNetStandard)
+        {
+            isNetCore = true;
+
+            // default pattern: run standard dlls on net core application
+            // But sometimes we need to run standard dlls on .netframework application
+
+            FileHelper.WriteInput(JsonConvert.SerializeObject(assemblyFileFullPath, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore }));
+            exitCode = RunProcess(runCoreApp: false, "ShouldNetStandardAssemblyRunOnNetFramework", waitForDebugger: false);
+            if (exitCode == 1)
+            {
+                var shouldNetStandardAssemblyRunOnNetFramework = JsonConvert.DeserializeObject<bool?>(FileHelper.ReadResponse());
+                if (shouldNetStandardAssemblyRunOnNetFramework is true)
+                {
+                    isNetCore = false;
+                }
+            }
+        }
+
         {
             FileHelper.WriteInput(inputAsJson);
 
@@ -77,24 +95,6 @@ static class External
                 return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail()));
             }
         }
-
-        // try to invoke netstandard code on netcore app
-        if (runtime.IsNetStandard)
-        {
-            FileHelper.WriteInput(inputAsJson);
-
-            exitCode = RunProcess(runCoreApp: true, methodName, waitForDebugger);
-            if (exitCode == 1)
-            {
-                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
-            }
-
-            if (exitCode == 0)
-            {
-                return (default, new Exception("(NetCore)" + FileHelper.TakeResponseAsFail()));
-            }
-        }
-
 
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }

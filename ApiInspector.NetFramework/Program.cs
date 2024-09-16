@@ -12,6 +12,9 @@ static class Program
 {
     public static string GetEnvironment(string assemblyFileFullPath)
     {
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
+        ReflectionHelper.AttachAssemblyResolver();
+
         return Plugin.GetEnvironment(assemblyFileFullPath);
     }
 
@@ -29,6 +32,9 @@ static class Program
     public static string GetInstanceEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance) state)
     {
         var (fullAssemblyPath, methodReference, jsonForInstance) = state;
+
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
+        ReflectionHelper.AttachAssemblyResolver();
 
         if (methodReference is null || methodReference.IsStatic)
         {
@@ -108,6 +114,9 @@ static class Program
     {
         var (fullAssemblyPath, methodReference, jsonForParameters) = state;
 
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
+        ReflectionHelper.AttachAssemblyResolver();
+
         if (methodReference is null || methodReference.Parameters.Count == 0)
         {
             return jsonForParameters;
@@ -147,6 +156,9 @@ static class Program
     public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
     {
         var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
+
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
+        ReflectionHelper.AttachAssemblyResolver();
 
         var assembly = MetadataHelper.LoadAssembly(fullAssemblyPath);
 
@@ -198,9 +210,9 @@ static class Program
                 {
                     map = JsonConvert.DeserializeObject<JObject>(jsonForParameters);
                 }
-                
-                if (parameterInfoList.Length == 1 && 
-                    parameterInfoList[0].ParameterType.FullName == "System.String" && 
+
+                if (parameterInfoList.Length == 1 &&
+                    parameterInfoList[0].ParameterType.FullName == "System.String" &&
                     parameterInfoList[0].Name is not null)
                 {
                     var jProperty = map.Property(parameterInfoList[0].Name, StringComparison.OrdinalIgnoreCase);
@@ -229,7 +241,7 @@ static class Program
             }
 
             var invocationParameters = new List<object>();
-        
+
             foreach (var parameterInfo in parameterInfoList)
             {
                 invocationParameters.Add(calculateParameterValue(map, parameterInfo));
@@ -237,7 +249,6 @@ static class Program
 
             methodParameters = invocationParameters.ToArray();
         }
-        
 
         object response = null;
 
@@ -337,8 +348,6 @@ static class Program
 
     public static void Main(string[] args)
     {
-        ReflectionHelper.AttachAssemblyResolver();
-
         KillAllNamedProcess(nameof(ApiInspector));
 
         FileHelper.ClearLog();
@@ -406,8 +415,19 @@ static class Program
         }
     }
 
+    public static bool? ShouldNetStandardAssemblyRunOnNetFramework(string assemblyFileName)
+    {
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileName);
+        ReflectionHelper.AttachAssemblyResolver();
+
+        return Plugin.ShouldNetStandardAssemblyRunOnNetFramework(assemblyFileName);
+    }
+
     internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
     {
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(prm.assemblyFilePath);
+        ReflectionHelper.AttachAssemblyResolver();
+
         return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
     }
 

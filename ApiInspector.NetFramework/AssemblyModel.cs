@@ -308,14 +308,7 @@ static class AssemblyModelHelper
 
     static IEnumerable<Type> TryGetTypes(Assembly assembly)
     {
-        try
-        {
-            return assembly.GetTypes().Where(isValidForAnalyze);
-        }
-        catch (Exception)
-        {
-            return Enumerable.Empty<Type>().ToArray();
-        }
+        return assembly.GetTypes().Where(isValidForAnalyze);
 
         static bool isValidForAnalyze(Type type)
         {

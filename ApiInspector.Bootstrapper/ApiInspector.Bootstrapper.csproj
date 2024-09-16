@@ -13,10 +13,9 @@
   </ItemGroup>
 
     <ItemGroup>
-        <RuntimeHostConfigurationOption Include="InstallationFolder" Value="{MyDocuments}\ApiInspector\Application\" />
+        <RuntimeHostConfigurationOption Include="InstallationFolder" Value="{MyDocuments}\ApiInspector\Application\Api Inspector (.net method invoker)\" />
         <RuntimeHostConfigurationOption Include="VersionUrl" Value="https://raw.githubusercontent.com/beyaz/ApiInspector/main/ApiInspector.Bootstrapper/Version.txt" />
         <RuntimeHostConfigurationOption Include="NewVersionZipFileUrl" Value="https://github.com/beyaz/ApiInspector/raw/main/ApiInspector.Bootstrapper/ApiInspectorLatestVersion.zip" />
-        
     </ItemGroup>
 
 </Project>
