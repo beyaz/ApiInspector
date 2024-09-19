@@ -12,9 +12,11 @@ static class ReflectionHelper
         AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssemblyInSameFolder;
         AppDomain.CurrentDomain.AssemblyResolve += ResolveAssemblyInSameFolder;
     }
-
+    
     public static void AttachToAssemblyResolveSameDirectory(string fullAssemblyPath)
     {
+        ExtractRuntimeFolders(fullAssemblyPath);
+        
         AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
         {
             var requestedAssemblyName = new AssemblyName(e.Name);
@@ -35,6 +37,76 @@ static class ReflectionHelper
 
             return null;
         };
+        
+        return;
+
+        static void ExtractRuntimeFolders(string fullAssemblyPath)
+        {
+            var assemblyDirectory = Directory.GetParent(fullAssemblyPath);
+            if (assemblyDirectory is null)
+            {
+                return;
+            }
+
+            var workingDirectoryPath = assemblyDirectory.FullName;
+
+
+            var operatingSystem = GetOperatingSystem();
+
+            var architecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+
+            string[] sourceDirectories =
+            [
+                Path.Combine(workingDirectoryPath, "runtimes", operatingSystem, "lib", "net8.0"),
+                Path.Combine(workingDirectoryPath, "runtimes", operatingSystem + "-" + architecture, "native")
+            ];
+
+            foreach (var sourceDirectory in sourceDirectories)
+            {
+                if (Directory.Exists(sourceDirectory))
+                {
+                    CopyAllFiles(sourceDirectory, workingDirectoryPath);
+                }
+            }
+
+            return;
+
+            static string GetOperatingSystem()
+            {
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                {
+                    return "win";
+                }
+
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                {
+                    return "linux";
+                }
+
+                return null;
+            }
+
+            static void CopyAllFiles(string sourceDirectory, string destinationDirectory)
+            {
+                // Ensure the destination directory exists
+                Directory.CreateDirectory(destinationDirectory);
+
+                // Get all files in the source directory
+                string[] files = Directory.GetFiles(sourceDirectory);
+
+                foreach (string file in files)
+                {
+                    // Get the file name without the directory
+                    string fileName = Path.GetFileName(file);
+
+                    // Create the full path for the destination file
+                    string destFile = Path.Combine(destinationDirectory, fileName);
+
+                    // Copy the file
+                    File.Copy(file, destFile, true); // true to overwrite existing files
+                }
+            }
+        }
     }
 
     public static object CreateDefaultValue(Type type)
