@@ -231,8 +231,7 @@ static class ReflectionHelper
         void onFail()
         {
             var errorMessage = $"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}";
-
-            throw new Exception(errorMessage);
+            Console.WriteLine(errorMessage);
         }
 
         static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)

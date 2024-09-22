@@ -333,7 +333,7 @@ static class Program
                         return parameterInstance;
                     }
 
-                    return jProperty.Value.ToObject(parameterInfo.ParameterType);
+                    return jProperty.Value.ToObject(parameterInfo.ParameterType, new JsonSerializer{ TypeNameHandling = TypeNameHandling.Auto});
                 }
             }
 
