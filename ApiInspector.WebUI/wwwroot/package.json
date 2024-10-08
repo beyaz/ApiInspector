@@ -6,25 +6,28 @@
         "build": "esbuild index.jsx --bundle --format=esm --outfile=dist/release/index.js --analyze --minify --target=es2016"
     },
     "dependencies": {
-        "@monaco-editor/react": "^4.5.2",
+        "@monaco-editor/react": "^4.6.0",
 
-        "esbuild": "^0.14.48",
+        "esbuild": "^0.23.1",
         "install": "^0.13.0",
-        "npm": "^8.15.0",
+        "npm": "^10.8.3",
 
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+
+        "react-transition-group": "^4.4.5",
         "react-free-scrollbar": "^0.3.4",
-        "react-transition-group": "^4.4.2",
+        
 
-        "rsuite": "^5.70.0",
+        "rsuite": "^5.70.2",
 
         "react-split": "^2.0.14",
 
-        "@mui/material": "^5.11.7",
-        "@emotion/react": "^11.10.5",
-        "@emotion/styled": "^11.10.5",
+        "@mui/material": "^6.1.0",
 
-         "framer-motion": "^10.16.0"
+         "@emotion/react": "^11.13.3",
+         "@emotion/styled": "^11.13.0",
+
+         "framer-motion": "^11.5.4"
     }
 }
