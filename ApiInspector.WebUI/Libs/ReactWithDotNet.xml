@@ -457,16 +457,6 @@
                 style.width = "100vw"
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.Mixin.WidthMax">
-            <summary>
-                width: 100%
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.Mixin.HeightMax">
-            <summary>
-                height: 100%
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.Mixin.WidthFitContent">
             <summary>
                 width: fit-content
@@ -1386,6 +1376,27 @@
                 width: 100%
                 <br />
                 height: 100%
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.SizeFitContent">
+            <summary>
+                width: fit-content
+                <br />
+                height: fit-content
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.SizeMaxContent">
+            <summary>
+                width: max-content
+                <br />
+                height: max-content
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.Mixin.SizeMinContent">
+            <summary>
+                width: min-content
+                <br />
+                height: min-content
             </summary>
         </member>
         <member name="P:ReactWithDotNet.Mixin.HeightFull">
@@ -4621,6 +4632,16 @@
                 Specifies independent, self-contained content.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.article.#ctor(System.String)">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(System.String,ReactWithDotNet.Modifier[])">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.article.op_Implicit(System.String)~ReactWithDotNet.article">
             <summary>
                 Specifies independent, self-contained content.
@@ -4642,6 +4663,16 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.article.#ctor(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Specifies independent, self-contained content.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.article.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
             <summary>
                 Specifies independent, self-contained content.
             </summary>
@@ -4771,6 +4802,16 @@
                 Defines a paragraph
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.p.#ctor(System.String)">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor(System.String,ReactWithDotNet.Modifier[])">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.p.op_Implicit(System.String)~ReactWithDotNet.p">
             <summary>
                 Defines a paragraph
@@ -4796,6 +4837,16 @@
                 Defines a paragraph
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.p.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.p.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Defines a paragraph
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.time.datetime">
             <summary>
                 Represent a machine-readable format of the 'time' element
@@ -4809,6 +4860,16 @@
             </summary>
         </member>
         <member name="T:ReactWithDotNet.dl">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(System.String)">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Defines a description list.
             </summary>
@@ -4838,7 +4899,27 @@
                 Defines a description list.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dl.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Defines a description list.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.dt">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(System.String)">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Defines a term/name in a description list.
             </summary>
@@ -4868,7 +4949,27 @@
                 Defines a term/name in a description list.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dt.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Defines a term/name in a description list.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.dd">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(System.String)">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Describe a term/name in a description list.
             </summary>
@@ -4898,7 +4999,27 @@
                 Describe a term/name in a description list.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.dd.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Describe a term/name in a description list.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.kbd">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(System.String)">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
             </summary>
@@ -4928,7 +5049,27 @@
                 tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.kbd.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                tag is used to define keyboard input. The content inside is displayed in the browser's default monospace font.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.pre">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(System.String)">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Preformatted text
             </summary>
@@ -4958,7 +5099,27 @@
                 Preformatted text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.pre.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Preformatted text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.code">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(System.String)">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Define some text as computer code in a document
             </summary>
@@ -4988,7 +5149,27 @@
                 Define some text as computer code in a document
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.code.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.code.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Define some text as computer code in a document
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.ol">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(System.String)">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Ordered list
             </summary>
@@ -5018,7 +5199,27 @@
                 Ordered list
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ol.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Ordered list
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.ul">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(System.String)">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Unordered (bulleted) list
             </summary>
@@ -5048,7 +5249,27 @@
                 Unordered (bulleted) list
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ul.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Unordered (bulleted) list
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.li">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(System.String)">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 List item
             </summary>
@@ -5078,7 +5299,27 @@
                 List item
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.li.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                List item
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.li.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                List item
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.span">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(System.String)">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
@@ -5108,7 +5349,27 @@
                 Inline container used to mark up a part of a text, or a part of a document.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.span.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.span.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Inline container used to mark up a part of a text, or a part of a document.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.sup">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(System.String)">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Superscript text
             </summary>
@@ -5138,7 +5399,27 @@
                 Superscript text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sup.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Superscript text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.sub">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(System.String)">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Subscript text
             </summary>
@@ -5168,7 +5449,27 @@
                 Subscript text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.sub.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Subscript text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.ins">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(System.String)">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Inserted text
             </summary>
@@ -5198,7 +5499,27 @@
                 Inserted text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.ins.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Inserted text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.del">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(System.String)">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Deleted text
             </summary>
@@ -5228,7 +5549,27 @@
                 Deleted text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.del.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.del.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Deleted text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.small">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(System.String)">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Smaller text
             </summary>
@@ -5258,7 +5599,27 @@
                 Smaller text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.small.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.small.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Smaller text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.mark">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(System.String)">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Marked text
             </summary>
@@ -5288,7 +5649,27 @@
                 Marked text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Marked text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.mark.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Marked text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.em">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(System.String)">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Emphasized text
             </summary>
@@ -5318,7 +5699,27 @@
                 Emphasized text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.em.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.em.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Emphasized text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.b">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(System.String)">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Bold text
             </summary>
@@ -5348,7 +5749,27 @@
                 Bold text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.b.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Bold text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.b.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Bold text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.i">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(System.String)">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Italic text
             </summary>
@@ -5378,7 +5799,27 @@
                 Italic text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.i.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Italic text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.i.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Italic text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.u">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(System.String)">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
@@ -5408,7 +5849,27 @@
                 Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.u.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.u.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Represents some text that is unarticulated and styled differently from normal text, such as misspelled words or proper names in Chinese text. The content inside is typically displayed with an underline.
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.strong">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(System.String)">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Important text
             </summary>
@@ -5438,7 +5899,27 @@
                 Important text
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Important text
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.strong.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
+            <summary>
+                Important text
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.section">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor(System.String)">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor(System.String,ReactWithDotNet.Modifier[])">
             <summary>
                 Section in a document
             </summary>
@@ -5459,6 +5940,16 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.section.#ctor(ReactWithDotNet.StyleModifier[])">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor(System.Collections.Generic.List{ReactWithDotNet.StyleModifier})">
+            <summary>
+                Section in a document
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.section.#ctor(System.Collections.Generic.List{ReactWithDotNet.Modifier})">
             <summary>
                 Section in a document
             </summary>
@@ -6015,11 +6506,6 @@
                 The linejoin style of the rectangle's stroke.
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.marker.id">
-            <summary>
-                Defines a unique identifier (ID) for the marker element.
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.marker.markerHeight">
             <summary>
                 Specifies the height of the marker viewport.
@@ -6058,13 +6544,6 @@
         <member name="P:ReactWithDotNet.marker.viewBox">
             <summary>
                 Specifies the position and dimension of the marker’s viewport.
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.marker.Id(System.String)">
-            <summary>
-                id = <paramref name="value"/>
-            <br/>
-                Defines a unique identifier (ID) for the marker element.
             </summary>
         </member>
         <member name="M:ReactWithDotNet.marker.MarkerHeight(ReactWithDotNet.UnionProp{System.String,System.Double})">
@@ -7144,7 +7623,11 @@
                 Indicates how an element should preserve its aspect ratio when the viewBox is different from the viewport.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:ReactWithDotNet.symbol.externalResourcesRequired" -->
+        <member name="P:ReactWithDotNet.symbol.externalResourcesRequired">
+            <summary>
+                Specifies whether the rendering of the 'symbol' element is dependent on external resources.
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.symbol.transform">
             <summary>
                 Applies a transformation to the element, such as scaling, rotating, or translating.
@@ -7164,7 +7647,13 @@
                 Indicates how an element should preserve its aspect ratio when the viewBox is different from the viewport.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:ReactWithDotNet.symbol.ExternalResourcesRequired(System.String)" -->
+        <member name="M:ReactWithDotNet.symbol.ExternalResourcesRequired(System.String)">
+            <summary>
+                externalResourcesRequired = <paramref name="value"/>
+            <br/>
+                Specifies whether the rendering of the 'symbol' element is dependent on external resources.
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.symbol.Transform(System.String)">
             <summary>
                 transform = <paramref name="value"/>
@@ -7767,11 +8256,6 @@
                 Adds a Content Security Policy for the iframe's content
             </summary>
         </member>
-        <member name="P:ReactWithDotNet.iframe.title">
-            <summary>
-                Provides advisory information about the content of the iframe
-            </summary>
-        </member>
         <member name="P:ReactWithDotNet.iframe.hidden">
             <summary>
                 Hides the iframe
@@ -7852,13 +8336,6 @@
                 csp = <paramref name="value"/>
             <br/>
                 Adds a Content Security Policy for the iframe's content
-            </summary>
-        </member>
-        <member name="M:ReactWithDotNet.iframe.Title(System.String)">
-            <summary>
-                title = <paramref name="value"/>
-            <br/>
-                Provides advisory information about the content of the iframe
             </summary>
         </member>
         <member name="M:ReactWithDotNet.iframe.Hidden(System.String)">
@@ -8011,6 +8488,30 @@
                 Adds given cssClassName ot class attribute of html element
             </summary>
         </member>
+        <member name="P:ReactWithDotNet.canvas.width">
+            <summary>
+                Defines the width of the canvas in pixels
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.canvas.height">
+            <summary>
+                Defines the height of the canvas in pixels
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.canvas.Width(ReactWithDotNet.UnionProp{System.String,System.Double})">
+            <summary>
+                width = <paramref name="value"/>
+            <br/>
+                Defines the width of the canvas in pixels
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.canvas.Height(ReactWithDotNet.UnionProp{System.String,System.Double})">
+            <summary>
+                height = <paramref name="value"/>
+            <br/>
+                Defines the height of the canvas in pixels
+            </summary>
+        </member>
         <member name="P:ReactWithDotNet.ReactComponentBase.DesignMode">
             <summary>
               Indicates component is in design mode.
@@ -8134,6 +8635,13 @@
                 flexDirection  = "row"
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.FlexRow.#ctor(System.String)">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.FlexRow.#ctor">
             <summary>
                 display = "flex"
@@ -8162,6 +8670,13 @@
                 flexDirection  = "row"
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.InlineFlexRow.#ctor(System.String)">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.FlexColumn">
             <summary>
                 display = "flex"
@@ -8177,6 +8692,13 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexColumn.#ctor">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "column"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexColumn.#ctor(System.String)">
             <summary>
                 display = "flex"
                 <br />
@@ -8204,6 +8726,13 @@
                 flexDirection  = "inline-column"
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.InlineFlexColumn.#ctor(System.String)">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "inline-column"
+            </summary>
+        </member>
         <member name="T:ReactWithDotNet.FlexRowCentered">
             <summary>
                 display = "flex"
@@ -8216,6 +8745,17 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.FlexRowCentered.#ctor">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.FlexRowCentered.#ctor(System.String)">
             <summary>
                 display = "flex"
                 <br />
@@ -8259,6 +8799,17 @@
                 alignItems     = "center"
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.InlineFlexRowCentered.#ctor(System.String)">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "row"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.InlineFlexRowCentered.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "inline-flex"
@@ -8292,6 +8843,17 @@
                 alignItems     = "center"
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor(System.String)">
+            <summary>
+                display = "flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.FlexColumnCentered.#ctor(ReactWithDotNet.Modifier[])">
             <summary>
                 display = "flex"
@@ -8315,6 +8877,17 @@
             </summary>
         </member>
         <member name="M:ReactWithDotNet.InlineFlexColumnCentered.#ctor">
+            <summary>
+                display = "inline-flex"
+                <br />
+                flexDirection  = "column"
+                <br />
+                justifyContent = "center"
+                <br />
+                alignItems     = "center"
+            </summary>
+        </member>
+        <member name="M:ReactWithDotNet.InlineFlexColumnCentered.#ctor(System.String)">
             <summary>
                 display = "inline-flex"
                 <br />
@@ -8441,11 +9014,6 @@
                 Example:
                 <br />
                 new MediaQuery("only screen and (max-width: 600px)", new Style { width:"5px" }
-            </summary>
-        </member>
-        <member name="P:ReactWithDotNet.MouseEvent.FirstNotEmptyId">
-            <summary>
-                this is the id of first element id which is 'has id value'
             </summary>
         </member>
         <member name="M:ReactWithDotNet.Tailwind.px(System.Double)">
@@ -10960,6 +11528,11 @@
                 component.valueBind = ()=>state.UserInfo.Name<br />
                 component.valueBindDebounceTimeout = 600 // milliseconds<br />
                 component.valueBindDebounceHandler = OnUserIterationFinished<br />
+            </summary>
+        </member>
+        <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactSuite.Uploader.onSuccess">
+            <summary>
+               callback function after successful upload
             </summary>
         </member>
         <member name="P:ReactWithDotNet.ThirdPartyLibraries.ReactXarrows.Xarrow.start">

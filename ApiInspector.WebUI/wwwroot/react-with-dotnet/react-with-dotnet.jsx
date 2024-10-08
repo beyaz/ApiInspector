@@ -212,21 +212,6 @@ function HasId(htmlElement)
     return htmlElement.id !== "";
 }
 
-function GoUpwardFindFirst(htmlElement, findFunc)
-{
-    while (htmlElement)
-    {
-        if (findFunc(htmlElement))
-        {
-            return htmlElement;
-        }
-
-        htmlElement = htmlElement.parentElement;
-    }
-
-    return null;
-}
-
 function OnDocumentReady(callback)
 {
     const stateCheck = setInterval(function ()
@@ -478,16 +463,6 @@ function ShouldBeNumber(value)
     throw CreateNewDeveloperError("value should be number.");
 }
 
-function NVL(a, b)
-{
-    if (a == null)
-    {
-        return b;
-    }
-
-    return a;
-}
-
 function Clone(obj)
 {
     return JSON.parse(JSON.stringify(obj));
@@ -556,9 +531,11 @@ const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
 
     const map = {};
 
+    const stateInRootNode = rootFiberNode.stateNode.state;
+
     map[rootNodeKey] =
     {
-        StateAsJson: JSON.stringify(rootFiberNode.stateNode.state[DotNetState])
+        StateAsJson: JSON.stringify(stateInRootNode[DotNetState])
     };
 
     const rootScope = {map: map, breadcrumb: rootNodeKey};
@@ -570,7 +547,7 @@ const CaptureStateTreeFromFiberNode = (rootFiberNode) =>
         child = child.sibling;
     }
 
-    map[rootNodeKey][DotNetProperties] = Object.assign({}, NotNull(rootFiberNode.stateNode.state[DotNetProperties]));
+    map[rootNodeKey][DotNetProperties] = Object.assign({}, NotNull(stateInRootNode[DotNetProperties]));
 
     // calculate $LogicalChildrenCount
     {
@@ -1390,15 +1367,7 @@ function IsSerializablePrimitiveJsValue(value)
 
 function ConvertToSyntheticMouseEvent(e)
 {
-    let firstNotEmptyId = NVL(GoUpwardFindFirst(e.target, HasId), e.target).id;
-    if (firstNotEmptyId === '')
-    {
-        firstNotEmptyId = null;
-    }
-
     return {
-        FirstNotEmptyId: firstNotEmptyId,
-
         altKey:    e.altKey,
         bubbles:   e.bubbles,
         clientX:   e.clientX,
@@ -2372,6 +2341,31 @@ RegisterCoreFunction("CalculateSyntheticFocusEventArguments", (argumentsAsArray)
     ];
 
 });
+
+
+function CalculateRemoteMethodArgument(arg)
+{
+    return arg;
+}
+
+function CalculateRemoteMethodArguments(args)
+{
+    if (args == null)
+    {
+        return null;
+    }
+
+    const newArgs = [];
+
+    for (var i = 0; i < args.length; i++)
+    {
+        newArgs.push(CalculateRemoteMethodArgument(args[i]));
+    }
+
+    return newArgs;
+}
+
+RegisterCoreFunction('CalculateRemoteMethodArguments', CalculateRemoteMethodArguments);
 
 function SetCookie(cookieName_StringNotNull, cookieValue_StringNotNull, expireDays_NumberNotNull)
 {

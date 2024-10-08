@@ -136,7 +136,7 @@ class MainWindow : Component<MainWindowModel>
                     IsSelected = i == state.ScenarioListSelectedIndex,
                     Clicked = e =>
                     {
-                        state.ScenarioListSelectedIndex = Convert.ToInt32(e.FirstNotEmptyId);
+                        state.ScenarioListSelectedIndex = Convert.ToInt32(e.currentTarget.id);
                         return Task.CompletedTask;
                     }
                 }),
@@ -180,9 +180,8 @@ class MainWindow : Component<MainWindowModel>
                         HistoryDialogVisible = true;
 
                         return Task.CompletedTask;
-                    },
-                    style = { PositionAbsolute, Right(10), Top(-13), ComponentBoxShadow }
-                },
+                    }
+                } + PositionAbsolute+ Right(10)+ Top(-13)+ ComponentBoxShadow,
 
                 new FlexColumn
                 {
@@ -252,9 +251,8 @@ class MainWindow : Component<MainWindowModel>
                     MethodFilter              = state.MethodFilter,
                     SelectedMethodTreeNodeKey = state.SelectedMethodTreeNodeKey,
                     SelectionChanged          = OnElementSelected,
-                    AssemblyFilePath          = AssemblyFileFullPath,
-                    style                     = { ComponentBoxShadow }
-                }
+                    AssemblyFilePath          = AssemblyFileFullPath
+                } + ComponentBoxShadow
             };
         }
 

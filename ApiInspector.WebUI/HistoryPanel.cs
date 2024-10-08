@@ -77,7 +77,7 @@ class HistoryPanel : Component
 
     Task OnClickHandler(MouseEvent e)
     {
-        var storageKey = e.FirstNotEmptyId;
+        var storageKey = e.currentTarget.id;
 
         var fileContent = ReadFromStorage(storageKey);
 
@@ -90,7 +90,7 @@ class HistoryPanel : Component
 
     Task OnDeleteClicked(MouseEvent e)
     {
-        var storageKey = e.FirstNotEmptyId;
+        var storageKey = e.currentTarget.id;
 
         DeleteFromStorage(storageKey);
         
