@@ -92,7 +92,7 @@ sealed class MainLayout : Component, IPageLayout
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"import {{ReactWithDotNet}} from './{root}/dist.{CompilerMode}/index.js?v={LastWriteTimeOfIndexJsFile}';");
+            sb.AppendLine($"import {{ReactWithDotNet}} from './{root}/dist/{CompilerMode}/index.js?v={LastWriteTimeOfIndexJsFile}';");
             sb.AppendLine("ReactWithDotNet.StrictMode = false;");
 
             sb.AppendLine("ReactWithDotNet.RenderComponentIn({");
@@ -113,7 +113,7 @@ sealed class MainLayout : Component, IPageLayout
 
         if (Directory.Exists(directoryName))
         {
-            var fileInfo = new FileInfo(Path.Combine(directoryName, root, $"dist.{CompilerMode}", "index.js"));
+            var fileInfo = new FileInfo(Path.Combine(directoryName, root, $"dist/{CompilerMode}", "index.js"));
             if (fileInfo.Exists)
             {
                 return fileInfo.LastWriteTime.Ticks.ToString();

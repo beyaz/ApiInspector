@@ -56,12 +56,6 @@
       <Content Update="web.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Update="wwwroot\dist.debug\index.js">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Update="wwwroot\dist.release\index.js">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 
@@ -91,11 +85,14 @@
 		</Exec>
 		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
 		<Message Importance="high" Text="Runinning npm command: 'npm run dev'" />
+
+		<RemoveDir Directories="$(AppRoot)dist/" />
 		<Exec WorkingDirectory="$(AppRoot)" Command="npm run dev" />
 		<Exec WorkingDirectory="$(AppRoot)" Command="npm run build" />
 	</Target>
 	
 	<Target Name="_BeforePublish_" AfterTargets="ComputeFilesToPublish">
+		<RemoveDir Directories="$(AppRoot)dist/" />
 		<Exec WorkingDirectory="$(AppRoot)" Command="npm install" />
 		<Exec WorkingDirectory="$(AppRoot)" Command="npm run build" />
 	</Target>
@@ -114,10 +111,10 @@
 		<RemoveDir Directories="$(PublishDir)\wwwroot\react-with-dotnet" />
 		<RemoveDir Directories="$(PublishDir)\Libs" />
 
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net7.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net7.0\ApiInspector.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net7.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net7.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\ApiInspector.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
+		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
 		
 		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>

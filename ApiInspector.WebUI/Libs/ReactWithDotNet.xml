@@ -992,34 +992,34 @@
                 min-width: 640px
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeBetween(System.Int32,System.Int32,ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaWidthBetween(System.Int32,System.Int32,ReactWithDotNet.StyleModifier[])">
             <summary>
                 (min-width: <paramref name="minWidthAsPixel" /> + 'px') and (max-width: <paramref name="maxWidthAsPixel" /> + 'px')
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeGreaterThan(System.Int32,ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaWidthGreaterThan(System.Int32,ReactWithDotNet.StyleModifier[])">
             <summary>
                 min-width: <paramref name="widthAsPixel" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeGreaterThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaWidthGreaterThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
             <summary>
                 Sample Usage:
                 <code>
-                 WhenMediaSizeGreaterThan(SM, BorderRadius(8))
+                 WhenMediaWidthGreaterThan(SM, BorderRadius(8))
                 </code>
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeLessThan(System.Int32,ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaWidthLessThan(System.Int32,ReactWithDotNet.StyleModifier[])">
             <summary>
                 max-width: <paramref name="widthAsPixel" /> + 'px'
             </summary>
         </member>
-        <member name="M:ReactWithDotNet.Mixin.WhenMediaSizeLessThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
+        <member name="M:ReactWithDotNet.Mixin.WhenMediaWidthLessThan(System.Func{ReactWithDotNet.StyleModifier[],ReactWithDotNet.StyleModifier},ReactWithDotNet.StyleModifier[])">
             <summary>
                 Sample Usage:
                 <code>
-                 WhenMediaSizeLessThan(SM, BorderRadius(8))
+                 WhenMediaWidthLessThan(SM, BorderRadius(8))
                 </code>
             </summary>
         </member>
