@@ -2,30 +2,33 @@
 
 namespace ApiInspector.WebUI;
 
-sealed class MainLayout : Component, IPageLayout
+internal sealed class MainLayout : Component, IPageLayout
 {
-    static readonly string LastWriteTimeOfIndexJsFile = CalculateLastWriteTimeOfIndexJsFile();
+    string LastWriteTimeOfIndexJsFile;
 
-    public string ContainerDomElementId => "app";
-
-    public ComponentRenderInfo RenderInfo { get; set; }
-    
-    
     static string CompilerMode
     {
         get
         {
-#if DEBUG
+            #if DEBUG
             return "debug";
-#else
+            #else
                 return "release";
-#endif
+            #endif
         }
     }
 
+    public ComponentRenderInfo RenderInfo { get; set; }
+
+    public string ContainerDomElementId => "app";
+
+    string IndexJsFilePath => $"/{Context.wwwroot}/dist/{CompilerMode}/index.js";
+
     protected override Element render()
     {
-        const string root = "wwwroot";
+        var root = Context.wwwroot;
+
+        LastWriteTimeOfIndexJsFile ??= new FileInfo(IndexJsFilePath).LastWriteTime.Ticks.ToString();
 
         return new html
         {
@@ -70,8 +73,8 @@ sealed class MainLayout : Component, IPageLayout
                 },
                 new link
                 {
-                    href = "https://fonts.cdnfonts.com/css/ibm-plex-mono-3", 
-                    rel = "stylesheet"
+                    href = "https://fonts.cdnfonts.com/css/ibm-plex-mono-3",
+                    rel  = "stylesheet"
                 }
             },
             new body
@@ -92,7 +95,7 @@ sealed class MainLayout : Component, IPageLayout
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"import {{ReactWithDotNet}} from './{root}/dist/{CompilerMode}/index.js?v={LastWriteTimeOfIndexJsFile}';");
+            sb.AppendLine($"import {{ReactWithDotNet}} from '{IndexJsFilePath}?v={LastWriteTimeOfIndexJsFile}';");
             sb.AppendLine("ReactWithDotNet.StrictMode = false;");
 
             sb.AppendLine("ReactWithDotNet.RenderComponentIn({");
@@ -103,23 +106,5 @@ sealed class MainLayout : Component, IPageLayout
 
             return sb;
         }
-    }
-
-    static string CalculateLastWriteTimeOfIndexJsFile()
-    {
-        const string root = "wwwroot";
-
-        var directoryName = Path.GetDirectoryName(typeof(MainLayout).Assembly.Location);
-
-        if (Directory.Exists(directoryName))
-        {
-            var fileInfo = new FileInfo(Path.Combine(directoryName, root, $"dist/{CompilerMode}", "index.js"));
-            if (fileInfo.Exists)
-            {
-                return fileInfo.LastWriteTime.Ticks.ToString();
-            }
-        }
-
-        throw new IOException("index.js file not found");
     }
 }
