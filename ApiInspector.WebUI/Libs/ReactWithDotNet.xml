@@ -204,6 +204,11 @@
                 Shorthand property for assign Flex properties
             </summary>
         </member>
+        <member name="M:ReactWithDotNet.Mixin.Flex(System.Double)">
+            <summary>
+                style.flex = <paramref name="value" />
+            </summary>
+        </member>
         <member name="M:ReactWithDotNet.Mixin.WithStyle(ReactWithDotNet.Style)">
             <summary>
                 Automatically generates a css class then adds class name to element.
