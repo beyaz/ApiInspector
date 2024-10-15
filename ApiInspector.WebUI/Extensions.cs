@@ -1,5 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 
@@ -134,6 +136,29 @@ static partial class Extensions
         }
 
         return data;
+    }
+    
+    public static string GetHashString(this string text, string salt = "")
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
+        // Uses SHA256 to create the hash
+        using (var sha = SHA256.Create())
+        {
+            // Convert the string to a byte array first, to be processed
+            var textBytes = Encoding.UTF8.GetBytes(text + salt);
+            var hashBytes = sha.ComputeHash(textBytes);
+
+            // Convert back to a string, removing the '-' that BitConverter adds
+            var hash = BitConverter
+                .ToString(hashBytes)
+                .Replace("-", string.Empty);
+
+            return hash;
+        }
     }
 }
 

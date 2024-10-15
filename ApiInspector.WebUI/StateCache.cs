@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ApiInspector.WebUI;
@@ -85,26 +82,5 @@ static class StateCache
         return Path.Combine(methodReference.DeclaringType.Assembly.Name + Path.DirectorySeparatorChar + fileName);
     }
 
-    static string GetHashString(this string text, string salt = "")
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            return string.Empty;
-        }
 
-        // Uses SHA256 to create the hash
-        using (var sha = SHA256.Create())
-        {
-            // Convert the string to a byte array first, to be processed
-            var textBytes = Encoding.UTF8.GetBytes(text + salt);
-            var hashBytes = sha.ComputeHash(textBytes);
-
-            // Convert back to a string, removing the '-' that BitConverter adds
-            var hash = BitConverter
-                .ToString(hashBytes)
-                .Replace("-", string.Empty);
-
-            return hash;
-        }
-    }
 }
