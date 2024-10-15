@@ -31,18 +31,18 @@ static class FileHelper
         }
     }
 
-    public static string ReadInputAsJsonString()
+    public static string ReadInputAsJsonString(string communicationId)
     {
-        var inputAsJson = File.ReadAllText(FilePath.Input);
+        var inputAsJson = File.ReadAllText(FilePath.Input(communicationId));
 
-        File.Delete(FilePath.Input);
+        File.Delete(FilePath.Input(communicationId));
 
         return inputAsJson;
     }
 
-    public static string ReadResponse()
+    public static string ReadResponse(string communicationId)
     {
-        var filePath = FilePath.ResponseSuccess;
+        var filePath = FilePath.ResponseSuccess(communicationId);
 
         while (true)
         {
@@ -62,9 +62,9 @@ static class FileHelper
         }
     }
 
-    public static string TakeResponseAsFail()
+    public static string TakeResponseAsFail(string communicationId)
     {
-        var filePath = FilePath.ResponseFail;
+        var filePath = FilePath.ResponseFail(communicationId);
 
         while (true)
         {
@@ -84,9 +84,9 @@ static class FileHelper
         }
     }
 
-    public static void WriteFail(Exception exception)
+    public static void WriteFail(string communicationId, Exception exception)
     {
-        File.WriteAllText(FilePath.ResponseFail, calculateFailMessage());
+        File.WriteAllText(FilePath.ResponseFail(communicationId), calculateFailMessage());
         return;
 
         string calculateFailMessage()
@@ -114,9 +114,9 @@ static class FileHelper
         }
     }
 
-    public static void WriteInput(string inputAsJson)
+    public static void WriteInput(string communicationId, string inputAsJson)
     {
-        File.WriteAllText(FilePath.Input, inputAsJson);
+        File.WriteAllText(FilePath.Input(communicationId), inputAsJson);
     }
 
     public static void WriteLog(string message)
@@ -124,9 +124,9 @@ static class FileHelper
         File.WriteAllText(FilePath.Log, message);
     }
 
-    public static void WriteSuccessResponse(string responseAsJson)
+    public static void WriteSuccessResponse(string communicationId, string responseAsJson)
     {
-        File.WriteAllText(FilePath.ResponseSuccess, responseAsJson);
+        File.WriteAllText(FilePath.ResponseSuccess(communicationId), responseAsJson);
     }
 
     static bool IsFileLocked(string path)
@@ -159,12 +159,12 @@ static class FileHelper
 
     static class FilePath
     {
-        public static string Input => WorkingDirectory + @"ApiInspector.Input.json";
+        public static string Input(string communicationId) => WorkingDirectory + $"ApiInspector.Input.{communicationId}.json";
 
         public static string Log => WorkingDirectory + @"ApiInspector.log.txt";
 
-        public static string ResponseFail => WorkingDirectory + @"ApiInspector.ResponseFail.json";
+        public static string ResponseFail(string communicationId) => WorkingDirectory + $"ApiInspector.ResponseFail-{communicationId}.json";
 
-        public static string ResponseSuccess => WorkingDirectory + @"ApiInspector.ResponseSuccess.json";
+        public static string ResponseSuccess(string communicationId) => WorkingDirectory + $"ApiInspector.ResponseSuccess-{communicationId}.json";
     }
 }

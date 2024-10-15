@@ -60,6 +60,9 @@ static class External
 
         int exitCode;
 
+        var communicationId = Guid.NewGuid().ToString("N");
+        
+        
         if (runtime.IsNetStandard)
         {
             isNetCore = true;
@@ -67,11 +70,11 @@ static class External
             // default pattern: run standard dlls on net core application
             // But sometimes we need to run standard dlls on .netframework application
 
-            FileHelper.WriteInput(JsonConvert.SerializeObject(assemblyFileFullPath, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore }));
-            exitCode = RunProcess(runCoreApp: false, "ShouldNetStandardAssemblyRunOnNetFramework", waitForDebugger: false);
+            FileHelper.WriteInput(communicationId, JsonConvert.SerializeObject(assemblyFileFullPath, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore }));
+            exitCode = RunProcess(communicationId, runCoreApp: false, "ShouldNetStandardAssemblyRunOnNetFramework", waitForDebugger: false);
             if (exitCode == 1)
             {
-                var shouldNetStandardAssemblyRunOnNetFramework = JsonConvert.DeserializeObject<bool?>(FileHelper.ReadResponse());
+                var shouldNetStandardAssemblyRunOnNetFramework = JsonConvert.DeserializeObject<bool?>(FileHelper.ReadResponse(communicationId));
                 if (shouldNetStandardAssemblyRunOnNetFramework is true)
                 {
                     isNetCore = false;
@@ -80,30 +83,30 @@ static class External
         }
 
         {
-            FileHelper.WriteInput(inputAsJson);
+            FileHelper.WriteInput(communicationId, inputAsJson);
 
-            exitCode = RunProcess(isNetCore, methodName, waitForDebugger);
+            exitCode = RunProcess(communicationId, isNetCore, methodName, waitForDebugger);
             if (exitCode == 1)
             {
-                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse()), null);
+                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse(communicationId)), null);
             }
 
             var messagePrefix = isNetCore ? "(NetCore)" : "(NetFramework)";
 
             if (exitCode == 0)
             {
-                return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail()));
+                return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail(communicationId)));
             }
         }
 
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
 
-    static int RunProcess(bool runCoreApp, string methodName, bool waitForDebugger)
+    static int RunProcess(string communicationId, bool runCoreApp, string methodName, bool waitForDebugger)
     {
         var process = new Process();
         process.StartInfo.FileName  = runCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath;
-        process.StartInfo.Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}";
+        process.StartInfo.Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}|{communicationId}";
         process.Start();
         process.WaitForExit();
 

@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using static ApiInspector.ProcessHelper;
 
 namespace ApiInspector;
 
 static class Program
 {
+    static string communicationId;
+    
     public static string GetEnvironment(string assemblyFileFullPath)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
@@ -153,7 +154,7 @@ static class Program
         });
     }
 
-    public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
+    public static string InvokeMethod( (string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
     {
         var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
 
@@ -365,7 +366,7 @@ static class Program
             }
 
             var arr = args[0].Split('|');
-            if (arr.Length is not 2)
+            if (arr.Length is not 3)
             {
                 throw new Exception($"CommandLine arguments are invalid. @arguments: {args[0]}");
             }
@@ -373,6 +374,8 @@ static class Program
             var waitForDebugger = arr[0];
 
             var methodName = arr[1];
+            
+            communicationId = arr[2];
 
             if (waitForDebugger == "1")
             {
@@ -388,7 +391,7 @@ static class Program
             var parameters = new object[] { };
             if (methodInfo.GetParameters().Length == 1)
             {
-                inputAsJsonString = FileHelper.ReadInputAsJsonString();
+                inputAsJsonString = FileHelper.ReadInputAsJsonString(communicationId);
 
                 parameters = new[] { JsonConvert.DeserializeObject(inputAsJsonString, methodInfo.GetParameters()[0].ParameterType) };
             }
@@ -442,13 +445,13 @@ static class Program
 
     static void SaveExceptionAndExitWithFailure(Exception exception)
     {
-        FileHelper.WriteFail(exception);
+        FileHelper.WriteFail(communicationId, exception);
         Environment.Exit(0);
     }
 
     static void SaveResponseAsJsonFileAndExitSuccessfully(object response)
     {
-        FileHelper.WriteSuccessResponse(ResponseToJson(response));
+        FileHelper.WriteSuccessResponse(communicationId, ResponseToJson(response));
 
         Environment.Exit(1);
     }
