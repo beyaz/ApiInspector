@@ -1,34 +1,32 @@
-﻿using System.Text;
+﻿namespace ApiInspector.WebUI;
 
-namespace ApiInspector.WebUI;
-
-internal sealed class MainLayout : Component, IPageLayout
+sealed class MainLayout : Component, IPageLayout
 {
-    string LastWriteTimeOfIndexJsFile;
+    static string LastWriteTimeOfIndexJsFile;
+
+    public string ContainerDomElementId => "app";
+
+    public ComponentRenderInfo RenderInfo { get; set; }
 
     static string CompilerMode
     {
         get
         {
-            #if DEBUG
+#if DEBUG
             return "debug";
-            #else
+#else
                 return "release";
-            #endif
+#endif
         }
     }
-
-    public ComponentRenderInfo RenderInfo { get; set; }
-
-    public string ContainerDomElementId => "app";
 
     string IndexJsFilePath => $"/{Context.wwwroot}/dist/{CompilerMode}/index.js";
 
     protected override Element render()
     {
-        var root = Context.wwwroot;
-
         LastWriteTimeOfIndexJsFile ??= new FileInfo(IndexJsFilePath).LastWriteTime.Ticks.ToString();
+
+        var root = Context.wwwroot;
 
         return new html
         {
@@ -84,27 +82,25 @@ internal sealed class MainLayout : Component, IPageLayout
                 // After page first rendered in client then connect with react system in background.
                 // So user first iteraction time will be minimize.
 
-                new script(script.Type("module"))
+                new script
                 {
-                    calculateInitialScript()
+                    type = "module",
+
+                    text =
+                        $$"""
+                          import {ReactWithDotNet} from '{{IndexJsFilePath}}?v={{LastWriteTimeOfIndexJsFile}}';
+
+                          ReactWithDotNet.StrictMode = false;
+
+                          ReactWithDotNet.RequestHandlerPath = '{{RequestHandlerPath}}';
+
+                          ReactWithDotNet.RenderComponentIn({
+                            idOfContainerHtmlElement: '{{ContainerDomElementId}}',
+                            renderInfo: {{RenderInfo.ToJsonString()}}
+                          });
+                          """
                 }
             }
         };
-
-        StringBuilder calculateInitialScript()
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine($"import {{ReactWithDotNet}} from '{IndexJsFilePath}?v={LastWriteTimeOfIndexJsFile}';");
-            sb.AppendLine("ReactWithDotNet.StrictMode = false;");
-
-            sb.AppendLine("ReactWithDotNet.RenderComponentIn({");
-            sb.AppendLine($"  idOfContainerHtmlElement: '{ContainerDomElementId}',");
-            sb.AppendLine("  renderInfo: ");
-            sb.Append(RenderInfo.ToJsonString());
-            sb.AppendLine("});");
-
-            return sb;
-        }
     }
 }

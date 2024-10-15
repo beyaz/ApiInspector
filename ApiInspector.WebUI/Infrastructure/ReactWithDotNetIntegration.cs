@@ -9,11 +9,13 @@ static class ReactWithDotNetIntegration
 {
     public static void ConfigureReactWithDotNet(this WebApplication app)
     {
+        RequestHandlerPath = $"/{nameof(HandleReactWithDotNetRequest)}";
+        
         app.Use(async (httpContext, next) =>
         {
             var path = httpContext.Request.Path.Value ?? string.Empty;
 
-            if (path == $"/{nameof(HandleReactWithDotNetRequest)}")
+            if (path == RequestHandlerPath)
             {
                 await HandleReactWithDotNetRequest(httpContext);
                 return;
