@@ -348,8 +348,6 @@ static class Program
 
     public static void Main(string[] args)
     {
-        KillAllNamedProcess(nameof(ApiInspector));
-
         FileHelper.ClearLog();
 
         string inputAsJsonString = null;
