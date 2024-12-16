@@ -21,8 +21,6 @@ class MainWindowModel
     public string SelectedMethodTreeNodeKey { get; set; }
 
     public string ScenarioFilterText { get; set; }
-    
-    public bool ScenarioFilterIsVisible { get; set; }
 }
 
 sealed class ScenarioModel

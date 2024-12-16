@@ -129,41 +129,49 @@ class MainWindow : Component<MainWindowModel>
         {
             return new input
             {
-                id = nameof(scenarioFilterInput),
                 type                     = "text",
                 valueBind                = () => state.ScenarioFilterText,
                 valueBindDebounceTimeout = 700,
                 valueBindDebounceHandler = OnScenarioFilterTextKeypressFinished,
-                style                    = { InputStyle, BoxShadowNone, PaddingY(4),PaddingX(10), BorderRadius(16) }
+                style                    = { InputStyle, BoxShadowNone, PaddingY(4), PaddingX(10), BorderRadius(16) },
+                autoComplete             = "off",
+                placeholder              = "filter by scenario"
             };
         }
         
         Element addRemovePanel()
         {
+            static bool hasMatch(ScenarioModel scenarioModel, string filterText)
+            {
+                if (string.IsNullOrWhiteSpace(filterText))
+                {
+                    return true;
+                }
+
+                return filterText.Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(x =>
+                {
+                    if (scenarioModel.JsonTextForDotNetMethodParameters?.Contains(x, StringComparison.OrdinalIgnoreCase) is true)
+                    {
+                        return true;
+                    }
+                    
+                    if (scenarioModel.JsonTextForDotNetInstanceProperties?.Contains(x, StringComparison.OrdinalIgnoreCase) is true)
+                    {
+                        return true;
+                    }
+                    
+                    if (scenarioModel.ResponseAsJson?.Contains(x, StringComparison.OrdinalIgnoreCase) is true)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+            }
             return new FlexColumn(Width(30), PaddingRight(10), Gap(10), JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
             {
-                state.ScenarioList.Count > -1 ? new CircleButton
-                {
-                    TooltipText = "Search",
-                    UseSearchIcon = true,
-                    IsSelected = state.ScenarioFilterIsVisible,
-                    Clicked = _ =>
-                    {
-                        state.ScenarioFilterIsVisible = !state.ScenarioFilterIsVisible;
-                        if (state.ScenarioFilterIsVisible)
-                        {
-                            const string jsCode =
-                                $"""
-                                 setTimeout(()=>document.getElementById('{nameof(scenarioFilterInput)}').focus(), 300);
-                                 """;
-                            
-                            Client.RunJavascript(jsCode);
-                        }
-                        return Task.CompletedTask;
-                    }
-                } : null,
-                
-                state.ScenarioList.Select((_, i) => new CircleButton
+                state.ScenarioList.Select((scenario, i) => new CircleButton
                 {
                     Index      = i,
                     Label      = i.ToString(),
@@ -173,7 +181,7 @@ class MainWindow : Component<MainWindowModel>
                         state.ScenarioListSelectedIndex = Convert.ToInt32(e.currentTarget.id);
                         return Task.CompletedTask;
                     }
-                }),
+                } + When(!hasMatch(scenario, state.ScenarioFilterText), DisplayNone) ),
 
                 new CircleButton
                 {
@@ -358,9 +366,10 @@ class MainWindow : Component<MainWindowModel>
                     new FlexColumn(AlignItemsCenter, FlexGrow(1))
                     {
                         PositionRelative,
+                        
+                        state.ScenarioList.Count < 0 ? null:
                         scenarioFilterInput() + 
-                        PositionAbsolute + Right(4) + Top(6) + 
-                        (state.ScenarioFilterIsVisible is false ? DisplayNone : null),
+                        PositionAbsolute + Right(4) + Top(6),
                         
                         new Label
                         {
