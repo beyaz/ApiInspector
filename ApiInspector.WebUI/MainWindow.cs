@@ -330,6 +330,64 @@ class MainWindow : Component<MainWindowModel>
 
             var scenarioIndex = state.ScenarioListSelectedIndex;
 
+            var isStaticMethod = state.SelectedMethod?.IsStatic == true;
+
+            var instanceEditor = new FlexColumn(AlignItemsCenter, FlexGrow(1), When(isStaticMethod, DisplayNone))
+            {
+                new Label
+                {
+                    Text = "Instance json",
+                    style =
+                    {
+                        Padding(10),
+                        FlexGrow(1)
+                    }
+                },
+                new FreeScrollBar
+                {
+                    AutoHideScrollbar,
+
+                    Height(300), PaddingBottom(10),
+                    BorderTop(Solid(1, "#d9d9d9")),
+                    BorderBottomLeftRadius(3),
+                    WidthFull,
+                    FlexGrow(1),
+
+                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
+                }
+            };
+            
+            var parametersEditor = new FlexColumn(AlignItemsCenter, FlexGrow(1))
+            {
+                PositionRelative,
+                        
+                state.ScenarioList.Count < 3 ? null:
+                    scenarioFilterInput() + 
+                    PositionAbsolute + Right(4) + Top(6),
+                        
+                new Label
+                {
+                    Text = "Parameters json",
+                    style =
+                    {
+                        Padding(10),
+                        FlexGrow(1)
+                    }
+                },
+                new FreeScrollBar
+                {
+                    AutoHideScrollbar,
+
+                    Height(300), PaddingBottom(10),
+                    BorderTop(Solid(1, "#d9d9d9")),
+                    BorderBottomRightRadius(3),
+                    WidthFull,
+                    FlexGrow(1),
+
+                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
+                }
+            };
+            
             return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
             {
                 new FlexRow(WidthFull)
@@ -338,61 +396,14 @@ class MainWindow : Component<MainWindowModel>
                     MarginTop(5),
                     BorderRadius(5),
 
-                    new FlexColumn(AlignItemsCenter, FlexGrow(1), When(state.SelectedMethod?.IsStatic == true, DisplayNone))
+                    isStaticMethod ? parametersEditor :
+                    new SplitRow
                     {
-                        new Label
-                        {
-                            Text = "Instance json",
-                            style =
-                            {
-                                Padding(10),
-                                FlexGrow(1)
-                            }
-                        },
-                        new FreeScrollBar
-                        {
-                            AutoHideScrollbar,
+                        instanceEditor,
 
-                            Height(300), PaddingBottom(10),
-                            BorderTop(Solid(1, "#d9d9d9")),
-                            BorderBottomLeftRadius(3),
-                            WidthFull,
-                            FlexGrow(1),
-
-                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
-                        }
-                    },
-
-                    new FlexColumn(AlignItemsCenter, FlexGrow(1))
-                    {
-                        PositionRelative,
-                        
-                        state.ScenarioList.Count < 0 ? null:
-                        scenarioFilterInput() + 
-                        PositionAbsolute + Right(4) + Top(6),
-                        
-                        new Label
-                        {
-                            Text = "Parameters json",
-                            style =
-                            {
-                                Padding(10),
-                                FlexGrow(1)
-                            }
-                        },
-                        new FreeScrollBar
-                        {
-                            AutoHideScrollbar,
-
-                            Height(300), PaddingBottom(10),
-                            BorderTop(Solid(1, "#d9d9d9")),
-                            BorderBottomRightRadius(3),
-                            WidthFull,
-                            FlexGrow(1),
-
-                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
-                        }
+                        parametersEditor
                     }
+                    
                 },
                 new FlexColumn(FlexGrow(1), Gap(10))
                 {
