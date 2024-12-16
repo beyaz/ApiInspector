@@ -125,10 +125,34 @@ class MainWindow : Component<MainWindowModel>
             };
         }
 
+        Element scenarioFilterInput()
+        {
+            return new input
+            {
+                type                     = "text",
+                valueBind                = () => state.ScenarioFilterText,
+                valueBindDebounceTimeout = 700,
+                valueBindDebounceHandler = OnScenarioFilterTextKeypressFinished,
+                style                    = { InputStyle, BoxShadowNone, PaddingY(4),PaddingX(10), BorderRadius(16) }
+            };
+        }
+        
         Element addRemovePanel()
         {
             return new FlexColumn(Width(30), PaddingRight(10), Gap(10), JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
             {
+                state.ScenarioList.Count > -1 ? new CircleButton
+                {
+                    TooltipText = "Search",
+                    Label      = "\u2315",
+                    IsSelected = false,
+                    Clicked = _ =>
+                    {
+                        state.ScenarioFilterIsVisible = !state.ScenarioFilterIsVisible;
+                        return Task.CompletedTask;
+                    }
+                } : null,
+                
                 state.ScenarioList.Select((_, i) => new CircleButton
                 {
                     Index      = i,
@@ -323,6 +347,11 @@ class MainWindow : Component<MainWindowModel>
 
                     new FlexColumn(AlignItemsCenter, FlexGrow(1))
                     {
+                        PositionRelative,
+                        scenarioFilterInput() + 
+                        PositionAbsolute + Right(4) + Top(6) + 
+                        (state.ScenarioFilterIsVisible is false ? DisplayNone : null),
+                        
                         new Label
                         {
                             Text = "Parameters json",
@@ -552,6 +581,11 @@ class MainWindow : Component<MainWindowModel>
     }
 
     Task OnFilterTextKeypressCompleted()
+    {
+        return Task.CompletedTask;
+    }
+    
+    Task OnScenarioFilterTextKeypressFinished()
     {
         return Task.CompletedTask;
     }
