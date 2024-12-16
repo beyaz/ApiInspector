@@ -595,12 +595,15 @@ class MainWindow : Component<MainWindowModel>
 
     class CircleButton : ReactPureComponent
     {
-        public MouseEventHandler Clicked { get; set; }
-        public int Index { get; set; }
-        public bool IsSelected { get; set; }
-        public string Label { get; set; }
+        public MouseEventHandler Clicked { get; init; }
+        
+        public int Index { get; init; }
+        
+        public bool IsSelected { get; init; }
+        
+        public string Label { get; init; }
 
-        public string TooltipText { get; set; }
+        public string TooltipText { get; init; }
 
         protected override Element render()
         {
