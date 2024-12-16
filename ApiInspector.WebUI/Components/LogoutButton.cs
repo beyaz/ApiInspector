@@ -44,7 +44,7 @@ sealed class LogoutButton : Component<LogoutButton.State>
 
     Task OnClicked(MouseEvent _)
     {
-        Client.CallJsFunction("CloseWindow");
+        Client.RunJavascript("window.close();");
 
         ExitAfterThreeSeconds();
 
