@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ApiInspector.WebUI;
+﻿namespace ApiInspector.WebUI;
 
 static class FileStorage
 {
@@ -58,13 +56,17 @@ static class FileStorage
             yield break;
         }
 
+        var searchTexts = (filter + string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        
         foreach (var directory in Directory.GetDirectories(cacheDirectoryPath).OrderByDescending(x => new DirectoryInfo(x).LastWriteTime))
         {
             foreach (var filePath in Directory.GetFiles(directory).OrderByDescending(x => new FileInfo(x).LastWriteTime))
             {
                 var fileContent = File.ReadAllText(filePath);
 
-                if (fileContent.IndexOf(filter + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0)
+                var hasAnyMatch = searchTexts.Any(x => fileContent.IndexOf(x + string.Empty, StringComparison.OrdinalIgnoreCase) >= 0);
+                
+                if (hasAnyMatch || string.IsNullOrWhiteSpace(filter))
                 {
                     yield return (ToStorageKey(filePath), fileContent);
                 }
