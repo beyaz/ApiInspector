@@ -442,13 +442,16 @@ class MainWindow : Component<MainWindowModel>
                 }
             };
             
-            return new FlexColumn(SizeFull, Gap(10), PaddingRight(10))
+            return new FlexColumn(SizeFull, PaddingRight(10))
             {
-                partEditors,
-                new FlexColumn(SizeFull, Gap(10))
+                new SplitColumn
                 {
-                    partActionButtons,
-                    partResponse
+                    partEditors,
+                    new FlexColumn(SizeFull, Gap(10))
+                    {
+                        partActionButtons,
+                        partResponse
+                    }
                 }
             };
         }
