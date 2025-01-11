@@ -49,7 +49,7 @@ static class Program
             return jsonForInstance;
         }
 
-        var declaringType = MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(typeOfInstance);
+        var declaringType = ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(typeOfInstance);
         if (declaringType == null)
         {
             return jsonForInstance;
@@ -129,7 +129,7 @@ static class Program
             map = new Dictionary<string, object>();
         }
 
-        foreach (var parameterInfo in MetadataHelper.LoadAssembly(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
+        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
         {
             var name = parameterInfo.Name;
             if (name == null || map.ContainsKey(name))
@@ -161,7 +161,7 @@ static class Program
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
         ReflectionHelper.AttachAssemblyResolver();
 
-        var assembly = MetadataHelper.LoadAssembly(fullAssemblyPath);
+        var assembly = ReflectionHelper.LoadFrom(fullAssemblyPath);
 
         var methodInfo = assembly.TryLoadFrom(methodReference);
         if (methodInfo == null)
@@ -423,15 +423,7 @@ static class Program
 
         return Plugin.ShouldNetStandardAssemblyRunOnNetFramework(assemblyFileName);
     }
-
-    internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
-    {
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(prm.assemblyFilePath);
-        ReflectionHelper.AttachAssemblyResolver();
-
-        return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
-    }
-
+    
     static string ResponseToJson(object response)
     {
         return JsonConvert.SerializeObject(response, new JsonSerializerSettings

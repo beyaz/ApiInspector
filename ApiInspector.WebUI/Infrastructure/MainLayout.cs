@@ -2,30 +2,13 @@
 
 sealed class MainLayout : Component, IPageLayout
 {
-    static string LastWriteTimeOfIndexJsFile;
 
     public string ContainerDomElementId => "app";
 
     public ComponentRenderInfo RenderInfo { get; set; }
 
-    static string CompilerMode
-    {
-        get
-        {
-#if DEBUG
-            return "debug";
-#else
-                return "release";
-#endif
-        }
-    }
-
-    string IndexJsFilePath => $"/{Context.wwwroot}/dist/{CompilerMode}/index.js";
-
     protected override Element render()
     {
-        LastWriteTimeOfIndexJsFile ??= new FileInfo(IndexJsFilePath).LastWriteTime.Ticks.ToString();
-
         var root = Context.wwwroot;
 
         return new html
@@ -39,6 +22,14 @@ sealed class MainLayout : Component, IPageLayout
                 new meta { name    = "viewport", content = "width=device-width, initial-scale=1" },
                 new title { "Api Inspector" },
                 new link { rel = "icon", href = $"{root}/favicon.ico" },
+                
+                new link
+                {
+                    rel  = "stylesheet",
+                    type = "text/css",
+                    href = IndexCssFilePath
+                },
+                
                 new style
                 {
                     """
@@ -88,7 +79,7 @@ sealed class MainLayout : Component, IPageLayout
 
                     text =
                         $$"""
-                          import {ReactWithDotNet} from '{{IndexJsFilePath}}?v={{LastWriteTimeOfIndexJsFile}}';
+                          import {ReactWithDotNet} from '{{IndexJsFilePath}}';
 
                           ReactWithDotNet.StrictMode = false;
 

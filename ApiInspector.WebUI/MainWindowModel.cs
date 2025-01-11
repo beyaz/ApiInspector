@@ -19,6 +19,8 @@ class MainWindowModel
     public MethodReference SelectedMethod { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
+
+    public string ScenarioFilterText { get; set; }
 }
 
 sealed class ScenarioModel

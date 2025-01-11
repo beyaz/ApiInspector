@@ -40,10 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyModel.cs" />
+    <Compile Include="AssemblyModelHelper.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="FpExtensions.cs" />
     <Compile Include="GlobalUsings.cs" />
-    <Compile Include="MetaDataHelper.cs" />
+    <Compile Include="MetadataNode.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="ProcessHelper.cs" />
     <Compile Include="Program.cs" />

@@ -125,11 +125,53 @@ class MainWindow : Component<MainWindowModel>
             };
         }
 
+        Element scenarioFilterInput()
+        {
+            return new input
+            {
+                type                     = "text",
+                valueBind                = () => state.ScenarioFilterText,
+                valueBindDebounceTimeout = 700,
+                valueBindDebounceHandler = OnScenarioFilterTextKeypressFinished,
+                style                    = { InputStyle, BoxShadowNone, PaddingY(4), PaddingX(10), BorderRadius(16) },
+                autoComplete             = "off",
+                placeholder              = "filter by scenario"
+            };
+        }
+        
         Element addRemovePanel()
         {
+            static bool hasMatch(ScenarioModel scenarioModel, string filterText)
+            {
+                if (string.IsNullOrWhiteSpace(filterText))
+                {
+                    return true;
+                }
+
+                return filterText.Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(x =>
+                {
+                    if (scenarioModel.JsonTextForDotNetMethodParameters?.Contains(x, StringComparison.OrdinalIgnoreCase) is true)
+                    {
+                        return true;
+                    }
+                    
+                    if (scenarioModel.JsonTextForDotNetInstanceProperties?.Contains(x, StringComparison.OrdinalIgnoreCase) is true)
+                    {
+                        return true;
+                    }
+                    
+                    if (scenarioModel.ResponseAsJson?.Contains(x, StringComparison.OrdinalIgnoreCase) is true)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+            }
             return new FlexColumn(Width(30), PaddingRight(10), Gap(10), JustifyContentFlexStart, AlignItemsCenter, PaddingTopBottom(10))
             {
-                state.ScenarioList.Select((_, i) => new CircleButton
+                state.ScenarioList.Select((scenario, i) => new CircleButton
                 {
                     Index      = i,
                     Label      = i.ToString(),
@@ -139,7 +181,7 @@ class MainWindow : Component<MainWindowModel>
                         state.ScenarioListSelectedIndex = Convert.ToInt32(e.currentTarget.id);
                         return Task.CompletedTask;
                     }
-                }),
+                } + When(!hasMatch(scenario, state.ScenarioFilterText), DisplayNone) ),
 
                 new CircleButton
                 {
@@ -288,102 +330,127 @@ class MainWindow : Component<MainWindowModel>
 
             var scenarioIndex = state.ScenarioListSelectedIndex;
 
-            return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
+            var isStaticMethod = state.SelectedMethod?.IsStatic == true;
+
+            var instanceEditor = new FlexColumn(AlignItemsCenter, FlexGrow(1), When(isStaticMethod, DisplayNone))
             {
-                new FlexRow(WidthFull)
+                new Label
                 {
-                    ComponentBoxShadow,
-                    MarginTop(5),
-                    BorderRadius(5),
-
-                    new FlexColumn(AlignItemsCenter, FlexGrow(1), When(state.SelectedMethod?.IsStatic == true, DisplayNone))
+                    Text = "Instance json",
+                    style =
                     {
-                        new Label
-                        {
-                            Text = "Instance json",
-                            style =
-                            {
-                                Padding(10),
-                                FlexGrow(1)
-                            }
-                        },
-                        new FreeScrollBar
-                        {
-                            AutoHideScrollbar,
-
-                            Height(300), PaddingBottom(10),
-                            BorderTop(Solid(1, "#d9d9d9")),
-                            BorderBottomLeftRadius(3),
-                            WidthFull,
-                            FlexGrow(1),
-
-                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
-                        }
-                    },
-
-                    new FlexColumn(AlignItemsCenter, FlexGrow(1))
-                    {
-                        new Label
-                        {
-                            Text = "Parameters json",
-                            style =
-                            {
-                                Padding(10),
-                                FlexGrow(1)
-                            }
-                        },
-                        new FreeScrollBar
-                        {
-                            AutoHideScrollbar,
-
-                            Height(300), PaddingBottom(10),
-                            BorderTop(Solid(1, "#d9d9d9")),
-                            BorderBottomRightRadius(3),
-                            WidthFull,
-                            FlexGrow(1),
-
-                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
-                        }
+                        Padding(10),
+                        FlexGrow(1)
                     }
                 },
-                new FlexColumn(FlexGrow(1), Gap(10))
+                new FreeScrollBar
                 {
-                    new FlexRow(Height(50), Gap(30))
+                    AutoHideScrollbar,
+
+                    Height(300), PaddingBottom(10),
+                    BorderTop(Solid(1, "#d9d9d9")),
+                    BorderBottomLeftRadius(3),
+                    WidthFull,
+                    FlexGrow(1),
+
+                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
+                }
+            };
+            
+            var parametersEditor = new FlexColumn(AlignItemsCenter, FlexGrow(1))
+            {
+                PositionRelative,
+                        
+                state.ScenarioList.Count < 3 ? null:
+                    scenarioFilterInput() + 
+                    PositionAbsolute + Right(4) + Top(6),
+                        
+                new Label
+                {
+                    Text = "Parameters json",
+                    style =
                     {
-                        new ExecuteButton
-                        {
-                            Click               = OnExecuteClicked,
-                            IsProcessing        = IsExecutionStarted,
-                            ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
-                            ShowStatusAsFail    = ExecuteButtonStatusIsFail
-                        } + ComponentBoxShadow,
-                        new DebugButton
-                        {
-                            Click               = OnDebugClicked,
-                            IsProcessing        = IsDebugStarted,
-                            ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
-                            ShowStatusAsFail    = DebugButtonStatusIsFail
-                        } + ComponentBoxShadow,
+                        Padding(10),
+                        FlexGrow(1)
+                    }
+                },
+                new FreeScrollBar
+                {
+                    AutoHideScrollbar,
 
-                        new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
-                    },
+                    Height(300), PaddingBottom(10),
+                    BorderTop(Solid(1, "#d9d9d9")),
+                    BorderBottomRightRadius(3),
+                    WidthFull,
+                    FlexGrow(1),
 
-                    new FlexColumn(SizeFull)
+                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
+                }
+            };
+
+            var partEditors = new FlexRow(WidthFull)
+            {
+                ComponentBoxShadow,
+                MarginTop(5),
+                BorderRadius(5),
+
+                isStaticMethod ? parametersEditor :
+                    new SplitRow
                     {
-                        new Label { Text = "Response as json" },
+                        instanceEditor,
 
-                        new FreeScrollBar
-                        {
-                            AutoHideScrollbar,
+                        parametersEditor
+                    }
 
-                            ComponentBoxShadow,
-                            Height("calc(100% - 28px)"), PaddingBottom(10),
-                            Border("1px solid #d9d9d9"),
-                            BorderRadius(5),
-                            WidthFull,
+            };
 
-                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
-                        }
+            var partActionButtons = new FlexRow(Height(50), Gap(30))
+            {
+                new ExecuteButton
+                {
+                    Click               = OnExecuteClicked,
+                    IsProcessing        = IsExecutionStarted,
+                    ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
+                    ShowStatusAsFail    = ExecuteButtonStatusIsFail
+                } + ComponentBoxShadow,
+                new DebugButton
+                {
+                    Click               = OnDebugClicked,
+                    IsProcessing        = IsDebugStarted,
+                    ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
+                    ShowStatusAsFail    = DebugButtonStatusIsFail
+                } + ComponentBoxShadow,
+
+                new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
+            };
+
+            var partResponse = new FlexColumn(SizeFull)
+            {
+                new Label { Text = "Response as json" },
+
+                new FreeScrollBar
+                {
+                    AutoHideScrollbar,
+
+                    ComponentBoxShadow,
+                    Height("calc(100% - 28px)"), PaddingBottom(10),
+                    Border("1px solid #d9d9d9"),
+                    BorderRadius(5),
+                    WidthFull,
+
+                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
+                }
+            };
+            
+            return new FlexColumn(SizeFull, PaddingRight(10))
+            {
+                new SplitColumn
+                {
+                    partEditors,
+                    new FlexColumn(SizeFull, Gap(10))
+                    {
+                        partActionButtons,
+                        partResponse
                     }
                 }
             };
@@ -555,6 +622,11 @@ class MainWindow : Component<MainWindowModel>
     {
         return Task.CompletedTask;
     }
+    
+    Task OnScenarioFilterTextKeypressFinished()
+    {
+        return Task.CompletedTask;
+    }
 
     void SaveState()
     {
@@ -595,12 +667,30 @@ class MainWindow : Component<MainWindowModel>
 
     class CircleButton : ReactPureComponent
     {
-        public MouseEventHandler Clicked { get; set; }
-        public int Index { get; set; }
-        public bool IsSelected { get; set; }
-        public string Label { get; set; }
+        static Element SearchIcon()
+        {
+            return new svg(ViewBox(0, 0, 24, 24), Fill(none), svg.Size(16), Stroke(Gray400))
+            {
+                new path
+                {
+                    fillRule = "evenodd",
+                    clipRule = "evenodd",
+                    d        = "M15 10.5C15 12.9853 12.9853 15 10.5 15C8.01472 15 6 12.9853 6 10.5C6 8.01472 8.01472 6 10.5 6C12.9853 6 15 8.01472 15 10.5ZM14.1793 15.2399C13.1632 16.0297 11.8865 16.5 10.5 16.5C7.18629 16.5 4.5 13.8137 4.5 10.5C4.5 7.18629 7.18629 4.5 10.5 4.5C13.8137 4.5 16.5 7.18629 16.5 10.5C16.5 11.8865 16.0297 13.1632 15.2399 14.1792L20.0304 18.9697L18.9697 20.0303L14.1793 15.2399Z",
+                    fill     = Gray400
+                }
+            };
+        }
+        public MouseEventHandler Clicked { get; init; }
+        
+        public int Index { get; init; }
+        
+        public bool IsSelected { get; init; }
+        
+        public string Label { get; init; }
 
-        public string TooltipText { get; set; }
+        public string TooltipText { get; init; }
+        
+        public bool UseSearchIcon { get; init; }
 
         protected override Element render()
         {
@@ -609,7 +699,8 @@ class MainWindow : Component<MainWindowModel>
                 Id(Index),
                 ComponentBoxShadow,
                 OnClick(Clicked),
-                Label,
+                UseSearchIcon ? SearchIcon() : Label,
+                
                 Border(Solid(1, Theme.BorderColor)),
                 BorderRadius("50%"),
                 Size(30),

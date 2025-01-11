@@ -9,6 +9,8 @@ static class ReactWithDotNetIntegration
 {
     public static void ConfigureReactWithDotNet(this WebApplication app)
     {
+        app.UseMiddleware<ReactWithDotNetJavaScriptFiles>();
+        
         RequestHandlerPath = $"/{nameof(HandleReactWithDotNetRequest)}";
         
         app.Use(async (httpContext, next) =>
@@ -62,12 +64,11 @@ static class ReactWithDotNetIntegration
         httpContext.Response.Headers[HeaderNames.Expires]      = "0";
         httpContext.Response.Headers[HeaderNames.Pragma]       = "no-cache";
 
-        return ProcessReactWithDotNetPageRequest(new ProcessReactWithDotNetPageRequestInput
+        return ProcessReactWithDotNetPageRequest(new()
         {
             LayoutType      = layoutType,
             MainContentType = mainContentType,
             HttpContext     = httpContext,
-            QueryString     = httpContext.Request.QueryString.ToString()
         });
     }
 }
