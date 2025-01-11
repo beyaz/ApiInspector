@@ -18,14 +18,7 @@ static class External
 
         return Execute<string>(assemblyFileFullPath, nameof(GetInstanceEditorJsonText), parameter);
     }
-
-    public static Result<IEnumerable<MetadataNode>> GetMetadataNodes(string assemblyFileFullPath, string classFilter, string methodFilter)
-    {
-        var parameter = (assemblyFileFullPath, classFilter, methodFilter);
-
-        return Execute<IEnumerable<MetadataNode>>(assemblyFileFullPath, nameof(GetMetadataNodes), parameter);
-    }
-
+    
     public static (string value, Exception exception) GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);

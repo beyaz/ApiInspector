@@ -68,7 +68,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             return new FileNotFoundException(AssemblyFilePath);
         }
 
-        return External.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
+        return MetadataHelper.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
                        .Then(nodes => FindTreeNode(nodes, x => HasMatch(x, treeNodeKey)));
     }
 
@@ -177,7 +177,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
-            return External.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter).Then(x => (IReadOnlyList<MetadataNode>)x.ToList());
+            return MetadataHelper.GetMetadataNodes(AssemblyFilePath, ClassFilter, MethodFilter);
         }
 
         return Array.Empty<MetadataNode>();

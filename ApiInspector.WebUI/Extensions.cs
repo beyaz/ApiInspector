@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
+using Mono.Cecil;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 
 namespace ApiInspector.WebUI;
@@ -60,30 +60,53 @@ static partial class Extensions
 
     public static TargetRuntimeInfo GetTargetFramework(FileInfo dll)
     {
-        var CompiledNetCoreRegex = new Regex(@".NETCoreApp,Version=v[0-9\.]+", RegexOptions.Compiled);
-        var CompiledNetFrameworkRegex = new Regex(@".NETFramework,Version=v[0-9\.]+", RegexOptions.Compiled);
-        var CompiledNetstandard = new Regex("netstandard+", RegexOptions.Compiled);
+        var assembly = AssemblyDefinition.ReadAssembly(dll.FullName);
 
-        var fileContent = File.ReadAllText(dll.FullName);
-
-        var match = CompiledNetFrameworkRegex.Match(fileContent);
-        if (match.Success)
+        if (assembly.Name.Name == "mscorlib")
         {
             return new() { IsNetFramework = true };
         }
-
-        match = CompiledNetCoreRegex.Match(fileContent);
-        if (match.Success)
+        
+        if (assembly.Name.Name == "System.Private.CoreLib")
         {
             return new() { IsNetCore = true };
         }
-
-        match = CompiledNetstandard.Match(fileContent);
-        if (match.Success)
+        
+        foreach (var attribute in assembly.CustomAttributes)
         {
-            return new() { IsNetStandard = true };
-        }
+            if (attribute.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute")
+            {
+                var frameworkName = attribute.ConstructorArguments[0].Value.ToString();
 
+                if (frameworkName!.StartsWith(".NETStandard", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new() { IsNetStandard = true };
+                }
+
+                if (frameworkName.StartsWith(".NETCoreApp", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new() { IsNetCore = true };
+                }
+
+                if (frameworkName.StartsWith(".NETFramework", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new() { IsNetFramework = true };
+                }
+            }
+        }
+        
+        foreach (var reference in assembly.MainModule.AssemblyReferences)
+        {
+            if (reference.Name.Equals("System.Private.CoreLib", StringComparison.OrdinalIgnoreCase))
+            {
+                return new() { IsNetCore = true };
+            }
+            else if (reference.Name.Equals("mscorlib", StringComparison.OrdinalIgnoreCase))
+            {
+                return new() { IsNetFramework = true };
+            }
+        }
+        
         return new();
     }
 

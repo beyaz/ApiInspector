@@ -49,7 +49,7 @@ static class Program
             return jsonForInstance;
         }
 
-        var declaringType = Assembly.LoadFrom(fullAssemblyPath).TryLoadFrom(typeOfInstance);
+        var declaringType = ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(typeOfInstance);
         if (declaringType == null)
         {
             return jsonForInstance;
@@ -129,7 +129,7 @@ static class Program
             map = new Dictionary<string, object>();
         }
 
-        foreach (var parameterInfo in Assembly.LoadFrom(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
+        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
         {
             var name = parameterInfo.Name;
             if (name == null || map.ContainsKey(name))
@@ -161,7 +161,7 @@ static class Program
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
         ReflectionHelper.AttachAssemblyResolver();
 
-        var assembly = Assembly.LoadFrom(fullAssemblyPath);
+        var assembly = ReflectionHelper.LoadFrom(fullAssemblyPath);
 
         var methodInfo = assembly.TryLoadFrom(methodReference);
         if (methodInfo == null)

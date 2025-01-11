@@ -1,207 +1,261 @@
-﻿//using System.Collections.Immutable;
-//using System.Reflection;
-//using Mono.Cecil;
+﻿using System.Collections.Immutable;
+using Mono.Cecil;
 
-//namespace ApiInspector.WebUI;
+namespace ApiInspector.WebUI;
 
-//static class MetadataHelper
-//{
-//    public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
-//    {
-//        AssemblyDefinition assemblyDefinition;
+static class MetadataHelper
+{
+    public static Result<IReadOnlyList<MetadataNode>> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
+    {
+        AssemblyDefinition assemblyDefinition;
 
-//        try
-//        {
-//            assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFilePath);
-//        }
-//        catch (Exception )
-//        {
-//            return [];
-//        }
-        
-        
-//        return getNamespaceNodes(getAllTypes(assemblyDefinition, classFilter));
+        try
+        {
+            assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFilePath);
+        }
+        catch (Exception exception)
+        {
+            return exception;
+        }
 
-//        IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
-//        {
-//            var items = new List<MetadataNode>();
+        return getNamespaceNodes(getAllTypes(assemblyDefinition, classFilter)).ToList();
 
-//            foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
-//            {
-//                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToList();
+        IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
+        {
+            var items = new List<MetadataNode>();
 
-//                if (!string.IsNullOrWhiteSpace(methodFilter))
-//                {
-//                    classNodes = classNodes.Where(classNode => classNode.HasChild).Take(5).OrderByDescending(classNode => classNode.Children.Count).ToList();
-//                }
+            foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
+            {
+                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToList();
 
-//                if (classNodes.Count > 0)
-//                {
-//                    items.Add(new()
-//                    {
-//                        NamespaceReference = namespaceName,
-//                        IsNamespace        = true,
-//                        label              = namespaceName,
-//                        Children           = classNodes.ToImmutableList()
-//                    });
-//                }
-//            }
+                if (!string.IsNullOrWhiteSpace(methodFilter))
+                {
+                    classNodes = classNodes.Where(classNode => classNode.HasChild).Take(5).OrderByDescending(classNode => classNode.Children.Count).ToList();
+                }
 
-//            return items.Take(5).ToList();
+                if (classNodes.Count > 0)
+                {
+                    items.Add(new()
+                    {
+                        NamespaceReference = namespaceName,
+                        IsNamespace        = true,
+                        label              = namespaceName,
+                        Children           = classNodes.ToImmutableList()
+                    });
+                }
+            }
 
-//            MetadataNode classToMetaData(TypeDefinition type)
-//            {
-//                var classNode = new MetadataNode
-//                {
-//                    IsClass       = true,
-//                    // todo: TypeReference = type.AsReference(),
-//                    label         = type.Name
-//                };
+            return items.Take(5).ToList();
 
-//                VisitMethods(type, m =>
-//                {
-//                    if (!string.IsNullOrWhiteSpace(methodFilter))
-//                    {
-//                        if (classNode.Children.Count < 5)
-//                        {
-//                            if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-//                            {
-//                                classNode = addChild(classNode, convertToMetadataNode(m));
-//                            }
-//                        }
+            MetadataNode classToMetaData(TypeDefinition type)
+            {
+                var classNode = new MetadataNode
+                {
+                    IsClass       = true,
+                    TypeReference = asTypeReference(type),
+                    label         = type.Name
+                };
 
-//                        return;
-//                    }
+                VisitMethods(type, m =>
+                {
+                    if (!string.IsNullOrWhiteSpace(methodFilter))
+                    {
+                        if (classNode.Children.Count < 5)
+                        {
+                            if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                classNode = addChild(classNode, convertToMetadataNode(m));
+                            }
+                        }
 
-//                    classNode = addChild(classNode, convertToMetadataNode(m));
-//                });
+                        return;
+                    }
 
-//                return classNode;
+                    classNode = addChild(classNode, convertToMetadataNode(m));
+                });
 
-//                static void VisitMethods(TypeDefinition type, Action<MethodDefinition> visit)
-//                {
-//                    foreach (var methodDefinition in type.Methods)
-//                    {
-//                        if (Try(() => IsValidForExport(methodDefinition)).value)
-//                        {
-//                            visit(methodDefinition);
-//                        }
-//                    }
-//                    return;
+                return classNode;
 
-//                    static bool IsValidForExport(MethodDefinition methodInfo)
-//                    {
-//                        if (methodInfo.Name == "render" || methodInfo.Name == "InvokeRender")
-//                        {
-//                            return false;
-//                        }
+                static void VisitMethods(TypeDefinition type, Action<MethodDefinition> visit)
+                {
+                    foreach (var methodDefinition in type.Methods)
+                    {
+                        if (Try(() => IsValidForExport(methodDefinition)).value)
+                        {
+                            visit(methodDefinition);
+                        }
+                    }
 
-//                        if (methodInfo.Name.StartsWith("set_"))
-//                        {
-//                            return false;
-//                        }
+                    return;
 
-//                        if (methodInfo.Name.StartsWith("get_") && !methodInfo.IsStatic)
-//                        {
-//                            return false;
-//                        }
+                    static bool IsValidForExport(MethodDefinition methodInfo)
+                    {
+                        if (methodInfo.Name == "render" || methodInfo.Name == "InvokeRender")
+                        {
+                            return false;
+                        }
 
-//                        if (methodInfo.Parameters.Any(p => isNotValidForJson(p.ParameterType)))
-//                        {
-//                            return false;
-//                        }
+                        if (methodInfo.Name.StartsWith("set_"))
+                        {
+                            return false;
+                        }
 
-//                        return true;
+                        if (methodInfo.Name.StartsWith("get_") && !methodInfo.IsStatic)
+                        {
+                            return false;
+                        }
 
-//                        static bool isNotValidForJson(Mono.Cecil.TypeReference t)
-//                        {
-//                            if (t.Resolve().BaseType?.FullName == typeof(MulticastDelegate).FullName)
-//                            {
-//                                return true;
-//                            }
+                        if (methodInfo.Parameters.Any(p => isNotValidForJson(p.ParameterType)))
+                        {
+                            return false;
+                        }
 
-//                            return false;
-//                        }
-//                    }
+                        return true;
 
-//                    static (Exception exception, T value) Try<T>(Func<T> func)
-//                    {
-//                        try
-//                        {
-//                            return (default, func());
-//                        }
-//                        catch (Exception exception)
-//                        {
-//                            return (exception, default);
-//                        }
-//                    }
-//                }
-//            }
-//        }
+                        static bool isNotValidForJson(Mono.Cecil.TypeReference t)
+                        {
+                            if (t.Resolve()?.BaseType?.FullName == typeof(MulticastDelegate).FullName)
+                            {
+                                return true;
+                            }
 
-//        static MetadataNode addChild(MetadataNode node, MetadataNode child)
-//        {
-//            return node with { Children = new List<MetadataNode>(node.Children) { child }.ToImmutableList() };
-//        }
+                            return false;
+                        }
+                    }
 
-//        static MetadataNode convertToMetadataNode(MethodDefinition methodInfo)
-//        {
-//            return new()
-//            {
-//                IsMethod        = true,
-//                //todo: MethodReference = methodInfo.AsReference(),
-//                //todo: label           = methodInfo.AsReference().FullNameWithoutReturnType
-//            };
-//        }
+                    static (Exception exception, T value) Try<T>(Func<T> func)
+                    {
+                        try
+                        {
+                            return (default, func());
+                        }
+                        catch (Exception exception)
+                        {
+                            return (exception, default);
+                        }
+                    }
+                }
+            }
+        }
 
-//        static List<TypeDefinition> getAllTypes(AssemblyDefinition assembly, string classFilter)
-//        {
-//            var types = new List<TypeDefinition>();
+        static MetadataNode addChild(MetadataNode node, MetadataNode child)
+        {
+            return node with { Children = new List<MetadataNode>(node.Children) { child }.ToImmutableList() };
+        }
 
-//            VisitTypes(assembly, visit);
+        static MetadataNode convertToMetadataNode(MethodDefinition methodInfo)
+        {
+            return new()
+            {
+                IsMethod        = true,
+                MethodReference = asMethodReference(methodInfo),
+                label           = asMethodReference(methodInfo).FullNameWithoutReturnType
+            };
 
-//            if (types.Count == 0 && !string.IsNullOrWhiteSpace(classFilter))
-//            {
-//                // try search by namespace
+            static MethodReference asMethodReference(MethodDefinition methodInfo)
+            {
+                return new()
+                {
+                    Name     = methodInfo.Name,
+                    IsStatic = methodInfo.IsStatic,
+                    FullNameWithoutReturnType = string.Join(string.Empty, new List<string>
+                    {
+                        methodInfo.Name,
+                        "(",
+                        string.Join(", ", methodInfo.Parameters.Select(parameterInfo => parameterInfo.ParameterType.Name + " " + parameterInfo.Name)),
+                        ")"
+                    }),
+                    MetadataToken = methodInfo.MetadataToken.ToInt32(),
 
-//                void filterByNamespaceName(TypeDefinition type)
-//                {
-//                    if (type.FullName?.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-//                    {
-//                        types.Add(type);
-//                    }
-//                }
+                    DeclaringType = asTypeReference(methodInfo.DeclaringType),
+                    Parameters    = methodInfo.Parameters.Select(asParameterReference).ToList()
+                };
 
-//                VisitTypes(assembly, filterByNamespaceName);
-//            }
+                static ParameterReference asParameterReference(ParameterDefinition parameterInfo)
+                {
+                    return new()
+                    {
+                        Name          = parameterInfo.Name,
+                        ParameterType = asTypeReference(parameterInfo.ParameterType)
+                    };
+                }
+            }
+        }
 
-//            return types;
+        static TypeReference asTypeReference(Mono.Cecil.TypeReference x)
+        {
+            return new()
+            {
+                FullName      = x.FullName,
+                Name          = GetName(x),
+                NamespaceName = x.Namespace,
+                Assembly      = asReference(x.Scope)
+            };
 
-//            void visit(TypeDefinition type)
-//            {
-//                if (!string.IsNullOrWhiteSpace(classFilter))
-//                {
-//                    if (type.Name.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-//                    {
-//                        types.Add(type);
-//                    }
+            static string GetName(Mono.Cecil.TypeReference x)
+            {
+                if (x.IsNested)
+                {
+                    return GetName(x.DeclaringType) + "+" + x.Name;
+                }
 
-//                    return;
-//                }
+                return x.Name;
+            }
 
-//                types.Add(type);
-//            }
+            static AssemblyReference asReference(IMetadataScope assembly)
+            {
+                return new() { Name = assembly.Name };
+            }
+        }
 
-//            static void VisitTypes(AssemblyDefinition assembly, Action<TypeDefinition> visit)
-//            {
-//                foreach (var moduleDefinition in assembly.Modules)
-//                {
-//                    foreach (var typeDefinition in moduleDefinition.Types)
-//                    {
-//                        visit(typeDefinition);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+        static List<TypeDefinition> getAllTypes(AssemblyDefinition assembly, string classFilter)
+        {
+            var types = new List<TypeDefinition>();
+
+            VisitTypes(assembly, visit);
+
+            if (types.Count == 0 && !string.IsNullOrWhiteSpace(classFilter))
+            {
+                // try search by namespace
+
+                void filterByNamespaceName(TypeDefinition type)
+                {
+                    if (type.FullName?.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        types.Add(type);
+                    }
+                }
+
+                VisitTypes(assembly, filterByNamespaceName);
+            }
+
+            return types;
+
+            void visit(TypeDefinition type)
+            {
+                if (!string.IsNullOrWhiteSpace(classFilter))
+                {
+                    if (type.Name.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        types.Add(type);
+                    }
+
+                    return;
+                }
+
+                types.Add(type);
+            }
+
+            static void VisitTypes(AssemblyDefinition assembly, Action<TypeDefinition> visit)
+            {
+                foreach (var moduleDefinition in assembly.Modules)
+                {
+                    foreach (var typeDefinition in moduleDefinition.Types)
+                    {
+                        visit(typeDefinition);
+                    }
+                }
+            }
+        }
+    }
+}

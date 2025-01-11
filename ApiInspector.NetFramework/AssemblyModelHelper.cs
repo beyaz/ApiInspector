@@ -70,21 +70,8 @@ static class AssemblyModelHelper
         {
             throw new ArgumentNullException(nameof(typeReference));
         }
-
-        Type foundedType = null;
-
-        assembly.VisitTypes(type =>
-        {
-            if (foundedType == null)
-            {
-                if (typeReference.Equals(type.AsReference()))
-                {
-                    foundedType = type;
-                }
-            }
-        });
-
-        return foundedType;
+        
+        return assembly.GetType(typeReference.FullName, throwOnError: false, ignoreCase: true);
     }
 
     public static MethodInfo TryLoadFrom(this Assembly assembly, MethodReference methodReference)
@@ -99,67 +86,21 @@ static class AssemblyModelHelper
             throw new ArgumentNullException(nameof(methodReference));
         }
 
-        var sameNames = new List<MethodInfo>();
-        var fullSame = new List<MethodInfo>();
-
-        assembly.VisitTypes(type =>
+        var type = assembly.GetType(methodReference.DeclaringType.FullName, throwOnError: false, ignoreCase: true);
+        if (type == null)
         {
-            if (fullSame.Count == 0)
-            {
-                type.VisitMethods(methodInfo =>
-                {
-                    if (fullSame.Count == 0)
-                    {
-                        try
-                        {
-                            var asReference = methodInfo.AsReference();
-
-                            if (methodReference.Equals(asReference))
-                            {
-                                fullSame.Add(methodInfo);
-                            }
-
-                            if (DeclaringTypesAreSameAndNameIsSame(methodReference, asReference))
-                            {
-                                sameNames.Add(methodInfo);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // ignored
-                        }
-                    }
-                });
-            }
-        });
-
-        if (fullSame.Count == 1)
-        {
-            return fullSame[0];
+            return null;
         }
 
-        if (sameNames.Count == 1)
+        var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        methods = methods.Where(m => m.Name == methodReference.Name).ToArray();
+        if (methods.Length == 1)
         {
-            return sameNames[0];
+            return methods[0];
         }
 
-        return null;
-
-        static bool DeclaringTypesAreSameAndNameIsSame(MethodReference a, MethodReference b)
-        {
-            if (a.DeclaringType is not null && b.DeclaringType is not null)
-            {
-                if (a.DeclaringType.Equals(b.DeclaringType))
-                {
-                    if (a.Name == b.Name)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
+        return methods.FirstOrDefault(m => methodReference.Equals(AsReference(m)));
     }
 
     public static void VisitMethods(this Type type, Action<MethodInfo> visitAction)

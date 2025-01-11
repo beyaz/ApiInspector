@@ -7,6 +7,16 @@ namespace ApiInspector;
 
 static class ReflectionHelper
 {
+    public static Assembly LoadFrom(string fullAssemblyPath)
+    {
+        var isMsCorLib = Path.GetFileNameWithoutExtension(typeof(object).Assembly.Location) == Path.GetFileNameWithoutExtension(fullAssemblyPath);
+        if (isMsCorLib)
+        {
+            return typeof(object).Assembly;
+        }
+        return Assembly.LoadFrom(fullAssemblyPath);
+    }
+    
     public static void AttachAssemblyResolver()
     {
         AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssemblyInSameFolder;
