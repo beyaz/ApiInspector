@@ -22,7 +22,7 @@ static class MetadataHelper
 
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
         {
-            var items = new List<MetadataNode>();
+            var namespaceNodes = new List<MetadataNode>();
 
             foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
             {
@@ -35,7 +35,7 @@ static class MetadataHelper
 
                 if (classNodes.Count > 0)
                 {
-                    items.Add(new()
+                    namespaceNodes.Add(new()
                     {
                         NamespaceReference = namespaceName,
                         IsNamespace        = true,
@@ -45,7 +45,7 @@ static class MetadataHelper
                 }
             }
 
-            return items.Take(5).ToList();
+            return namespaceNodes.Take(5).ToList();
 
             MetadataNode classToMetaData(TypeDefinition type)
             {
@@ -90,6 +90,16 @@ static class MetadataHelper
 
                     static bool IsValidForExport(MethodDefinition methodInfo)
                     {
+                        if (methodInfo.IsConstructor)
+                        {
+                            return false;
+                        }
+                        
+                        if (!methodInfo.HasBody)
+                        {
+                            return false;
+                        }
+                        
                         if (methodInfo.Name == "render" || methodInfo.Name == "InvokeRender")
                         {
                             return false;
@@ -252,6 +262,10 @@ static class MetadataHelper
                 {
                     foreach (var typeDefinition in moduleDefinition.Types)
                     {
+                        if (typeDefinition.IsInterface)
+                        {
+                            continue;
+                        }
                         visit(typeDefinition);
                     }
                 }
