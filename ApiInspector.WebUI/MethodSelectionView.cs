@@ -10,9 +10,11 @@ public record MetadataNode
     public bool IsClass { get; init; }
     public bool IsMethod { get; init; }
     public bool IsNamespace { get; init; }
+    
     public MethodReference MethodReference { get; init; }
 
     public string NamespaceReference { get; init; }
+    
     public TypeReference TypeReference { get; init; }
 
     public string label { get; init; }
