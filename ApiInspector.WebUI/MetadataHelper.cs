@@ -26,11 +26,11 @@ static class MetadataHelper
 
             foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
             {
-                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).ToList();
+                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    classNodes = classNodes.Where(classNode => classNode.HasChild).Take(5).OrderByDescending(classNode => classNode.Children.Count).ToList();
+                    classNodes = classNodes.Take(3).OrderByDescending(classNode => classNode.Children.Count).ToList();
                 }
 
                 if (classNodes.Count > 0)
