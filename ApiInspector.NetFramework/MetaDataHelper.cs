@@ -27,7 +27,7 @@ static class MetadataHelper
 {
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
-        return getNamespaceNodes(GetAllTypes(LoadAssembly(assemblyFilePath), classFilter));
+        return getNamespaceNodes(GetAllTypes(Assembly.LoadFrom(assemblyFilePath), classFilter));
 
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
         {
@@ -204,11 +204,5 @@ static class MetadataHelper
                 assembly.VisitTypes(visit);
             }
         }
-    }
-
-    public static Assembly LoadAssembly(string assemblyFilePath)
-    {
-        ReflectionHelper.AttachAssemblyResolver();
-        return Assembly.LoadFrom(assemblyFilePath);
     }
 }
