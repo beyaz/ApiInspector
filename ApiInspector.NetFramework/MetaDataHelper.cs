@@ -27,7 +27,7 @@ static class MetadataHelper
 {
     public static IEnumerable<MetadataNode> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
-        return getNamespaceNodes(GetAllTypes(Assembly.LoadFrom(assemblyFilePath), classFilter));
+        return getNamespaceNodes(getAllTypes(Assembly.LoadFrom(assemblyFilePath), classFilter));
 
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<Type> types)
         {
@@ -55,103 +55,103 @@ static class MetadataHelper
             }
 
             return items.Take(5).ToList();
-        }
 
-        MetadataNode classToMetaData(Type type)
-        {
-            var classNode = new MetadataNode
+            MetadataNode classToMetaData(Type type)
             {
-                IsClass       = true,
-                TypeReference = type.AsReference(),
-                label         = type.Name
-            };
-
-            VisitMethods(type, m =>
-            {
-                if (!string.IsNullOrWhiteSpace(methodFilter))
+                var classNode = new MetadataNode
                 {
-                    if (classNode.Children.Count < 5)
+                    IsClass       = true,
+                    TypeReference = type.AsReference(),
+                    label         = type.Name
+                };
+
+                VisitMethods(type, m =>
+                {
+                    if (!string.IsNullOrWhiteSpace(methodFilter))
                     {
-                        if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (classNode.Children.Count < 5)
                         {
-                            classNode = AddChild(classNode, ConvertToMetadataNode(m));
+                            if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                classNode = addChild(classNode, convertToMetadataNode(m));
+                            }
                         }
+
+                        return;
                     }
 
-                    return;
-                }
-
-                classNode = AddChild(classNode, ConvertToMetadataNode(m));
-            });
-
-            return classNode;
-
-            static void VisitMethods(Type type, Action<MethodInfo> visit)
-            {
-                type.VisitMethods(methodInfo =>
-                {
-                    if (Try(() => IsValidForExport(methodInfo)).value)
-                    {
-                        visit(methodInfo);
-                    }
+                    classNode = addChild(classNode, convertToMetadataNode(m));
                 });
-                return;
 
-                static bool IsValidForExport(MethodInfo methodInfo)
+                return classNode;
+
+                static void VisitMethods(Type type, Action<MethodInfo> visit)
                 {
-                    if (methodInfo.Name == "render" || methodInfo.Name == "InvokeRender")
+                    type.VisitMethods(methodInfo =>
                     {
-                        return false;
-                    }
-
-                    if (methodInfo.Name.StartsWith("set_"))
-                    {
-                        return false;
-                    }
-
-                    if (methodInfo.Name.StartsWith("get_") && !methodInfo.IsStatic)
-                    {
-                        return false;
-                    }
-
-                    if (methodInfo.GetParameters().Any(p => isNotValidForJson(p.ParameterType)))
-                    {
-                        return false;
-                    }
-
-                    return true;
-
-                    static bool isNotValidForJson(Type t)
-                    {
-                        if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
+                        if (Try(() => IsValidForExport(methodInfo)).value)
                         {
-                            return true;
+                            visit(methodInfo);
+                        }
+                    });
+                    return;
+
+                    static bool IsValidForExport(MethodInfo methodInfo)
+                    {
+                        if (methodInfo.Name == "render" || methodInfo.Name == "InvokeRender")
+                        {
+                            return false;
                         }
 
-                        return false;
-                    }
-                }
+                        if (methodInfo.Name.StartsWith("set_"))
+                        {
+                            return false;
+                        }
 
-                static (Exception exception, T value) Try<T>(Func<T> func)
-                {
-                    try
-                    {
-                        return (default, func());
+                        if (methodInfo.Name.StartsWith("get_") && !methodInfo.IsStatic)
+                        {
+                            return false;
+                        }
+
+                        if (methodInfo.GetParameters().Any(p => isNotValidForJson(p.ParameterType)))
+                        {
+                            return false;
+                        }
+
+                        return true;
+
+                        static bool isNotValidForJson(Type t)
+                        {
+                            if (typeof(MulticastDelegate).IsAssignableFrom(t.BaseType))
+                            {
+                                return true;
+                            }
+
+                            return false;
+                        }
                     }
-                    catch (Exception exception)
+
+                    static (Exception exception, T value) Try<T>(Func<T> func)
                     {
-                        return (exception, default);
+                        try
+                        {
+                            return (default, func());
+                        }
+                        catch (Exception exception)
+                        {
+                            return (exception, default);
+                        }
                     }
                 }
             }
         }
 
-        static MetadataNode AddChild(MetadataNode node, MetadataNode child)
+        static MetadataNode addChild(MetadataNode node, MetadataNode child)
         {
             return node with { Children = new List<MetadataNode>(node.Children) { child } };
         }
 
-        static MetadataNode ConvertToMetadataNode(MethodInfo methodInfo)
+        static MetadataNode convertToMetadataNode(MethodInfo methodInfo)
         {
             return new()
             {
@@ -161,7 +161,7 @@ static class MetadataHelper
             };
         }
 
-        static List<Type> GetAllTypes(Assembly assembly, string classFilter)
+        static List<Type> getAllTypes(Assembly assembly, string classFilter)
         {
             var types = new List<Type>();
 
