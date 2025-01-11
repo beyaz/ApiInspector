@@ -442,10 +442,10 @@ class MainWindow : Component<MainWindowModel>
                 }
             };
             
-            return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
+            return new FlexColumn(SizeFull, Gap(10), PaddingRight(10))
             {
                 partEditors,
-                new FlexColumn(FlexGrow(1), Gap(10))
+                new FlexColumn(SizeFull, Gap(10))
                 {
                     partActionButtons,
                     partResponse
