@@ -423,15 +423,7 @@ static class Program
 
         return Plugin.ShouldNetStandardAssemblyRunOnNetFramework(assemblyFileName);
     }
-
-    internal static IEnumerable<MetadataNode> GetMetadataNodes((string assemblyFilePath, string classFilter, string methodFilter) prm)
-    {
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(prm.assemblyFilePath);
-        ReflectionHelper.AttachAssemblyResolver();
-
-        return MetadataHelper.GetMetadataNodes(prm.assemblyFilePath, prm.classFilter, prm.methodFilter);
-    }
-
+    
     static string ResponseToJson(object response)
     {
         return JsonConvert.SerializeObject(response, new JsonSerializerSettings
