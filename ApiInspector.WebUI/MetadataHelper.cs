@@ -45,7 +45,7 @@ static class MetadataHelper
                 }
             }
 
-            return namespaceNodes.Take(5).ToList();
+            return namespaceNodes.Take(3).ToList();
 
             MetadataNode classToMetaData(TypeDefinition type)
             {
