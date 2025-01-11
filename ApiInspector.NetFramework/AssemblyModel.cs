@@ -94,11 +94,6 @@ public sealed class ParameterReference
 
 static class AssemblyModelHelper
 {
-    public static AssemblyReference AsReference(this Assembly assembly)
-    {
-        return new() { Name = assembly.GetName().Name };
-    }
-
     public static TypeReference AsReference(this Type x)
     {
         return new()
@@ -106,7 +101,7 @@ static class AssemblyModelHelper
             FullName      = x.FullName,
             Name          = GetName(x),
             NamespaceName = x.Namespace,
-            Assembly      = x.Assembly.AsReference()
+            Assembly      = asReference(x.Assembly)
         };
 
         static string GetName(Type x)
@@ -117,6 +112,11 @@ static class AssemblyModelHelper
             }
 
             return x.Name;
+        }
+
+        static AssemblyReference asReference(Assembly assembly)
+        {
+            return new() { Name = assembly.GetName().Name };
         }
     }
 
@@ -255,7 +255,7 @@ static class AssemblyModelHelper
     public static void VisitMethods(this Type type, Action<MethodInfo> visitAction)
     {
         var flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-        if (type.IsStaticClass())
+        if (IsStaticClass(type))
         {
             flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         }
@@ -268,6 +268,13 @@ static class AssemblyModelHelper
             }
 
             visitAction(methodInfo);
+        }
+
+        return;
+
+        static bool IsStaticClass(Type type)
+        {
+            return type.IsClass && type.IsAbstract && type.IsSealed;
         }
     }
 
@@ -299,31 +306,26 @@ static class AssemblyModelHelper
                 visitType(nestedType);
             }
         }
-    }
 
-    static bool IsStaticClass(this Type type)
-    {
-        return type.IsClass && type.IsAbstract && type.IsSealed;
-    }
-
-    static IEnumerable<Type> TryGetTypes(Assembly assembly)
-    {
-        return assembly.GetTypes().Where(isValidForAnalyze);
-
-        static bool isValidForAnalyze(Type type)
+        static IEnumerable<Type> TryGetTypes(Assembly assembly)
         {
-            var skipTypeList = new[]
-            {
-                "Microsoft.CodeAnalysis.EmbeddedAttribute",
-                "System.Runtime.CompilerServices.RefSafetyRulesAttribute"
-            };
+            return assembly.GetTypes().Where(isValidForAnalyze);
 
-            if (skipTypeList.Contains(type.FullName))
+            static bool isValidForAnalyze(Type type)
             {
-                return false;
+                var skipTypeList = new[]
+                {
+                    "Microsoft.CodeAnalysis.EmbeddedAttribute",
+                    "System.Runtime.CompilerServices.RefSafetyRulesAttribute"
+                };
+
+                if (skipTypeList.Contains(type.FullName))
+                {
+                    return false;
+                }
+
+                return true;
             }
-
-            return true;
         }
     }
 }
