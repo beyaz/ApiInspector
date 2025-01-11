@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\AssemblyModelHelper.cs" Link="AssemblyModelHelper.cs" />
         <Compile Include="..\ApiInspector.NetFramework\FileHelper.cs" Link="FileHelper.cs" />
         <Compile Include="..\ApiInspector.NetFramework\FpExtensions.cs" Link="FpExtensions.cs" />
         <Compile Include="..\ApiInspector.NetFramework\GlobalUsings.cs" Link="GlobalUsings.cs" />
