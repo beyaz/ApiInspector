@@ -58,14 +58,16 @@ static class MetadataHelper
 
                 VisitMethods(type, m =>
                 {
+                    if (classNode.Children.Count >= 5)
+                    {
+                        return;
+                    }
+
                     if (!string.IsNullOrWhiteSpace(methodFilter))
                     {
-                        if (classNode.Children.Count < 5)
+                        if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-                            {
-                                classNode = addChild(classNode, convertToMetadataNode(m));
-                            }
+                            classNode = addChild(classNode, convertToMetadataNode(m));
                         }
 
                         return;
@@ -94,12 +96,12 @@ static class MetadataHelper
                         {
                             return false;
                         }
-                        
+
                         if (!methodInfo.HasBody)
                         {
                             return false;
                         }
-                        
+
                         if (methodInfo.Name == "render" || methodInfo.Name == "InvokeRender")
                         {
                             return false;
@@ -266,6 +268,7 @@ static class MetadataHelper
                         {
                             continue;
                         }
+
                         visit(typeDefinition);
                     }
                 }
