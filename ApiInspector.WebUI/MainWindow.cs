@@ -387,63 +387,68 @@ class MainWindow : Component<MainWindowModel>
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
                 }
             };
-            
-            return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
-            {
-                new FlexRow(WidthFull)
-                {
-                    ComponentBoxShadow,
-                    MarginTop(5),
-                    BorderRadius(5),
 
-                    isStaticMethod ? parametersEditor :
+            var partEditors = new FlexRow(WidthFull)
+            {
+                ComponentBoxShadow,
+                MarginTop(5),
+                BorderRadius(5),
+
+                isStaticMethod ? parametersEditor :
                     new SplitRow
                     {
                         instanceEditor,
 
                         parametersEditor
                     }
-                    
-                },
+
+            };
+
+            var partActionButtons = new FlexRow(Height(50), Gap(30))
+            {
+                new ExecuteButton
+                {
+                    Click               = OnExecuteClicked,
+                    IsProcessing        = IsExecutionStarted,
+                    ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
+                    ShowStatusAsFail    = ExecuteButtonStatusIsFail
+                } + ComponentBoxShadow,
+                new DebugButton
+                {
+                    Click               = OnDebugClicked,
+                    IsProcessing        = IsDebugStarted,
+                    ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
+                    ShowStatusAsFail    = DebugButtonStatusIsFail
+                } + ComponentBoxShadow,
+
+                new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
+            };
+
+            var partResponse = new FlexColumn(SizeFull)
+            {
+                new Label { Text = "Response as json" },
+
+                new FreeScrollBar
+                {
+                    AutoHideScrollbar,
+
+                    ComponentBoxShadow,
+                    Height("calc(100% - 28px)"), PaddingBottom(10),
+                    Border("1px solid #d9d9d9"),
+                    BorderRadius(5),
+                    WidthFull,
+
+                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
+                }
+            };
+            
+            return new FlexColumn(FlexGrow(1), Gap(10), PaddingRight(10))
+            {
+                partEditors,
                 new FlexColumn(FlexGrow(1), Gap(10))
                 {
-                    new FlexRow(Height(50), Gap(30))
-                    {
-                        new ExecuteButton
-                        {
-                            Click               = OnExecuteClicked,
-                            IsProcessing        = IsExecutionStarted,
-                            ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
-                            ShowStatusAsFail    = ExecuteButtonStatusIsFail
-                        } + ComponentBoxShadow,
-                        new DebugButton
-                        {
-                            Click               = OnDebugClicked,
-                            IsProcessing        = IsDebugStarted,
-                            ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
-                            ShowStatusAsFail    = DebugButtonStatusIsFail
-                        } + ComponentBoxShadow,
-
-                        new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
-                    },
-
-                    new FlexColumn(SizeFull)
-                    {
-                        new Label { Text = "Response as json" },
-
-                        new FreeScrollBar
-                        {
-                            AutoHideScrollbar,
-
-                            ComponentBoxShadow,
-                            Height("calc(100% - 28px)"), PaddingBottom(10),
-                            Border("1px solid #d9d9d9"),
-                            BorderRadius(5),
-                            WidthFull,
-
-                            NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
-                        }
-                    }
+                    partActionButtons,
+                    partResponse
                 }
             };
         }
