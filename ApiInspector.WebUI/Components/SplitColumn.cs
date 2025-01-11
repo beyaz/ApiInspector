@@ -8,7 +8,7 @@ sealed class SplitColumn : Component
 
     protected override Element render()
     {
-        return new FlexRow(SizeFull)
+        return new FlexColumn(SizeFull)
         {
             new style
             {
@@ -20,7 +20,7 @@ sealed class SplitColumn : Component
                 ]),
                 new CssClass("gutter.gutter-vertical",
                 [
-                    BackgroundImage("url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==')")
+                    BackgroundImage("url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=')")
                 ])
             },
 
@@ -29,7 +29,7 @@ sealed class SplitColumn : Component
                 sizes      = sizes,
                 gutterSize = 12,
                 style      = { SizeFull, DisplayFlexColumn },
-
+                direction = "vertical",
                 children =
                 {
                     children
