@@ -12,7 +12,7 @@ static class MetadataHelper
 
         try
         {
-            assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFilePath);
+            assemblyDefinition = ReadAssembly(assemblyFilePath);
         }
         catch (Exception exception)
         {
@@ -265,6 +265,34 @@ static class MetadataHelper
                 }
 
                 return true;
+            }
+        }
+    }
+
+    static AssemblyDefinition ReadAssembly(string assemblyFilePath)
+    {
+        var assemblyResolver = new CustomResolver();
+
+        assemblyResolver.AddSearchDirectory(Path.GetDirectoryName(assemblyFilePath));
+
+        return AssemblyDefinition.ReadAssembly(assemblyFilePath, new ReaderParameters
+        {
+            AssemblyResolver = assemblyResolver
+        });
+    }
+
+    class CustomResolver : DefaultAssemblyResolver
+    {
+        public override AssemblyDefinition Resolve(AssemblyNameReference name)
+        {
+            try
+            {
+                return base.Resolve(name);
+            }
+            catch (Exception exception)
+            {
+
+                throw;
             }
         }
     }
