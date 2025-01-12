@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Mono.Cecil;
+using MethodDefinition = Mono.Cecil.MethodDefinition;
 
 namespace ApiInspector.WebUI;
 
@@ -56,39 +57,38 @@ static class MetadataHelper
                     label         = type.Name
                 };
 
-                VisitMethods(type, m =>
+                var methods = getMethods(type);
+
+                if (string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    if (classNode.Children.Count >= 5)
+                    foreach (var methodDefinition in methods.Take(3))
                     {
-                        return;
+                        classNode = addChild(classNode, convertToMetadataNode(methodDefinition));
                     }
-
-                    if (!string.IsNullOrWhiteSpace(methodFilter))
+                }
+                else
+                {
+                    foreach (var methodDefinition in methods.Where(m => m.Name.Contains(methodFilter, StringComparison.OrdinalIgnoreCase)).Take(3))
                     {
-                        if (m.Name.IndexOf(methodFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            classNode = addChild(classNode, convertToMetadataNode(m));
-                        }
-
-                        return;
+                        classNode = addChild(classNode, convertToMetadataNode(methodDefinition));
                     }
-
-                    classNode = addChild(classNode, convertToMetadataNode(m));
-                });
+                }
 
                 return classNode;
 
-                static void VisitMethods(TypeDefinition type, Action<MethodDefinition> visit)
+                static IReadOnlyList<MethodDefinition> getMethods(TypeDefinition typeDefinition)
                 {
-                    foreach (var methodDefinition in type.Methods)
+                    var returnList = new List<MethodDefinition>();
+
+                    foreach (var methodDefinition in typeDefinition.Methods)
                     {
                         if (Try(() => IsValidForExport(methodDefinition)).value)
                         {
-                            visit(methodDefinition);
+                            returnList.Add(methodDefinition);
                         }
                     }
 
-                    return;
+                    return returnList;
 
                     static bool IsValidForExport(MethodDefinition methodInfo)
                     {
@@ -230,7 +230,7 @@ static class MetadataHelper
             }
 
             var classFilters = classFilter.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-            
+
             var selectedTypes = types.Where(t => containsFilter(t.Name)).ToList();
             if (selectedTypes.Count > 0)
             {
@@ -238,7 +238,7 @@ static class MetadataHelper
             }
 
             return types.Where(t => containsFilter(t.Namespace)).ToList();
-            
+
             bool containsFilter(string name)
             {
                 if (string.IsNullOrWhiteSpace(name))
@@ -263,7 +263,6 @@ static class MetadataHelper
                 {
                     return false;
                 }
-
 
                 return true;
             }
