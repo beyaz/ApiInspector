@@ -222,56 +222,50 @@ static class MetadataHelper
 
         static List<TypeDefinition> getAllTypes(AssemblyDefinition assembly, string classFilter)
         {
-            var types = new List<TypeDefinition>();
+            var types = assembly.MainModule.Types.Where(canExport).ToList();
 
-            VisitTypes(assembly, visit);
-
-            if (types.Count == 0 && !string.IsNullOrWhiteSpace(classFilter))
+            if (string.IsNullOrWhiteSpace(classFilter))
             {
-                // try search by namespace
-
-                void filterByNamespaceName(TypeDefinition type)
-                {
-                    if (type.FullName?.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        types.Add(type);
-                    }
-                }
-
-                VisitTypes(assembly, filterByNamespaceName);
+                return types;
             }
 
-            return types;
-
-            void visit(TypeDefinition type)
+            var classFilters = classFilter.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            
+            var selectedTypes = types.Where(t => containsFilter(t.Name)).ToList();
+            if (selectedTypes.Count > 0)
             {
-                if (!string.IsNullOrWhiteSpace(classFilter))
-                {
-                    if (type.Name.IndexOf(classFilter, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        types.Add(type);
-                    }
-
-                    return;
-                }
-
-                types.Add(type);
+                return selectedTypes;
             }
 
-            static void VisitTypes(AssemblyDefinition assembly, Action<TypeDefinition> visit)
+            return types.Where(t => containsFilter(t.Namespace)).ToList();
+            
+            bool containsFilter(string name)
             {
-                foreach (var moduleDefinition in assembly.Modules)
+                if (string.IsNullOrWhiteSpace(name))
                 {
-                    foreach (var typeDefinition in moduleDefinition.Types)
-                    {
-                        if (typeDefinition.IsInterface)
-                        {
-                            continue;
-                        }
+                    return false;
+                }
 
-                        visit(typeDefinition);
+                foreach (var filter in classFilters)
+                {
+                    if (name.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
                     }
                 }
+
+                return false;
+            }
+
+            static bool canExport(TypeDefinition typeDefinition)
+            {
+                if (typeDefinition.IsInterface)
+                {
+                    return false;
+                }
+
+
+                return true;
             }
         }
     }
