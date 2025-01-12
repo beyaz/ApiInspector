@@ -126,6 +126,16 @@ static class MetadataHelper
 
                         static bool isNotValidForJson(Mono.Cecil.TypeReference t)
                         {
+                            if (t.IsGenericParameter)
+                            {
+                                return false;
+                            }
+                            
+                            if (t.Scope.Name == "System.Data.SqlClient")
+                            {
+                                return false;
+                            }
+                            
                             if (t.Resolve()?.BaseType?.FullName == typeof(MulticastDelegate).FullName)
                             {
                                 return true;
