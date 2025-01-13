@@ -8,18 +8,16 @@ static class MetadataHelper
 {
     public static Result<IReadOnlyList<MetadataNode>> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
-        AssemblyDefinition assemblyDefinition;
-
         try
         {
-            assemblyDefinition = ReadAssembly(assemblyFilePath);
+            using var assemblyDefinition = ReadAssembly(assemblyFilePath);
+
+            return getNamespaceNodes(getAllTypes(assemblyDefinition, classFilter)).ToList();
         }
         catch (Exception exception)
         {
             return exception;
         }
-
-        return getNamespaceNodes(getAllTypes(assemblyDefinition, classFilter)).ToList();
 
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
         {
@@ -135,7 +133,7 @@ static class MetadataHelper
                             {
                                 return true;
                             }
-                            
+
                             return false;
                         }
                     }
@@ -276,7 +274,7 @@ static class MetadataHelper
 
     static AssemblyDefinition ReadAssembly(string assemblyFilePath)
     {
-        var assemblyResolver = new CustomResolver();
+        var assemblyResolver = new DefaultAssemblyResolver();
 
         assemblyResolver.AddSearchDirectory(Path.GetDirectoryName(assemblyFilePath));
 
@@ -284,21 +282,5 @@ static class MetadataHelper
         {
             AssemblyResolver = assemblyResolver
         });
-    }
-
-    class CustomResolver : DefaultAssemblyResolver
-    {
-        public override AssemblyDefinition Resolve(AssemblyNameReference name)
-        {
-            try
-            {
-                return base.Resolve(name);
-            }
-            catch (Exception exception)
-            {
-
-                throw;
-            }
-        }
     }
 }
