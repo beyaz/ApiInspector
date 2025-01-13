@@ -280,7 +280,9 @@ static class MetadataHelper
 
         return AssemblyDefinition.ReadAssembly(assemblyFilePath, new ReaderParameters
         {
-            AssemblyResolver = assemblyResolver
+            AssemblyResolver = assemblyResolver,
+            InMemory = true,
+            ReadWrite = false
         });
     }
 }
