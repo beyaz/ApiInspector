@@ -128,19 +128,14 @@ static class MetadataHelper
                         {
                             if (t.IsGenericParameter)
                             {
-                                return false;
-                            }
-                            
-                            if (t.Scope.Name == "System.Data.SqlClient")
-                            {
-                                return false;
-                            }
-                            
-                            if (t.Resolve()?.BaseType?.FullName == typeof(MulticastDelegate).FullName)
-                            {
                                 return true;
                             }
 
+                            if (t.Name.Contains("<>c__DisplayClass", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return true;
+                            }
+                            
                             return false;
                         }
                     }
