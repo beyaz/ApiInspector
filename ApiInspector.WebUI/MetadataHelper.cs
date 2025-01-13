@@ -272,7 +272,7 @@ static class MetadataHelper
         }
     }
 
-    static AssemblyDefinition ReadAssembly(string assemblyFilePath)
+    public static AssemblyDefinition ReadAssembly(string assemblyFilePath)
     {
         var assemblyResolver = new DefaultAssemblyResolver();
 

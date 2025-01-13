@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using Mono.Cecil;
 using ReactWithDotNet.ThirdPartyLibraries.ReactFreeScrollbar;
 
 namespace ApiInspector.WebUI;
@@ -60,7 +59,7 @@ static partial class Extensions
 
     public static TargetRuntimeInfo GetTargetFramework(FileInfo dll)
     {
-        var assembly = AssemblyDefinition.ReadAssembly(dll.FullName);
+        var assembly = MetadataHelper.ReadAssembly(dll.FullName);
 
         if (assembly.Name.Name == "mscorlib")
         {
