@@ -334,6 +334,7 @@ class MainWindow : Component<MainWindowModel>
 
             var instanceEditor = new FlexColumn(AlignItemsCenter, FlexGrow(1), When(isStaticMethod, DisplayNone))
             {
+                PositionRelative,
                 new Label
                 {
                     Text = "Instance json",
@@ -354,9 +355,21 @@ class MainWindow : Component<MainWindowModel>
                     FlexGrow(1),
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
+                },
+
+                new Tooltip
+                {
+                    Tooltip.Title("Format"),
+                    new div(CursorDefault, Hover(FontWeightBold), PositionAbsolute, Right(32), Bottom(8))
+                    {
+                        "{ }",
+                        OnClick(FormatDotNetInstanceText)
+                    }
                 }
             };
+
             
+
             var parametersEditor = new FlexColumn(AlignItemsCenter, FlexGrow(1))
             {
                 PositionRelative,
@@ -385,7 +398,17 @@ class MainWindow : Component<MainWindowModel>
                     FlexGrow(1),
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
-                }
+                },
+                
+               new Tooltip
+               {
+                   Tooltip.Title("Format"),
+                   new div(CursorDefault, Hover(FontWeightBold), PositionAbsolute, Right(22), Bottom(8))
+                   {
+                       "{ }",
+                       OnClick(FormatDotNetParametersText)
+                   }
+               }
             };
 
             var partEditors = new FlexRow(WidthFull)
@@ -455,6 +478,43 @@ class MainWindow : Component<MainWindowModel>
                 }
             };
         }
+    }
+
+    ScenarioModel SelectedScenarioModel
+    {
+        get
+        {
+            if (state.ScenarioListSelectedIndex >= 0 && state.ScenarioListSelectedIndex < state.ScenarioList.Count)
+            {
+                return state.ScenarioList[state.ScenarioListSelectedIndex];
+            }
+
+            return null;
+        }
+    }
+    
+    Task FormatDotNetInstanceText(MouseEvent _)
+    {
+        if (SelectedScenarioModel is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        SelectedScenarioModel.JsonTextForDotNetInstanceProperties = JsonPrettify(SelectedScenarioModel.JsonTextForDotNetInstanceProperties);
+
+        return Task.CompletedTask;
+    }
+    
+    Task FormatDotNetParametersText(MouseEvent _)
+    {
+        if (SelectedScenarioModel is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        SelectedScenarioModel.JsonTextForDotNetMethodParameters = JsonPrettify(SelectedScenarioModel.JsonTextForDotNetMethodParameters);
+
+        return Task.CompletedTask;
     }
 
     Task ClearActionButtonStates()
