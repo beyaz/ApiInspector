@@ -52,20 +52,20 @@ public class Program
 
         app.UseRouting();
 
-        app.ConfigureReactWithDotNet();
-        
         app.UseStaticFiles(new StaticFileOptions
         {
-            RequestPath         = new PathString("/wwwroot"),
-            OnPrepareResponse   = ctx =>
+            RequestPath = new("/wwwroot"),
+            OnPrepareResponse = ctx =>
             {
                 var maxAge = TimeSpan.FromMinutes(5).TotalSeconds;
-                
+
                 ctx.Context.Response.Headers.Append("Cache-Control", $" max-age={maxAge},public,immutable");
             }
         });
 
         app.UseResponseCompression();
+
+        app.ConfigureReactWithDotNet();
 
         if (Config.UseUrls)
         {
@@ -76,5 +76,4 @@ public class Program
             app.Run();
         }
     }
-
 }
