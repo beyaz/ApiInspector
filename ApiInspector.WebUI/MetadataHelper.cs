@@ -66,7 +66,7 @@ static class MetadataHelper
                 }
                 else
                 {
-                    foreach (var methodDefinition in methods.Where(m => m.Name.Contains(methodFilter, StringComparison.OrdinalIgnoreCase)).Take(3))
+                    foreach (var methodDefinition in methods.Where(m => m.Name.Contains(methodFilter, StringComparison.OrdinalIgnoreCase)))
                     {
                         classNode = addChild(classNode, convertToMetadataNode(methodDefinition));
                     }
