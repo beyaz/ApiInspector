@@ -2,8 +2,23 @@
 
 sealed class MainLayout : Component, IPageLayout
 {
-
     public string ContainerDomElementId => "app";
+
+    // After page first rendered in client then connect with react system in background.
+    // So user first iteraction time will be minimize.
+    public string InitialScript
+        => $$"""
+             import {ReactWithDotNet} from '{{IndexJsFilePath}}';
+
+             ReactWithDotNet.StrictMode = false;
+
+             ReactWithDotNet.RequestHandlerPath = '{{RequestHandlerPath}}';
+
+             ReactWithDotNet.RenderComponentIn({
+               idOfContainerHtmlElement: '{{ContainerDomElementId}}',
+               renderInfo: {{RenderInfo.ToJsonString()}}
+             });
+             """;
 
     public ComponentRenderInfo RenderInfo { get; set; }
 
@@ -22,14 +37,14 @@ sealed class MainLayout : Component, IPageLayout
                 new meta { name    = "viewport", content = "width=device-width, initial-scale=1" },
                 new title { "Api Inspector" },
                 new link { rel = "icon", href = $"{root}/favicon.ico" },
-                
+
                 new link
                 {
                     rel  = "stylesheet",
                     type = "text/css",
                     href = IndexCssFilePath
                 },
-                
+
                 new style
                 {
                     """
@@ -68,29 +83,7 @@ sealed class MainLayout : Component, IPageLayout
             },
             new body
             {
-                new div(Id(ContainerDomElementId), SizeFull),
-
-                // After page first rendered in client then connect with react system in background.
-                // So user first iteraction time will be minimize.
-
-                new script
-                {
-                    type = "module",
-
-                    text =
-                        $$"""
-                          import {ReactWithDotNet} from '{{IndexJsFilePath}}';
-
-                          ReactWithDotNet.StrictMode = false;
-
-                          ReactWithDotNet.RequestHandlerPath = '{{RequestHandlerPath}}';
-
-                          ReactWithDotNet.RenderComponentIn({
-                            idOfContainerHtmlElement: '{{ContainerDomElementId}}',
-                            renderInfo: {{RenderInfo.ToJsonString()}}
-                          });
-                          """
-                }
+                new div(Id(ContainerDomElementId), SizeFull)
             }
         };
     }
