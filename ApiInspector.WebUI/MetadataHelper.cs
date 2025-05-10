@@ -232,6 +232,18 @@ static class MetadataHelper
                 return types;
             }
 
+            // try match from fullName
+            {
+                if (classFilter.Contains('.', StringComparison.CurrentCulture))
+                {
+                    var fullNameMatchedType = types.FirstOrDefault(t => t.FullName == classFilter);
+                    if (fullNameMatchedType is not null)
+                    {
+                        return [fullNameMatchedType];
+                    }
+                }
+            }
+            
             var classFilters = classFilter.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
             var selectedTypes = types.Where(t => containsFilter(t.Name)).ToList();
@@ -259,6 +271,8 @@ static class MetadataHelper
 
                 return false;
             }
+
+           
 
             static bool canExport(TypeDefinition typeDefinition)
             {
