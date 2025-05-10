@@ -14,7 +14,7 @@ public class Program
     {
         ProcessHelper.KillAllNamedProcess($"{nameof(ApiInspector)}.{nameof(WebUI)}");
 
-        var Port = NetworkHelper.GetAvailablePort(Config.NextAvailablePortFrom);
+        var port = NetworkHelper.GetAvailablePort(Config.NextAvailablePortFrom);
 
         if (Config.HideConsoleWindow)
         {
@@ -23,7 +23,7 @@ public class Program
 
         if (Config.UseUrls)
         {
-            Process.Start(Config.BrowserExePath, Config.BrowserExeArguments.Replace("{Port}", Port.ToString()));
+            Process.Start(Config.BrowserExePath, Config.BrowserExeArguments.Replace("{Port}", port.ToString()));
         }
 
         var builder = WebApplication.CreateBuilder(args);
@@ -69,7 +69,7 @@ public class Program
 
         if (Config.UseUrls)
         {
-            app.Run($"https://*:{Port}");
+            app.Run($"https://*:{port}");
         }
         else
         {
