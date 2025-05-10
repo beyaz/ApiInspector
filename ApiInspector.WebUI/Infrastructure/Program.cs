@@ -12,7 +12,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        ProcessHelper.KillAllNamedProcess("ApiInspector.WebUI");
+        ProcessHelper.KillAllNamedProcess($"{nameof(ApiInspector)}.{nameof(WebUI)}");
 
         var Port = NetworkHelper.GetAvailablePort(Config.NextAvailablePortFrom);
 
