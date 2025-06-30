@@ -14,7 +14,7 @@ static class AssemblyModelHelper
             {
                 methodInfo.Name,
                 "(",
-                string.Join(", ", methodInfo.GetParameters().Select(parameterInfo => parameterInfo.ParameterType.Name + " " + parameterInfo.Name)),
+                string.Join(", ", methodInfo.GetParameters().Select(parameterInfo => GetTypeName(parameterInfo.ParameterType) + " " + parameterInfo.Name)),
                 ")"
             }),
             MetadataToken = methodInfo.MetadataToken,
@@ -37,25 +37,40 @@ static class AssemblyModelHelper
             return new()
             {
                 FullName      = x.FullName,
-                Name          = GetName(x),
+                Name          = GetTypeName(x),
                 NamespaceName = x.Namespace,
                 Assembly      = asReference(x.Assembly)
             };
 
-            static string GetName(Type x)
-            {
-                if (x.IsNested)
-                {
-                    return GetName(x.DeclaringType) + "+" + x.Name;
-                }
-
-                return x.Name;
-            }
 
             static AssemblyReference asReference(Assembly assembly)
             {
-                return new() { Name = assembly.GetName().Name };
+                var assemblyName = assembly.GetName();
+
+                var name = assemblyName.Name;
+                
+                if (name.EndsWith(".dll"))
+                {
+                    name = name.RemoveFromEnd(".dll");
+                }
+                
+                return new() { Name = assemblyName.Name };
             }
+        }
+
+        static string GetTypeName(Type type)
+        {
+            if (type.IsNested)
+            {
+                return GetTypeName(type.DeclaringType) + "+" + type.Name;
+            }
+
+            if (type.Name == "Nullable`1")
+            {
+                return GetTypeName(type.GenericTypeArguments[0]) + "?";
+            }
+
+            return type.Name;
         }
     }
 
@@ -101,5 +116,26 @@ static class AssemblyModelHelper
         }
 
         return methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
+    }
+
+    /// <summary>
+    ///     Removes value from end of str
+    /// </summary>
+     static string RemoveFromEnd(this string data, string value)
+    {
+        return RemoveFromEnd(data, value, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    ///     Removes from end.
+    /// </summary>
+     static string RemoveFromEnd(this string data, string value, StringComparison comparison)
+    {
+        if (data.EndsWith(value, comparison))
+        {
+            return data.Substring(0, data.Length - value.Length);
+        }
+
+        return data;
     }
 }
