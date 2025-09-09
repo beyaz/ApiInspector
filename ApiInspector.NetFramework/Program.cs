@@ -351,6 +351,8 @@ static class Program
     {
         FileHelper.ClearLog();
 
+        WriteLog("ProgramStarted");
+        
         string inputAsJsonString = null;
 
         try
@@ -379,7 +381,9 @@ static class Program
 
             if (waitForDebugger == "1")
             {
+                WriteLog("WaitingForAttachToDebugger");
                 WaitForDebuggerAttach();
+                WriteLog("DebuggerAttached");
             }
 
             var methodInfo = typeof(Program).GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
@@ -438,6 +442,9 @@ static class Program
     static void SaveExceptionAndExitWithFailure(Exception exception)
     {
         FileHelper.WriteFail(communicationId, exception);
+        
+        WriteLog("ExitWithFailure: " + exception);
+        
         Environment.Exit(0);
     }
 
