@@ -419,14 +419,6 @@ static class Program
             SaveExceptionAndExitWithFailure(exception);
         }
     }
-
-    public static bool? ShouldNetStandardAssemblyRunOnNetFramework(string assemblyFileName)
-    {
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileName);
-        ReflectionHelper.AttachAssemblyResolver();
-
-        return Plugin.ShouldNetStandardAssemblyRunOnNetFramework(assemblyFileName);
-    }
     
     static string ResponseToJson(object response)
     {

@@ -21,6 +21,15 @@ class MainWindowModel
     public string SelectedMethodTreeNodeKey { get; set; }
 
     public string ScenarioFilterText { get; set; }
+    
+    public string RuntimeName { get; set; }
+}
+
+static class RuntimeNames
+{
+    public static string NetCore => nameof(NetCore);
+    
+    public static string NetFramework => nameof(NetFramework);
 }
 
 sealed class ScenarioModel
