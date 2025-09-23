@@ -684,6 +684,11 @@ class MainWindow : Component<MainWindowModel>
                     state.AssemblyFileName  = currentState.AssemblyFileName;
                     state.ClassFilter       = currentState.ClassFilter;
                     state.MethodFilter      = currentState.MethodFilter;
+                    
+                    if (state.RuntimeName.HasNoValue())
+                    {
+                        state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
+                    }
                 }
             }
         }
