@@ -56,33 +56,52 @@ static class External
 
         var isNetCore = runtimeName == RuntimeNames.NetCore;
 
-        var communicationId = Guid.NewGuid().ToString("N");
-        
-        FileHelper.WriteInput(communicationId, inputAsJson);
-
-        var exitCode = RunProcess(communicationId, isNetCore, methodName, waitForDebugger);
+        var (exitCode, outputAsJson) = RunProcess(inputAsJson, isNetCore, methodName, waitForDebugger);
         if (exitCode == 1)
         {
-            return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse(communicationId)), null);
+            return (JsonConvert.DeserializeObject<TResponse>(outputAsJson), null);
         }
 
         if (exitCode == 0)
         {
-            return (default, new Exception(FileHelper.TakeResponseAsFail(communicationId)));
+            return (default, new Exception(outputAsJson));
         }
 
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));
     }
-
-    static int RunProcess(string communicationId, bool runCoreApp, string methodName, bool waitForDebugger)
+    
+    static (int exitCode, string outputAsJson) RunProcess(string inputAsJson, bool runCoreApp, string methodName, bool waitForDebugger)
     {
-        var process = new Process();
-        process.StartInfo.FileName  = runCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath;
-        process.StartInfo.Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}|{communicationId}";
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = runCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
+            
+            Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}",
+                
+            RedirectStandardInput  = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+            UseShellExecute        = false,
+            CreateNoWindow         = true
+        };
+
+        using var process = new Process();
+        
+        process.StartInfo = processStartInfo;
+
         process.Start();
+        
+        using (var writer = process.StandardInput)
+        {
+            writer.Write(inputAsJson);
+        }
+        
+        
+        var outputAsJson = process.StandardOutput.ReadToEnd();
+        
         process.WaitForExit();
 
-        return process.ExitCode;
+        return (process.ExitCode, outputAsJson);
     }
 
     static Exception RuntimeNotDetectedException(string assemblyFileFullPath)

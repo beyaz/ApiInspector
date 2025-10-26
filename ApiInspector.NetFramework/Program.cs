@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,8 +10,6 @@ namespace ApiInspector;
 
 static class Program
 {
-    static string communicationId;
-    
     public static string GetEnvironment(string assemblyFileFullPath)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
@@ -178,7 +177,7 @@ static class Program
 
             if (occurredErrorWhenCreatingInstance != null)
             {
-                SaveExceptionAndExitWithFailure(occurredErrorWhenCreatingInstance);
+                throw occurredErrorWhenCreatingInstance;
             }
 
             if (isSuccessfullyCreated)
@@ -305,7 +304,7 @@ static class Program
 
         if (invocationException != null)
         {
-            SaveExceptionAndExitWithFailure(invocationException);
+            throw invocationException;
         }
 
         if (response is string responseAsString)
@@ -326,7 +325,7 @@ static class Program
 
                     if (occurredErrorWhenCreatingInstance != null)
                     {
-                        SaveExceptionAndExitWithFailure(occurredErrorWhenCreatingInstance);
+                        throw occurredErrorWhenCreatingInstance;
                     }
 
                     if (isSuccessfullyCreated)
@@ -349,11 +348,13 @@ static class Program
 
     public static void Main(string[] args)
     {
+        var originalStdout = Console.Out;
+        
+        Console.SetOut(TextWriter.Null);
+        
         FileHelper.ClearLog();
 
         WriteLog("ProgramStarted");
-        
-        string inputAsJsonString = null;
 
         try
         {
@@ -367,8 +368,10 @@ static class Program
                 throw new Exception("CommandLine arguments cannot be empty.");
             }
 
+            WriteLog($"A r g u m e n t s : {args[0]}");
+            
             var arr = args[0].Split('|');
-            if (arr.Length is not 3)
+            if (arr.Length is not 2)
             {
                 throw new Exception($"CommandLine arguments are invalid. @arguments: {args[0]}");
             }
@@ -377,8 +380,6 @@ static class Program
 
             var methodName = arr[1];
             
-            communicationId = arr[2];
-
             if (waitForDebugger == "1")
             {
                 WriteLog("WaitingForAttachToDebugger");
@@ -395,28 +396,47 @@ static class Program
             var parameters = new object[] { };
             if (methodInfo.GetParameters().Length == 1)
             {
-                inputAsJsonString = FileHelper.ReadInputAsJsonString(communicationId);
+                var inputAsJsonString = Console.In.ReadToEnd();
+                
+                WriteLog($"I N P U T : {inputAsJsonString}");
 
-                parameters = new[] { JsonConvert.DeserializeObject(inputAsJsonString, methodInfo.GetParameters()[0].ParameterType) };
+                parameters = [JsonConvert.DeserializeObject(inputAsJsonString, methodInfo.GetParameters()[0].ParameterType)];
             }
 
             var response = methodInfo.Invoke(null, parameters);
 
-            SaveResponseAsJsonFileAndExitSuccessfully(response);
+            var responseAsJson = ResponseToJson(response);
+            
+            Console.SetOut(originalStdout);
+            Console.Write(responseAsJson);
+            
+            WriteLog($"ResponseAsJson: {responseAsJson}");
+            
+            WriteLog("SuccessfullyExit");
+                
+            Environment.Exit(1);
         }
         catch (Exception exception)
         {
-            if (args is not null)
+            if (exception is TargetInvocationException targetInvocationException)
             {
-                exception.Data.Add(nameof(args), string.Join(", ", args));
+                if (targetInvocationException.InnerException is not null)
+                {
+                    exception = targetInvocationException.InnerException;
+                }
             }
-
-            if (inputAsJsonString is not null)
+            
+            var failInfoAsJson = JsonConvert.SerializeObject(exception, new JsonSerializerSettings
             {
-                exception.Data.Add(nameof(inputAsJsonString), inputAsJsonString);
-            }
-
-            SaveExceptionAndExitWithFailure(exception);
+                Formatting = Formatting.Indented
+            });
+            
+            Console.SetOut(originalStdout);
+            Console.Write(failInfoAsJson);
+            
+            WriteLog($"Failed: {failInfoAsJson}");
+            
+            Environment.Exit(0);
         }
     }
     
@@ -431,21 +451,8 @@ static class Program
         });
     }
 
-    static void SaveExceptionAndExitWithFailure(Exception exception)
-    {
-        FileHelper.WriteFail(communicationId, exception);
-        
-        WriteLog("ExitWithFailure: " + exception);
-        
-        Environment.Exit(0);
-    }
 
-    static void SaveResponseAsJsonFileAndExitSuccessfully(object response)
-    {
-        FileHelper.WriteSuccessResponse(communicationId, ResponseToJson(response));
-
-        Environment.Exit(1);
-    }
+    
 
     static void WaitForDebuggerAttach()
     {
