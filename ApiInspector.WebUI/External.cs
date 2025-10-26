@@ -5,36 +5,41 @@ namespace ApiInspector.WebUI;
 
 static class External
 {
-    public static (string response, Exception exception) GetEnvironment(string assemblyFileFullPath)
+    public static (string response, Exception exception) GetEnvironment(string runtimeName, string assemblyFileFullPath)
     {
         var parameter = assemblyFileFullPath;
 
-        return Execute<string>(assemblyFileFullPath, nameof(GetEnvironment), parameter);
+        return Execute<string>(runtimeName,assemblyFileFullPath, nameof(GetEnvironment), parameter);
     }
 
-    public static (string value, Exception exception) GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
+    public static (string value, Exception exception) GetInstanceEditorJsonText(string runtimeName,string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
-        return Execute<string>(assemblyFileFullPath, nameof(GetInstanceEditorJsonText), parameter);
+        return Execute<string>(runtimeName, assemblyFileFullPath, nameof(GetInstanceEditorJsonText), parameter);
     }
     
-    public static (string value, Exception exception) GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
+    public static (string value, Exception exception) GetParametersEditorJsonText(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
 
-        return Execute<string>(assemblyFileFullPath, nameof(GetParametersEditorJsonText), parameter);
+        return Execute<string>(runtimeName,assemblyFileFullPath, nameof(GetParametersEditorJsonText), parameter);
     }
 
-    public static Result<string> InvokeMethod(string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
+    public static Result<string> InvokeMethod(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
     {
         var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
 
-        return Execute<string>(assemblyFileFullPath, nameof(InvokeMethod), parameter, waitForDebugger);
+        return Execute<string>(runtimeName, assemblyFileFullPath, nameof(InvokeMethod), parameter, waitForDebugger);
     }
 
-    static (TResponse response, Exception exception) Execute<TResponse>(string assemblyFileFullPath, string methodName, object parameter, bool waitForDebugger = false)
+    static (TResponse response, Exception exception) Execute<TResponse>(string runtimeName, string assemblyFileFullPath, string methodName, object parameter, bool waitForDebugger = false)
     {
+        if (string.IsNullOrWhiteSpace(runtimeName))
+        {
+            return (default, new ArgumentException("Select runtime"));
+        }
+        
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (!fileInfo.Exists)
         {
@@ -49,47 +54,21 @@ static class External
 
         var inputAsJson = JsonConvert.SerializeObject(parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
 
-        var isNetCore = runtime.IsNetCore;
-
-        int exitCode;
+        var isNetCore = runtimeName == RuntimeNames.NetCore;
 
         var communicationId = Guid.NewGuid().ToString("N");
         
-        
-        if (runtime.IsNetStandard)
+        FileHelper.WriteInput(communicationId, inputAsJson);
+
+        var exitCode = RunProcess(communicationId, isNetCore, methodName, waitForDebugger);
+        if (exitCode == 1)
         {
-            isNetCore = true;
-
-            // default pattern: run standard dlls on net core application
-            // But sometimes we need to run standard dlls on .netframework application
-
-            FileHelper.WriteInput(communicationId, JsonConvert.SerializeObject(assemblyFileFullPath, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore }));
-            exitCode = RunProcess(communicationId, runCoreApp: false, "ShouldNetStandardAssemblyRunOnNetFramework", waitForDebugger: false);
-            if (exitCode == 1)
-            {
-                var shouldNetStandardAssemblyRunOnNetFramework = JsonConvert.DeserializeObject<bool?>(FileHelper.ReadResponse(communicationId));
-                if (shouldNetStandardAssemblyRunOnNetFramework is true)
-                {
-                    isNetCore = false;
-                }
-            }
+            return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse(communicationId)), null);
         }
 
+        if (exitCode == 0)
         {
-            FileHelper.WriteInput(communicationId, inputAsJson);
-
-            exitCode = RunProcess(communicationId, isNetCore, methodName, waitForDebugger);
-            if (exitCode == 1)
-            {
-                return (JsonConvert.DeserializeObject<TResponse>(FileHelper.ReadResponse(communicationId)), null);
-            }
-
-            var messagePrefix = isNetCore ? "(NetCore)" : "(NetFramework)";
-
-            if (exitCode == 0)
-            {
-                return (default, new Exception(messagePrefix + FileHelper.TakeResponseAsFail(communicationId)));
-            }
+            return (default, new Exception(FileHelper.TakeResponseAsFail(communicationId)));
         }
 
         return (default, new Exception($"Unexpected exitCode: {exitCode}"));

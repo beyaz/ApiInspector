@@ -34,6 +34,8 @@ class MainWindow : Component<MainWindowModel>
             MethodFilter      = "GetHelpMessage"
         };
 
+        state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
+        
         return Task.CompletedTask;
     }
 
@@ -235,7 +237,14 @@ class MainWindow : Component<MainWindowModel>
                         SelectionChanged = x =>
                         {
                             state.AssemblyDirectory = x;
-                            Client.DispatchEvent(Event.OnAssemblyChanged, [AssemblyFileFullPath]);
+                            
+                            state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
+                            
+                            Client.DispatchEvent(Event.OnAssemblyChanged, [new AssemblyChangedArgs
+                            {
+                                AssemblyFileFullPath = AssemblyFileFullPath,
+                                RuntimeName = state.RuntimeName
+                            }]);
 
                             return Task.CompletedTask;
                         }
@@ -254,7 +263,13 @@ class MainWindow : Component<MainWindowModel>
                         {
                             state.AssemblyFileName = x;
 
-                            Client.DispatchEvent(Event.OnAssemblyChanged, [AssemblyFileFullPath]);
+                            state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
+
+                            Client.DispatchEvent(Event.OnAssemblyChanged, [new AssemblyChangedArgs
+                            {
+                                AssemblyFileFullPath = AssemblyFileFullPath,
+                                RuntimeName          = state.RuntimeName
+                            }]);
 
                             return Task.CompletedTask;
                         })
@@ -429,6 +444,48 @@ class MainWindow : Component<MainWindowModel>
 
             var partActionButtons = new FlexRow(Height(50), Gap(30))
             {
+                new FlexColumn(Gap(2), AlignItemsFlexStart, CursorDefault)
+                {
+                    new FlexRowCentered(Gap(4))
+                    {
+                        new svg(svg.Size(20))
+                        {
+                            new circle{ cx =10, cy =10, r =9, stroke = BluePrimary, strokeWidth = 1, fill = none},
+                            
+                            state.RuntimeName == RuntimeNames.NetCore ? null:
+                            new circle{ cx =10, cy =10, r =5,   fill  = "#f18484"}
+                        },
+                    
+                        "Framework",
+                        
+                        OnClick(_ =>
+                        {
+                            state.RuntimeName = RuntimeNames.NetFramework;
+                            
+                            return Task.CompletedTask;
+                        })
+                    },
+                    
+                    new FlexRowCentered(Gap(4))
+                    {
+                        new svg(svg.Size(20))
+                        {
+                            new circle{ cx =10, cy =10, r =9, stroke = BluePrimary, strokeWidth = 1, fill = none},
+                            
+                            state.RuntimeName == RuntimeNames.NetFramework ? null:
+                            new circle{ cx =10, cy =10, r =5,   fill  = "#f18484"}
+                        },
+                    
+                        "Core",
+                        
+                        OnClick(_ =>
+                        {
+                            state.RuntimeName = RuntimeNames.NetCore;
+                            
+                            return Task.CompletedTask;
+                        })
+                    }
+                },
                 new ExecuteButton
                 {
                     Click               = OnExecuteClicked,
@@ -532,7 +589,9 @@ class MainWindow : Component<MainWindowModel>
     {
         return new EnvironmentInfoView
         {
-            AssemblyFileFullPath = AssemblyFileFullPath
+            AssemblyFileFullPath = AssemblyFileFullPath,
+            
+            RuntimeName = state.RuntimeName
         };
     }
 
@@ -560,7 +619,7 @@ class MainWindow : Component<MainWindowModel>
 
             try
             {
-                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true).Unwrap();
+                scenario.ResponseAsJson = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true).Unwrap();
 
                 DebugButtonStatusIsSuccess = true;
             }
@@ -625,6 +684,11 @@ class MainWindow : Component<MainWindowModel>
                     state.AssemblyFileName  = currentState.AssemblyFileName;
                     state.ClassFilter       = currentState.ClassFilter;
                     state.MethodFilter      = currentState.MethodFilter;
+                    
+                    if (state.RuntimeName.HasNoValue())
+                    {
+                        state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
+                    }
                 }
             }
         }
@@ -633,6 +697,22 @@ class MainWindow : Component<MainWindowModel>
         
         return Task.CompletedTask;
     }
+
+    static string GetDefaultRuntimeNameFromAssembly(string assemblyFileFullPath)
+    {
+        var fileInfo = new FileInfo(assemblyFileFullPath);
+        if (fileInfo.Exists)
+        {
+            var targetRuntimeInfo = GetTargetFramework(fileInfo);
+            if (targetRuntimeInfo.IsNetFramework)
+            {
+                return  RuntimeNames.NetFramework;
+            }
+        }
+
+        return RuntimeNames.NetCore;
+    }
+    
 
     Task OnExecuteClicked(MouseEvent _) => OnExecuteClicked();
     
@@ -658,7 +738,7 @@ class MainWindow : Component<MainWindowModel>
 
             try
             {
-                scenario.ResponseAsJson = External.InvokeMethod(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Unwrap();
+                scenario.ResponseAsJson = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Unwrap();
 
                 ExecuteButtonStatusIsSuccess = true;
             }
@@ -708,13 +788,13 @@ class MainWindow : Component<MainWindowModel>
 
             if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                External.GetInstanceEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties)
+                External.GetInstanceEditorJsonText(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties)
                     .Then(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
 
             if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                External.GetParametersEditorJsonText(AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters)
+                External.GetParametersEditorJsonText(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters)
                     .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 
@@ -792,30 +872,36 @@ class MainWindow : Component<MainWindowModel>
     class EnvironmentInfoState
     {
         public string AssemblyFileFullPath { get; set; }
+        
+        public string RuntimeName { get; set; }
+        
         public string Text { get; set; }
     }
 
     class EnvironmentInfoView : Component<EnvironmentInfoState>
     {
-        public string AssemblyFileFullPath { get; init; }
+        public required string AssemblyFileFullPath { get; init; }
+        
+        public required string RuntimeName { get; init; }
 
         protected override Task constructor()
         {
             state = new();
-
-            OnAssemblyChanged(AssemblyFileFullPath);
-
-            Client.ListenEvent<string>(Event.OnAssemblyChanged, OnAssemblyChanged);
+            
+            Client.ListenEvent<AssemblyChangedArgs>(Event.OnAssemblyChanged, OnAssemblyChanged);
 
             return base.constructor();
         }
 
         protected override Task OverrideStateFromPropsBeforeRender()
         {
-            if (state.AssemblyFileFullPath != AssemblyFileFullPath)
+            if (state.AssemblyFileFullPath != AssemblyFileFullPath || state.RuntimeName != RuntimeName)
             {
                 state.AssemblyFileFullPath = AssemblyFileFullPath;
-                state.Text                 = Flow(AssemblyFileFullPath, External.GetEnvironment, str => str);
+
+                state.RuntimeName = RuntimeName;
+                
+                state.Text = Flow(AssemblyFileFullPath, x=> External.GetEnvironment(state.RuntimeName, x), str => str);
             }
 
             return base.OverrideStateFromPropsBeforeRender();
@@ -829,11 +915,13 @@ class MainWindow : Component<MainWindowModel>
             };
         }
 
-        Task OnAssemblyChanged(string assemblyFileFullPath)
+        Task OnAssemblyChanged(AssemblyChangedArgs args)
         {
-            state.AssemblyFileFullPath = assemblyFileFullPath;
+            state.AssemblyFileFullPath = args.AssemblyFileFullPath;
+            
+            state.RuntimeName = args.RuntimeName;
 
-            Flow(assemblyFileFullPath, External.GetEnvironment, str => state.Text = str);
+            Flow(args.AssemblyFileFullPath, x=>External.GetEnvironment(x, args.RuntimeName), str => state.Text = str);
 
             return Task.CompletedTask;
         }
@@ -843,4 +931,11 @@ class MainWindow : Component<MainWindowModel>
 enum Event
 {
     OnAssemblyChanged
+}
+
+sealed record AssemblyChangedArgs
+{
+    public string AssemblyFileFullPath { get; init; }
+    
+    public string RuntimeName { get; init; }
 }

@@ -177,7 +177,7 @@ static class MetadataHelper
                     {
                         methodInfo.Name,
                         "(",
-                        string.Join(", ", methodInfo.Parameters.Select(parameterInfo => parameterInfo.ParameterType.Name + " " + parameterInfo.Name)),
+                        string.Join(", ", methodInfo.Parameters.Select(parameterInfo => GetTypeName(parameterInfo.ParameterType) + " " + parameterInfo.Name)),
                         ")"
                     }),
                     MetadataToken = methodInfo.MetadataToken.ToInt32(),
@@ -202,25 +202,34 @@ static class MetadataHelper
             return new()
             {
                 FullName      = x.FullName,
-                Name          = GetName(x),
+                Name          = GetTypeName(x),
                 NamespaceName = x.Namespace,
                 Assembly      = asReference(x.Scope)
             };
 
-            static string GetName(Mono.Cecil.TypeReference x)
-            {
-                if (x.IsNested)
-                {
-                    return GetName(x.DeclaringType) + "+" + x.Name;
-                }
-
-                return x.Name;
-            }
 
             static AssemblyReference asReference(IMetadataScope assembly)
             {
-                return new() { Name = assembly.Name };
+                return new() { Name = assembly.Name.RemoveFromEnd(".dll").RemoveFromEnd(".exe") };
             }
+        }
+
+        static string GetTypeName(Mono.Cecil.TypeReference typeReference)
+        {
+            if (typeReference.IsNested)
+            {
+                return GetTypeName(typeReference.DeclaringType) + "+" + typeReference.Name;
+            }
+
+            if (typeReference.Name== "Nullable`1")
+            {
+                if (typeReference is GenericInstanceType genericInstanceType)
+                {
+                    return GetTypeName(genericInstanceType.GenericArguments[0]) + "?";
+                }
+            }
+
+            return typeReference.Name;
         }
 
         static List<TypeDefinition> getAllTypes(AssemblyDefinition assembly, string classFilter)
