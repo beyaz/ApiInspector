@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <ApplicationIcon>app.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -65,5 +66,9 @@
 		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
 		
 	</Target>
+
+    <ItemGroup>
+        <Content Include="app.ico" />
+    </ItemGroup>
    
 </Project>
