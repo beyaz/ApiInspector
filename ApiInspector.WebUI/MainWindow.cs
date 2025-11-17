@@ -704,7 +704,7 @@ class MainWindow : Component<MainWindowModel>
         if (fileInfo.Exists)
         {
             var targetRuntimeInfo = GetTargetFramework(fileInfo);
-            if (targetRuntimeInfo.IsNetFramework)
+            if (targetRuntimeInfo.IsNetFramework || targetRuntimeInfo.IsNetStandard)
             {
                 return  RuntimeNames.NetFramework;
             }
