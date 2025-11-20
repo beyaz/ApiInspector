@@ -14,6 +14,8 @@ static class Plugin
 
         static PluginInfo readPluginInfo()
         {
+            WriteLog("StartedToReadPlugins");
+            
             var directory = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
             if (string.IsNullOrWhiteSpace(directory))
             {
@@ -24,6 +26,8 @@ static class Plugin
             {
                 if (Path.GetFileNameWithoutExtension(file).StartsWith("ApiInspector.Plugin.", StringComparison.OrdinalIgnoreCase))
                 {
+                    WriteLog($"PluginFound.{file}");
+                    
                     return new PluginInfo
                     {
                         FullClassName          = "ApiInspector.Plugin",
@@ -32,6 +36,8 @@ static class Plugin
                 }
             }
 
+            WriteLog("NoPlugin");
+            
             return null;
         }
     }
