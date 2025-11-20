@@ -8,6 +8,11 @@ static class FileHelper
     {
         get
         {
+            if (field is not null)
+            {
+                return field;
+            }
+
             var myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             var directoryPath = Path.Combine(myDocuments, "ApiInspector") + Path.DirectorySeparatorChar;
@@ -16,7 +21,7 @@ static class FileHelper
                 Directory.CreateDirectory(directoryPath);
             }
 
-            return directoryPath;
+            return field = directoryPath;
         }
     }
 
@@ -30,11 +35,21 @@ static class FileHelper
 
     public static void WriteLog(string message)
     {
-        File.AppendAllText(FilePath.Log, $"{Environment.NewLine}[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]{Environment.NewLine}{message}{Environment.NewLine}");
+        try
+        {
+            File.AppendAllText(FilePath.Log, $"{Environment.NewLine}[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]{Environment.NewLine}{message}{Environment.NewLine}");
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 
     static class FilePath
     {
-        public static string Log => WorkingDirectory + @"ApiInspector.log.txt";
+        public static string Log
+        {
+            get { return field ??= Path.Combine(WorkingDirectory, "ApiInspector.log.txt"); }
+        }
     }
 }
