@@ -114,7 +114,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         return new div(MarginLeftRight(3), OverflowYScroll, CursorPointer, Padding(5), Border(Solid(1, rgb(217, 217, 217))), BorderRadius(3))
         {
             state.ErrorMessage.HasValue() ? new pre { state.ErrorMessage } : AsTreeView(nodes),
-            WidthFull, HeightFull
+            WidthFull, Flex(1, 1, 0)
         };
     }
 

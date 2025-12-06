@@ -29,7 +29,7 @@ static class MetadataHelper
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    classNodes = classNodes.Take(3).OrderByDescending(classNode => classNode.Children.Count).ToList();
+                    classNodes = classNodes.OrderByDescending(classNode => classNode.Children.Count).ToList();
                 }
 
                 if (classNodes.Count > 0)
@@ -130,6 +130,11 @@ static class MetadataHelper
                             }
 
                             if (t.Name.Contains("<>c__DisplayClass", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return true;
+                            }
+                            
+                            if (t.Name.Contains("`"))
                             {
                                 return true;
                             }
