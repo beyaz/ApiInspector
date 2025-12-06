@@ -23,6 +23,7 @@ sealed record ConfigInfo
 partial class Extensions
 {
     static readonly bool IsRunningInVS = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition"));
+    
     public static readonly ConfigInfo Config = ReadConfig();
 
     public static string AppFolder

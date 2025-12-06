@@ -155,10 +155,20 @@ static class Program
 
     public static string InvokeMethod( (string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
     {
+        WriteLog("InvokeStarted");
+        
         var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
+        
+        WriteLog("Inputs");
+        WriteLog($"fullAssemblyPath: {fullAssemblyPath}");
+        WriteLog($"methodReference: {methodReference.FullNameWithoutReturnType}");
+        WriteLog($"jsonForInstance: {jsonForInstance}");
+        WriteLog($"jsonForParameters: {jsonForParameters}");
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
         ReflectionHelper.AttachAssemblyResolver();
+        
+        WriteLog("ResolversAttached");
 
         var assembly = ReflectionHelper.LoadFrom(fullAssemblyPath);
 
@@ -167,21 +177,25 @@ static class Program
         {
             throw new MissingMemberException(methodReference.FullNameWithoutReturnType);
         }
+        
+        WriteLog("MethodFound");
 
         object instance = null;
         if (!methodInfo.IsStatic)
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
+            WriteLog("Plugin.TryCreateInstance");
             var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugin.TryCreateInstance(declaringType, jsonForInstance);
-
             if (occurredErrorWhenCreatingInstance != null)
             {
+                WriteLog($"occurredErrorWhenCreatingInstance: {occurredErrorWhenCreatingInstance}");
                 throw occurredErrorWhenCreatingInstance;
             }
 
             if (isSuccessfullyCreated)
             {
+                WriteLog("PluginSuccessfullyCreatedInstance");
                 instance = createdInstance;
             }
 
@@ -189,15 +203,21 @@ static class Program
             {
                 if (!string.IsNullOrWhiteSpace(jsonForInstance))
                 {
+                    WriteLog("instance = deserialize from jsonForInstance");
+                    
                     instance = JsonConvert.DeserializeObject(jsonForInstance, declaringType);
                 }
                 else
                 {
+                    WriteLog($"instance = reflection create from declaringType: {declaringType.FullName}");
+                    
                     instance = Activator.CreateInstance(declaringType);
                 }
             }
         }
 
+        WriteLog("Started to calculate parameters");
+        
         // calculate parameters
         object[] methodParameters;
         {
@@ -208,6 +228,8 @@ static class Program
             {
                 if (!string.IsNullOrWhiteSpace(jsonForParameters))
                 {
+                    WriteLog("Started to deserialize jsonForParameters");
+                    
                     map = JsonConvert.DeserializeObject<JObject>(jsonForParameters);
                 }
 
@@ -225,10 +247,14 @@ static class Program
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                WriteLog($"Deserialization_failed:{exception}");
+                
                 if (parameterInfoList.Length == 1 && parameterInfoList[0].ParameterType.FullName == "System.String" && parameterInfoList[0].Name is not null)
                 {
+                    WriteLog("Deserialization_failed_but_recalculating_for_string_only_parameter");
+                    
                     map = new JObject
                     {
                         [parameterInfoList[0].Name] = new JValue(jsonForParameters)
@@ -236,14 +262,19 @@ static class Program
                 }
                 else
                 {
+                    WriteLog("Throwing_exception");
                     throw;
                 }
             }
 
+            WriteLog("Preparing_invocationParameters");
+            
             var invocationParameters = new List<object>();
 
             foreach (var parameterInfo in parameterInfoList)
             {
+                WriteLog($"Preparing_invocation_parameter: {parameterInfo.Name}");
+                
                 invocationParameters.Add(calculateParameterValue(map, parameterInfo));
             }
 
@@ -254,13 +285,19 @@ static class Program
 
         Exception invocationException = null;
 
+        WriteLog("Invocation_started");
+        
         try
         {
             var shouldInvoke = true;
 
+            WriteLog("Try_to_invoke_from_plugin");
+            
             var (exception, isInvoked, invocationOutput) = Plugin.InvokeMethod(methodInfo, instance, methodParameters);
             if (exception is not null)
             {
+                WriteLog($"Try_to_invoke_from_plugin_has_error: {exception}");
+                
                 invocationException = exception;
 
                 shouldInvoke = false;
@@ -268,6 +305,8 @@ static class Program
 
             if (isInvoked)
             {
+                WriteLog("Successfully_invoked_from_plugin");
+                
                 response = invocationOutput;
 
                 shouldInvoke = false;
@@ -275,6 +314,8 @@ static class Program
 
             if (shouldInvoke)
             {
+                WriteLog("Trying_invoke_by_default_reflection");
+                
                 response = methodInfo.Invoke(instance, methodParameters);
             }
 
@@ -291,12 +332,17 @@ static class Program
         }
         catch (Exception exception)
         {
+            WriteLog($"Exception_occurred: {exception}");
+            
             invocationException = exception.InnerException ?? exception;
         }
 
+        WriteLog("Started_to_call_plugin_after_invoke_method");
         var afterInvoke = Plugin.AfterInvokeMethod(methodInfo, instance, methodParameters, response, invocationException);
         if (afterInvoke.isProcessed)
         {
+            WriteLog("Plugin_after_invoke_method_successfully_called");
+            
             response = afterInvoke.invocationResponse;
 
             invocationException = afterInvoke.invocationException;
@@ -304,14 +350,22 @@ static class Program
 
         if (invocationException != null)
         {
+            WriteLog($"Throwing_exception: {invocationException}");
+            
             throw invocationException;
         }
 
+        WriteLog("Invocation_is_success");
+        
         if (response is string responseAsString)
         {
+            WriteLog($"Returning_already_string_response: {responseAsString}");
+            
             return responseAsString;
         }
 
+        WriteLog("Serializing_invocation_output_to_json");
+        
         return ResponseToJson(response);
 
         static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
@@ -442,13 +496,15 @@ static class Program
     
     static string ResponseToJson(object response)
     {
-        return JsonConvert.SerializeObject(response, new JsonSerializerSettings
+        var jsonSerializerSettings = new JsonSerializerSettings
         {
             DefaultValueHandling       = DefaultValueHandling.Ignore,
             Formatting                 = Formatting.Indented,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            PreserveReferencesHandling = PreserveReferencesHandling.None,
+            ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
             Converters                 = new List<JsonConverter> { new JsonConverterForPropertyInfo() }
-        });
+        };
+        return JsonConvert.SerializeObject(response, jsonSerializerSettings);
     }
 
 

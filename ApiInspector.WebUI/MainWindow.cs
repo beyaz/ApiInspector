@@ -328,7 +328,16 @@ class MainWindow : Component<MainWindowModel>
                     formatOnPaste       = true,
                     formatOnType        = true,
                     automaticLayout     = true,
-                    lineNumbers         = false
+                    lineNumbers         = false,
+                    
+                    
+                    unicodeHighlight    = new
+                    {
+                        ambiguousCharacters = false, // confusable karakterleri vurgulama
+                        includeStrings      = false, // (ops.) string içeriklerinde vurgulama
+                        invisibleCharacters = false  // (ops.) görünmez karakterleri vurgulama
+                    }
+
                 }
             };
         }
@@ -582,6 +591,8 @@ class MainWindow : Component<MainWindowModel>
         ExecuteButtonStatusIsFail    = false;
         ExecuteButtonStatusIsSuccess = false;
 
+        SaveState();
+        
         return Task.CompletedTask;
     }
 
@@ -607,7 +618,7 @@ class MainWindow : Component<MainWindowModel>
             return;
         }
 
-        SaveState();
+       
 
         scenario.ResponseAsJson = null;
 
@@ -725,8 +736,6 @@ class MainWindow : Component<MainWindowModel>
             scenario.ResponseAsJson = "Please select any method from left side.";
             return;
         }
-
-        SaveState();
 
         scenario.ResponseAsJson = null;
 
