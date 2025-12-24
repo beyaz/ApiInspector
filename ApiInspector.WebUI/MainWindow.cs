@@ -8,6 +8,13 @@ using static System.Environment;
 
 namespace ApiInspector.WebUI;
 
+enum ActionButtonStatus
+{
+    Ready,
+    Executing,
+    Success,
+    Fail
+}
 class MainWindow : Component<MainWindowModel>
 {
     public bool DebugButtonStatusIsFail { get; set; }
@@ -15,6 +22,8 @@ class MainWindow : Component<MainWindowModel>
     public bool DebugButtonStatusIsSuccess { get; set; }
     public bool ExecuteButtonStatusIsFail { get; set; }
 
+    public ActionButtonStatus ExecuteButtonStatus { get; set; }
+    
     public bool ExecuteButtonStatusIsSuccess { get; set; }
 
     public bool HistoryDialogVisible { get; set; }
