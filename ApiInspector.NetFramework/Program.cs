@@ -20,13 +20,13 @@ static class Program
 
     public static string[] GetHelpMessage()
     {
-        return new[]
-        {
+        return
+        [
             "Hello from Api Inspector!",
             "This tool that you can execute or debug any .net method.",
             "Select any .net assembly from left side then prepare parameters or instance properties then you can execute selected method.",
             "if you debug any method then press Debug button and attach to process named 'ApiInspector' by visual studio or any other ide."
-        };
+        ];
     }
 
     public static string GetInstanceEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance) state)
