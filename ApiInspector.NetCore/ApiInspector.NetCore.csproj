@@ -9,6 +9,7 @@
 
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
+        <ApplicationIcon>app.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,6 +24,10 @@
         <Compile Include="..\ApiInspector.NetFramework\Program.cs" Link="Program.cs" />
         <Compile Include="..\ApiInspector.NetFramework\ReflectionHelper.cs" Link="ReflectionHelper.cs" />
         <Compile Include="..\ApiInspector.NetFramework\JsonConverterForPropertyInfo.cs" Link="JsonConverterForPropertyInfo.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="app.ico" />
     </ItemGroup>
 
     <ItemGroup>
