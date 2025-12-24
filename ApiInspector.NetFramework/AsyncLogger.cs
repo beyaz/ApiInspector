@@ -1,23 +1,42 @@
 ﻿using System.Collections.Concurrent;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ApiInspector;
 
 public static class AsyncLogger
 {
-    private static readonly ConcurrentQueue<string> _queue = new();
-    private static readonly SemaphoreSlim _signal = new(0);
-    private static readonly HttpClient _httpClient = new();
-    private static bool _started = false;
+    static readonly HttpClient _httpClient = new();
+    
+    static readonly ConcurrentQueue<string> _queue = new();
+    
+    static readonly SemaphoreSlim _signal = new(0);
+    
+    static bool _started;
+
+    public static void Log(string message)
+    {
+        _queue.Enqueue(message);
+        _signal.Release();
+    }
 
     public static void Start(string apiUrl)
     {
-        if (_started) return;
+        if (_started)
+        {
+            return;
+        }
+
         _started = true;
 
-        Task.Run(async () =>
+        Task.Run(InfiniteLoop);
+        
+        return;
+
+        async Task InfiniteLoop()
         {
             while (true)
             {
@@ -27,26 +46,19 @@ public static class AsyncLogger
                 {
                     try
                     {
-                        var content = new StringContent(
-                            JsonSerializer.Serialize(message),
-                            Encoding.UTF8,
-                            "application/json");
+                        var json = JsonConvert.SerializeObject(new[] { message });
+                        
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                         await _httpClient.PostAsync(apiUrl, content);
                     }
                     catch
                     {
-                        // burada istersen retry / file fallback yaparsın
+                        // ignored
                     }
                 }
             }
-        });
-    }
-
-    public static void Log(string message)
-    {
-        Console.WriteLine(message); // normal console output
-        _queue.Enqueue(message);
-        _signal.Release();
+            // ReSharper disable once FunctionNeverReturns
+        }
     }
 }
