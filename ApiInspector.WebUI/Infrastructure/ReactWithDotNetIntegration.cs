@@ -5,6 +5,24 @@ using ReactWithDotNet.UIDesigner;
 
 namespace ApiInspector.WebUI;
 
+class AsyncLogger
+{
+    public const string UrlPath = "/trace";
+
+    public static readonly List<string> logs = new();
+    
+    public static async Task HandleRequest(HttpContext httpContext)
+    {
+        var items = await httpContext.Request.ReadFromJsonAsync<string[]>();
+        
+        logs.AddRange(items);
+                
+        httpContext.Response.StatusCode = StatusCodes.Status200OK;
+                
+        await httpContext.Response.Body.FlushAsync();
+    }
+}
+
 static class ReactWithDotNetIntegration
 {
     public static void ConfigureReactWithDotNet(this WebApplication app)
@@ -26,6 +44,13 @@ static class ReactWithDotNetIntegration
             if (path == "/")
             {
                 await HomePage(httpContext);
+                return;
+            }
+            
+            if (path == AsyncLogger.UrlPath)
+            {
+                await AsyncLogger.HandleRequest(httpContext);
+                
                 return;
             }
 
