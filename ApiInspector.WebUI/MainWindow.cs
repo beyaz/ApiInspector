@@ -17,17 +17,11 @@ enum ActionButtonStatus
 }
 class MainWindow : Component<MainWindowModel>
 {
-    public bool DebugButtonStatusIsFail { get; set; }
-
-    public bool DebugButtonStatusIsSuccess { get; set; }
-
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
     
     public ActionButtonStatus DebugButtonStatus { get; set; }
-    
 
     public bool HistoryDialogVisible { get; set; }
-    public bool IsDebugStarted { get; set; }
 
     public bool IsInitializingSelectedMethod { get; set; }
 
@@ -525,9 +519,9 @@ class MainWindow : Component<MainWindowModel>
                 new DebugButton
                 {
                     Click               = OnDebugClicked,
-                    IsProcessing        = IsDebugStarted,
-                    ShowStatusAsSuccess = DebugButtonStatusIsSuccess,
-                    ShowStatusAsFail    = DebugButtonStatusIsFail
+                    IsProcessing        = DebugButtonStatus == ActionButtonStatus.Executing,
+                    ShowStatusAsSuccess = DebugButtonStatus == ActionButtonStatus.Success,
+                    ShowStatusAsFail    = DebugButtonStatus == ActionButtonStatus.Fail
                 } + ComponentBoxShadow,
 
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
@@ -583,10 +577,9 @@ class MainWindow : Component<MainWindowModel>
 
     Task ClearActionButtonStates()
     {
-        DebugButtonStatusIsFail    = false;
         
-        DebugButtonStatusIsSuccess = false;
-
+        DebugButtonStatus = ActionButtonStatus.Ready;
+        
         ExecuteButtonStatus = ActionButtonStatus.Ready;
 
         SaveState();
@@ -628,49 +621,57 @@ class MainWindow : Component<MainWindowModel>
         };
     }
 
-    Task OnDebugClicked(MouseEvent _)
+    async Task OnDebugClicked(MouseEvent _)
     {
-        return OnDebugClicked();
+        await ClearActionButtonStates();
+        
+        await OnDebugClicked();
     }
 
-    async Task OnDebugClicked()
+    Task OnDebugClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
         if (state.SelectedMethod is null)
         {
             scenario.ResponseAsJson = "Please select any method from left side.";
-            return;
+            
+            DebugButtonStatus = ActionButtonStatus.Ready;
+            
+            return Task.CompletedTask;
         }
 
         scenario.ResponseAsJson = null;
 
-        await ClearActionButtonStates();
-
-        if (IsDebugStarted)
+        if (DebugButtonStatus == ActionButtonStatus.Ready)
         {
-            IsDebugStarted = false;
+            DebugButtonStatus = ActionButtonStatus.Executing;
 
+            Client.GotoMethod(100, OnDebugClicked);
+        }
+        else if (DebugButtonStatus == ActionButtonStatus.Executing)
+        {
             try
             {
                 scenario.ResponseAsJson = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true).Unwrap();
 
-                DebugButtonStatusIsSuccess = true;
+                DebugButtonStatus = ActionButtonStatus.Success;
             }
             catch (Exception exception)
             {
-                DebugButtonStatusIsFail = true;
-
                 scenario.ResponseAsJson = exception.Message;
+
+                DebugButtonStatus = ActionButtonStatus.Fail;
             }
 
             Client.GotoMethod(2000, ClearActionButtonStates);
         }
-        else
-        {
-            IsDebugStarted = true;
-            Client.GotoMethod(100, OnDebugClicked);
-        }
+        
+        return Task.CompletedTask;
+        
+        
+
+        
     }
 
     Task OnElementSelected(string keyOfSelectedTreeNode)
