@@ -23,6 +23,8 @@ class MainWindow : Component<MainWindowModel>
 
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
     
+    public ActionButtonStatus DebugButtonStatus { get; set; }
+    
 
     public bool HistoryDialogVisible { get; set; }
     public bool IsDebugStarted { get; set; }
