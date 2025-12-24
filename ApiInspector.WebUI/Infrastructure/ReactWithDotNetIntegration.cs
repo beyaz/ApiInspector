@@ -11,6 +11,8 @@ class AsyncLogger
 
     public static readonly List<string> logs = new();
     
+    public static string ListennigUrl { get; set; }
+
     public static async Task HandleRequest(HttpContext httpContext)
     {
         var items = await httpContext.Request.ReadFromJsonAsync<string[]>();
@@ -33,6 +35,9 @@ static class ReactWithDotNetIntegration
         
         app.Use(async (httpContext, next) =>
         {
+            AsyncLogger.ListennigUrl ??= $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{AsyncLogger.UrlPath}";
+            
+            
             var path = httpContext.Request.Path.Value ?? string.Empty;
 
             if (path == RequestHandlerPath)

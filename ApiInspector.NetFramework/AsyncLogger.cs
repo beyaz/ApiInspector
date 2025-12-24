@@ -10,11 +10,11 @@ namespace ApiInspector;
 public static class AsyncLogger
 {
     static readonly HttpClient _httpClient = new();
-    
+
     static readonly ConcurrentQueue<string> _queue = new();
-    
+
     static readonly SemaphoreSlim _signal = new(0);
-    
+
     static bool _started;
 
     public static void Log(string message)
@@ -33,7 +33,7 @@ public static class AsyncLogger
         _started = true;
 
         Task.Run(InfiniteLoop);
-        
+
         return;
 
         async Task InfiniteLoop()
@@ -47,7 +47,7 @@ public static class AsyncLogger
                     try
                     {
                         var json = JsonConvert.SerializeObject(new[] { message });
-                        
+
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                         await _httpClient.PostAsync(apiUrl, content);

@@ -76,7 +76,7 @@ static class External
         {
             FileName = runCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
             
-            Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}",
+            Arguments = $"{(waitForDebugger ? "1" : "0")}|{methodName}|{AsyncLogger.ListennigUrl}",
                 
             RedirectStandardInput  = true,
             RedirectStandardOutput = true,

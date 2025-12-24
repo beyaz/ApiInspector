@@ -10,6 +10,7 @@ namespace ApiInspector.WebUI;
 
 public class Program
 {
+    
     public static void Main(string[] args)
     {
         ProcessHelper.KillAllNamedProcess($"{nameof(ApiInspector)}.{nameof(WebUI)}");
