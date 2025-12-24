@@ -20,15 +20,12 @@ class MainWindow : Component<MainWindowModel>
     public bool DebugButtonStatusIsFail { get; set; }
 
     public bool DebugButtonStatusIsSuccess { get; set; }
-    public bool ExecuteButtonStatusIsFail { get; set; }
 
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
     
-    public bool ExecuteButtonStatusIsSuccess { get; set; }
 
     public bool HistoryDialogVisible { get; set; }
     public bool IsDebugStarted { get; set; }
-    public bool IsExecutionStarted { get; set; }
 
     public bool IsInitializingSelectedMethod { get; set; }
 
@@ -519,9 +516,9 @@ class MainWindow : Component<MainWindowModel>
                 new ExecuteButton
                 {
                     Click               = OnExecuteClicked,
-                    IsProcessing        = IsExecutionStarted,
-                    ShowStatusAsSuccess = ExecuteButtonStatusIsSuccess,
-                    ShowStatusAsFail    = ExecuteButtonStatusIsFail
+                    IsProcessing        = ExecuteButtonStatus== ActionButtonStatus.Executing,
+                    ShowStatusAsSuccess = ExecuteButtonStatus == ActionButtonStatus.Success,
+                    ShowStatusAsFail    = ExecuteButtonStatus == ActionButtonStatus.Fail
                 } + ComponentBoxShadow,
                 new DebugButton
                 {
@@ -585,10 +582,10 @@ class MainWindow : Component<MainWindowModel>
     Task ClearActionButtonStates()
     {
         DebugButtonStatusIsFail    = false;
+        
         DebugButtonStatusIsSuccess = false;
 
-        ExecuteButtonStatusIsFail    = false;
-        ExecuteButtonStatusIsSuccess = false;
+        ExecuteButtonStatus = ActionButtonStatus.Ready;
 
         SaveState();
 
@@ -733,49 +730,53 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
-    Task OnExecuteClicked(MouseEvent _)
+    async Task OnExecuteClicked(MouseEvent _)
     {
-        return OnExecuteClicked();
+        await ClearActionButtonStates();
+        
+        await OnExecuteClicked();
     }
 
-    async Task OnExecuteClicked()
+    Task OnExecuteClicked()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
         if (state.SelectedMethod is null)
         {
             scenario.ResponseAsJson = "Please select any method from left side.";
-            return;
+            
+            ExecuteButtonStatus = ActionButtonStatus.Ready;
+            
+            return Task.CompletedTask;
         }
 
         scenario.ResponseAsJson = null;
 
-        await ClearActionButtonStates();
-
-        if (IsExecutionStarted)
+        if (ExecuteButtonStatus == ActionButtonStatus.Ready)
         {
-            IsExecutionStarted = false;
+            ExecuteButtonStatus = ActionButtonStatus.Executing;
 
+            Client.GotoMethod(100, OnExecuteClicked);
+        }
+        else if (ExecuteButtonStatus == ActionButtonStatus.Executing)
+        {
             try
             {
                 scenario.ResponseAsJson = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Unwrap();
 
-                ExecuteButtonStatusIsSuccess = true;
+                ExecuteButtonStatus = ActionButtonStatus.Success;
             }
             catch (Exception exception)
             {
                 scenario.ResponseAsJson = exception.Message;
 
-                ExecuteButtonStatusIsFail = true;
+                ExecuteButtonStatus = ActionButtonStatus.Fail;
             }
 
             Client.GotoMethod(2000, ClearActionButtonStates);
         }
-        else
-        {
-            IsExecutionStarted = true;
-            Client.GotoMethod(100, OnExecuteClicked);
-        }
+        
+        return Task.CompletedTask;
     }
 
     Task OnFilterTextKeypressCompleted()
