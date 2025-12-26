@@ -45,7 +45,6 @@
     <Compile Include="AssemblyModel.cs" />
     <Compile Include="AssemblyModelHelper.cs" />
     <Compile Include="AsyncLogger.cs" />
-    <Compile Include="FileHelper.cs" />
     <Compile Include="FpExtensions.cs" />
     <Compile Include="GlobalUsings.cs" />
     <Compile Include="MetadataNode.cs" />
