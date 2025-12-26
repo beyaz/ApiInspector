@@ -708,17 +708,11 @@ class MainWindow : Component<MainWindowModel>
             {
                 try
                 {
-                    var result = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true);
-                    if (result.Success)
-                    {
-                        ResponseException = null;
-                        
-                        ResponseAsJson = result.Value;
-                    }
-                    else
-                    {
-                        ResponseException = new(result.InfoCollection.ToString());
-                    }
+                    External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, true).Match
+                    (
+                        json => ResponseAsJson = json,
+                        exception => ResponseException = exception
+                    );
                 }
                 catch (Exception exception)
                 {
@@ -870,18 +864,13 @@ class MainWindow : Component<MainWindowModel>
             {
                 try
                 {
-                    var result = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false);
-                    if (result.Success)
-                    {
-                        ResponseException = null;
-                        
-                        ResponseAsJson = result.Value;
-                    }
-                    else
-                    {
-                        ResponseException = new(result.InfoCollection.ToString());
-                    }
-                    
+                    External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Match
+                    (
+                        json => ResponseAsJson = json,
+
+                        exception => ResponseException = exception
+                    );
+
                 }
                 catch (Exception exception)
                 {
@@ -926,13 +915,13 @@ class MainWindow : Component<MainWindowModel>
             if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
                 External.GetInstanceEditorJsonText(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties)
-                    .Then(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
+                    .Match(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
 
             if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
                 External.GetParametersEditorJsonText(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters)
-                    .Then(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
+                    .Match(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 
             void printError(Exception exception)
