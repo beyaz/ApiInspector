@@ -184,18 +184,6 @@ sealed record Result<T>
         return tuple.value;
     }
 
-    public T Unwrap()
-    {
-        if (Success)
-        {
-            return Value;
-        }
-
-        throw new ExecutionException
-        {
-            InfoCollection = InfoCollection
-        };
-    }
 
     public Result<A> Then<A>(Func<T, A> next)
     {
