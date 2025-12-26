@@ -50,27 +50,7 @@ partial class Extensions
         }
     }
 
-    public static B Then<T, B>(this (T value, Exception exception) response, Func<T, B> onSuccess, Func<Exception, B> onFail)
-    {
-        if (response.exception is null)
-        {
-            return onSuccess(response.value);
-        }
 
-        return onFail(response.exception);
-    }
-
-    public static (T value, Exception exception) Try<T>(Func<T> func)
-    {
-        try
-        {
-            return (func(), null);
-        }
-        catch (Exception exception)
-        {
-            return (default, exception);
-        }
-    }
 }
 
 sealed class ExecutionException : Exception
