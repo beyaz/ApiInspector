@@ -4,16 +4,7 @@ namespace ApiInspector.WebUI;
 
 partial class Extensions
 {
-    public static C Flow<A, B, C>(A value, Func<A, (B, Exception)> nextFunc, Func<B, C> onSuccess)
-    {
-        var (b, exception) = nextFunc(value);
-        if (exception is null)
-        {
-            return onSuccess(b);
-        }
-
-        return default;
-    }
+  
 
     public static void IgnoreException(Action action)
     {
@@ -38,27 +29,12 @@ partial class Extensions
         return false;
     }
 
-    public static void Then<T>(this (T value, Exception exception) response, Action<T> onSuccess, Action<Exception> onFail)
-    {
-        if (response.exception is null)
-        {
-            onSuccess(response.value);
-        }
-        else
-        {
-            onFail(response.exception);
-        }
-    }
+  
 
 
 }
 
-sealed class ExecutionException : Exception
-{
-    public InfoCollection InfoCollection { get; init; }
-    
-    public override string Message => InfoCollection;
-}
+
 
 sealed record Info
 {
