@@ -1,14 +1,25 @@
-﻿using System.Collections.Concurrent;
+﻿global using static ApiInspector.AsyncLogger;
+
+using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+
 namespace ApiInspector;
 
 public static class AsyncLogger
 {
+    public static void WriteLog(string message)
+    {
+        Log(message);
+        
+        Thread.Sleep(700);
+
+    }
+   
     static readonly HttpClient _httpClient = new();
 
     static readonly ConcurrentQueue<string> _queue = new();

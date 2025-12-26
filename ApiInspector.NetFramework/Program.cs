@@ -437,7 +437,7 @@ static class Program
             var loggerUrl = arr[2];
 
             AsyncLogger.Start(loggerUrl);
-
+            
             if (waitForDebugger == "1")
             {
                 WriteLog("WaitingForAttachToDebugger");

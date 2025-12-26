@@ -33,8 +33,10 @@ static class FileHelper
         }
     }
 
-    public static void WriteLog(string message)
+    // todo: check and remove
+    public static void WriteLog_(string message)
     {
+        
         try
         {
             File.AppendAllText(FilePath.Log, $"{Environment.NewLine}[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]{Environment.NewLine}{message}{Environment.NewLine}");

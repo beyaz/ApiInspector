@@ -529,7 +529,7 @@ class MainWindow : Component<MainWindowModel>
 
             var partResponse = new FlexColumn(SizeFull)
             {
-                new Label { Text = "Response as json" },
+                new Label { Text = ExecuteButtonStatus == ActionButtonStatus.Executing ? "Trace" : "Response as json" },
 
                 new FreeScrollBar
                 {
@@ -577,7 +577,12 @@ class MainWindow : Component<MainWindowModel>
 
     Task ClearActionButtonStates()
     {
+        AsyncLogger.logs.Clear();
         
+        ResponseException = null;
+        
+        ResponseAsJson = null;
+
         DebugButtonStatus = ActionButtonStatus.Ready;
         
         ExecuteButtonStatus = ActionButtonStatus.Ready;
@@ -763,21 +768,68 @@ class MainWindow : Component<MainWindowModel>
         }
         else if (ExecuteButtonStatus == ActionButtonStatus.Executing)
         {
-            try
+            _ = Task.Run(() =>
             {
-                scenario.ResponseAsJson = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Unwrap();
+                try
+                {
+                    ResponseAsJson = External.InvokeMethod(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties, scenario.JsonTextForDotNetMethodParameters, false).Unwrap();
+                }
+                catch (Exception exception)
+                {
+                    ResponseException = exception;
+                }
+            });
+            
+            Client.GotoMethod(MonitorExecution);
+        }
+        
+        return Task.CompletedTask;
+    }
 
-                ExecuteButtonStatus = ActionButtonStatus.Success;
-            }
-            catch (Exception exception)
-            {
-                scenario.ResponseAsJson = exception.Message;
-
-                ExecuteButtonStatus = ActionButtonStatus.Fail;
-            }
+    static string ResponseAsJson;
+    static Exception ResponseException;
+    
+    Task MonitorExecution()
+    {
+        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+        
+        if (ResponseException is not null)
+        {
+            ExecuteButtonStatus = ActionButtonStatus.Fail;
+            
+            scenario.ResponseAsJson = ResponseException.Message;
+            
+            ResponseException = null;
+            
+            ResponseAsJson = null;
 
             Client.GotoMethod(2000, ClearActionButtonStates);
+
+            return Task.CompletedTask;
         }
+        
+        if (ResponseAsJson is not null)
+        {
+            ExecuteButtonStatus = ActionButtonStatus.Success;
+            
+            scenario.ResponseAsJson = ResponseAsJson;
+            
+            ResponseException = null;
+            
+            ResponseAsJson = null;
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
+
+            return Task.CompletedTask;
+        }
+
+        var logs = new List<string>(AsyncLogger.logs);
+
+        logs.Reverse();
+        
+        scenario.ResponseAsJson =  string.Join(Environment.NewLine, logs);
+        
+        Client.GotoMethod(100, MonitorExecution);
         
         return Task.CompletedTask;
     }

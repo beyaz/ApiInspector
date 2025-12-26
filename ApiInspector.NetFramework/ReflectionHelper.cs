@@ -120,7 +120,7 @@ static class ReflectionHelper
     {
         return SafeInvoke(() => Assembly.LoadFrom(filePath)).TraceError(traceError).Unwrap();
 
-        void traceError(Exception exception) => FileHelper.WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
+        void traceError(Exception exception) => WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }
 
     static (bool success, T value) OnFail<T>(this (bool success, T value) tuple, Action action)
