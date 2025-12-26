@@ -15,11 +15,14 @@ enum ActionButtonStatus
     Success,
     Fail
 }
+
 class MainWindow : Component<MainWindowModel>
 {
-    public ActionButtonStatus ExecuteButtonStatus { get; set; }
-    
+    static string ResponseAsJson;
+    static Exception ResponseException;
+
     public ActionButtonStatus DebugButtonStatus { get; set; }
+    public ActionButtonStatus ExecuteButtonStatus { get; set; }
 
     public bool HistoryDialogVisible { get; set; }
 
@@ -512,7 +515,7 @@ class MainWindow : Component<MainWindowModel>
                 new ExecuteButton
                 {
                     Click               = OnExecuteClicked,
-                    IsProcessing        = ExecuteButtonStatus== ActionButtonStatus.Executing,
+                    IsProcessing        = ExecuteButtonStatus == ActionButtonStatus.Executing,
                     ShowStatusAsSuccess = ExecuteButtonStatus == ActionButtonStatus.Success,
                     ShowStatusAsFail    = ExecuteButtonStatus == ActionButtonStatus.Fail
                 } + ComponentBoxShadow,
@@ -578,13 +581,13 @@ class MainWindow : Component<MainWindowModel>
     Task ClearActionButtonStates()
     {
         AsyncLogger.logs.Clear();
-        
+
         ResponseException = null;
-        
+
         ResponseAsJson = null;
 
         DebugButtonStatus = ActionButtonStatus.Ready;
-        
+
         ExecuteButtonStatus = ActionButtonStatus.Ready;
 
         SaveState();
@@ -626,10 +629,55 @@ class MainWindow : Component<MainWindowModel>
         };
     }
 
+    Task MonitorExecution()
+    {
+        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+
+        if (ResponseException is not null)
+        {
+            ExecuteButtonStatus = ActionButtonStatus.Fail;
+
+            scenario.ResponseAsJson = ResponseException.Message;
+
+            ResponseException = null;
+
+            ResponseAsJson = null;
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
+
+            return Task.CompletedTask;
+        }
+
+        if (ResponseAsJson is not null)
+        {
+            ExecuteButtonStatus = ActionButtonStatus.Success;
+
+            scenario.ResponseAsJson = ResponseAsJson;
+
+            ResponseException = null;
+
+            ResponseAsJson = null;
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
+
+            return Task.CompletedTask;
+        }
+
+        var logs = new List<string>(AsyncLogger.logs);
+
+        logs.Reverse();
+
+        scenario.ResponseAsJson = string.Join(NewLine, logs);
+
+        Client.GotoMethod(100, MonitorExecution);
+
+        return Task.CompletedTask;
+    }
+
     async Task OnDebugClicked(MouseEvent _)
     {
         await ClearActionButtonStates();
-        
+
         await OnDebugClicked();
     }
 
@@ -640,9 +688,9 @@ class MainWindow : Component<MainWindowModel>
         if (state.SelectedMethod is null)
         {
             scenario.ResponseAsJson = "Please select any method from left side.";
-            
+
             DebugButtonStatus = ActionButtonStatus.Ready;
-            
+
             return Task.CompletedTask;
         }
 
@@ -671,12 +719,8 @@ class MainWindow : Component<MainWindowModel>
 
             Client.GotoMethod(2000, ClearActionButtonStates);
         }
-        
-        return Task.CompletedTask;
-        
-        
 
-        
+        return Task.CompletedTask;
     }
 
     Task OnElementSelected(string keyOfSelectedTreeNode)
@@ -741,7 +785,7 @@ class MainWindow : Component<MainWindowModel>
     async Task OnExecuteClicked(MouseEvent _)
     {
         await ClearActionButtonStates();
-        
+
         await OnExecuteClicked();
     }
 
@@ -752,9 +796,9 @@ class MainWindow : Component<MainWindowModel>
         if (state.SelectedMethod is null)
         {
             scenario.ResponseAsJson = "Please select any method from left side.";
-            
+
             ExecuteButtonStatus = ActionButtonStatus.Ready;
-            
+
             return Task.CompletedTask;
         }
 
@@ -779,58 +823,10 @@ class MainWindow : Component<MainWindowModel>
                     ResponseException = exception;
                 }
             });
-            
+
             Client.GotoMethod(MonitorExecution);
         }
-        
-        return Task.CompletedTask;
-    }
 
-    static string ResponseAsJson;
-    static Exception ResponseException;
-    
-    Task MonitorExecution()
-    {
-        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
-        
-        if (ResponseException is not null)
-        {
-            ExecuteButtonStatus = ActionButtonStatus.Fail;
-            
-            scenario.ResponseAsJson = ResponseException.Message;
-            
-            ResponseException = null;
-            
-            ResponseAsJson = null;
-
-            Client.GotoMethod(2000, ClearActionButtonStates);
-
-            return Task.CompletedTask;
-        }
-        
-        if (ResponseAsJson is not null)
-        {
-            ExecuteButtonStatus = ActionButtonStatus.Success;
-            
-            scenario.ResponseAsJson = ResponseAsJson;
-            
-            ResponseException = null;
-            
-            ResponseAsJson = null;
-
-            Client.GotoMethod(2000, ClearActionButtonStates);
-
-            return Task.CompletedTask;
-        }
-
-        var logs = new List<string>(AsyncLogger.logs);
-
-        logs.Reverse();
-        
-        scenario.ResponseAsJson =  string.Join(Environment.NewLine, logs);
-        
-        Client.GotoMethod(100, MonitorExecution);
-        
         return Task.CompletedTask;
     }
 
