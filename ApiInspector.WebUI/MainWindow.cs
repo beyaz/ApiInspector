@@ -1039,7 +1039,12 @@ class MainWindow : Component<MainWindowModel>
 
                 state.RuntimeName = RuntimeName;
 
-                state.Text = Flow(AssemblyFileFullPath, x => External.GetEnvironment(state.RuntimeName, x), str => str);
+                External.GetEnvironment(state.RuntimeName, AssemblyFileFullPath).Match
+                (
+                    x => state.Text = x,
+                    _ => state.Text = null
+                );
+
             }
 
             return base.OverrideStateFromPropsBeforeRender();
@@ -1059,8 +1064,12 @@ class MainWindow : Component<MainWindowModel>
 
             state.RuntimeName = args.RuntimeName;
 
-            Flow(args.AssemblyFileFullPath, x => External.GetEnvironment(x, args.RuntimeName), str => state.Text = str);
-
+            External.GetEnvironment(args.RuntimeName, args.AssemblyFileFullPath).Match
+            (
+                x => state.Text = x,
+                _ => state.Text = null
+            );
+            
             return Task.CompletedTask;
         }
     }
