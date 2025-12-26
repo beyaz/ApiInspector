@@ -406,7 +406,7 @@ static class Program
 
         Console.SetOut(TextWriter.Null);
 
-        WriteLog("ProgramStarted");
+        WriteLog("Invocation started.");
 
         try
         {
@@ -419,9 +419,7 @@ static class Program
             {
                 throw new("CommandLine arguments cannot be empty.");
             }
-
-            WriteLog($"A r g u m e n t s : {args[0]}");
-
+            
             var arr = args[0].Split('|');
             if (arr.Length is not 3)
             {
@@ -434,7 +432,7 @@ static class Program
 
             var loggerUrl = arr[2];
 
-            AsyncLogger.Start(loggerUrl);
+            Start(loggerUrl);
             
             if (waitForDebugger == "1")
             {
