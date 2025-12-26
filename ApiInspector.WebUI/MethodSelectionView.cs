@@ -68,9 +68,9 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             return new FileNotFoundException(AssemblyFilePath);
         }
 
-        return from nodes in MetadataHelper.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
-               from x in FindTreeNode(nodes, x => HasMatch(x, treeNodeKey))
-               select x;;
+        return
+            from nodes in MetadataHelper.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
+            select FindTreeNode(nodes, x => HasMatch(x, treeNodeKey));
     }
 
     protected override Task constructor()
