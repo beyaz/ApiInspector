@@ -406,8 +406,6 @@ static class Program
 
         Console.SetOut(TextWriter.Null);
 
-        ClearLog();
-
         WriteLog("ProgramStarted");
 
         try
