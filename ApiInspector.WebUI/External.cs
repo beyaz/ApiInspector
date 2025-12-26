@@ -26,7 +26,7 @@ static class External
         return Execute<string>(runtimeName,assemblyFileFullPath, nameof(GetParametersEditorJsonText), parameter);
     }
 
-    public static Result<string> InvokeMethod(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
+    public static Result_old<string> InvokeMethod(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
     {
         var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
 

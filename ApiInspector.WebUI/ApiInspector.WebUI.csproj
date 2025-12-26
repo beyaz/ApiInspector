@@ -26,6 +26,7 @@
     </ItemGroup>
 	
     <ItemGroup>
+      <Folder Include="Toolbox\" />
       <Folder Include="Properties\" />
     </ItemGroup>
 

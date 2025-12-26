@@ -125,7 +125,7 @@ sealed record InfoCollection
     }
 }
 
-sealed record Result<T>
+sealed record Result_old<T>
 {
     public T Value { get; init; }
 
@@ -146,35 +146,35 @@ sealed record Result<T>
         }
     }
 
-    public static implicit operator Result<T>(T value)
+    public static implicit operator Result_old<T>(T value)
     {
         return new() { Value = value };
     }
 
-    public static implicit operator Result<T>(Exception exception)
+    public static implicit operator Result_old<T>(Exception exception)
     {
         Info info = exception;
 
-        return new Result<T> { InfoCollection = info };
+        return new Result_old<T> { InfoCollection = info };
     }
 
-    public static implicit operator Result<T>(InfoCollection infoCollection)
+    public static implicit operator Result_old<T>(InfoCollection infoCollection)
     {
-        return new Result<T> { InfoCollection = infoCollection };
+        return new Result_old<T> { InfoCollection = infoCollection };
     }
 
-    public static implicit operator Result<T>(Info[] infoArray)
+    public static implicit operator Result_old<T>(Info[] infoArray)
     {
-        return new Result<T> { InfoCollection = infoArray };
+        return new Result_old<T> { InfoCollection = infoArray };
     }
 
-    public static implicit operator Result<T>((T value, Exception exception) tuple)
+    public static implicit operator Result_old<T>((T value, Exception exception) tuple)
     {
         if (tuple.exception is not null)
         {
             Info info = tuple.exception;
 
-            return new Result<T>
+            return new Result_old<T>
             {
                 Value          = tuple.value,
                 InfoCollection = info
@@ -185,7 +185,7 @@ sealed record Result<T>
     }
 
 
-    public Result<A> Then<A>(Func<T, A> next)
+    public Result_old<A> Then<A>(Func<T, A> next)
     {
         if (Success)
         {

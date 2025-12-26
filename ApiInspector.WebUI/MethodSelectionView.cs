@@ -51,7 +51,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     [CustomEvent]
     public Func<string, Task> SelectionChanged { get; set; }
 
-    public static Result<MetadataNode> FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
+    public static Result_old<MetadataNode> FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
     {
         if (string.IsNullOrWhiteSpace(AssemblyFilePath))
         {
@@ -173,7 +173,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         }
     }
 
-    static Result<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
+    static Result_old<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {
