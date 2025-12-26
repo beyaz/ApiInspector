@@ -798,9 +798,9 @@ class MainWindow : Component<MainWindowModel>
         state.ScenarioListSelectedIndex = 0;
 
         var nodeResult = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
-        if (nodeResult.Fail)
+        if (nodeResult.HasError)
         {
-            this.FailNotification(nodeResult.InfoCollection);
+            this.FailNotification(nodeResult.Error.Message);
         }
 
         var node = nodeResult.Value;

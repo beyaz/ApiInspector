@@ -51,7 +51,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     [CustomEvent]
     public Func<string, Task> SelectionChanged { get; set; }
 
-    public static Result_old<MetadataNode> FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
+    public static Result<MetadataNode> FindTreeNode(string AssemblyFilePath, string treeNodeKey, string classFilter, string methodFilter)
     {
         if (string.IsNullOrWhiteSpace(AssemblyFilePath))
         {
@@ -68,8 +68,9 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             return new FileNotFoundException(AssemblyFilePath);
         }
 
-        return MetadataHelper.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
-                       .Then(nodes => FindTreeNode(nodes, x => HasMatch(x, treeNodeKey)));
+        return from nodes in MetadataHelper.GetMetadataNodes(AssemblyFilePath, classFilter, methodFilter)
+               from x in FindTreeNode(nodes, x => HasMatch(x, treeNodeKey))
+               select x;;
     }
 
     protected override Task constructor()
@@ -83,7 +84,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         };
 
         FetchNodes(state.AssemblyFilePath, state.ClassFilter, state.MethodFilter)
-           .Then(ok: x => state.Nodes = x, nok: x => state.ErrorMessage = x);
+           .Match( x => state.Nodes = x,  x => state.ErrorMessage = x.Message);
 
         return Task.CompletedTask;
     }
@@ -101,7 +102,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
 
             FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter)
-               .Then(ok: x => state.Nodes = x, x => state.ErrorMessage = x);
+               .Match(x => state.Nodes = x, x => state.ErrorMessage = x.Message);
         }
 
         return Task.CompletedTask;
@@ -173,7 +174,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
         }
     }
 
-    static Result_old<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
+    static Result<IReadOnlyList<MetadataNode>> FetchNodes(string AssemblyFilePath, string ClassFilter, string MethodFilter)
     {
         if (!string.IsNullOrWhiteSpace(AssemblyFilePath) && File.Exists(AssemblyFilePath))
         {

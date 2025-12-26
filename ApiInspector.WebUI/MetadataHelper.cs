@@ -6,7 +6,7 @@ namespace ApiInspector.WebUI;
 
 static class MetadataHelper
 {
-    public static Result_old<IReadOnlyList<MetadataNode>> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
+    public static Result<IReadOnlyList<MetadataNode>> GetMetadataNodes(string assemblyFilePath, string classFilter, string methodFilter)
     {
         try
         {
