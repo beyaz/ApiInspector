@@ -73,6 +73,8 @@ static class External
         public string methodName { get; set; }
         public object parameter;
         public bool waitForDebugger;
+        
+        public Action<Process> OnProcessStarted { get; init; }
     }
     
     static Result<TResponse> Execute<TResponse>(ExecuteInput input)
@@ -123,6 +125,8 @@ static class External
         public bool runCoreApp;
         public string methodName;
         public bool waitForDebugger;
+        
+        public Action<Process> OnProcessStarted { get; init; }
     }
     
     static (int exitCode, string outputAsJson) RunProcess(RunProcessInput input)
@@ -143,9 +147,12 @@ static class External
         using var process = new Process();
         
         process.StartInfo = processStartInfo;
-        
-        ExternalProcessManager.CurrentProcess = process;
 
+        if (input.OnProcessStarted is not null)
+        {
+            input.OnProcessStarted(process);
+        }
+        
         process.Start();
         
         using (var writer = process.StandardInput)
