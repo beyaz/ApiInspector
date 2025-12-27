@@ -595,13 +595,12 @@ class MainWindow : Component<MainWindowModel>
 
             if (ExternalProcessManager.CurrentProcessTask is not null)
             {
-                IgnoreException(()=>ExternalProcessManager.CurrentProcessTask.Dispose());
+                IgnoreException(() => ExternalProcessManager.CurrentProcessTask.Dispose());
 
                 ExternalProcessManager.CurrentProcessTask = null;
             }
-           
         }
-        
+
         AsyncLogger.logs.Clear();
 
         ResponseException = null;
@@ -611,8 +610,6 @@ class MainWindow : Component<MainWindowModel>
         DebugButtonStatus = ActionButtonStatus.Ready;
 
         ExecuteButtonStatus = ActionButtonStatus.Ready;
-        
-       
 
         SaveState();
 
@@ -651,6 +648,51 @@ class MainWindow : Component<MainWindowModel>
 
             RuntimeName = state.RuntimeName
         };
+    }
+
+    Task MonitorDebug()
+    {
+        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
+
+        if (ResponseException is not null)
+        {
+            DebugButtonStatus = ActionButtonStatus.Fail;
+
+            scenario.ResponseAsJson = ResponseException.Message;
+
+            ResponseException = null;
+
+            ResponseAsJson = null;
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
+
+            return Task.CompletedTask;
+        }
+
+        if (ResponseAsJson is not null)
+        {
+            DebugButtonStatus = ActionButtonStatus.Success;
+
+            scenario.ResponseAsJson = ResponseAsJson;
+
+            ResponseException = null;
+
+            ResponseAsJson = null;
+
+            Client.GotoMethod(2000, ClearActionButtonStates);
+
+            return Task.CompletedTask;
+        }
+
+        var logs = new List<string>(AsyncLogger.logs);
+
+        logs.Reverse();
+
+        scenario.ResponseAsJson = string.Join(NewLine, logs);
+
+        Client.GotoMethod(100, MonitorDebug);
+
+        return Task.CompletedTask;
     }
 
     Task MonitorExecution()
@@ -703,10 +745,10 @@ class MainWindow : Component<MainWindowModel>
         if (DebugButtonStatus == ActionButtonStatus.Executing)
         {
             await ClearActionButtonStates();
-            
+
             return;
         }
-        
+
         await ClearActionButtonStates();
 
         await OnDebugClicked();
@@ -741,21 +783,24 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        RuntimeName                              = state.RuntimeName,
-                        AssemblyFileFullPath                     = AssemblyFileFullPath,
-                        MethodReference                          = state.SelectedMethod,
+                        RuntimeName = state.RuntimeName,
+
+                        AssemblyFileFullPath = AssemblyFileFullPath,
+
+                        MethodReference = state.SelectedMethod,
+
                         JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
-                        JsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
-                        OnProcessStarted = process =>
-                        {
-                            ExternalProcessManager.CurrentProcess = process;
-                        },
-                        WaitForDebugger = true
+
+                        JsonTextForDotNetMethodParameters = scenario.JsonTextForDotNetMethodParameters,
+
+                        WaitForDebugger = true,
+
+                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; }
                     };
-                    
+
                     External.InvokeMethod(input).Match
                     (
-                        json => ResponseAsJson = json,
+                        json => ResponseAsJson         = json,
                         exception => ResponseException = exception
                     );
                 }
@@ -767,51 +812,6 @@ class MainWindow : Component<MainWindowModel>
 
             Client.GotoMethod(MonitorDebug);
         }
-
-        return Task.CompletedTask;
-    }
-    
-    Task MonitorDebug()
-    {
-        var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
-
-        if (ResponseException is not null)
-        {
-            DebugButtonStatus = ActionButtonStatus.Fail;
-
-            scenario.ResponseAsJson = ResponseException.Message;
-
-            ResponseException = null;
-
-            ResponseAsJson = null;
-
-            Client.GotoMethod(2000, ClearActionButtonStates);
-
-            return Task.CompletedTask;
-        }
-
-        if (ResponseAsJson is not null)
-        {
-            DebugButtonStatus = ActionButtonStatus.Success;
-
-            scenario.ResponseAsJson = ResponseAsJson;
-
-            ResponseException = null;
-
-            ResponseAsJson = null;
-
-            Client.GotoMethod(2000, ClearActionButtonStates);
-
-            return Task.CompletedTask;
-        }
-
-        var logs = new List<string>(AsyncLogger.logs);
-
-        logs.Reverse();
-
-        scenario.ResponseAsJson = string.Join(NewLine, logs);
-
-        Client.GotoMethod(100, MonitorDebug);
 
         return Task.CompletedTask;
     }
@@ -880,10 +880,10 @@ class MainWindow : Component<MainWindowModel>
         if (ExecuteButtonStatus == ActionButtonStatus.Executing)
         {
             await ClearActionButtonStates();
-            
+
             return;
         }
-        
+
         await ClearActionButtonStates();
 
         await OnExecuteClicked();
@@ -918,24 +918,25 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        RuntimeName                              = state.RuntimeName,
-                        AssemblyFileFullPath                     = AssemblyFileFullPath,
-                        MethodReference                          = state.SelectedMethod,
+                        RuntimeName = state.RuntimeName,
+
+                        AssemblyFileFullPath = AssemblyFileFullPath,
+
+                        MethodReference = state.SelectedMethod,
+
                         JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
-                        JsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
+
+                        JsonTextForDotNetMethodParameters = scenario.JsonTextForDotNetMethodParameters,
+
                         WaitForDebugger = false,
-                        OnProcessStarted = process =>
-                        {
-                            ExternalProcessManager.CurrentProcess = process;
-                        }
+
+                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; }
                     };
                     External.InvokeMethod(input).Match
                     (
-                        json => ResponseAsJson = json,
-
+                        json => ResponseAsJson         = json,
                         exception => ResponseException = exception
                     );
-
                 }
                 catch (Exception exception)
                 {
@@ -1098,7 +1099,6 @@ class MainWindow : Component<MainWindowModel>
                     x => state.Text = x,
                     _ => state.Text = null
                 );
-
             }
 
             return base.OverrideStateFromPropsBeforeRender();
@@ -1123,7 +1123,7 @@ class MainWindow : Component<MainWindowModel>
                 x => state.Text = x,
                 _ => state.Text = null
             );
-            
+
             return Task.CompletedTask;
         }
     }
