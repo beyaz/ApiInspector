@@ -78,6 +78,7 @@ class MainWindow : Component<MainWindowModel>
 
                 new Style
                 {
+                    PaddingBottom(10),
                     Border(Solid(1, Theme.BorderColor)),
                     SizeFull,
                     Background(Theme.WindowBackgroundColor),
@@ -243,7 +244,7 @@ class MainWindow : Component<MainWindowModel>
 
         Element searchPanel()
         {
-            return new FlexColumn(Width(500), Gap(10), Padding(10, 0, 10, 10), MarginTop(20), PositionRelative)
+            return new FlexColumn(Width(500), Gap(10), Padding(10, 0, 0, 10), MarginTop(20), PositionRelative)
             {
                 new HistoryButton
                 {
@@ -606,7 +607,7 @@ class MainWindow : Component<MainWindowModel>
                 
             }
             
-            var partResponse = new FlexColumn(SizeFull, PaddingBottom(10))
+            var partResponse = new FlexColumn(SizeFull)
             {
                 new Label { Text = "Response as json" },
 
