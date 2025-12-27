@@ -6,13 +6,21 @@ namespace ApiInspector.WebUI;
 sealed record ExternalInvokeInput
 {
     // @formatter:off
+    
     public string RuntimeName { get; init; }
+    
     public string AssemblyFileFullPath { get; init;} 
+    
     public MethodReference MethodReference { get;init; } 
+    
     public string JsonTextForDotNetInstanceProperties { get; init;} 
+    
     public string JsonTextForDotNetMethodParameters { get; init;} 
+    
     public bool WaitForDebugger { get;init; } 
+    
     public Action<Process> OnProcessStarted { get; init; }
+    
     // @formatter:on
 }
 
@@ -83,13 +91,19 @@ static class External
     sealed record ExecuteInput
     {
         // @formatter:off
+        
         public string RuntimeName { get; init; }
+        
         public string AssemblyFileFullPath { get; init; }
+        
         public string MethodName { get; init; }
+        
         public object Parameter { get; init; }
+        
         public bool WaitForDebugger { get; init; }
         
         public Action<Process> OnProcessStarted { get; init; }
+        
         // @formatter:on
     }
     
@@ -138,12 +152,17 @@ static class External
     sealed record RunProcessInput
     {
         // @formatter:off
+        
         public string InputAsJson{ get; init; }
+        
         public bool IsNetCoreApp{ get; init; }
+        
         public string MethodName{ get; init; }
+        
         public bool WaitForDebugger{ get; init; }
         
         public Action<Process> OnProcessStarted { get; init; }
+        
         // @formatter:on
     }
     
