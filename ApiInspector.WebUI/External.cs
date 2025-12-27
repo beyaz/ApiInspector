@@ -113,7 +113,11 @@ static class External
 
         var runProcessInput = new RunProcessInput
         {
-            InputAsJson = inputAsJson, IsNetCoreApp = isNetCore, MethodName = input.MethodName, WaitForDebugger = input.WaitForDebugger
+            InputAsJson      = inputAsJson,
+            IsNetCoreApp     = isNetCore,
+            MethodName       = input.MethodName,
+            WaitForDebugger  = input.WaitForDebugger,
+            OnProcessStarted = input.OnProcessStarted
         };
 
         var (exitCode, outputAsJson) = RunProcess(runProcessInput);

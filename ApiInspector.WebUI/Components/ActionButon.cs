@@ -22,7 +22,24 @@ sealed class ActionButton : PureComponent
         {
             if (isProcessing)
             {
-                icon = new LoadingIcon { Size(20), MarginRight(10) };
+                icon = new FlexRowCentered(Size(20), MarginRight(10))
+                {
+                    new LoadingIcon
+                    {
+                        Size(20)
+                    },
+                    
+                    PositionRelative,
+                    new div
+                    {
+                        PositionAbsolute,
+                        Left(5),
+                        Top(5),
+                        Size(10),
+                        Background("#f18484"),
+                        BorderRadius(2)
+                    }
+                };
             }
             else if(SvgFileName.HasValue())
             {
