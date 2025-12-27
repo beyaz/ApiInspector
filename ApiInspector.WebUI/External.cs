@@ -71,7 +71,8 @@ static class External
             assemblyFileFullPath = input.AssemblyFileFullPath,
             methodName           = nameof(InvokeMethod),
             parameter            = parameter,
-            waitForDebugger      = input.WaitForDebugger
+            waitForDebugger      = input.WaitForDebugger,
+            OnProcessStarted = input.OnProcessStarted
         };
         
         return Execute<string>(executeInput);
