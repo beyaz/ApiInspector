@@ -561,33 +561,46 @@ class MainWindow : Component<MainWindowModel>
                             BorderRadius(5),
                             WidthFull,
 
-                            new Editor
+                            new textarea
                             {
-                                defaultLanguage = "plaintext",
-                                value           = trace,
-                                options =
+                                id = "textAreaForLogs",
+                                value = trace,
+                                spellcheck = "false",
+                                readOnly = true,
+                                wrap = "off",
+                                style =
                                 {
-                                    renderLineHighlight = "none",
-                                    fontFamily          = "'IBM Plex Mono Medium', 'Courier New', monospace",
-                                    fontSize            = 11,
-                                    minimap             = new { enabled = false },
-                                    formatOnPaste       = true,
-                                    formatOnType        = true,
-                                    automaticLayout     = true,
-                                    lineNumbers         = false,
-
-                                    unicodeHighlight = new
-                                    {
-                                        ambiguousCharacters = false, // confusable karakterleri vurgulama
-                                        includeStrings      = false, // (ops.) string içeriklerinde vurgulama
-                                        invisibleCharacters = false // (ops.) görünmez karakterleri vurgulama
-                                    }
+                                    OutlineNone,
+                                    BorderNone,
+                                    FontSize11,
+                                    FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
+                                    SizeFull,
+                                    Padding(16)
+                                    
                                 }
                             }
                         }
 
 
                     };
+
+                    Client.RunJavascript
+                    (
+                        """
+                        function scrollTextareaToEnd(id) 
+                        {
+                          const ta = document.getElementById(id);
+                          if (!ta) return;
+
+                          ta.scrollTop = ta.scrollHeight;   // scroll sona
+                          ta.selectionStart = ta.selectionEnd = ta.value.length; // caret sona
+                          ta.focus(); // opsiyonel
+                        }
+
+                        scrollTextareaToEnd("textAreaForLogs");
+
+                        """
+                    );
                 }
                
                 
