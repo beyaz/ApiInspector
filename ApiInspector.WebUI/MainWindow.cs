@@ -522,17 +522,12 @@ class MainWindow : Component<MainWindowModel>
                 new ExecuteButton
                 {
                     Click               = OnExecuteClicked,
-                    Status = ExecuteButtonStatus,
-                    ShowStatusAsSuccess = ExecuteButtonStatus == ActionButtonStatus.Success,
-                    ShowStatusAsFail    = ExecuteButtonStatus == ActionButtonStatus.Fail
+                    Status = ExecuteButtonStatus
                 } + ComponentBoxShadow,
                 new DebugButton
                 {
                     Click               = OnDebugClicked,
-                    Status = DebugButtonStatus,
-                    
-                    ShowStatusAsSuccess = DebugButtonStatus == ActionButtonStatus.Success,
-                    ShowStatusAsFail    = DebugButtonStatus == ActionButtonStatus.Fail
+                    Status = DebugButtonStatus
                 } + ComponentBoxShadow,
 
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow

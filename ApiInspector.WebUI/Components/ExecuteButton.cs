@@ -3,11 +3,7 @@
 sealed class ExecuteButton : PureComponent
 {
     public MouseEventHandler Click { get; init; }
-
-    public bool ShowStatusAsFail { get; init; }
-
-    public bool ShowStatusAsSuccess { get; init; }
-
+    
     public required ActionButtonStatus Status { get; init; }
 
     protected override Element render()
