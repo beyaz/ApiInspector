@@ -5,13 +5,12 @@ namespace ApiInspector.WebUI;
 
 sealed record ExternalInvokeInput
 {
-    public string runtimeName { get; init; }
-
-    public string assemblyFileFullPath { get; init;} 
-    public MethodReference methodReference { get;init; } 
-    public string stateJsonTextForDotNetInstanceProperties { get; init;} 
-    public string stateJsonTextForDotNetMethodParameters { get; init;} 
-    public bool waitForDebugger { get;init; } 
+    public string RuntimeName { get; init; }
+    public string AssemblyFileFullPath { get; init;} 
+    public MethodReference MethodReference { get;init; } 
+    public string JsonTextForDotNetInstanceProperties { get; init;} 
+    public string JsonTextForDotNetMethodParameters { get; init;} 
+    public bool WaitForDebugger { get;init; } 
     public Action<Process> OnProcessStarted { get; init; }
 }
 
@@ -64,15 +63,15 @@ static class External
 
     public static Result<string> InvokeMethod(ExternalInvokeInput input)
     {
-        var parameter = (input.assemblyFileFullPath, input.methodReference, input.stateJsonTextForDotNetInstanceProperties, input.stateJsonTextForDotNetMethodParameters);
+        var parameter = (assemblyFileFullPath: input.AssemblyFileFullPath, methodReference: input.MethodReference, stateJsonTextForDotNetInstanceProperties: input.JsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters: input.JsonTextForDotNetMethodParameters);
 
         var executeInput = new ExecuteInput
         {
-            runtimeName          = input.runtimeName,
-            assemblyFileFullPath = input.assemblyFileFullPath,
+            runtimeName          = input.RuntimeName,
+            assemblyFileFullPath = input.AssemblyFileFullPath,
             methodName           = nameof(InvokeMethod),
             parameter            = parameter,
-            waitForDebugger      = input.waitForDebugger
+            waitForDebugger      = input.WaitForDebugger
         };
         
         return Execute<string>(executeInput);

@@ -741,16 +741,16 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        runtimeName                              = state.RuntimeName,
-                        assemblyFileFullPath                     = AssemblyFileFullPath,
-                        methodReference                          = state.SelectedMethod,
-                        stateJsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
-                        stateJsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
+                        RuntimeName                              = state.RuntimeName,
+                        AssemblyFileFullPath                     = AssemblyFileFullPath,
+                        MethodReference                          = state.SelectedMethod,
+                        JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
+                        JsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
                         OnProcessStarted = process =>
                         {
                             ExternalProcessManager.CurrentProcess = process;
                         },
-                        waitForDebugger = true
+                        WaitForDebugger = true
                     };
                     
                     External.InvokeMethod(input).Match
@@ -918,11 +918,11 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        runtimeName                              = state.RuntimeName,
-                        assemblyFileFullPath                     = AssemblyFileFullPath,
-                        methodReference                          = state.SelectedMethod,
-                        stateJsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
-                        stateJsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
+                        RuntimeName                              = state.RuntimeName,
+                        AssemblyFileFullPath                     = AssemblyFileFullPath,
+                        MethodReference                          = state.SelectedMethod,
+                        JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
+                        JsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
                         OnProcessStarted = process =>
                         {
                             ExternalProcessManager.CurrentProcess = process;
