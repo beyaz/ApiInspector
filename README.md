@@ -18,16 +18,6 @@ https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
 .net Core 8.0 SDK
 
->Note: if there is an error like '..Unable to configure HTTPS endpoint. No server certificate was specified...'\
->You can  fix:
-
->dotnet dev-certs https --trust
-
->dotnet dev-certs https --clean
-
->dotnet dev-certs https --verbose
-
 ## Screenshots
 
-![Screenshot](Screenshots/1.gif)
 ![Screenshot](Screenshots/2.gif)
