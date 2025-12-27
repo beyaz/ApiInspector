@@ -14,12 +14,12 @@ sealed class DebugButton : Component
     {
         var svgFileName = "bug";
 
-        if (ShowStatusAsSuccess)
+        if (Status == ActionButtonStatus.Success)
         {
             svgFileName = "success";
         }
 
-        if (ShowStatusAsFail)
+        if (Status == ActionButtonStatus.Fail)
         {
             svgFileName = "fail";
         }
