@@ -8,7 +8,7 @@ sealed class ActionButton : PureComponent
 
     public string Label { get; init; }
 
-    public MouseEventHandler OnClicked { get; init; }
+    public required MouseEventHandler OnClicked { get; init; }
 
     public string SvgFileName { get; init; }
 
@@ -34,9 +34,7 @@ sealed class ActionButton : PureComponent
             CursorPointer
         };
 
-        var onClick = isProcessing ? null : OnClick(OnClicked);
-
-        var content = new FlexRowCentered(buttonStyle, onClick)
+        var content = new FlexRowCentered(buttonStyle, OnClick(OnClicked))
         {
             loadingIcon,
             icon,

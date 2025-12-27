@@ -88,6 +88,8 @@ static class External
         using var process = new Process();
         
         process.StartInfo = processStartInfo;
+        
+        ExternalProcessManager.CurrentProcess = process;
 
         process.Start();
         

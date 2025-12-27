@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
@@ -14,6 +15,12 @@ enum ActionButtonStatus
     Executing,
     Success,
     Fail
+}
+
+class ExternalProcessManager
+{
+    public static Process CurrentProcess;
+    public static Task CurrentProcessTask { get; set; }
 }
 
 class MainWindow : Component<MainWindowModel>
@@ -580,6 +587,21 @@ class MainWindow : Component<MainWindowModel>
 
     Task ClearActionButtonStates()
     {
+        if (ExternalProcessManager.CurrentProcess is not null)
+        {
+            IgnoreException(() => ExternalProcessManager.CurrentProcess.Kill(entireProcessTree: true));
+
+            ExternalProcessManager.CurrentProcess = null;
+
+            if (ExternalProcessManager.CurrentProcessTask is not null)
+            {
+                IgnoreException(()=>ExternalProcessManager.CurrentProcessTask.Dispose());
+
+                ExternalProcessManager.CurrentProcessTask = null;
+            }
+           
+        }
+        
         AsyncLogger.logs.Clear();
 
         ResponseException = null;
@@ -589,6 +611,8 @@ class MainWindow : Component<MainWindowModel>
         DebugButtonStatus = ActionButtonStatus.Ready;
 
         ExecuteButtonStatus = ActionButtonStatus.Ready;
+        
+       
 
         SaveState();
 
@@ -676,6 +700,13 @@ class MainWindow : Component<MainWindowModel>
 
     async Task OnDebugClicked(MouseEvent _)
     {
+        if (DebugButtonStatus == ActionButtonStatus.Executing)
+        {
+            await ClearActionButtonStates();
+            
+            return;
+        }
+        
         await ClearActionButtonStates();
 
         await OnDebugClicked();
@@ -704,7 +735,7 @@ class MainWindow : Component<MainWindowModel>
         }
         else if (DebugButtonStatus == ActionButtonStatus.Executing)
         {
-            _ = Task.Run(() =>
+            ExternalProcessManager.CurrentProcessTask = Task.Run(() =>
             {
                 try
                 {
@@ -832,6 +863,13 @@ class MainWindow : Component<MainWindowModel>
 
     async Task OnExecuteClicked(MouseEvent _)
     {
+        if (ExecuteButtonStatus == ActionButtonStatus.Executing)
+        {
+            await ClearActionButtonStates();
+            
+            return;
+        }
+        
         await ClearActionButtonStates();
 
         await OnExecuteClicked();
@@ -860,7 +898,7 @@ class MainWindow : Component<MainWindowModel>
         }
         else if (ExecuteButtonStatus == ActionButtonStatus.Executing)
         {
-            _ = Task.Run(() =>
+            ExternalProcessManager.CurrentProcessTask = Task.Run(() =>
             {
                 try
                 {
