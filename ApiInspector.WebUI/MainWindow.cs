@@ -605,6 +605,7 @@ class MainWindow : Component<MainWindowModel>
                 
                 
             }
+            
             var partResponse = new FlexColumn(SizeFull, PaddingBottom(10))
             {
                 new Label { Text = "Response as json" },
