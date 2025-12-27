@@ -541,66 +541,65 @@ class MainWindow : Component<MainWindowModel>
                 if (DebugButtonStatus == ActionButtonStatus.Executing || DebugButtonStatus == ActionButtonStatus.Fail ||
                     ExecuteButtonStatus == ActionButtonStatus.Executing || ExecuteButtonStatus == ActionButtonStatus.Fail)
                 {
-                    var logs = new List<string>(AsyncLogger.logs);
-
-                    //logs.Reverse();
-
-                    var trace = string.Join(NewLine, logs);
-
-                    partTrace  = new FlexColumn(WidthFull, Height(200))
+                    if (AsyncLogger.logs.Count > 0)
                     {
-                        new Label { Text = "Trace" },
+                        var trace = string.Join(NewLine, AsyncLogger.logs);
 
-                        new FreeScrollBar
+                        partTrace  = new FlexColumn(WidthFull, Height(200))
                         {
-                            AutoHideScrollbar,
+                            new Label { Text = "Trace" },
 
-                            ComponentBoxShadow,
-                            HeightFull,
-                            Border("1px solid #d9d9d9"),
-                            BorderRadius(5),
-                            WidthFull,
-
-                            new textarea
+                            new FreeScrollBar
                             {
-                                id = "textAreaForLogs",
-                                value = trace,
-                                spellcheck = "false",
-                                readOnly = true,
-                                wrap = "off",
-                                style =
+                                AutoHideScrollbar,
+
+                                ComponentBoxShadow,
+                                HeightFull,
+                                Border("1px solid #d9d9d9"),
+                                BorderRadius(5),
+                                WidthFull,
+
+                                new textarea
                                 {
-                                    OutlineNone,
-                                    BorderNone,
-                                    FontSize11,
-                                    FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
-                                    SizeFull,
-                                    Padding(16)
-                                    
+                                    id         = "textAreaForLogs",
+                                    value      = trace,
+                                    spellcheck = "false",
+                                    readOnly   = true,
+                                    wrap       = "off",
+                                    style =
+                                    {
+                                        OutlineNone,
+                                        BorderNone,
+                                        FontSize11,
+                                        FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
+                                        SizeFull,
+                                        Padding(16)
+                                    }
                                 }
                             }
-                        }
 
 
-                    };
+                        };
 
-                    Client.RunJavascript
-                    (
-                        """
-                        function scrollTextareaToEnd(id) 
-                        {
-                          const ta = document.getElementById(id);
-                          if (!ta) return;
+                        Client.RunJavascript
+                        (
+                            """
+                            function scrollTextareaToEnd(id) 
+                            {
+                              const ta = document.getElementById(id);
+                              if (!ta) return;
 
-                          ta.scrollTop = ta.scrollHeight;   // scroll sona
-                          ta.selectionStart = ta.selectionEnd = ta.value.length; // caret sona
-                          ta.focus(); // opsiyonel
-                        }
+                              ta.scrollTop = ta.scrollHeight;
+                              ta.selectionStart = ta.selectionEnd = ta.value.length;
+                              ta.focus();
+                            }
 
-                        scrollTextareaToEnd("textAreaForLogs");
+                            scrollTextareaToEnd("textAreaForLogs");
 
-                        """
-                    );
+                            """
+                        );
+                    }
+                    
                 }
                
                 
