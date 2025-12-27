@@ -7,19 +7,19 @@ sealed record ExternalInvokeInput
 {
     // @formatter:off
     
-    public string RuntimeName { get; init; }
+    public required string RuntimeName { get; init; }
     
-    public string AssemblyFileFullPath { get; init;} 
+    public required  string AssemblyFileFullPath { get; init;} 
     
-    public MethodReference MethodReference { get;init; } 
+    public required  MethodReference MethodReference { get;init; } 
     
-    public string JsonTextForDotNetInstanceProperties { get; init;} 
+    public required  string JsonTextForDotNetInstanceProperties { get; init;} 
     
-    public string JsonTextForDotNetMethodParameters { get; init;} 
+    public required  string JsonTextForDotNetMethodParameters { get; init;} 
     
-    public bool WaitForDebugger { get;init; } 
+    public required  bool WaitForDebugger { get;init; } 
     
-    public Action<Process> OnProcessStarted { get; init; }
+    public required  Action<Process> OnProcessStarted { get; init; }
     
     // @formatter:on
 }

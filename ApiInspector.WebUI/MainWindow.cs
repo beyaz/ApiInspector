@@ -923,6 +923,7 @@ class MainWindow : Component<MainWindowModel>
                         MethodReference                          = state.SelectedMethod,
                         JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
                         JsonTextForDotNetMethodParameters   = scenario.JsonTextForDotNetMethodParameters,
+                        WaitForDebugger = false,
                         OnProcessStarted = process =>
                         {
                             ExternalProcessManager.CurrentProcess = process;
