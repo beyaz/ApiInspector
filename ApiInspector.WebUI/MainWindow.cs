@@ -545,8 +545,8 @@ class MainWindow : Component<MainWindowModel>
                     AutoHideScrollbar,
 
                     ComponentBoxShadow,
-                    Height("calc(100% - 28px)"), 
-                    PaddingBottom(10),
+                    HeightFull,
+                    MarginBottom(10),
                     Border("1px solid #d9d9d9"),
                     BorderRadius(5),
                     WidthFull,
