@@ -9,6 +9,8 @@ sealed class DebugButton : Component
     public bool ShowStatusAsFail { get; init; }
 
     public bool ShowStatusAsSuccess { get; init; }
+    
+    public required ActionButtonStatus Status { get; init; }
 
     protected override Element render()
     {
@@ -26,6 +28,7 @@ sealed class DebugButton : Component
 
         return new ActionButton
         {
+            Status = Status,
             Label        = "Debug",
             SvgFileName  = svgFileName,
             OnClicked      = Click,

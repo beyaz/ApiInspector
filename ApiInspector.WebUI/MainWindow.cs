@@ -522,6 +522,7 @@ class MainWindow : Component<MainWindowModel>
                 new ExecuteButton
                 {
                     Click               = OnExecuteClicked,
+                    Status = ExecuteButtonStatus,
                     IsProcessing        = ExecuteButtonStatus == ActionButtonStatus.Executing,
                     ShowStatusAsSuccess = ExecuteButtonStatus == ActionButtonStatus.Success,
                     ShowStatusAsFail    = ExecuteButtonStatus == ActionButtonStatus.Fail
@@ -529,6 +530,8 @@ class MainWindow : Component<MainWindowModel>
                 new DebugButton
                 {
                     Click               = OnDebugClicked,
+                    Status = DebugButtonStatus,
+                    
                     IsProcessing        = DebugButtonStatus == ActionButtonStatus.Executing,
                     ShowStatusAsSuccess = DebugButtonStatus == ActionButtonStatus.Success,
                     ShowStatusAsFail    = DebugButtonStatus == ActionButtonStatus.Fail

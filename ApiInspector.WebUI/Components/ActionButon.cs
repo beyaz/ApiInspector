@@ -14,7 +14,7 @@ sealed class ActionButton : PureComponent
 
     public string TooltipText { get; init; }
 
-    
+    public required ActionButtonStatus Status { get; init; }
 
     protected override Element render()
     {

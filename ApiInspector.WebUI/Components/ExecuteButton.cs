@@ -10,6 +10,8 @@ sealed class ExecuteButton : PureComponent
 
     public bool ShowStatusAsSuccess { get; init; }
 
+    public required ActionButtonStatus Status { get; init; }
+
     protected override Element render()
     {
         var svgFileName = "play";
@@ -26,11 +28,12 @@ sealed class ExecuteButton : PureComponent
 
         return new ActionButton
         {
+            Status       = Status,
             Label        = "Execute",
             SvgFileName  = svgFileName,
-            OnClicked      = Click,
+            OnClicked    = Click,
             IsProcessing = IsProcessing,
-            TooltipText        = "Executes selected method by given parameters above then show results in below."
+            TooltipText  = "Executes selected method by given parameters above then show results in below."
         };
     }
 }
