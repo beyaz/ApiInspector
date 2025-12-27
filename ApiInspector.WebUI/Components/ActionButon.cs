@@ -43,7 +43,7 @@ sealed class ActionButton : PureComponent
             }
             else if(SvgFileName.HasValue())
             {
-                icon = new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) };
+                icon = new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(10) };
             }
         }
         
