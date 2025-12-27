@@ -18,10 +18,18 @@ sealed class ActionButton : PureComponent
     {
         var isProcessing = Status == ActionButtonStatus.Executing;
 
-        var loadingIcon = isProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) };
-
-        var icon = !isProcessing && SvgFileName.HasValue() ? new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) } : null;
-
+        Element icon = null;
+        {
+            if (isProcessing)
+            {
+                icon = new LoadingIcon { Size(20), MarginRight(10) };
+            }
+            else if(SvgFileName.HasValue())
+            {
+                icon = new img { Src(GetSvgUrl(SvgFileName)), Size(20), MarginRight(5) };
+            }
+        }
+        
         var buttonStyle = new Style
         {
             Color(BluePrimary),
@@ -34,7 +42,6 @@ sealed class ActionButton : PureComponent
 
         var content = new FlexRowCentered(buttonStyle, OnClick(OnClicked))
         {
-            loadingIcon,
             icon,
             new div{Label}
         };
