@@ -114,7 +114,7 @@ static class External
 
         var runProcessInput = new RunProcessInput
         {
-            InputAsJson = inputAsJson, RunCoreApp = isNetCore, MethodName = input.MethodName, WaitForDebugger = input.WaitForDebugger
+            InputAsJson = inputAsJson, IsNetCoreApp = isNetCore, MethodName = input.MethodName, WaitForDebugger = input.WaitForDebugger
         };
         
         var (exitCode, outputAsJson) = RunProcess(runProcessInput);
@@ -134,7 +134,7 @@ static class External
     sealed record RunProcessInput
     {
         public string InputAsJson{ get; init; }
-        public bool RunCoreApp{ get; init; }
+        public bool IsNetCoreApp{ get; init; }
         public string MethodName{ get; init; }
         public bool WaitForDebugger{ get; init; }
         
@@ -145,7 +145,7 @@ static class External
     {
         var processStartInfo = new ProcessStartInfo
         {
-            FileName = input.RunCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
+            FileName = input.IsNetCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
             
             Arguments = $"{(input.WaitForDebugger ? "1" : "0")}|{input.MethodName}|{AsyncLogger.ListennigUrl}",
                 
