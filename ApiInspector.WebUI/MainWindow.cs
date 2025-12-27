@@ -755,8 +755,11 @@ class MainWindow : Component<MainWindowModel>
 
             return Task.CompletedTask;
         }
-        
-        Client.GotoMethod(100, MonitorDebug);
+
+        if (DebugButtonStatus == ActionButtonStatus.Executing)
+        {
+            Client.GotoMethod(100, MonitorDebug);
+        }
 
         return Task.CompletedTask;
     }
@@ -795,7 +798,12 @@ class MainWindow : Component<MainWindowModel>
             return Task.CompletedTask;
         }
         
-        Client.GotoMethod(100, MonitorExecution);
+        if (ExecuteButtonStatus == ActionButtonStatus.Executing)
+        {
+            Client.GotoMethod(100, MonitorExecution);
+        }
+        
+       
 
         return Task.CompletedTask;
     }
@@ -860,7 +868,8 @@ class MainWindow : Component<MainWindowModel>
 
                     External.InvokeMethod(input).Match
                     (
-                        json => ExternalProcessManager.ResponseAsJson         = json,
+                        json => ExternalProcessManager.ResponseAsJson = json,
+                        
                         exception => ExternalProcessManager.ResponseException = exception
                     );
                 }
