@@ -37,11 +37,11 @@ static class External
             MethodName           = nameof(GetEnvironment),
             Parameter            = parameter
         };
-        
+
         return Execute<string>(executeInput);
     }
 
-    public static Result<string> GetInstanceEditorJsonText(string runtimeName,string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
+    public static Result<string> GetInstanceEditorJsonText(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
@@ -52,10 +52,10 @@ static class External
             MethodName           = nameof(GetInstanceEditorJsonText),
             Parameter            = parameter
         };
-        
+
         return Execute<string>(executeInput);
     }
-    
+
     public static Result<string> GetParametersEditorJsonText(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
@@ -67,7 +67,7 @@ static class External
             MethodName           = nameof(GetParametersEditorJsonText),
             Parameter            = parameter
         };
-        
+
         return Execute<string>(executeInput);
     }
 
@@ -82,10 +82,95 @@ static class External
             MethodName           = nameof(InvokeMethod),
             Parameter            = parameter,
             WaitForDebugger      = input.WaitForDebugger,
-            OnProcessStarted = input.OnProcessStarted
+            OnProcessStarted     = input.OnProcessStarted
         };
-        
+
         return Execute<string>(executeInput);
+    }
+
+    static Result<TResponse> Execute<TResponse>(ExecuteInput input)
+    {
+        if (string.IsNullOrWhiteSpace(input.RuntimeName))
+        {
+            return new ArgumentException("Select runtime");
+        }
+
+        var fileInfo = new FileInfo(input.AssemblyFileFullPath);
+        if (!fileInfo.Exists)
+        {
+            return new FileNotFoundException(input.AssemblyFileFullPath);
+        }
+
+        var runtime = GetTargetFramework(fileInfo);
+        if (runtime.IsNetCore is false && runtime.IsNetFramework is false && runtime.IsNetStandard is false)
+        {
+            return RuntimeNotDetectedException(input.AssemblyFileFullPath);
+        }
+
+        var inputAsJson = JsonConvert.SerializeObject(input.Parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
+
+        var isNetCore = input.RuntimeName == RuntimeNames.NetCore;
+
+        var runProcessInput = new RunProcessInput
+        {
+            InputAsJson = inputAsJson, IsNetCoreApp = isNetCore, MethodName = input.MethodName, WaitForDebugger = input.WaitForDebugger
+        };
+
+        var (exitCode, outputAsJson) = RunProcess(runProcessInput);
+        if (exitCode == 1)
+        {
+            return JsonConvert.DeserializeObject<TResponse>(outputAsJson);
+        }
+
+        if (exitCode == 0)
+        {
+            return new Exception(outputAsJson);
+        }
+
+        return new Exception($"Unexpected exitCode: {exitCode}");
+    }
+
+    static (int exitCode, string outputAsJson) RunProcess(RunProcessInput input)
+    {
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = input.IsNetCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
+
+            Arguments = $"{(input.WaitForDebugger ? "1" : "0")}|{input.MethodName}|{AsyncLogger.ListennigUrl}",
+
+            RedirectStandardInput  = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+            UseShellExecute        = false,
+            CreateNoWindow         = true
+        };
+
+        using var process = new Process();
+
+        process.StartInfo = processStartInfo;
+
+        if (input.OnProcessStarted is not null)
+        {
+            input.OnProcessStarted(process);
+        }
+
+        process.Start();
+
+        using (var writer = process.StandardInput)
+        {
+            writer.Write(input.InputAsJson);
+        }
+
+        var outputAsJson = process.StandardOutput.ReadToEnd();
+
+        process.WaitForExit();
+
+        return (process.ExitCode, outputAsJson);
+    }
+
+    static Exception RuntimeNotDetectedException(string assemblyFileFullPath)
+    {
+        return new($"Runtime not detected. @{assemblyFileFullPath}");
     }
 
     sealed record ExecuteInput
@@ -106,48 +191,6 @@ static class External
         
         // @formatter:on
     }
-    
-    static Result<TResponse> Execute<TResponse>(ExecuteInput input)
-    {
-        if (string.IsNullOrWhiteSpace(input.RuntimeName))
-        {
-            return  new ArgumentException("Select runtime");
-        }
-        
-        var fileInfo = new FileInfo(input.AssemblyFileFullPath);
-        if (!fileInfo.Exists)
-        {
-            return  new FileNotFoundException(input.AssemblyFileFullPath);
-        }
-
-        var runtime = GetTargetFramework(fileInfo);
-        if (runtime.IsNetCore is false && runtime.IsNetFramework is false && runtime.IsNetStandard is false)
-        {
-            return  RuntimeNotDetectedException(input.AssemblyFileFullPath);
-        }
-
-        var inputAsJson = JsonConvert.SerializeObject(input.Parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
-
-        var isNetCore = input.RuntimeName == RuntimeNames.NetCore;
-
-        var runProcessInput = new RunProcessInput
-        {
-            InputAsJson = inputAsJson, IsNetCoreApp = isNetCore, MethodName = input.MethodName, WaitForDebugger = input.WaitForDebugger
-        };
-        
-        var (exitCode, outputAsJson) = RunProcess(runProcessInput);
-        if (exitCode == 1)
-        {
-            return JsonConvert.DeserializeObject<TResponse>(outputAsJson);
-        }
-
-        if (exitCode == 0)
-        {
-            return  new Exception(outputAsJson);
-        }
-
-        return  new Exception($"Unexpected exitCode: {exitCode}");
-    }
 
     sealed record RunProcessInput
     {
@@ -164,49 +207,5 @@ static class External
         public Action<Process> OnProcessStarted { get; init; }
         
         // @formatter:on
-    }
-    
-    static (int exitCode, string outputAsJson) RunProcess(RunProcessInput input)
-    {
-        var processStartInfo = new ProcessStartInfo
-        {
-            FileName = input.IsNetCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
-            
-            Arguments = $"{(input.WaitForDebugger ? "1" : "0")}|{input.MethodName}|{AsyncLogger.ListennigUrl}",
-                
-            RedirectStandardInput  = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError  = true,
-            UseShellExecute        = false,
-            CreateNoWindow         = true
-        };
-
-        using var process = new Process();
-        
-        process.StartInfo = processStartInfo;
-
-        if (input.OnProcessStarted is not null)
-        {
-            input.OnProcessStarted(process);
-        }
-        
-        process.Start();
-        
-        using (var writer = process.StandardInput)
-        {
-            writer.Write(input.InputAsJson);
-        }
-        
-        
-        var outputAsJson = process.StandardOutput.ReadToEnd();
-        
-        process.WaitForExit();
-
-        return (process.ExitCode, outputAsJson);
-    }
-
-    static Exception RuntimeNotDetectedException(string assemblyFileFullPath)
-    {
-        return new Exception($"Runtime not detected. @{assemblyFileFullPath}");
     }
 }
