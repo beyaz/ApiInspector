@@ -538,7 +538,7 @@ class MainWindow : Component<MainWindowModel>
 
             var partResponse = new FlexColumn(SizeFull)
             {
-                new Label { Text = ExecuteButtonStatus == ActionButtonStatus.Executing ? "Trace" : "Response as json" },
+                new Label { Text = "Response as json" },
 
                 new FreeScrollBar
                 {
