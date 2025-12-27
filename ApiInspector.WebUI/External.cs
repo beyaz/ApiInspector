@@ -3,6 +3,18 @@ using Newtonsoft.Json;
 
 namespace ApiInspector.WebUI;
 
+sealed record ExternalInvokeInput
+{
+    public string runtimeName { get; init; }
+
+    public string assemblyFileFullPath { get; init;} 
+    public MethodReference methodReference { get;init; } 
+    public string stateJsonTextForDotNetInstanceProperties { get; init;} 
+    public string stateJsonTextForDotNetMethodParameters { get; init;} 
+    public bool waitForDebugger { get;init; } 
+    public Action<Process> OnProcessStarted { get; init; }
+}
+
 static class External
 {
     public static Result<string> GetEnvironment(string runtimeName, string assemblyFileFullPath)
@@ -50,17 +62,17 @@ static class External
         return Execute<string>(executeInput);
     }
 
-    public static Result<string> InvokeMethod(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters, bool waitForDebugger)
+    public static Result<string> InvokeMethod(ExternalInvokeInput input)
     {
-        var parameter = (assemblyFileFullPath, methodReference, stateJsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters);
+        var parameter = (input.assemblyFileFullPath, input.methodReference, input.stateJsonTextForDotNetInstanceProperties, input.stateJsonTextForDotNetMethodParameters);
 
         var executeInput = new ExecuteInput
         {
-            runtimeName          = runtimeName,
-            assemblyFileFullPath = assemblyFileFullPath,
+            runtimeName          = input.runtimeName,
+            assemblyFileFullPath = input.assemblyFileFullPath,
             methodName           = nameof(InvokeMethod),
             parameter            = parameter,
-            waitForDebugger      = waitForDebugger
+            waitForDebugger      = input.waitForDebugger
         };
         
         return Execute<string>(executeInput);
