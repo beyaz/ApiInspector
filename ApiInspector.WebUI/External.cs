@@ -22,10 +22,10 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            runtimeName          = runtimeName,
-            assemblyFileFullPath = assemblyFileFullPath,
-            methodName           = nameof(GetEnvironment),
-            parameter            = parameter
+            RuntimeName          = runtimeName,
+            AssemblyFileFullPath = assemblyFileFullPath,
+            MethodName           = nameof(GetEnvironment),
+            Parameter            = parameter
         };
         
         return Execute<string>(executeInput);
@@ -37,10 +37,10 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            runtimeName          = runtimeName,
-            assemblyFileFullPath = assemblyFileFullPath,
-            methodName           = nameof(GetInstanceEditorJsonText),
-            parameter            = parameter
+            RuntimeName          = runtimeName,
+            AssemblyFileFullPath = assemblyFileFullPath,
+            MethodName           = nameof(GetInstanceEditorJsonText),
+            Parameter            = parameter
         };
         
         return Execute<string>(executeInput);
@@ -52,10 +52,10 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            runtimeName          = runtimeName,
-            assemblyFileFullPath = assemblyFileFullPath,
-            methodName           = nameof(GetParametersEditorJsonText),
-            parameter            = parameter
+            RuntimeName          = runtimeName,
+            AssemblyFileFullPath = assemblyFileFullPath,
+            MethodName           = nameof(GetParametersEditorJsonText),
+            Parameter            = parameter
         };
         
         return Execute<string>(executeInput);
@@ -67,11 +67,11 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            runtimeName          = input.RuntimeName,
-            assemblyFileFullPath = input.AssemblyFileFullPath,
-            methodName           = nameof(InvokeMethod),
-            parameter            = parameter,
-            waitForDebugger      = input.WaitForDebugger,
+            RuntimeName          = input.RuntimeName,
+            AssemblyFileFullPath = input.AssemblyFileFullPath,
+            MethodName           = nameof(InvokeMethod),
+            Parameter            = parameter,
+            WaitForDebugger      = input.WaitForDebugger,
             OnProcessStarted = input.OnProcessStarted
         };
         
@@ -80,41 +80,41 @@ static class External
 
     sealed record ExecuteInput
     {
-        public string runtimeName;
-        public string assemblyFileFullPath;
-        public string methodName { get; set; }
-        public object parameter;
-        public bool waitForDebugger;
+        public string RuntimeName { get; init; }
+        public string AssemblyFileFullPath { get; init; }
+        public string MethodName { get; init; }
+        public object Parameter { get; init; }
+        public bool WaitForDebugger { get; init; }
         
         public Action<Process> OnProcessStarted { get; init; }
     }
     
     static Result<TResponse> Execute<TResponse>(ExecuteInput input)
     {
-        if (string.IsNullOrWhiteSpace(input.runtimeName))
+        if (string.IsNullOrWhiteSpace(input.RuntimeName))
         {
             return  new ArgumentException("Select runtime");
         }
         
-        var fileInfo = new FileInfo(input.assemblyFileFullPath);
+        var fileInfo = new FileInfo(input.AssemblyFileFullPath);
         if (!fileInfo.Exists)
         {
-            return  new FileNotFoundException(input.assemblyFileFullPath);
+            return  new FileNotFoundException(input.AssemblyFileFullPath);
         }
 
         var runtime = GetTargetFramework(fileInfo);
         if (runtime.IsNetCore is false && runtime.IsNetFramework is false && runtime.IsNetStandard is false)
         {
-            return  RuntimeNotDetectedException(input.assemblyFileFullPath);
+            return  RuntimeNotDetectedException(input.AssemblyFileFullPath);
         }
 
-        var inputAsJson = JsonConvert.SerializeObject(input.parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
+        var inputAsJson = JsonConvert.SerializeObject(input.Parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
 
-        var isNetCore = input.runtimeName == RuntimeNames.NetCore;
+        var isNetCore = input.RuntimeName == RuntimeNames.NetCore;
 
         var runProcessInput = new RunProcessInput
         {
-            inputAsJson = inputAsJson, runCoreApp = isNetCore, methodName = input.methodName, waitForDebugger = input.waitForDebugger
+            InputAsJson = inputAsJson, RunCoreApp = isNetCore, MethodName = input.MethodName, WaitForDebugger = input.WaitForDebugger
         };
         
         var (exitCode, outputAsJson) = RunProcess(runProcessInput);
@@ -133,10 +133,10 @@ static class External
 
     sealed record RunProcessInput
     {
-        public string inputAsJson;
-        public bool runCoreApp;
-        public string methodName;
-        public bool waitForDebugger;
+        public string InputAsJson{ get; init; }
+        public bool RunCoreApp{ get; init; }
+        public string MethodName{ get; init; }
+        public bool WaitForDebugger{ get; init; }
         
         public Action<Process> OnProcessStarted { get; init; }
     }
@@ -145,9 +145,9 @@ static class External
     {
         var processStartInfo = new ProcessStartInfo
         {
-            FileName = input.runCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
+            FileName = input.RunCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
             
-            Arguments = $"{(input.waitForDebugger ? "1" : "0")}|{input.methodName}|{AsyncLogger.ListennigUrl}",
+            Arguments = $"{(input.WaitForDebugger ? "1" : "0")}|{input.MethodName}|{AsyncLogger.ListennigUrl}",
                 
             RedirectStandardInput  = true,
             RedirectStandardOutput = true,
@@ -169,7 +169,7 @@ static class External
         
         using (var writer = process.StandardInput)
         {
-            writer.Write(input.inputAsJson);
+            writer.Write(input.InputAsJson);
         }
         
         
