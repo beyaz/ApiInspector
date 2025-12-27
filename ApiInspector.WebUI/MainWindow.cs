@@ -20,19 +20,18 @@ enum ActionButtonStatus
 class ExternalProcessManager
 {
     public static Process CurrentProcess { get; set; }
-    
+
     public static Task CurrentProcessTask { get; set; }
-    
-    public static string ResponseAsJson{ get; set; }
-    
-    public static Exception ResponseException{ get; set; }
+
+    public static string ResponseAsJson { get; set; }
+
+    public static Exception ResponseException { get; set; }
 }
 
 class MainWindow : Component<MainWindowModel>
 {
-   
-
     public ActionButtonStatus DebugButtonStatus { get; set; }
+    
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
 
     public bool HistoryDialogVisible { get; set; }
@@ -525,12 +524,12 @@ class MainWindow : Component<MainWindowModel>
                 },
                 new ExecuteButton
                 {
-                    Click               = OnExecuteClicked,
+                    Click  = OnExecuteClicked,
                     Status = ExecuteButtonStatus
                 } + ComponentBoxShadow,
                 new DebugButton
                 {
-                    Click               = OnDebugClicked,
+                    Click  = OnDebugClicked,
                     Status = DebugButtonStatus
                 } + ComponentBoxShadow,
 
