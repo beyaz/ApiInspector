@@ -4,8 +4,6 @@ sealed class DebugButton : Component
 {
     public MouseEventHandler Click { get; init; }
 
-    public bool IsProcessing { get; init; }
-
     public bool ShowStatusAsFail { get; init; }
 
     public bool ShowStatusAsSuccess { get; init; }
@@ -32,7 +30,6 @@ sealed class DebugButton : Component
             Label        = "Debug",
             SvgFileName  = svgFileName,
             OnClicked      = Click,
-            IsProcessing = IsProcessing,
             TooltipText  = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide."
         };
     }

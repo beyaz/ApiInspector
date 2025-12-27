@@ -523,7 +523,6 @@ class MainWindow : Component<MainWindowModel>
                 {
                     Click               = OnExecuteClicked,
                     Status = ExecuteButtonStatus,
-                    IsProcessing        = ExecuteButtonStatus == ActionButtonStatus.Executing,
                     ShowStatusAsSuccess = ExecuteButtonStatus == ActionButtonStatus.Success,
                     ShowStatusAsFail    = ExecuteButtonStatus == ActionButtonStatus.Fail
                 } + ComponentBoxShadow,
@@ -532,7 +531,6 @@ class MainWindow : Component<MainWindowModel>
                     Click               = OnDebugClicked,
                     Status = DebugButtonStatus,
                     
-                    IsProcessing        = DebugButtonStatus == ActionButtonStatus.Executing,
                     ShowStatusAsSuccess = DebugButtonStatus == ActionButtonStatus.Success,
                     ShowStatusAsFail    = DebugButtonStatus == ActionButtonStatus.Fail
                 } + ComponentBoxShadow,

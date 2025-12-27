@@ -4,8 +4,6 @@ sealed class ExecuteButton : PureComponent
 {
     public MouseEventHandler Click { get; init; }
 
-    public bool IsProcessing { get; init; }
-
     public bool ShowStatusAsFail { get; init; }
 
     public bool ShowStatusAsSuccess { get; init; }
@@ -32,7 +30,6 @@ sealed class ExecuteButton : PureComponent
             Label        = "Execute",
             SvgFileName  = svgFileName,
             OnClicked    = Click,
-            IsProcessing = IsProcessing,
             TooltipText  = "Executes selected method by given parameters above then show results in below."
         };
     }

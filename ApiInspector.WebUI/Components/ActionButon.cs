@@ -4,8 +4,6 @@ namespace ApiInspector.WebUI.Components;
 
 sealed class ActionButton : PureComponent
 {
-    public bool IsProcessing { get; init; }
-
     public string Label { get; init; }
 
     public required MouseEventHandler OnClicked { get; init; }
@@ -18,7 +16,7 @@ sealed class ActionButton : PureComponent
 
     protected override Element render()
     {
-        var isProcessing = IsProcessing;
+        var isProcessing = Status == ActionButtonStatus.Executing;
 
         var loadingIcon = isProcessing is false ? null : new LoadingIcon { Size(20), MarginRight(10) };
 
