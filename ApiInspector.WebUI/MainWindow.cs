@@ -536,7 +536,7 @@ class MainWindow : Component<MainWindowModel>
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
             };
 
-            var partResponse = new FlexColumn(SizeFull)
+            var partResponse = new FlexColumn(SizeFull, PaddingBottom(10))
             {
                 new Label { Text = "Response as json" },
 
@@ -546,7 +546,6 @@ class MainWindow : Component<MainWindowModel>
 
                     ComponentBoxShadow,
                     HeightFull,
-                    MarginBottom(10),
                     Border("1px solid #d9d9d9"),
                     BorderRadius(5),
                     WidthFull,
