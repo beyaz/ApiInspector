@@ -31,7 +31,7 @@ class ExternalProcessManager
 class MainWindow : Component<MainWindowModel>
 {
     public ActionButtonStatus DebugButtonStatus { get; set; }
-    
+
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
 
     public bool HistoryDialogVisible { get; set; }
@@ -546,7 +546,7 @@ class MainWindow : Component<MainWindowModel>
                     {
                         var trace = string.Join(NewLine, AsyncLogger.logs);
 
-                        partTrace  = new FlexColumn(WidthFull, Height(200))
+                        partTrace = new FlexColumn(WidthFull, Height(200))
                         {
                             new Label { Text = "Trace" },
 
@@ -578,8 +578,6 @@ class MainWindow : Component<MainWindowModel>
                                     }
                                 }
                             }
-
-
                         };
 
                         Client.RunJavascript
@@ -600,13 +598,9 @@ class MainWindow : Component<MainWindowModel>
                             """
                         );
                     }
-                    
                 }
-               
-                
-                
             }
-            
+
             var partResponse = new FlexColumn(SizeFull)
             {
                 new Label { Text = "Response as json" },
@@ -623,7 +617,7 @@ class MainWindow : Component<MainWindowModel>
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
                 },
-                
+
                 partTrace
             };
 
@@ -797,13 +791,11 @@ class MainWindow : Component<MainWindowModel>
 
             return Task.CompletedTask;
         }
-        
+
         if (ExecuteButtonStatus == ActionButtonStatus.Executing)
         {
             Client.GotoMethod(100, MonitorExecution);
         }
-        
-       
 
         return Task.CompletedTask;
     }
@@ -868,8 +860,7 @@ class MainWindow : Component<MainWindowModel>
 
                     External.InvokeMethod(input).Match
                     (
-                        json => ExternalProcessManager.ResponseAsJson = json,
-                        
+                        json => ExternalProcessManager.ResponseAsJson         = json,
                         exception => ExternalProcessManager.ResponseException = exception
                     );
                 }
