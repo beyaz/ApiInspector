@@ -30,8 +30,6 @@ public static class AsyncLogger
         _queue.Enqueue(message);
         
         _signal.Release();
-        
-        Thread.Sleep(500);
     }
 
     public static void Start(string apiUrl)
