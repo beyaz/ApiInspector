@@ -15,9 +15,6 @@ public static class AsyncLogger
     public static void WriteLog(string message)
     {
         Log(message);
-        
-        Thread.Sleep(700);
-
     }
    
     static readonly HttpClient _httpClient = new();
