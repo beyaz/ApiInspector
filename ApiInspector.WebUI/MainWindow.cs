@@ -19,14 +19,15 @@ enum ActionButtonStatus
 
 class ExternalProcessManager
 {
-    public static Process CurrentProcess;
+    public static Process CurrentProcess { get; set; }
+    
     public static Task CurrentProcessTask { get; set; }
 }
 
 class MainWindow : Component<MainWindowModel>
 {
-    static string ResponseAsJson;
-    static Exception ResponseException;
+    static string ResponseAsJson{ get; set; }
+    static Exception ResponseException{ get; set; }
 
     public ActionButtonStatus DebugButtonStatus { get; set; }
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
