@@ -22,12 +22,15 @@ class ExternalProcessManager
     public static Process CurrentProcess { get; set; }
     
     public static Task CurrentProcessTask { get; set; }
+    
+    public static string ResponseAsJson{ get; set; }
+    
+    public static Exception ResponseException{ get; set; }
 }
 
 class MainWindow : Component<MainWindowModel>
 {
-    static string ResponseAsJson{ get; set; }
-    static Exception ResponseException{ get; set; }
+   
 
     public ActionButtonStatus DebugButtonStatus { get; set; }
     public ActionButtonStatus ExecuteButtonStatus { get; set; }
@@ -600,9 +603,9 @@ class MainWindow : Component<MainWindowModel>
 
         AsyncLogger.logs.Clear();
 
-        ResponseException = null;
+        ExternalProcessManager.ResponseException = null;
 
-        ResponseAsJson = null;
+        ExternalProcessManager.ResponseAsJson = null;
 
         DebugButtonStatus = ActionButtonStatus.Ready;
 
@@ -651,30 +654,30 @@ class MainWindow : Component<MainWindowModel>
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
-        if (ResponseException is not null)
+        if (ExternalProcessManager.ResponseException is not null)
         {
             DebugButtonStatus = ActionButtonStatus.Fail;
 
-            scenario.ResponseAsJson = ResponseException.Message;
+            scenario.ResponseAsJson = ExternalProcessManager.ResponseException.Message;
 
-            ResponseException = null;
+            ExternalProcessManager.ResponseException = null;
 
-            ResponseAsJson = null;
+            ExternalProcessManager.ResponseAsJson = null;
 
             Client.GotoMethod(2000, ClearActionButtonStates);
 
             return Task.CompletedTask;
         }
 
-        if (ResponseAsJson is not null)
+        if (ExternalProcessManager.ResponseAsJson is not null)
         {
             DebugButtonStatus = ActionButtonStatus.Success;
 
-            scenario.ResponseAsJson = ResponseAsJson;
+            scenario.ResponseAsJson = ExternalProcessManager.ResponseAsJson;
 
-            ResponseException = null;
+            ExternalProcessManager.ResponseException = null;
 
-            ResponseAsJson = null;
+            ExternalProcessManager.ResponseAsJson = null;
 
             Client.GotoMethod(2000, ClearActionButtonStates);
 
@@ -696,30 +699,30 @@ class MainWindow : Component<MainWindowModel>
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
-        if (ResponseException is not null)
+        if (ExternalProcessManager.ResponseException is not null)
         {
             ExecuteButtonStatus = ActionButtonStatus.Fail;
 
-            scenario.ResponseAsJson = ResponseException.Message;
+            scenario.ResponseAsJson = ExternalProcessManager.ResponseException.Message;
 
-            ResponseException = null;
+            ExternalProcessManager.ResponseException = null;
 
-            ResponseAsJson = null;
+            ExternalProcessManager.ResponseAsJson = null;
 
             Client.GotoMethod(2000, ClearActionButtonStates);
 
             return Task.CompletedTask;
         }
 
-        if (ResponseAsJson is not null)
+        if (ExternalProcessManager.ResponseAsJson is not null)
         {
             ExecuteButtonStatus = ActionButtonStatus.Success;
 
-            scenario.ResponseAsJson = ResponseAsJson;
+            scenario.ResponseAsJson = ExternalProcessManager.ResponseAsJson;
 
-            ResponseException = null;
+            ExternalProcessManager.ResponseException = null;
 
-            ResponseAsJson = null;
+            ExternalProcessManager.ResponseAsJson = null;
 
             Client.GotoMethod(2000, ClearActionButtonStates);
 
@@ -797,13 +800,13 @@ class MainWindow : Component<MainWindowModel>
 
                     External.InvokeMethod(input).Match
                     (
-                        json => ResponseAsJson         = json,
-                        exception => ResponseException = exception
+                        json => ExternalProcessManager.ResponseAsJson         = json,
+                        exception => ExternalProcessManager.ResponseException = exception
                     );
                 }
                 catch (Exception exception)
                 {
-                    ResponseException = exception;
+                    ExternalProcessManager.ResponseException = exception;
                 }
             });
 
@@ -931,13 +934,13 @@ class MainWindow : Component<MainWindowModel>
                     };
                     External.InvokeMethod(input).Match
                     (
-                        json => ResponseAsJson         = json,
-                        exception => ResponseException = exception
+                        json => ExternalProcessManager.ResponseAsJson         = json,
+                        exception => ExternalProcessManager.ResponseException = exception
                     );
                 }
                 catch (Exception exception)
                 {
-                    ResponseException = exception;
+                    ExternalProcessManager.ResponseException = exception;
                 }
             });
 
