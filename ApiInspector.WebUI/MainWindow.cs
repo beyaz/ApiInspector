@@ -563,7 +563,7 @@ class MainWindow : Component<MainWindowModel>
                                 {
                                     id         = "textAreaForLogs",
                                     value      = trace,
-                                    spellcheck = "false",
+                                    spellCheck = "false",
                                     readOnly   = true,
                                     wrap       = "off",
                                     style =

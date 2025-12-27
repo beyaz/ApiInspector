@@ -1,6 +1,6 @@
 ﻿namespace ApiInspector.WebUI;
 
-sealed class MainLayout : Component, IPageLayout
+sealed class MainLayout : PureComponent, IPageLayout
 {
     public string ContainerDomElementId => "app";
 
