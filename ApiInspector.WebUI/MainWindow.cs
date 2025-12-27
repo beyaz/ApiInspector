@@ -536,6 +536,63 @@ class MainWindow : Component<MainWindowModel>
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
             };
 
+            Element partTrace = null;
+            {
+                if (DebugButtonStatus == ActionButtonStatus.Executing || DebugButtonStatus == ActionButtonStatus.Fail ||
+                    ExecuteButtonStatus == ActionButtonStatus.Executing || ExecuteButtonStatus == ActionButtonStatus.Fail)
+                {
+                    var logs = new List<string>(AsyncLogger.logs);
+
+                    //logs.Reverse();
+
+                    var trace = string.Join(NewLine, logs);
+
+                    partTrace  = new FlexColumn(WidthFull, Height(200))
+                    {
+                        new Label { Text = "Trace" },
+
+                        new FreeScrollBar
+                        {
+                            AutoHideScrollbar,
+
+                            ComponentBoxShadow,
+                            HeightFull,
+                            Border("1px solid #d9d9d9"),
+                            BorderRadius(5),
+                            WidthFull,
+
+                            new Editor
+                            {
+                                defaultLanguage = "plaintext",
+                                value           = trace,
+                                options =
+                                {
+                                    renderLineHighlight = "none",
+                                    fontFamily          = "'IBM Plex Mono Medium', 'Courier New', monospace",
+                                    fontSize            = 11,
+                                    minimap             = new { enabled = false },
+                                    formatOnPaste       = true,
+                                    formatOnType        = true,
+                                    automaticLayout     = true,
+                                    lineNumbers         = false,
+
+                                    unicodeHighlight = new
+                                    {
+                                        ambiguousCharacters = false, // confusable karakterleri vurgulama
+                                        includeStrings      = false, // (ops.) string içeriklerinde vurgulama
+                                        invisibleCharacters = false // (ops.) görünmez karakterleri vurgulama
+                                    }
+                                }
+                            }
+                        }
+
+
+                    };
+                }
+               
+                
+                
+            }
             var partResponse = new FlexColumn(SizeFull, PaddingBottom(10))
             {
                 new Label { Text = "Response as json" },
@@ -551,7 +608,9 @@ class MainWindow : Component<MainWindowModel>
                     WidthFull,
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
-                }
+                },
+                
+                partTrace
             };
 
             return new FlexColumn(SizeFull, PaddingRight(10))
@@ -682,13 +741,7 @@ class MainWindow : Component<MainWindowModel>
 
             return Task.CompletedTask;
         }
-
-        var logs = new List<string>(AsyncLogger.logs);
-
-        logs.Reverse();
-
-        scenario.ResponseAsJson = string.Join(NewLine, logs);
-
+        
         Client.GotoMethod(100, MonitorDebug);
 
         return Task.CompletedTask;
@@ -727,13 +780,7 @@ class MainWindow : Component<MainWindowModel>
 
             return Task.CompletedTask;
         }
-
-        var logs = new List<string>(AsyncLogger.logs);
-
-        logs.Reverse();
-
-        scenario.ResponseAsJson = string.Join(NewLine, logs);
-
+        
         Client.GotoMethod(100, MonitorExecution);
 
         return Task.CompletedTask;
