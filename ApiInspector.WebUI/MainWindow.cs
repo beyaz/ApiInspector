@@ -546,7 +546,7 @@ class MainWindow : Component<MainWindowModel>
                     {
                         var trace = string.Join(NewLine, AsyncLogger.logs);
 
-                        partTrace = new FlexColumn(WidthFull, Height(150))
+                        partTrace = new FlexColumn(WidthFull, Height(200))
                         {
                             new Label { Text = "Trace" },
 
