@@ -174,31 +174,28 @@ static class Program
             await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
         }
 
-        StartWebApplication(installationFolder);
-    }
-
-    static void StartWebApplication(string appFolder)
-    {
-        Console.WriteLine("Starting...");
-
-        var filePath = Path.Combine(appFolder, "ApiInspector.WebUI.exe");
-
-        var processStartInfo = new ProcessStartInfo(filePath)
+        // S t a r t   a p p l i c a t i o n
         {
-            WorkingDirectory = appFolder
-        };
+            trace("Starting...");
 
-        var process = Process.Start(processStartInfo);
+            var filePath = Path.Combine(installationFolder, "ApiInspector.WebUI.exe");
 
-        if (process?.HasExited == true)
-        {
-            Console.WriteLine($"Exieted with exitCode: {process.ExitCode}");
-        }
-        else
-        {
-            Console.WriteLine("Started.");
+            var processStartInfo = new ProcessStartInfo(filePath)
+            {
+                WorkingDirectory = installationFolder,
+            
+                CreateNoWindow = true,
+
+                UseShellExecute = false
+            };
+
+            Process.Start(processStartInfo);
+            
+            trace("Started.");
         }
     }
+
+   
 
     static async Task<B> Then<A, B>(this Task<A> task, Func<A, B> nextFunc)
     {
