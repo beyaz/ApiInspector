@@ -97,42 +97,48 @@ static class Program
         {
             trace("Updating to new version...");
 
-            if (Directory.Exists(installationFolder))
+            // D e l e t e   P r e v i o u s   V e r s i o n
             {
-                trace($"Deleting previous version...{installationFolder}");
-                var isDeleted = await TryDeleteDirectory(installationFolder);
-                if (!isDeleted)
+                if (Directory.Exists(installationFolder))
                 {
-                    trace($"Please remove folder manually. {installationFolder}");
-                    Console.Read();
-                    return;
+                    trace($"Deleting previous version...{installationFolder}");
+                    var isDeleted = await TryDeleteDirectory(installationFolder);
+                    if (!isDeleted)
+                    {
+                        trace($"Please remove folder manually. {installationFolder}");
+                        Console.Read();
+                        return;
+                    }
+
+                    trace("Previous version successfully removed.");
+                }
+            }
+
+            // D o w n l o a d   N e w   V e r s i o n
+            {
+                Directory.CreateDirectory(installationFolder);
+
+                var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
+                if (File.Exists(localZipFilePath))
+                {
+                    trace("Clearing zip file...");
+                    File.Delete(localZipFilePath);
                 }
 
-                trace("Previous version successfully removed.");
-            }
+                trace($"Downloading... {newVersionZipFileUrl}");
 
-            Directory.CreateDirectory(installationFolder);
+                await Network.DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
 
-            var localZipFilePath = Path.Combine(installationFolder, "Remote.zip");
-            if (File.Exists(localZipFilePath))
-            {
-                trace("Clearing zip file...");
+                trace("Extracting...");
+
+                ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
+
                 File.Delete(localZipFilePath);
+
+                var remoteVersion = await Network.DownloadStringAsync(versionUrl).Then(int.Parse);
+
+                await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
             }
-
-            trace($"Downloading... {newVersionZipFileUrl}");
-
-            await Network.DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
-
-            trace("Extracting...");
-
-            ZipFile.ExtractToDirectory(localZipFilePath, installationFolder, true);
-
-            File.Delete(localZipFilePath);
-
-            var remoteVersion = await Network.DownloadStringAsync(versionUrl).Then(int.Parse);
-
-            await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
         }
 
         // S t a r t   a p p l i c a t i o n
