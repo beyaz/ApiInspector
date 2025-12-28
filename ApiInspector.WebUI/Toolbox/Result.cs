@@ -316,18 +316,10 @@ public static class ResultExtensions
             return source.Error;
         }
 
-        try
+        return new()
         {
-            var middles = bind(source.Value);
-
-            var results = middles.Select(middle => resultSelector(source.Value, middle));
-
-            return new() { Value = results };
-        }
-        catch (Exception ex)
-        {
-            return ex;
-        }
+            Value = from middle in bind(source.Value) select resultSelector(source.Value, middle)
+        };
     }
 
     public static Result<IEnumerable<C>> SelectMany<A, B, C>
