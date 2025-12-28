@@ -46,22 +46,27 @@ static class Program
         }
     }
 
-    static async Task DownloadFileAsync(string url, string localFilePath)
+   
+
+    class Network
     {
-        using var httpClient = new HttpClient();
+        internal static async Task DownloadFileAsync(string url, string localFilePath)
+        {
+            using var httpClient = new HttpClient();
 
-        await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
+            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
 
-        var response = await httpClient.GetAsync(url);
+            var response = await httpClient.GetAsync(url);
 
-        await response.Content.CopyToAsync(fs);
-    }
+            await response.Content.CopyToAsync(fs);
+        }
 
-    static async Task<string> DownloadStringAsync(string url)
-    {
-        using var httpClient = new HttpClient();
+        internal static async Task<string> DownloadStringAsync(string url)
+        {
+            using var httpClient = new HttpClient();
 
-        return await httpClient.GetStringAsync(url);
+            return await httpClient.GetStringAsync(url);
+        }
     }
 
     static void KillAllNamedProcess(string processName)
@@ -85,7 +90,9 @@ static class Program
         trace("Checking version...");
 
         var versionUrl = config.VersionUrl;
+        
         var newVersionZipFileUrl = config.NewVersionZipFileUrl;
+        
         var installationFolder = config.InstallationFolder;
 
         var shouldUpdate = true;
@@ -96,7 +103,7 @@ static class Program
 
         if (File.Exists(localVersionFilePath))
         {
-            var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+            var remoteVersion = await Network.DownloadStringAsync(versionUrl).Then(int.Parse);
 
             var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
 
@@ -138,7 +145,7 @@ static class Program
 
             trace($"Downloading... {newVersionZipFileUrl}");
 
-            await DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
+            await Network.DownloadFileAsync(newVersionZipFileUrl, localZipFilePath);
 
             trace("Extracting...");
 
@@ -146,7 +153,7 @@ static class Program
 
             File.Delete(localZipFilePath);
 
-            var remoteVersion = await DownloadStringAsync(versionUrl).Then(int.Parse);
+            var remoteVersion = await Network.DownloadStringAsync(versionUrl).Then(int.Parse);
 
             await File.WriteAllTextAsync(localVersionFilePath, remoteVersion.ToString());
         }
