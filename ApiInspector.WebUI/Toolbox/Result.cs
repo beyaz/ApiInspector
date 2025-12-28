@@ -316,9 +316,13 @@ public static class ResultExtensions
             return source.Error;
         }
 
+        var a = source.Value;
+        
+        var enumerableB = bind(a);
+        
         return new()
         {
-            Value = from middle in bind(source.Value) select resultSelector(source.Value, middle)
+            Value = from b in enumerableB select resultSelector(a, b)
         };
     }
 
