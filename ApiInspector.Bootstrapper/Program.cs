@@ -1,9 +1,14 @@
-﻿using System;
+﻿
+global using System;
+global using System.Threading.Tasks;
+global using System.Collections;
+global using System.Collections.Generic;
+
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
-using System.Threading.Tasks;
+
 
 namespace ApiInspector.Bootstrapper;
 
