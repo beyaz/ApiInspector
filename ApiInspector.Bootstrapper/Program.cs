@@ -41,6 +41,8 @@ static class Program
             {
                 throw new Exception($"Value @{key} cannot be empty.");
             }
+            
+            value = value.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), StringComparison.OrdinalIgnoreCase);
 
             return value;
         }

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\ApiInspector.WebUI\Toolbox\Result.cs" Link="Result.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="debug.ico" />
   </ItemGroup>
 
