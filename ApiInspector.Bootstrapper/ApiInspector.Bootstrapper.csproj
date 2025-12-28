@@ -18,4 +18,8 @@
         <RuntimeHostConfigurationOption Include="NewVersionZipFileUrl" Value="https://github.com/beyaz/ApiInspector/raw/main/ApiInspector.Bootstrapper/ApiInspectorLatestVersion.zip" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Properties\" />
+    </ItemGroup>
+
 </Project>
