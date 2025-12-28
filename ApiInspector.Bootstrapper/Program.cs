@@ -34,12 +34,12 @@ static class Program
         static string ReadConfig(string key)
         {
             var value = (string)AppContext.GetData(key);
-            
+
             if (value is null)
             {
-                throw new Exception($"Value @{key} cannot be empty.");
+                throw new($"Value @{key} cannot be empty.");
             }
-            
+
             value = value.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), StringComparison.OrdinalIgnoreCase);
 
             return value;
@@ -48,35 +48,21 @@ static class Program
 
     static async Task DownloadFileAsync(string url, string localFilePath)
     {
-        if (IsWebUrl(url))
-        {
-            using var httpClient = new HttpClient();
+        using var httpClient = new HttpClient();
 
-            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
+        await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
 
-            var response = await httpClient.GetAsync(url);
+        var response = await httpClient.GetAsync(url);
 
-            await response.Content.CopyToAsync(fs);
-
-            return;
-        }
-
-        File.Copy(url, localFilePath);
+        await response.Content.CopyToAsync(fs);
     }
 
     static async Task<string> DownloadStringAsync(string url)
     {
-        if (IsWebUrl(url))
-        {
-            using var httpClient = new HttpClient();
+        using var httpClient = new HttpClient();
 
-            return await httpClient.GetStringAsync(url);
-        }
-
-        return await File.ReadAllTextAsync(url);
+        return await httpClient.GetStringAsync(url);
     }
-
-    static bool IsWebUrl(string url) => url.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
 
     static void KillAllNamedProcess(string processName)
     {
@@ -174,19 +160,17 @@ static class Program
             var processStartInfo = new ProcessStartInfo(filePath)
             {
                 WorkingDirectory = installationFolder,
-            
+
                 CreateNoWindow = true,
 
                 UseShellExecute = false
             };
 
             Process.Start(processStartInfo);
-            
+
             trace("Started.");
         }
     }
-
-   
 
     static async Task<B> Then<A, B>(this Task<A> task, Func<A, B> nextFunc)
     {
@@ -198,11 +182,19 @@ static class Program
     static async Task<bool> TryDeleteDirectory(string directoryPath, int maxRetries = 10, int millisecondsDelay = 30)
     {
         if (directoryPath == null)
+        {
             throw new ArgumentNullException(nameof(directoryPath));
+        }
+
         if (maxRetries < 1)
+        {
             throw new ArgumentOutOfRangeException(nameof(maxRetries));
+        }
+
         if (millisecondsDelay < 1)
+        {
             throw new ArgumentOutOfRangeException(nameof(millisecondsDelay));
+        }
 
         for (var i = 0; i < maxRetries; ++i)
         {
