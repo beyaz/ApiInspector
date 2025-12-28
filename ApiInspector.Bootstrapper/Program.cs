@@ -46,29 +46,6 @@ static class Program
         }
     }
 
-   
-
-    class Network
-    {
-        internal static async Task DownloadFileAsync(string url, string localFilePath)
-        {
-            using var httpClient = new HttpClient();
-
-            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
-
-            var response = await httpClient.GetAsync(url);
-
-            await response.Content.CopyToAsync(fs);
-        }
-
-        internal static async Task<string> DownloadStringAsync(string url)
-        {
-            using var httpClient = new HttpClient();
-
-            return await httpClient.GetStringAsync(url);
-        }
-    }
-
     static void KillAllNamedProcess(string processName)
     {
         foreach (var process in Process.GetProcessesByName(processName))
@@ -90,9 +67,9 @@ static class Program
         trace("Checking version...");
 
         var versionUrl = config.VersionUrl;
-        
+
         var newVersionZipFileUrl = config.NewVersionZipFileUrl;
-        
+
         var installationFolder = config.InstallationFolder;
 
         var shouldUpdate = true;
@@ -225,6 +202,27 @@ static class Program
         }
 
         return false;
+    }
+
+    class Network
+    {
+        internal static async Task DownloadFileAsync(string url, string localFilePath)
+        {
+            using var httpClient = new HttpClient();
+
+            await using var fs = new FileStream(localFilePath, FileMode.CreateNew);
+
+            var response = await httpClient.GetAsync(url);
+
+            await response.Content.CopyToAsync(fs);
+        }
+
+        internal static async Task<string> DownloadStringAsync(string url)
+        {
+            using var httpClient = new HttpClient();
+
+            return await httpClient.GetStringAsync(url);
+        }
     }
 
     sealed record Config
