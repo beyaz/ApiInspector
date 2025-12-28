@@ -26,27 +26,24 @@ static class Program
     {
         var config = new Config
         {
-            VersionUrl           = (string)AppContext.GetData("VersionUrl"),
-            NewVersionZipFileUrl = (string)AppContext.GetData("NewVersionZipFileUrl"),
-            InstallationFolder   = (string)AppContext.GetData("InstallationFolder"),
+            VersionUrl           = ReadConfig(nameof(Config.VersionUrl)),
+            NewVersionZipFileUrl = ReadConfig(nameof(Config.NewVersionZipFileUrl)),
+            InstallationFolder   = ReadConfig(nameof(Config.InstallationFolder))
         };
 
-        if (config.InstallationFolder is null)
-        {
-            throw new Exception($"Value @{nameof(config.InstallationFolder)} cannot be empty.");
-        }
-
-        if (config.VersionUrl is null)
-        {
-            throw new Exception($"Value @{nameof(config.VersionUrl)} cannot be empty.");
-        }
-
-        if (config.NewVersionZipFileUrl is null)
-        {
-            throw new Exception($"Value @{nameof(config.NewVersionZipFileUrl)} cannot be empty.");
-        }
-
         return config;
+
+        static string ReadConfig(string key)
+        {
+            var value = (string)AppContext.GetData(key);
+            
+            if (value is null)
+            {
+                throw new Exception($"Value @{key} cannot be empty.");
+            }
+
+            return value;
+        }
     }
 
     static async Task DownloadFileAsync(string url, string localFilePath)
@@ -236,7 +233,7 @@ static class Program
         return false;
     }
 
-    sealed class Config
+    sealed record Config
     {
         public string InstallationFolder { get; init; }
         public string NewVersionZipFileUrl { get; init; }
