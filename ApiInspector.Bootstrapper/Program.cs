@@ -78,18 +78,21 @@ static class Program
 
         var localVersionFilePath = Path.Combine(installationFolder, "Version.txt");
 
-        if (File.Exists(localVersionFilePath))
+        // C o m p a r e  L o c a l  a n d   R e m o t e   V e r s i o n
         {
-            var remoteVersion = await Network.DownloadStringAsync(versionUrl).Then(int.Parse);
-
-            var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
-
-            trace($"Remote Version: {remoteVersion}");
-            trace($"Local Version : {localVersion}");
-
-            if (remoteVersion <= localVersion)
+            if (File.Exists(localVersionFilePath))
             {
-                shouldUpdate = false;
+                var remoteVersion = await Network.DownloadStringAsync(versionUrl).Then(int.Parse);
+
+                var localVersion = await File.ReadAllTextAsync(localVersionFilePath).Then(int.Parse);
+
+                trace($"Remote Version: {remoteVersion}");
+                trace($"Local Version : {localVersion}");
+
+                if (remoteVersion <= localVersion)
+                {
+                    shouldUpdate = false;
+                }
             }
         }
 
