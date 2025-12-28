@@ -111,8 +111,6 @@ static class Program
         var newVersionZipFileUrl = config.NewVersionZipFileUrl;
         var installationFolder = config.InstallationFolder;
 
-        installationFolder = installationFolder.Replace("{MyDocuments}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-
         var shouldUpdate = true;
 
         trace("Installation Folder: " + installationFolder);
