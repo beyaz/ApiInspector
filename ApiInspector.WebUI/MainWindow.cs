@@ -217,14 +217,7 @@ class MainWindow : Component<MainWindowModel>
                 new CircleButton
                 {
                     Label = "+",
-                    Clicked = _ =>
-                    {
-                        state.ScenarioList              = state.ScenarioList.Add(new());
-                        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
-                        TryInitializeDefaultJsonInputs();
-
-                        return Task.CompletedTask;
-                    },
+                    Clicked = AddNewScenarioClicked,
                     TooltipText = "Add new test scenario"
                 },
                 state.ScenarioList.Count > 1
@@ -636,6 +629,28 @@ class MainWindow : Component<MainWindowModel>
                 }
             };
         }
+    }
+
+    Task AddNewScenarioClicked(MouseEvent _)
+    {
+        state.ScenarioList = state.ScenarioList.Add(new());
+        
+        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+
+        IsInitializingSelectedMethod = true;
+        
+        Client.GotoMethod(AddNewScenarioClicked);
+
+        return Task.CompletedTask;
+    }
+    
+    Task AddNewScenarioClicked()
+    {
+        IsInitializingSelectedMethod = false;
+        
+        TryInitializeDefaultJsonInputs();
+
+        return Task.CompletedTask;
     }
 
     static string GetDefaultRuntimeNameFromAssembly(string assemblyFileFullPath)
