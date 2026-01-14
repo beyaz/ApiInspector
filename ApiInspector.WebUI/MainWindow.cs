@@ -227,18 +227,20 @@ class MainWindow : Component<MainWindowModel>
                     },
                     TooltipText = "Add new test scenario"
                 },
-                state.ScenarioList.Count > 1 ? new CircleButton
-                {
-                    Label = "-",
-                    Clicked = _ =>
+                state.ScenarioList.Count > 1
+                    ? new CircleButton
                     {
-                        state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
-                        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+                        Label = "-",
+                        Clicked = _ =>
+                        {
+                            state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
+                            state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
 
-                        return Task.CompletedTask;
-                    },
-                    TooltipText = "Remove selected test scenario"
-                } : null
+                            return Task.CompletedTask;
+                        },
+                        TooltipText = "Remove selected test scenario"
+                    }
+                    : null
             };
         }
 
@@ -427,9 +429,10 @@ class MainWindow : Component<MainWindowModel>
             {
                 PositionRelative,
 
-                state.ScenarioList.Count < 3 ? null :
-                    scenarioFilterInput() +
-                    PositionAbsolute + Right(4) + Top(6),
+                state.ScenarioList.Count < 3
+                    ? null
+                    : scenarioFilterInput() +
+                      PositionAbsolute + Right(4) + Top(6),
 
                 new Label
                 {
@@ -470,8 +473,9 @@ class MainWindow : Component<MainWindowModel>
                 MarginTop(5),
                 BorderRadius(5),
 
-                isStaticMethod ? parametersEditor :
-                    new SplitRow
+                isStaticMethod
+                    ? parametersEditor
+                    : new SplitRow
                     {
                         instanceEditor,
 
@@ -489,8 +493,7 @@ class MainWindow : Component<MainWindowModel>
                         {
                             new circle { cx = 10, cy = 10, r = 9, stroke = BluePrimary, strokeWidth = 1, fill = none },
 
-                            state.RuntimeName == RuntimeNames.NetCore ? null :
-                                new circle { cx = 10, cy = 10, r = 5, fill = "#f18484" }
+                            state.RuntimeName == RuntimeNames.NetCore ? null : new circle { cx = 10, cy = 10, r = 5, fill = "#f18484" }
                         },
 
                         "Framework",
@@ -509,8 +512,7 @@ class MainWindow : Component<MainWindowModel>
                         {
                             new circle { cx = 10, cy = 10, r = 9, stroke = BluePrimary, strokeWidth = 1, fill = none },
 
-                            state.RuntimeName == RuntimeNames.NetFramework ? null :
-                                new circle { cx = 10, cy = 10, r = 5, fill = "#f18484" }
+                            state.RuntimeName == RuntimeNames.NetFramework ? null : new circle { cx = 10, cy = 10, r = 5, fill = "#f18484" }
                         },
 
                         "Core",
@@ -1040,14 +1042,24 @@ class MainWindow : Component<MainWindowModel>
 
             if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                External.GetInstanceEditorJsonText(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetInstanceProperties)
-                    .Match(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
+                External.GetInstanceEditorJsonText
+                (
+                    state.RuntimeName,
+                    AssemblyFileFullPath,
+                    state.SelectedMethod,
+                    scenario.JsonTextForDotNetInstanceProperties
+                ).Match(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
 
             if (scenario.JsonTextForDotNetMethodParameters.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
-                External.GetParametersEditorJsonText(state.RuntimeName, AssemblyFileFullPath, state.SelectedMethod, scenario.JsonTextForDotNetMethodParameters)
-                    .Match(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
+                External.GetParametersEditorJsonText
+                (
+                    state.RuntimeName,
+                    AssemblyFileFullPath,
+                    state.SelectedMethod,
+                    scenario.JsonTextForDotNetMethodParameters
+                ).Match(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 
             void printError(Exception exception)
