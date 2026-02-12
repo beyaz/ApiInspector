@@ -1,5 +1,4 @@
 ﻿global using static ApiInspector.AsyncLogger;
-
 using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Text;
@@ -7,18 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-
 namespace ApiInspector;
 
-public static class AsyncLogger
+static class AsyncLogger
 {
-    public static bool HasItem => _queue.IsEmpty is false;
-    
-    public static void WriteLog(string message)
-    {
-        Log(message);
-    }
-   
     static readonly HttpClient _httpClient = new();
 
     static readonly ConcurrentQueue<string> _queue = new();
@@ -27,14 +18,7 @@ public static class AsyncLogger
 
     static bool _started;
 
-    public static void Log(string message)
-    {
-        _queue.Enqueue(message);
-        
-        _signal.Release();
-    }
-
-    public static void Start(string apiUrl)
+    internal static void Start(string apiUrl)
     {
         if (_started)
         {
@@ -71,5 +55,20 @@ public static class AsyncLogger
             }
             // ReSharper disable once FunctionNeverReturns
         }
+    }
+
+    internal static void WaitAsyncLogsForFinish()
+    {
+        while (!_queue.IsEmpty)
+        {
+            Thread.Sleep(50);
+        }
+    }
+
+    internal static void WriteLog(string message)
+    {
+        _queue.Enqueue(message);
+
+        _signal.Release();
     }
 }
