@@ -486,10 +486,7 @@ static class Program
 
             WriteLog("SuccessfullyExit");
 
-            while (AsyncLogger.HasItem)
-            {
-                Thread.Sleep(100);
-            }
+            WaitAsyncLogsForFinish();
 
             Environment.Exit(1);
         }
@@ -513,10 +510,7 @@ static class Program
 
             WriteLog($"Failed: {failInfoAsJson}");
             
-            while (AsyncLogger.HasItem)
-            {
-                Thread.Sleep(100);
-            }
+            WaitAsyncLogsForFinish();
 
             Environment.Exit(0);
         }
