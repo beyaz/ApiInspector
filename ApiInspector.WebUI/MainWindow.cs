@@ -37,7 +37,7 @@ class MainWindow : Component<MainWindowModel>
     public bool HistoryDialogVisible { get; set; }
 
     public bool IsInitializingSelectedMethod { get; set; }
-    
+
     public bool IsTraceVisible { get; set; }
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
@@ -218,8 +218,8 @@ class MainWindow : Component<MainWindowModel>
 
                 new CircleButton
                 {
-                    Label = "+",
-                    Clicked = AddNewScenarioClicked,
+                    Label       = "+",
+                    Clicked     = AddNewScenarioClicked,
                     TooltipText = "Add new test scenario"
                 },
                 state.ScenarioList.Count > 1
@@ -536,59 +536,57 @@ class MainWindow : Component<MainWindowModel>
 
             Element partTrace = null;
             {
-               
-                    if (AsyncLogger.logs.Count > 0)
+                if (AsyncLogger.logs.Count > 0)
+                {
+                    var trace = string.Join(NewLine, AsyncLogger.logs);
+
+                    partTrace = new FreeScrollBar
                     {
-                        var trace = string.Join(NewLine, AsyncLogger.logs);
+                        AutoHideScrollbar,
 
-                        partTrace =  new FreeScrollBar
+                        ComponentBoxShadow,
+                        HeightFull,
+                        Border("1px solid #d9d9d9"),
+                        BorderRadius(5),
+                        WidthFull,
+
+                        new textarea
                         {
-                            AutoHideScrollbar,
-
-                            ComponentBoxShadow,
-                            HeightFull,
-                            Border("1px solid #d9d9d9"),
-                            BorderRadius(5),
-                            WidthFull,
-
-                            new textarea
+                            id         = "textAreaForLogs",
+                            value      = trace,
+                            spellCheck = "false",
+                            readOnly   = true,
+                            wrap       = "off",
+                            style =
                             {
-                                id         = "textAreaForLogs",
-                                value      = trace,
-                                spellCheck = "false",
-                                readOnly   = true,
-                                wrap       = "off",
-                                style =
-                                {
-                                    OutlineNone,
-                                    BorderNone,
-                                    FontSize11,
-                                    FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
-                                    SizeFull,
-                                    Padding(16)
-                                }
+                                OutlineNone,
+                                BorderNone,
+                                FontSize11,
+                                FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
+                                SizeFull,
+                                Padding(16)
                             }
-                        };
+                        }
+                    };
 
-                        Client.RunJavascript
-                        (
-                            """
-                            function scrollTextareaToEnd(id) 
-                            {
-                              const ta = document.getElementById(id);
-                              if (!ta) return;
+                    Client.RunJavascript
+                    (
+                        """
+                        function scrollTextareaToEnd(id) 
+                        {
+                          const ta = document.getElementById(id);
+                          if (!ta) return;
 
-                              ta.scrollTop = ta.scrollHeight;
-                              ta.selectionStart = ta.selectionEnd = ta.value.length;
-                              ta.focus();
-                            }
+                          ta.scrollTop = ta.scrollHeight;
+                          ta.selectionStart = ta.selectionEnd = ta.value.length;
+                          ta.focus();
+                        }
 
-                            scrollTextareaToEnd("textAreaForLogs");
+                        scrollTextareaToEnd("textAreaForLogs");
 
-                            """
-                        );
-                    }
-                
+                        """
+                    );
+                }
             }
 
             if (DebugButtonStatus == ActionButtonStatus.Executing || DebugButtonStatus == ActionButtonStatus.Fail ||
@@ -596,42 +594,36 @@ class MainWindow : Component<MainWindowModel>
             {
                 IsTraceVisible = true;
             }
-            
+
             var showTrace = IsTraceVisible && AsyncLogger.logs.Count > 0;
-            
-            
-            var partResponse = new FlexColumn(SizeFull)
+
+            var partResponse = new FlexColumn(SizeFull, Gap(2))
             {
                 new FlexRow(Gap(16), CursorDefault)
                 {
-                    new Label { Text = "Response" } + 
-                    (!showTrace ? Opacity1 : Opacity(0.8)) +
+                    new Label { Text = "Response" } +
+                    (!showTrace ? Opacity1 : Opacity(0.7)) +
                     (!showTrace ? null : OnClick(SetTraceIsNotVisible)),
-                    
-                    partTrace is null ? null : 
-                        
-                        new Label { Text = "Trace" } + 
-                        (showTrace ? Opacity1 : Opacity(0.8)) +
+
+                    partTrace is null ? null :
+                        new Label { Text = "Trace" } +
+                        (showTrace ? Opacity1 : Opacity(0.7)) +
                         (showTrace ? null : OnClick(SetTraceIsVisible))
-                                               
-                                               
-                                               ,
                 },
 
-                showTrace ? partTrace:
-                    
-                new FreeScrollBar
-                {
-                    AutoHideScrollbar,
+                showTrace ? partTrace :
+                    new FreeScrollBar
+                    {
+                        AutoHideScrollbar,
 
-                    ComponentBoxShadow,
-                    HeightFull,
-                    Border("1px solid #d9d9d9"),
-                    BorderRadius(5),
-                    WidthFull,
+                        ComponentBoxShadow,
+                        HeightFull,
+                        Border("1px solid #d9d9d9"),
+                        BorderRadius(5),
+                        WidthFull,
 
-                    NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
-                }
+                        NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
+                    }
             };
 
             return new FlexColumn(SizeFull, PaddingRight(10))
@@ -649,42 +641,6 @@ class MainWindow : Component<MainWindowModel>
         }
     }
 
-    Task SetTraceIsVisible(MouseEvent _)
-    {
-        IsTraceVisible = true;
-
-        return Task.CompletedTask;
-    }
-    
-    Task SetTraceIsNotVisible(MouseEvent _)
-    {
-        IsTraceVisible = false;
-
-        return Task.CompletedTask;
-    }
-    
-    Task AddNewScenarioClicked(MouseEvent _)
-    {
-        state.ScenarioList = state.ScenarioList.Add(new());
-        
-        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
-
-        IsInitializingSelectedMethod = true;
-        
-        Client.GotoMethod(AddNewScenarioClicked);
-
-        return Task.CompletedTask;
-    }
-    
-    Task AddNewScenarioClicked()
-    {
-        IsInitializingSelectedMethod = false;
-        
-        TryInitializeDefaultJsonInputs();
-
-        return Task.CompletedTask;
-    }
-
     static string GetDefaultRuntimeNameFromAssembly(string assemblyFileFullPath)
     {
         var fileInfo = new FileInfo(assemblyFileFullPath);
@@ -698,6 +654,28 @@ class MainWindow : Component<MainWindowModel>
         }
 
         return RuntimeNames.NetCore;
+    }
+
+    Task AddNewScenarioClicked(MouseEvent _)
+    {
+        state.ScenarioList = state.ScenarioList.Add(new());
+
+        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+
+        IsInitializingSelectedMethod = true;
+
+        Client.GotoMethod(AddNewScenarioClicked);
+
+        return Task.CompletedTask;
+    }
+
+    Task AddNewScenarioClicked()
+    {
+        IsInitializingSelectedMethod = false;
+
+        TryInitializeDefaultJsonInputs();
+
+        return Task.CompletedTask;
     }
 
     Task ClearActionButtonStates()
@@ -715,7 +693,7 @@ class MainWindow : Component<MainWindowModel>
                 ExternalProcessManager.CurrentProcessTask = null;
             }
         }
-        
+
         ExternalProcessManager.ResponseException = null;
 
         ExternalProcessManager.ResponseAsJson = null;
@@ -850,7 +828,7 @@ class MainWindow : Component<MainWindowModel>
     async Task OnDebugClicked(MouseEvent _)
     {
         AsyncLogger.logs.Clear();
-        
+
         if (DebugButtonStatus == ActionButtonStatus.Executing)
         {
             await ClearActionButtonStates();
@@ -987,7 +965,7 @@ class MainWindow : Component<MainWindowModel>
     async Task OnExecuteClicked(MouseEvent _)
     {
         AsyncLogger.logs.Clear();
-        
+
         if (ExecuteButtonStatus == ActionButtonStatus.Executing)
         {
             await ClearActionButtonStates();
@@ -1081,6 +1059,20 @@ class MainWindow : Component<MainWindowModel>
         {
             StateCache.Save(state.SelectedMethod, state);
         }
+    }
+
+    Task SetTraceIsNotVisible(MouseEvent _)
+    {
+        IsTraceVisible = false;
+
+        return Task.CompletedTask;
+    }
+
+    Task SetTraceIsVisible(MouseEvent _)
+    {
+        IsTraceVisible = true;
+
+        return Task.CompletedTask;
     }
 
     void TryInitializeDefaultJsonInputs()
