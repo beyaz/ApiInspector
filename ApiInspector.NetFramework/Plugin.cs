@@ -166,8 +166,8 @@ static class Plugin
 
     sealed class PluginInfo
     {
-        public string FullClassName { get; set; }
+        public string FullClassName { get; init; }
 
-        public string FullFilePathOfAssembly { get; set; }
+        public string FullFilePathOfAssembly { get; init; }
     }
 }
