@@ -598,7 +598,7 @@ class MainWindow : Component<MainWindowModel>
 
             var partResponse = new FlexColumn(SizeFull)
             {
-                new Label { Text = "Response as json" },
+                new Label { Text = "Response" },
 
                 new FreeScrollBar
                 {

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -400,12 +401,29 @@ static class Program
         }
     }
 
+    
+    sealed class LogTextWriter : TextWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
+
+        public override void Write(string value)
+        {
+            WriteLog(value);
+        }
+
+        public override void WriteLine(string value)
+        {
+            WriteLog(value);
+        }
+    }
+
+    
     public static void Main(string[] args)
     {
         var originalStdout = Console.Out;
 
-        Console.SetOut(TextWriter.Null);
-
+        Console.SetOut(new LogTextWriter());
+        
         WriteLog("Invocation started.");
 
         try
