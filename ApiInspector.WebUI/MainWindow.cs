@@ -589,13 +589,11 @@ class MainWindow : Component<MainWindowModel>
                 }
             }
 
-            if (DebugButtonStatus == ActionButtonStatus.Executing || DebugButtonStatus == ActionButtonStatus.Fail ||
-                ExecuteButtonStatus == ActionButtonStatus.Executing || ExecuteButtonStatus == ActionButtonStatus.Fail)
-            {
-                IsTraceVisible = true;
-            }
+            var isTraceVisible = IsTraceVisible ||
+                                 DebugButtonStatus == ActionButtonStatus.Executing ||
+                                 ExecuteButtonStatus == ActionButtonStatus.Executing;
 
-            var showTrace = IsTraceVisible && AsyncLogger.logs.Count > 0;
+            var showTrace = isTraceVisible && AsyncLogger.logs.Count > 0;
 
             var partResponse = new FlexColumn(SizeFull, Gap(2))
             {
