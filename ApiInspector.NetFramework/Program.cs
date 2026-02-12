@@ -482,9 +482,7 @@ static class Program
             Console.SetOut(originalStdout);
             Console.Write(responseAsJson);
 
-            WriteLog($"ResponseAsJson: {responseAsJson}");
-
-            WriteLog("SuccessfullyExit");
+            WriteLog("S U C C E S S");
 
             WaitAsyncLogsForFinish();
 
@@ -508,7 +506,7 @@ static class Program
             Console.SetOut(originalStdout);
             Console.Write(failInfoAsJson);
 
-            WriteLog($"Failed: {failInfoAsJson}");
+            WriteLog("F A I L");
             
             WaitAsyncLogsForFinish();
 
