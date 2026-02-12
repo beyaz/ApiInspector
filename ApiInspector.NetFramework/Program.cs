@@ -486,6 +486,11 @@ static class Program
 
             WriteLog("SuccessfullyExit");
 
+            while (AsyncLogger.HasItem)
+            {
+                Thread.Sleep(100);
+            }
+
             Environment.Exit(1);
         }
         catch (Exception exception)
@@ -507,6 +512,11 @@ static class Program
             Console.Write(failInfoAsJson);
 
             WriteLog($"Failed: {failInfoAsJson}");
+            
+            while (AsyncLogger.HasItem)
+            {
+                Thread.Sleep(100);
+            }
 
             Environment.Exit(0);
         }

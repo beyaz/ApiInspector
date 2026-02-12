@@ -136,6 +136,8 @@ static class ReflectionHelper
     static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
+        
+        WriteLog($"RequestedAssemblyName: {requestedAssemblyName}");
 
         var fileNameWithoutExtension = requestedAssemblyName.Name;
 
@@ -275,6 +277,8 @@ static class ReflectionHelper
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
 
+        WriteLog($"requestedAssemblyName: {requestedAssemblyName}");
+        
         var fileNameWithoutExtension = requestedAssemblyName.Name;
 
         var directoryInfo = Directory.GetParent(fullAssemblyPath);
@@ -283,12 +287,14 @@ static class ReflectionHelper
             return null;
         }
 
-        var path = Path.Combine(directoryInfo.FullName, fileNameWithoutExtension + ".dll");
-        if (File.Exists(path))
+        var fullFilePath = Path.Combine(directoryInfo.FullName, fileNameWithoutExtension + ".dll");
+        if (File.Exists(fullFilePath))
         {
-            return Assembly.LoadFrom(path);
+            return Assembly.LoadFrom(fullFilePath);
         }
 
+        WriteLog($"FileNotFound: {fullFilePath}");
+        
         return null;
     }
 

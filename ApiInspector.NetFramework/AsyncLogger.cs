@@ -12,6 +12,8 @@ namespace ApiInspector;
 
 public static class AsyncLogger
 {
+    public static bool HasItem => _queue.IsEmpty is false;
+    
     public static void WriteLog(string message)
     {
         Log(message);
