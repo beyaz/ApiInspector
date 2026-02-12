@@ -9,8 +9,8 @@ static class ReflectionHelper
 {
     public static void AttachAssemblyResolver()
     {
-        AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssemblyInSameFolder;
-        AppDomain.CurrentDomain.AssemblyResolve += ResolveAssemblyInSameFolder;
+        AppDomain.CurrentDomain.AssemblyResolve -= TryResolveAssembly;
+        AppDomain.CurrentDomain.AssemblyResolve += TryResolveAssembly;
     }
 
     public static void AttachToAssemblyResolveSameDirectory(string fullAssemblyPath)
@@ -133,7 +133,7 @@ static class ReflectionHelper
         return tuple;
     }
 
-    static Assembly ResolveAssemblyInSameFolder(object _, ResolveEventArgs e)
+    static Assembly TryResolveAssembly(object _, ResolveEventArgs e)
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
         
