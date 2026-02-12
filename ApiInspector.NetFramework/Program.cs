@@ -15,6 +15,7 @@ static class Program
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
         ReflectionHelper.AttachAssemblyResolver();
+        Plugin.BeforeStart(assemblyFileFullPath);
 
         return Plugin.GetEnvironment(assemblyFileFullPath);
     }
@@ -36,6 +37,7 @@ static class Program
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
         ReflectionHelper.AttachAssemblyResolver();
+        Plugin.BeforeStart(fullAssemblyPath);
 
         if (methodReference is null || methodReference.IsStatic)
         {
@@ -117,6 +119,7 @@ static class Program
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
         ReflectionHelper.AttachAssemblyResolver();
+        Plugin.BeforeStart(fullAssemblyPath);
 
         if (methodReference is null || methodReference.Parameters.Count == 0)
         {
@@ -168,6 +171,7 @@ static class Program
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
         ReflectionHelper.AttachAssemblyResolver();
+        Plugin.BeforeStart(fullAssemblyPath);
 
         WriteLog("ResolversAttached");
 

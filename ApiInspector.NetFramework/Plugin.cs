@@ -164,6 +164,18 @@ static class Plugin
         return (isInvoked: true, (TMethodOutput)methodInfo.Invoke(null, methodArguments));
     }
 
+    public static string BeforeStart(string fullAssemblyPath)
+    {
+        if (PluginInstance is null)
+        {
+            return string.Empty;
+        }
+
+        TryInvokeStaticMethodFromPlugin<string>(PluginInstance, nameof(BeforeStart), fullAssemblyPath);
+       
+        return string.Empty;
+    }
+    
     sealed class PluginInfo
     {
         public string FullClassName { get; init; }
