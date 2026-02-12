@@ -37,6 +37,8 @@ class MainWindow : Component<MainWindowModel>
     public bool HistoryDialogVisible { get; set; }
 
     public bool IsInitializingSelectedMethod { get; set; }
+    
+    public bool IsTraceVisible { get; set; }
 
     string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
 
@@ -534,43 +536,36 @@ class MainWindow : Component<MainWindowModel>
 
             Element partTrace = null;
             {
-                if (DebugButtonStatus == ActionButtonStatus.Executing || DebugButtonStatus == ActionButtonStatus.Fail ||
-                    ExecuteButtonStatus == ActionButtonStatus.Executing || ExecuteButtonStatus == ActionButtonStatus.Fail)
-                {
+               
                     if (AsyncLogger.logs.Count > 0)
                     {
                         var trace = string.Join(NewLine, AsyncLogger.logs);
 
-                        partTrace = new FlexColumn(WidthFull, Height(200))
+                        partTrace =  new FreeScrollBar
                         {
-                            new Label { Text = "Trace" },
+                            AutoHideScrollbar,
 
-                            new FreeScrollBar
+                            ComponentBoxShadow,
+                            HeightFull,
+                            Border("1px solid #d9d9d9"),
+                            BorderRadius(5),
+                            WidthFull,
+
+                            new textarea
                             {
-                                AutoHideScrollbar,
-
-                                ComponentBoxShadow,
-                                HeightFull,
-                                Border("1px solid #d9d9d9"),
-                                BorderRadius(5),
-                                WidthFull,
-
-                                new textarea
+                                id         = "textAreaForLogs",
+                                value      = trace,
+                                spellCheck = "false",
+                                readOnly   = true,
+                                wrap       = "off",
+                                style =
                                 {
-                                    id         = "textAreaForLogs",
-                                    value      = trace,
-                                    spellCheck = "false",
-                                    readOnly   = true,
-                                    wrap       = "off",
-                                    style =
-                                    {
-                                        OutlineNone,
-                                        BorderNone,
-                                        FontSize11,
-                                        FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
-                                        SizeFull,
-                                        Padding(16)
-                                    }
+                                    OutlineNone,
+                                    BorderNone,
+                                    FontSize11,
+                                    FontFamily("'IBM Plex Mono Medium', 'Courier New', monospace"),
+                                    SizeFull,
+                                    Padding(16)
                                 }
                             }
                         };
@@ -593,13 +588,38 @@ class MainWindow : Component<MainWindowModel>
                             """
                         );
                     }
-                }
+                
             }
 
+            if (DebugButtonStatus == ActionButtonStatus.Executing || DebugButtonStatus == ActionButtonStatus.Fail ||
+                ExecuteButtonStatus == ActionButtonStatus.Executing || ExecuteButtonStatus == ActionButtonStatus.Fail)
+            {
+                IsTraceVisible = true;
+            }
+            
+            var showTrace = IsTraceVisible && AsyncLogger.logs.Count > 0;
+            
+            
             var partResponse = new FlexColumn(SizeFull)
             {
-                new Label { Text = "Response" },
+                new FlexRow(Gap(16), CursorDefault)
+                {
+                    new Label { Text = "Response" } + 
+                    (!showTrace ? Opacity1 : Opacity(0.8)) +
+                    (!showTrace ? null : OnClick(SetTraceIsNotVisible)),
+                    
+                    partTrace is null ? null : 
+                        
+                        new Label { Text = "Trace" } + 
+                        (showTrace ? Opacity1 : Opacity(0.8)) +
+                        (showTrace ? null : OnClick(SetTraceIsVisible))
+                                               
+                                               
+                                               ,
+                },
 
+                showTrace ? partTrace:
+                    
                 new FreeScrollBar
                 {
                     AutoHideScrollbar,
@@ -611,9 +631,7 @@ class MainWindow : Component<MainWindowModel>
                     WidthFull,
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].ResponseAsJson)
-                },
-
-                partTrace
+                }
             };
 
             return new FlexColumn(SizeFull, PaddingRight(10))
@@ -631,6 +649,20 @@ class MainWindow : Component<MainWindowModel>
         }
     }
 
+    Task SetTraceIsVisible(MouseEvent _)
+    {
+        IsTraceVisible = true;
+
+        return Task.CompletedTask;
+    }
+    
+    Task SetTraceIsNotVisible(MouseEvent _)
+    {
+        IsTraceVisible = false;
+
+        return Task.CompletedTask;
+    }
+    
     Task AddNewScenarioClicked(MouseEvent _)
     {
         state.ScenarioList = state.ScenarioList.Add(new());
@@ -683,9 +715,7 @@ class MainWindow : Component<MainWindowModel>
                 ExternalProcessManager.CurrentProcessTask = null;
             }
         }
-
-        AsyncLogger.logs.Clear();
-
+        
         ExternalProcessManager.ResponseException = null;
 
         ExternalProcessManager.ResponseAsJson = null;
@@ -819,6 +849,8 @@ class MainWindow : Component<MainWindowModel>
 
     async Task OnDebugClicked(MouseEvent _)
     {
+        AsyncLogger.logs.Clear();
+        
         if (DebugButtonStatus == ActionButtonStatus.Executing)
         {
             await ClearActionButtonStates();
@@ -954,6 +986,8 @@ class MainWindow : Component<MainWindowModel>
 
     async Task OnExecuteClicked(MouseEvent _)
     {
+        AsyncLogger.logs.Clear();
+        
         if (ExecuteButtonStatus == ActionButtonStatus.Executing)
         {
             await ClearActionButtonStates();
