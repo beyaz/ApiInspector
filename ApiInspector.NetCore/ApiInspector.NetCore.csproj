@@ -34,4 +34,14 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
+
+    <!--<ItemGroup>
+        <PackageReference Include="BOA.Compatibility" Version="1.*" />
+    </ItemGroup>
+    <PropertyGroup>
+        <PostBuildEvent>
+            copy /y "$(OutDir)$(AssemblyName).*" D:\BOA\tools\ApiInspector\ApiInspector.NetCore\
+        </PostBuildEvent>
+    </PropertyGroup>-->
+
 </Project>
