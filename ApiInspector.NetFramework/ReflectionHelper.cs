@@ -276,8 +276,6 @@ static class ReflectionHelper
     static Assembly TryLoadFromSameFolder(string fullAssemblyPath, ResolveEventArgs e)
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
-
-        WriteLog($"requestedAssemblyName: {requestedAssemblyName}");
         
         var fileNameWithoutExtension = requestedAssemblyName.Name;
 
@@ -288,14 +286,15 @@ static class ReflectionHelper
         }
 
         var fullFilePath = Path.Combine(directoryInfo.FullName, fileNameWithoutExtension + ".dll");
-        if (File.Exists(fullFilePath))
+        if (!File.Exists(fullFilePath))
         {
-            return Assembly.LoadFrom(fullFilePath);
+            return null;
         }
 
-        WriteLog($"FileNotFound: {fullFilePath}");
-        
-        return null;
+        WriteLog($"Loading: {fullFilePath}");
+            
+        return Assembly.LoadFrom(fullFilePath);
+
     }
 
     static T ValueOrDefault<T>(this (bool success, T value) tuple)

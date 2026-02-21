@@ -2,6 +2,8 @@
 
 static class FpExtensions
 {
+    internal const string Tab = "    ";
+    
     public static (T value, Exception exception) SafeInvoke<T>(Func<T> func)
     {
         try
