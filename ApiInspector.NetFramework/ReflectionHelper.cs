@@ -23,7 +23,7 @@ static class ReflectionHelper
 
             var json = """
                        {
-                          ABC: 'Xyz'
+                          ABC: 89
                        }
                        """;
             tryAssignInternalProps(instance, json);
@@ -53,9 +53,9 @@ static class ReflectionHelper
                     {
                         var value = map[propertyName];
 
-                        if (value is string)
+                        if (propertyInfo.PropertyType == typeof(string) && value is not null)
                         {
-                            propertyInfo.SetValue(instance, value);
+                            propertyInfo.SetValue(instance, value.ToString());
                             continue;
                         }
                     }
