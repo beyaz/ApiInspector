@@ -1,6 +1,5 @@
 ﻿using Mono.Cecil;
 using System.Collections.Immutable;
-using System.Reflection;
 using MethodDefinition = Mono.Cecil.MethodDefinition;
 
 namespace ApiInspector.WebUI;
