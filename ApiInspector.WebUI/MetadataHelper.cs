@@ -239,46 +239,74 @@ static class MetadataHelper
 
                 static string CalculateName(ParameterDefinition parameterDefinition)
                 {
-                    var typeReference = parameterDefinition.ParameterType;
-                    if (typeReference.Name.StartsWith("ValueTuple`") && typeReference.Namespace == nameof(System))
+                  
+
+                    return run(parameterDefinition,[
+                        tryCalculateForTuples,
+                        defaultCalculate
+                    ]);
+                    
+                    
+
+                    static string defaultCalculate(ParameterDefinition parameterDefinition)
                     {
-                        foreach (var customAttribute in parameterDefinition.CustomAttributes)
+                        return GetTypeName(parameterDefinition.ParameterType) + " " + parameterDefinition.Name;
+                    }
+                    
+                    static string tryCalculateForTuples(ParameterDefinition parameterDefinition)
+                    {
+                        var typeReference = parameterDefinition.ParameterType;
+                        
+                        if (typeReference.Name.StartsWith("ValueTuple`") && typeReference.Namespace == nameof(System))
                         {
-                            if (customAttribute.AttributeType.FullName == typeof(System.Runtime.CompilerServices.TupleElementNamesAttribute).FullName)
+                            foreach (var customAttribute in parameterDefinition.CustomAttributes)
                             {
-                                if (customAttribute.ConstructorArguments.Count == 1)
+                                if (customAttribute.AttributeType.FullName == typeof(System.Runtime.CompilerServices.TupleElementNamesAttribute).FullName)
                                 {
-                                    if ( customAttribute.ConstructorArguments[0].Value is CustomAttributeArgument[] attributeArgument)
+                                    if (customAttribute.ConstructorArguments.Count == 1)
                                     {
-                                        var parameters = new List<string>();
-
-                                        for (int i = 0; i < attributeArgument.Length; i++)
+                                        if ( customAttribute.ConstructorArguments[0].Value is CustomAttributeArgument[] attributeArgument)
                                         {
-                                            if (typeReference is GenericInstanceType genericInstanceType)
-                                            {
-                                                var typeName = GetTypeName(attributeArgument[i].Type);
+                                            var parameters = new List<string>();
 
-                                                var name = attributeArgument[i].Value.ToString();
+                                            foreach (var argument in attributeArgument)
+                                            {
+                                                var typeName = GetTypeName(argument.Type);
+
+                                                var name = argument.Value.ToString();
 
                                                 parameters.Add(typeName + " " + name);
                                             }
+
+                                            return $"({string.Join(", ", parameters)}) {parameterDefinition.Name}";
                                         }
 
-                                        return $"({string.Join(", ", parameters)}) {parameterDefinition.Name}";
-                                    }
-
                                    
-                                }
+                                    }
                               
 
+                                }
+                            }
+
+                            return typeReference.FullName.RemoveFromStart(typeReference.Namespace+".");
+                        }
+
+                        return null;
+                    }
+
+                    static string run<T>(T value,Func<T,string>[] methods)
+                    {
+                        foreach (var func in methods)
+                        {
+                            var result = func(value);
+                            if (result is not null)
+                            {
+                                return result;
                             }
                         }
 
-                        return typeReference.FullName.RemoveFromStart(typeReference.Namespace+".");
+                        return null;
                     }
-
-                    return GetTypeName(parameterDefinition.ParameterType) + " " + parameterDefinition.Name;
-                    
                     
                 }
             }
