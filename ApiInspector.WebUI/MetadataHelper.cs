@@ -1,5 +1,6 @@
-﻿using System.Collections.Immutable;
-using Mono.Cecil;
+﻿using Mono.Cecil;
+using System.Collections.Immutable;
+using System.Reflection;
 using MethodDefinition = Mono.Cecil.MethodDefinition;
 
 namespace ApiInspector.WebUI;
@@ -29,7 +30,7 @@ static class MetadataHelper
 
                 foreach (var typeDefinitionNestedType in typeDefinition.NestedTypes)
                 {
-                    if (typeDefinitionNestedType.Name.StartsWith("<"))
+                    if (typeDefinitionNestedType.Name.StartsWith("<")) // Skip compiler generated classes
                     {
                         continue;
                     }
@@ -67,17 +68,15 @@ static class MetadataHelper
 
             return namespaceNodes.Take(3).ToList();
 
+          
+            
             MetadataNode classToMetaData(TypeDefinition type)
             {
-                if (type.Name == "RemoteApiLayer")
-                {
-                    ;
-                }
                 var classNode = new MetadataNode
                 {
                     IsClass       = true,
                     TypeReference = asTypeReference(type),
-                    label         = type.Name
+                    label         = GetLabel(type)
                 };
 
                 var methods = getMethods(type);
@@ -184,6 +183,16 @@ static class MetadataHelper
                         }
                     }
                 }
+                
+                static string GetLabel(TypeDefinition typeDefinition)
+                {
+                    if (typeDefinition.IsNested)
+                    {
+                        return GetLabel(typeDefinition.DeclaringType) + "/" + typeDefinition.Name;
+                    }
+
+                    return typeDefinition.Name;
+                }
             }
         }
 
@@ -211,7 +220,7 @@ static class MetadataHelper
                     {
                         methodInfo.Name,
                         "(",
-                        string.Join(", ", methodInfo.Parameters.Select(parameterInfo => GetTypeName(parameterInfo.ParameterType) + " " + parameterInfo.Name)),
+                        string.Join(", ", methodInfo.Parameters.Select(CalculateName)),
                         ")"
                     }),
                     MetadataToken = methodInfo.MetadataToken.ToInt32(),
@@ -227,6 +236,17 @@ static class MetadataHelper
                         Name          = parameterInfo.Name,
                         ParameterType = asTypeReference(parameterInfo.ParameterType)
                     };
+                }
+
+                static string CalculateName(ParameterDefinition parameterDefinition)
+                {
+                    var typeReference = parameterDefinition.ParameterType;
+                    if (typeReference.Name.StartsWith("ValueTuple`") && typeReference.Namespace == nameof(System))
+                    {
+                        return typeReference.FullName.RemoveFromStart(typeReference.Namespace+".");
+                    }
+
+                    return GetTypeName(parameterDefinition.ParameterType) + " " + parameterDefinition.Name;
                 }
             }
         }
@@ -262,6 +282,8 @@ static class MetadataHelper
                     return GetTypeName(genericInstanceType.GenericArguments[0]) + "?";
                 }
             }
+
+           
 
             return typeReference.Name;
         }

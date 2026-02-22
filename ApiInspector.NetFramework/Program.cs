@@ -57,7 +57,7 @@ static class Program
             return jsonForInstance;
         }
 
-        // try create from plugins
+        // try to create from plugins
         {
             var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(declaringType);
             if (isSuccessfullyCreated)
