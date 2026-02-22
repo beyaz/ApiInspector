@@ -195,6 +195,10 @@ static class Program
                 tryCreateInstanceFromJson,
                 tryCreateInstanceFromReflection
             ]);
+
+            instance = ReflectionHelper.tryAssignInternalProps(instance, jsonForInstance);
+            
+           
             
             static object tryCreateInstanceFromPlugins(Type declaringType, string jsonForInstance)
             {
@@ -553,3 +557,4 @@ static class Program
         }
     }
 }
+

@@ -1,12 +1,73 @@
 ﻿using System.Collections;
 using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using static ApiInspector.FpExtensions;
 
 namespace ApiInspector;
 
 static class ReflectionHelper
 {
+    
+    class tryAssignInternalPropsTest
+    {
+        class MyClass
+        {
+            internal string Abc { get; set; }
+        }
+
+        internal static string Test1()
+        {
+            var instance = new MyClass();
+
+            var json = """
+                       {
+                          ABC: 'Xyz'
+                       }
+                       """;
+            tryAssignInternalProps(instance, json);
+
+            return instance.Abc;
+        }
+    
+    }
+    
+   internal static object tryAssignInternalProps(object instance, string jsonForInstance)
+    {
+        if (string.IsNullOrWhiteSpace(jsonForInstance))
+        {
+            return instance;
+        }
+
+        var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance);
+
+        foreach (var propertyName in map.Keys)
+        {
+            var propertyInfo = instance.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
+            if (propertyInfo is not null)
+            {
+                if (propertyInfo.CanRead && propertyInfo.CanWrite)
+                {
+                    if (propertyInfo.GetValue(instance) == null)
+                    {
+                        var value = map[propertyName];
+
+                        if (value is string)
+                        {
+                            propertyInfo.SetValue(instance, value);
+                            continue;
+                        }
+                    }
+                    
+                    
+                }
+            }
+        }
+
+        return instance;
+    }
+    
     public static void AttachAssemblyResolver()
     {
         AppDomain.CurrentDomain.AssemblyResolve -= TryResolveAssembly;
