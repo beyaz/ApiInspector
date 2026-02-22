@@ -190,6 +190,12 @@ static class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
+            instance = ExecUntilNotNull(declaringType, jsonForInstance, [
+                tryCreateInstanceFromPlugins,
+                tryCreateInstanceFromJson,
+                tryCreateInstanceFromReflection
+            ]);
+            
             static object tryCreateInstanceFromPlugins(Type declaringType, string jsonForInstance)
             {
                 WriteLog("Plugin.TryCreateInstance");
@@ -207,9 +213,8 @@ static class Program
 
                 WriteLog("PluginSuccessfullyCreatedInstance");
                 return createdInstance;
-
             }
-            
+
             static object tryCreateInstanceFromJson(Type declaringType, string jsonForInstance)
             {
                 if (!string.IsNullOrWhiteSpace(jsonForInstance))
@@ -218,24 +223,18 @@ static class Program
 
                     return JsonConvert.DeserializeObject(jsonForInstance, declaringType);
                 }
+
                 return null;
             }
-            
+
             static object tryCreateInstanceFromReflection(Type declaringType, string jsonForInstance)
             {
                 WriteLog($"instance = reflection create from declaringType: {declaringType.FullName}");
 
-                return  Activator.CreateInstance(declaringType);
+                return Activator.CreateInstance(declaringType);
             }
-            
-           
 
-            instance = ExecUntilNotNull(declaringType, jsonForInstance, [
-                tryCreateInstanceFromPlugins,
-                tryCreateInstanceFromJson,
-                tryCreateInstanceFromReflection
-            ]);
-            
+           
         }
 
         WriteLog("Started to calculate parameters");
@@ -422,29 +421,12 @@ static class Program
         }
     }
 
-    
-    sealed class LogTextWriter : TextWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
-
-        public override void Write(string value)
-        {
-            WriteLog(value);
-        }
-
-        public override void WriteLine(string value)
-        {
-            WriteLog(value);
-        }
-    }
-
-    
     public static void Main(string[] args)
     {
         var originalStdout = Console.Out;
 
         Console.SetOut(new LogTextWriter());
-        
+
         WriteLog("Invocation started.");
 
         try
@@ -458,7 +440,7 @@ static class Program
             {
                 throw new("CommandLine arguments cannot be empty.");
             }
-            
+
             var arr = args[0].Split('|');
             if (arr.Length is not 3)
             {
@@ -472,7 +454,7 @@ static class Program
             var loggerUrl = arr[2];
 
             Start(loggerUrl);
-            
+
             if (waitForDebugger == "1")
             {
                 WriteLog("WaitingForAttachToDebugger");
@@ -528,7 +510,7 @@ static class Program
             Console.Write(failInfoAsJson);
 
             WriteLog("F A I L");
-            
+
             WaitAsyncLogsForFinish();
 
             Environment.Exit(0);
@@ -553,6 +535,21 @@ static class Program
         while (!Debugger.IsAttached)
         {
             Thread.Sleep(100);
+        }
+    }
+
+    sealed class LogTextWriter : TextWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
+
+        public override void Write(string value)
+        {
+            WriteLog(value);
+        }
+
+        public override void WriteLine(string value)
+        {
+            WriteLog(value);
         }
     }
 }
