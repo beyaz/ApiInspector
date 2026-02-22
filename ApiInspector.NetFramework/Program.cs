@@ -190,35 +190,63 @@ static class Program
         {
             var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
 
-            WriteLog("Plugin.TryCreateInstance");
-            var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugin.TryCreateInstance(declaringType, jsonForInstance);
-            if (occurredErrorWhenCreatingInstance != null)
+            static object tryCreateInstanceFromPlugins(Type declaringType, string jsonForInstance)
             {
-                WriteLog($"occurredErrorWhenCreatingInstance: {occurredErrorWhenCreatingInstance}");
-                throw occurredErrorWhenCreatingInstance;
-            }
+                WriteLog("Plugin.TryCreateInstance");
+                var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugin.TryCreateInstance(declaringType, jsonForInstance);
+                if (occurredErrorWhenCreatingInstance != null)
+                {
+                    WriteLog($"occurredErrorWhenCreatingInstance: {occurredErrorWhenCreatingInstance}");
+                    throw occurredErrorWhenCreatingInstance;
+                }
 
-            if (isSuccessfullyCreated)
-            {
-                WriteLog("PluginSuccessfullyCreatedInstance");
-                instance = createdInstance;
-            }
+                if (isSuccessfullyCreated)
+                {
+                    WriteLog("PluginSuccessfullyCreatedInstance");
+                    return createdInstance;
+                }
 
-            if (instance == null)
+                return null;
+            }
+            
+            static object tryCreateInstanceFromJson(Type declaringType, string jsonForInstance)
             {
                 if (!string.IsNullOrWhiteSpace(jsonForInstance))
                 {
                     WriteLog("instance = deserialize from jsonForInstance");
 
-                    instance = JsonConvert.DeserializeObject(jsonForInstance, declaringType);
+                    return JsonConvert.DeserializeObject(jsonForInstance, declaringType);
                 }
-                else
-                {
-                    WriteLog($"instance = reflection create from declaringType: {declaringType.FullName}");
-
-                    instance = Activator.CreateInstance(declaringType);
-                }
+                return null;
             }
+            
+            static object tryCreateInstanceFromReflection(Type declaringType, string jsonForInstance)
+            {
+                WriteLog($"instance = reflection create from declaringType: {declaringType.FullName}");
+
+                return  Activator.CreateInstance(declaringType);
+            }
+            
+            static C run<A,B,C>(A a,B b, Func<A,B, C>[] methods)
+            {
+                foreach (var func in methods)
+                {
+                    var result = func(a,b);
+                    if (result is not null)
+                    {
+                        return result;
+                    }
+                }
+
+                return default;
+            }
+
+            instance = run(declaringType, jsonForInstance, [
+                tryCreateInstanceFromPlugins,
+                tryCreateInstanceFromJson,
+                tryCreateInstanceFromReflection
+            ]);
+            
         }
 
         WriteLog("Started to calculate parameters");
