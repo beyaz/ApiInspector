@@ -242,10 +242,44 @@ static class MetadataHelper
                     var typeReference = parameterDefinition.ParameterType;
                     if (typeReference.Name.StartsWith("ValueTuple`") && typeReference.Namespace == nameof(System))
                     {
+                        foreach (var customAttribute in parameterDefinition.CustomAttributes)
+                        {
+                            if (customAttribute.AttributeType.FullName == typeof(System.Runtime.CompilerServices.TupleElementNamesAttribute).FullName)
+                            {
+                                if (customAttribute.ConstructorArguments.Count == 1)
+                                {
+                                    if ( customAttribute.ConstructorArguments[0].Value is CustomAttributeArgument[] attributeArgument)
+                                    {
+                                        var parameters = new List<string>();
+
+                                        for (int i = 0; i < attributeArgument.Length; i++)
+                                        {
+                                            if (typeReference is GenericInstanceType genericInstanceType)
+                                            {
+                                                var typeName = GetTypeName(attributeArgument[i].Type);
+
+                                                var name = attributeArgument[i].Value.ToString();
+
+                                                parameters.Add(typeName + " " + name);
+                                            }
+                                        }
+
+                                        return $"({string.Join(", ", parameters)}) {parameterDefinition.Name}";
+                                    }
+
+                                   
+                                }
+                              
+
+                            }
+                        }
+
                         return typeReference.FullName.RemoveFromStart(typeReference.Namespace+".");
                     }
 
                     return GetTypeName(parameterDefinition.ParameterType) + " " + parameterDefinition.Name;
+                    
+                    
                 }
             }
         }
@@ -364,3 +398,4 @@ static class MetadataHelper
         });
     }
 }
+
