@@ -19,13 +19,34 @@ static class MetadataHelper
             return exception;
         }
 
+        static List<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> types)
+        {
+            var list = new List<TypeDefinition>();
+
+            foreach (var typeDefinition in types)
+            {
+                list.Add(typeDefinition);
+
+                foreach (var typeDefinitionNestedType in typeDefinition.NestedTypes)
+                {
+                    if (typeDefinitionNestedType.Name.StartsWith("<"))
+                    {
+                        continue;
+                    }
+
+                    list.Add(typeDefinitionNestedType);
+                }
+            }
+
+            return list;
+        }
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
         {
             var namespaceNodes = new List<MetadataNode>();
 
             foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
             {
-                var classNodes = types.Where(x => x.Namespace == namespaceName).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
+                var classNodes = GetAllTypes(types.Where(x => x.Namespace == namespaceName)).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
@@ -48,6 +69,10 @@ static class MetadataHelper
 
             MetadataNode classToMetaData(TypeDefinition type)
             {
+                if (type.Name == "RemoteApiLayer")
+                {
+                    ;
+                }
                 var classNode = new MetadataNode
                 {
                     IsClass       = true,
@@ -133,7 +158,11 @@ static class MetadataHelper
                             {
                                 return true;
                             }
-                            
+
+                            if (t.IsGenericInstance && t.Name.StartsWith("ValueTuple`") && t.Namespace =="System") 
+                            {
+                                return false;
+                            }
                             if (t.Name.Contains("`"))
                             {
                                 return true;
