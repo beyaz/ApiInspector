@@ -188,7 +188,7 @@ static class MetadataHelper
                 {
                     if (typeDefinition.IsNested)
                     {
-                        return GetLabel(typeDefinition.DeclaringType) + "/" + typeDefinition.Name;
+                        return GetLabel(typeDefinition.DeclaringType) + "+" + typeDefinition.Name;
                     }
 
                     return typeDefinition.Name;
@@ -308,7 +308,7 @@ static class MetadataHelper
         {
             return new()
             {
-                FullName      = x.FullName,
+                FullName      = x.FullName.Replace("/","+"),
                 Name          = GetTypeName(x),
                 NamespaceName = x.Namespace,
                 Assembly      = asReference(x.Scope)
