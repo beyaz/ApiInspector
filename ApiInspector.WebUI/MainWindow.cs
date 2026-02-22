@@ -400,11 +400,11 @@ class MainWindow : Component<MainWindowModel>
                 {
                     AutoHideScrollbar,
 
-                    Height(300), PaddingBottom(10),
+                    PaddingBottom(10),
                     BorderTop(Solid(1, "#d9d9d9")),
                     BorderBottomLeftRadius(3),
                     WidthFull,
-                    FlexGrow(1),
+                    HeightFull,
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetInstanceProperties)
                 },
@@ -442,11 +442,11 @@ class MainWindow : Component<MainWindowModel>
                 {
                     AutoHideScrollbar,
 
-                    Height(300), PaddingBottom(10),
+                    PaddingBottom(10),
                     BorderTop(Solid(1, "#d9d9d9")),
                     BorderBottomRightRadius(3),
                     WidthFull,
-                    FlexGrow(1),
+                    HeightFull,
 
                     NewJsonEditor(() => state.ScenarioList[scenarioIndex].JsonTextForDotNetMethodParameters)
                 },
