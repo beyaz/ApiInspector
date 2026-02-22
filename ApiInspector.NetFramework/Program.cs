@@ -200,13 +200,14 @@ static class Program
                     throw occurredErrorWhenCreatingInstance;
                 }
 
-                if (isSuccessfullyCreated)
+                if (!isSuccessfullyCreated)
                 {
-                    WriteLog("PluginSuccessfullyCreatedInstance");
-                    return createdInstance;
+                    return null;
                 }
 
-                return null;
+                WriteLog("PluginSuccessfullyCreatedInstance");
+                return createdInstance;
+
             }
             
             static object tryCreateInstanceFromJson(Type declaringType, string jsonForInstance)
