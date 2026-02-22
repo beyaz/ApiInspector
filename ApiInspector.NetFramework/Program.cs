@@ -132,7 +132,7 @@ static class Program
             map = new();
         }
 
-        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? new ParameterInfo[] { })
+        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? [])
         {
             var name = parameterInfo.Name;
             if (name == null || map.ContainsKey(name))
