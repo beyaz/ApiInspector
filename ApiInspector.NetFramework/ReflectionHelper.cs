@@ -10,63 +10,9 @@ namespace ApiInspector;
 static class ReflectionHelper
 {
     
-    class tryAssignInternalPropsTest
-    {
-        class MyClass
-        {
-            internal string Abc { get; set; }
-        }
-
-        internal static string Test1()
-        {
-            var instance = new MyClass();
-
-            var json = """
-                       {
-                          ABC: 89
-                       }
-                       """;
-            tryAssignInternalProps(instance, json);
-
-            return instance.Abc;
-        }
+  
     
-    }
-    
-   internal static object tryAssignInternalProps(object instance, string jsonForInstance)
-    {
-        if (string.IsNullOrWhiteSpace(jsonForInstance))
-        {
-            return instance;
-        }
 
-        var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance);
-
-        foreach (var propertyName in map.Keys)
-        {
-            var propertyInfo = instance.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
-            if (propertyInfo is not null)
-            {
-                if (propertyInfo.CanRead && propertyInfo.CanWrite)
-                {
-                    if (propertyInfo.GetValue(instance) == null)
-                    {
-                        var value = map[propertyName];
-
-                        if (propertyInfo.PropertyType == typeof(string) && value is not null)
-                        {
-                            propertyInfo.SetValue(instance, value.ToString());
-                            continue;
-                        }
-                    }
-                    
-                    
-                }
-            }
-        }
-
-        return instance;
-    }
     
     public static void AttachAssemblyResolver()
     {

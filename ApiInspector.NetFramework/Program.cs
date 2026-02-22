@@ -196,7 +196,7 @@ static class Program
                 tryCreateInstanceFromReflection
             ]);
 
-            instance = ReflectionHelper.tryAssignInternalProps(instance, jsonForInstance);
+            instance = JsonInternalAssigner.tryAssignInternalProps(instance, jsonForInstance);
             
            
             
