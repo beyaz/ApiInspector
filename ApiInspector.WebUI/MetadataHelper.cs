@@ -1,5 +1,6 @@
-﻿using Mono.Cecil;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
+using Mono.Cecil;
 using MethodDefinition = Mono.Cecil.MethodDefinition;
 
 namespace ApiInspector.WebUI;
@@ -40,6 +41,7 @@ static class MetadataHelper
 
             return list;
         }
+
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
         {
             var namespaceNodes = new List<MetadataNode>();
@@ -67,8 +69,6 @@ static class MetadataHelper
 
             return namespaceNodes.Take(3).ToList();
 
-          
-            
             MetadataNode classToMetaData(TypeDefinition type)
             {
                 var classNode = new MetadataNode
@@ -157,10 +157,11 @@ static class MetadataHelper
                                 return true;
                             }
 
-                            if (t.IsGenericInstance && t.Name.StartsWith("ValueTuple`") && t.Namespace =="System") 
+                            if (t.IsGenericInstance && t.Name.StartsWith("ValueTuple`") && t.Namespace == "System")
                             {
                                 return false;
                             }
+
                             if (t.Name.Contains("`"))
                             {
                                 return true;
@@ -182,7 +183,7 @@ static class MetadataHelper
                         }
                     }
                 }
-                
+
                 static string GetLabel(TypeDefinition typeDefinition)
                 {
                     if (typeDefinition.IsNested)
@@ -239,33 +240,29 @@ static class MetadataHelper
 
                 static string CalculateName(ParameterDefinition parameterDefinition)
                 {
-                  
-
-                    return run(parameterDefinition,[
+                    return run(parameterDefinition, [
                         tryCalculateForTuples,
                         defaultCalculate
                     ]);
-                    
-                    
 
                     static string defaultCalculate(ParameterDefinition parameterDefinition)
                     {
                         return GetTypeName(parameterDefinition.ParameterType) + " " + parameterDefinition.Name;
                     }
-                    
+
                     static string tryCalculateForTuples(ParameterDefinition parameterDefinition)
                     {
                         var typeReference = parameterDefinition.ParameterType;
-                        
+
                         if (typeReference.Name.StartsWith("ValueTuple`") && typeReference.Namespace == nameof(System))
                         {
                             foreach (var customAttribute in parameterDefinition.CustomAttributes)
                             {
-                                if (customAttribute.AttributeType.FullName == typeof(System.Runtime.CompilerServices.TupleElementNamesAttribute).FullName)
+                                if (customAttribute.AttributeType.FullName == typeof(TupleElementNamesAttribute).FullName)
                                 {
                                     if (customAttribute.ConstructorArguments.Count == 1)
                                     {
-                                        if ( customAttribute.ConstructorArguments[0].Value is CustomAttributeArgument[] attributeArgument)
+                                        if (customAttribute.ConstructorArguments[0].Value is CustomAttributeArgument[] attributeArgument)
                                         {
                                             var parameters = new List<string>();
 
@@ -280,21 +277,17 @@ static class MetadataHelper
 
                                             return $"({string.Join(", ", parameters)}) {parameterDefinition.Name}";
                                         }
-
-                                   
                                     }
-                              
-
                                 }
                             }
 
-                            return typeReference.FullName.RemoveFromStart(typeReference.Namespace+".");
+                            return typeReference.FullName.RemoveFromStart(typeReference.Namespace + ".");
                         }
 
                         return null;
                     }
 
-                    static string run<T>(T value,Func<T,string>[] methods)
+                    static string run<T>(T value, Func<T, string>[] methods)
                     {
                         foreach (var func in methods)
                         {
@@ -307,7 +300,6 @@ static class MetadataHelper
 
                         return null;
                     }
-                    
                 }
             }
         }
@@ -322,7 +314,6 @@ static class MetadataHelper
                 Assembly      = asReference(x.Scope)
             };
 
-
             static AssemblyReference asReference(IMetadataScope assembly)
             {
                 return new() { Name = assembly.Name.RemoveFromEnd(".dll").RemoveFromEnd(".exe") };
@@ -336,15 +327,13 @@ static class MetadataHelper
                 return GetTypeName(typeReference.DeclaringType) + "+" + typeReference.Name;
             }
 
-            if (typeReference.Name== "Nullable`1")
+            if (typeReference.Name == "Nullable`1")
             {
                 if (typeReference is GenericInstanceType genericInstanceType)
                 {
                     return GetTypeName(genericInstanceType.GenericArguments[0]) + "?";
                 }
             }
-
-           
 
             return typeReference.Name;
         }
@@ -369,7 +358,7 @@ static class MetadataHelper
                     }
                 }
             }
-            
+
             var classFilters = classFilter.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
             var selectedTypes = types.Where(t => containsFilter(t.Name)).ToList();
@@ -398,8 +387,6 @@ static class MetadataHelper
                 return false;
             }
 
-           
-
             static bool canExport(TypeDefinition typeDefinition)
             {
                 if (typeDefinition.IsInterface)
@@ -421,9 +408,8 @@ static class MetadataHelper
         return AssemblyDefinition.ReadAssembly(assemblyFilePath, new ReaderParameters
         {
             AssemblyResolver = assemblyResolver,
-            InMemory = true,
-            ReadWrite = false
+            InMemory         = true,
+            ReadWrite        = false
         });
     }
 }
-
