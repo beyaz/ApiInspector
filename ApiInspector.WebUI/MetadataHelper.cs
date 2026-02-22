@@ -240,7 +240,7 @@ static class MetadataHelper
 
                 static string CalculateName(ParameterDefinition parameterDefinition)
                 {
-                    return run(parameterDefinition, [
+                    return ExecUntilNotNull(parameterDefinition, [
                         tryCalculateForTuples,
                         defaultCalculate
                     ]);
@@ -287,19 +287,7 @@ static class MetadataHelper
                         return null;
                     }
 
-                    static string run<T>(T value, Func<T, string>[] methods)
-                    {
-                        foreach (var func in methods)
-                        {
-                            var result = func(value);
-                            if (result is not null)
-                            {
-                                return result;
-                            }
-                        }
-
-                        return null;
-                    }
+                   
                 }
             }
         }

@@ -227,21 +227,9 @@ static class Program
                 return  Activator.CreateInstance(declaringType);
             }
             
-            static C run<A,B,C>(A a,B b, Func<A,B, C>[] methods)
-            {
-                foreach (var func in methods)
-                {
-                    var result = func(a,b);
-                    if (result is not null)
-                    {
-                        return result;
-                    }
-                }
+           
 
-                return default;
-            }
-
-            instance = run(declaringType, jsonForInstance, [
+            instance = ExecUntilNotNull(declaringType, jsonForInstance, [
                 tryCreateInstanceFromPlugins,
                 tryCreateInstanceFromJson,
                 tryCreateInstanceFromReflection

@@ -24,4 +24,18 @@ partial class Extensions
 
         return false;
     }
+    
+    internal static string ExecUntilNotNull<T>(T value, Func<T, string>[] methods)
+    {
+        foreach (var func in methods)
+        {
+            var result = func(value);
+            if (result is not null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
 }

@@ -1,7 +1,37 @@
-﻿namespace ApiInspector;
+﻿global using static ApiInspector.FpExtensions;
+
+namespace ApiInspector;
 
 static class FpExtensions
 {
+    internal static C ExecUntilNotNull<A,B,C>(A a,B b, Func<A,B, C>[] methods)
+    {
+        foreach (var func in methods)
+        {
+            var result = func(a,b);
+            if (result is not null)
+            {
+                return result;
+            }
+        }
+
+        return default;
+    }
+    
+    internal static string ExecUntilNotNull<T>(T value, Func<T, string>[] methods)
+    {
+        foreach (var func in methods)
+        {
+            var result = func(value);
+            if (result is not null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
+    
     internal const string Tab = "    ";
     
     public static (T value, Exception exception) SafeInvoke<T>(Func<T> func)
