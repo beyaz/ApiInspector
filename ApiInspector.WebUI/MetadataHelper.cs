@@ -286,8 +286,6 @@ static class MetadataHelper
 
                         return null;
                     }
-
-                   
                 }
             }
         }
@@ -296,7 +294,7 @@ static class MetadataHelper
         {
             return new()
             {
-                FullName      = x.FullName.Replace("/","+"),
+                FullName      = x.FullName.Replace("/", "+"),
                 Name          = GetTypeName(x),
                 NamespaceName = x.Namespace,
                 Assembly      = asReference(x.Scope)
@@ -349,15 +347,51 @@ static class MetadataHelper
 
             var classFilters = classFilter.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-            var selectedTypes = types.Where(t => containsFilter(t.Name)).ToList();
+            var selectedTypes = types.Where(t => typeHasAnyMatch(t, classFilters)).ToList();
             if (selectedTypes.Count > 0)
             {
                 return selectedTypes;
             }
 
-            return types.Where(t => containsFilter(t.Namespace)).ToList();
+            return types.Where(t => containsFilter(t.Namespace, classFilters)).ToList();
 
-            bool containsFilter(string name)
+            static bool typeHasAnyMatch(TypeDefinition typeDefinition, IReadOnlyList<string> classFilters)
+            {
+                foreach (var classFilter in classFilters)
+                {
+                    if (typeHasMatch(typeDefinition, classFilter))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+
+                static bool typeHasMatch(TypeDefinition typeDefinition, string classFilter)
+                {
+                    if (string.IsNullOrWhiteSpace(classFilter))
+                    {
+                        return false;
+                    }
+
+                    if (typeDefinition.Name.Contains(classFilter, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+
+                    foreach (var nestedType in typeDefinition.NestedTypes)
+                    {
+                        if (typeHasMatch(nestedType, classFilter))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            }
+
+            static bool containsFilter(string name, IReadOnlyList<string> classFilters)
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
