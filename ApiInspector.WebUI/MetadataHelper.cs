@@ -326,7 +326,14 @@ static class MetadataHelper
 
         static List<TypeDefinition> getAllTypes(AssemblyDefinition assembly, string classFilter)
         {
-            var types = assembly.MainModule.Types.Where(canExport).ToList();
+            List<TypeDefinition> types = [];
+
+            foreach (var typeDefinition in assembly.MainModule.Types)
+            {
+                addType(types, typeDefinition);
+            }
+            
+            types = types.Where(canExport).ToList();
 
             if (string.IsNullOrWhiteSpace(classFilter))
             {
@@ -355,6 +362,17 @@ static class MetadataHelper
 
             return types.Where(t => containsFilter(t.Namespace, classFilters)).ToList();
 
+            static void addType(List<TypeDefinition> types, TypeDefinition typeDefinition)
+            {
+                types.Add(typeDefinition);
+                
+                foreach (var nestedType in typeDefinition.NestedTypes)
+                {
+                    addType(types, nestedType);
+                }
+
+            }
+
             static bool typeHasAnyMatch(TypeDefinition typeDefinition, IReadOnlyList<string> classFilters)
             {
                 foreach (var classFilter in classFilters)
@@ -377,14 +395,6 @@ static class MetadataHelper
                     if (typeDefinition.Name.Contains(classFilter, StringComparison.OrdinalIgnoreCase))
                     {
                         return true;
-                    }
-
-                    foreach (var nestedType in typeDefinition.NestedTypes)
-                    {
-                        if (typeHasMatch(nestedType, classFilter))
-                        {
-                            return true;
-                        }
                     }
 
                     return false;
@@ -412,6 +422,11 @@ static class MetadataHelper
             static bool canExport(TypeDefinition typeDefinition)
             {
                 if (typeDefinition.IsInterface)
+                {
+                    return false;
+                }
+                
+                if (typeDefinition.Name.StartsWith("<")) // Skip compiler generated classes
                 {
                     return false;
                 }

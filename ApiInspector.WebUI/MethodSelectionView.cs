@@ -167,7 +167,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             }
             else
             {
-                el += Hover(BackgroundImage(linear_gradient(90, rgb(190, 220, 244), rgb(242, 246, 249))) + BorderRadius(3));
+                el += Hover(BackgroundImage(linear_gradient(90, rgb(190, 220, 244), rgb(242, 246, 249))) , BorderRadius(3));
             }
 
             el.onClick = OnTreeItemClicked;
@@ -235,7 +235,7 @@ class MethodSelectionView : Component<MethodSelectionViewState>
 
     Element AsTreeItem(MetadataNode node)
     {
-        return AsTreeItem(node, SelectedMethodTreeNodeKey, OnTreeItemClicked);
+        return AsTreeItem(node, state.SelectedMethodTreeNodeKey, OnTreeItemClicked);
     }
 
     Element AsTreeView(IReadOnlyList<MetadataNode> nodes)
