@@ -395,12 +395,13 @@ static class Program
 
         static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
-            JProperty jProperty = null;
-            
-            if (parameterInfo.Name is not null)
+            var jProperty = parameterInfo.Name switch
             {
-                jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
-            }
+                null => null,
+                _    => map.Property(parameterInfo.Name, StringComparison.Ordinal)
+            };
+            
+           
 
             return ExecUntilNotNull(parameterInfo, jProperty, [
                 tryCreateFromPlugins,
@@ -433,12 +434,7 @@ static class Program
             
             static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
             {
-                if (jProperty is null)
-                {
-                    return null;
-                }
-                
-                return jProperty.Value.ToObject(parameterInfo.ParameterType, new()
+                return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
                 {
                     TypeNameHandling = TypeNameHandling.Auto
                 });
