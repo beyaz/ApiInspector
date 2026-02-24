@@ -197,9 +197,7 @@ static class Program
             ]);
 
             instance = JsonInternalAssigner.tryAssignInternalProps(instance, jsonForInstance);
-            
-           
-            
+
             static object tryCreateInstanceFromPlugins(Type declaringType, string jsonForInstance)
             {
                 WriteLog("Plugin.TryCreateInstance");
@@ -237,8 +235,6 @@ static class Program
 
                 return Activator.CreateInstance(declaringType);
             }
-
-           
         }
 
         WriteLog("Started to calculate parameters");
@@ -400,8 +396,6 @@ static class Program
                 null => null,
                 _    => map.Property(parameterInfo.Name, StringComparison.Ordinal)
             };
-            
-           
 
             return ExecUntilNotNull(parameterInfo, jProperty, [
                 tryCreateFromPlugins,
@@ -409,14 +403,13 @@ static class Program
                 createDefaultValueByReflection
             ]);
 
-            
-
             static object tryCreateFromPlugins(ParameterInfo parameterInfo, JProperty jProperty)
             {
                 if (jProperty is null)
                 {
                     return null;
                 }
+
                 var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.Value.ToString());
 
                 if (occurredErrorWhenCreatingInstance != null)
@@ -431,16 +424,15 @@ static class Program
 
                 return null;
             }
-            
+
             static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
             {
                 return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
                 {
                     TypeNameHandling = TypeNameHandling.Auto
                 });
-
             }
-            
+
             static object createDefaultValueByReflection(ParameterInfo parameterInfo, JProperty jProperty)
             {
                 if (parameterInfo.ParameterType.IsValueType)
@@ -585,4 +577,3 @@ static class Program
         }
     }
 }
-
