@@ -446,26 +446,30 @@ static class Program
             
             static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
             {
-                JObject jObject = jProperty.Value as JObject;
-                if (jObject is null)
+                if (jProperty.Value is not JObject jObject)
                 {
                     return null;
                 }
 
-                var tupleNamesAttr = parameterInfo.GetCustomAttribute<System.Runtime.CompilerServices.TupleElementNamesAttribute>();
-
-                var elementNames = tupleNamesAttr?.TransformNames;
-
-                if (elementNames is null || elementNames.Count == 0)
+                IList<string> elementNames;
                 {
-                    return null;
+                    var tupleNamesAttr = parameterInfo.GetCustomAttribute<System.Runtime.CompilerServices.TupleElementNamesAttribute>();
+
+                    elementNames = tupleNamesAttr?.TransformNames;
+
+                    if (elementNames is null || elementNames.Count == 0)
+                    {
+                        return null;
+                    }
                 }
 
-                var genericArgs = parameterInfo.ParameterType.GetGenericArguments();
+                var parameterType = parameterInfo.ParameterType;
+                
+                var genericArgs = parameterType.GetGenericArguments();
 
                 var values = new object[genericArgs.Length];
 
-                for (int i = 0; i < genericArgs.Length; i++)
+                for (var i = 0; i < genericArgs.Length; i++)
                 {
                     var name = elementNames[i];
                     if (name is not null && jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out var jToken))
@@ -482,7 +486,7 @@ static class Program
                     }
                 }
 
-                return Activator.CreateInstance(parameterInfo.ParameterType, values);
+                return Activator.CreateInstance(parameterType, values);
             }
 
         }
