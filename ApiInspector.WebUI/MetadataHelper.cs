@@ -82,7 +82,7 @@ static class MetadataHelper
 
                 if (string.IsNullOrWhiteSpace(methodFilter))
                 {
-                    foreach (var methodDefinition in methods.Take(3))
+                    foreach (var methodDefinition in methods)
                     {
                         classNode = addChild(classNode, convertToMetadataNode(methodDefinition));
                     }
