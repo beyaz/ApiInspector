@@ -467,10 +467,19 @@ static class Program
 
                 for (int i = 0; i < genericArgs.Length; i++)
                 {
-                    var name = elementNames[i] ?? $"Item{i + 1}";
-                    var token = jObject[name];
-
-                    values[i] = token?.ToObject(genericArgs[i]);
+                    var name = elementNames[i];
+                    if (name is not null && jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out var jToken))
+                    {
+                        values[i] = jToken.ToObject(genericArgs[i]);
+                    }
+                    else
+                    {
+                        name = $"Item{i + 1}";
+                        if (jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out  jToken))
+                        {
+                            values[i] = jToken.ToObject(genericArgs[i]);
+                        }
+                    }
                 }
 
                 return Activator.CreateInstance(parameterInfo.ParameterType, values);
