@@ -395,33 +395,65 @@ static class Program
 
         static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
+            JProperty jProperty = null;
+            
             if (parameterInfo.Name is not null)
             {
-                var jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
-                if (jProperty != null)
-                {
-                    var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.Value.ToString());
-
-                    if (occurredErrorWhenCreatingInstance != null)
-                    {
-                        throw occurredErrorWhenCreatingInstance;
-                    }
-
-                    if (isSuccessfullyCreated)
-                    {
-                        return parameterInstance;
-                    }
-
-                    return jProperty.Value.ToObject(parameterInfo.ParameterType, new() { TypeNameHandling = TypeNameHandling.Auto });
-                }
+                jProperty = map.Property(parameterInfo.Name, StringComparison.OrdinalIgnoreCase);
             }
 
-            if (parameterInfo.ParameterType.IsValueType)
+            return ExecUntilNotNull(parameterInfo, jProperty, [
+                tryCreateFromPlugins,
+                tryCreateFromJsonBySerialization,
+                createDefaultValueByReflection
+            ]);
+
+            
+
+            static object tryCreateFromPlugins(ParameterInfo parameterInfo, JProperty jProperty)
             {
-                return Activator.CreateInstance(parameterInfo.ParameterType);
-            }
+                if (jProperty is null)
+                {
+                    return null;
+                }
+                var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.Value.ToString());
 
-            return null;
+                if (occurredErrorWhenCreatingInstance != null)
+                {
+                    throw occurredErrorWhenCreatingInstance;
+                }
+
+                if (isSuccessfullyCreated)
+                {
+                    return parameterInstance;
+                }
+
+                return null;
+            }
+            
+            static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
+            {
+                if (jProperty is null)
+                {
+                    return null;
+                }
+                
+                return jProperty.Value.ToObject(parameterInfo.ParameterType, new()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                });
+
+            }
+            
+            static object createDefaultValueByReflection(ParameterInfo parameterInfo, JProperty jProperty)
+            {
+                if (parameterInfo.ParameterType.IsValueType)
+                {
+                    return Activator.CreateInstance(parameterInfo.ParameterType);
+                }
+
+                return null;
+            }
         }
     }
 
