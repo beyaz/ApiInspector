@@ -399,6 +399,7 @@ static class Program
 
             return ExecUntilNotNull(parameterInfo, jProperty, [
                 tryCreateFromPlugins,
+                tryDeserializeTuple,
                 tryCreateFromJsonBySerialization,
                 createDefaultValueByReflection
             ]);
@@ -442,6 +443,39 @@ static class Program
 
                 return null;
             }
+            
+            static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
+            {
+                JObject jObject = jProperty.Value as JObject;
+                if (jObject is null)
+                {
+                    return null;
+                }
+
+                var tupleNamesAttr = parameterInfo.GetCustomAttribute<System.Runtime.CompilerServices.TupleElementNamesAttribute>();
+
+                var elementNames = tupleNamesAttr?.TransformNames;
+
+                if (elementNames is null || elementNames.Count == 0)
+                {
+                    return null;
+                }
+
+                var genericArgs = parameterInfo.ParameterType.GetGenericArguments();
+
+                var values = new object[genericArgs.Length];
+
+                for (int i = 0; i < genericArgs.Length; i++)
+                {
+                    var name = elementNames[i] ?? $"Item{i + 1}";
+                    var token = jObject[name];
+
+                    values[i] = token?.ToObject(genericArgs[i]);
+                }
+
+                return Activator.CreateInstance(parameterInfo.ParameterType, values);
+            }
+
         }
     }
 
