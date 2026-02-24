@@ -252,6 +252,8 @@ static class MetadataHelper
 
                     static string tryCalculateForTuples(ParameterDefinition parameterDefinition)
                     {
+                        
+                        
                         var typeReference = parameterDefinition.ParameterType;
 
                         if (typeReference.Name.StartsWith("ValueTuple`") && typeReference.Namespace == nameof(System))
@@ -270,8 +272,12 @@ static class MetadataHelper
                                             {
                                                 var typeName = GetTypeName(argument.Type);
 
-                                                var name = argument.Value.ToString();
-
+                                                var name = argument.Value?.ToString();
+                                                if (name is null)
+                                                {
+                                                    continue;
+                                                }
+                                                
                                                 parameters.Add(typeName + " " + name);
                                             }
 
