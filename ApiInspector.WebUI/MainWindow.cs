@@ -69,15 +69,6 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
-    void TryUpdateEnvironmentText()
-    {
-        External.GetEnvironment(state.RuntimeName, AssemblyFileFullPath).Match
-        (
-            x => state.EnvironmentText = x,
-            _ => state.EnvironmentText = null
-        );
-    }
-    
     protected override Element render()
     {
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
@@ -603,14 +594,16 @@ class MainWindow : Component<MainWindowModel>
                     (!showTrace ? Opacity1 : Opacity(0.7)) +
                     (!showTrace ? null : OnClick(SetTraceIsNotVisible)),
 
-                    partTrace is null ? null :
-                        new Label { Text = "Trace" } +
-                        (showTrace ? Opacity1 : Opacity(0.7)) +
-                        (showTrace ? null : OnClick(SetTraceIsVisible))
+                    partTrace is null
+                        ? null
+                        : new Label { Text = "Trace" } +
+                          (showTrace ? Opacity1 : Opacity(0.7)) +
+                          (showTrace ? null : OnClick(SetTraceIsVisible))
                 },
 
-                showTrace ? partTrace :
-                    new FreeScrollBar
+                showTrace
+                    ? partTrace
+                    : new FreeScrollBar
                     {
                         AutoHideScrollbar,
 
@@ -728,7 +721,7 @@ class MainWindow : Component<MainWindowModel>
 
         return Task.CompletedTask;
     }
-    
+
     Task MonitorDebug()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
@@ -1097,6 +1090,15 @@ class MainWindow : Component<MainWindowModel>
                 scenario.ResponseAsJson = exception + NewLine + scenario.ResponseAsJson;
             }
         }
+    }
+
+    void TryUpdateEnvironmentText()
+    {
+        External.GetEnvironment(state.RuntimeName, AssemblyFileFullPath).Match
+        (
+            x => state.EnvironmentText = x,
+            _ => state.EnvironmentText = null
+        );
     }
 
     class CircleButton : ReactPureComponent
