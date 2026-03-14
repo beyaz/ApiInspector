@@ -40,7 +40,7 @@ class MainWindow : Component<MainWindowModel>
 
     public bool IsTraceVisible { get; set; }
 
-    string AssemblyFileFullPath => Path.Combine(state.AssemblyDirectory, state.AssemblyFileName);
+    string AssemblyFileFullPath => Directory.Exists(state.AssemblyDirectory) && state.AssemblyFileName.HasValue() ? Path.Combine(state.AssemblyDirectory, state.AssemblyFileName) : null;
 
     ScenarioModel SelectedScenarioModel
     {
@@ -265,12 +265,11 @@ class MainWindow : Component<MainWindowModel>
                         DirectoryPath = state.AssemblyDirectory,
                         SelectionChanged = x =>
                         {
-                            state.AssemblyDirectory = x;
-
-                            state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
-
-                            TryUpdateEnvironmentText();
-
+                            state = new()
+                            {
+                                AssemblyDirectory = x
+                            };
+                            
                             return Task.CompletedTask;
                         }
                     }
@@ -925,7 +924,6 @@ class MainWindow : Component<MainWindowModel>
                 {
                     state = cachedState;
 
-                    state.AssemblyDirectory         = currentState.AssemblyDirectory;
                     state.AssemblyFileName          = currentState.AssemblyFileName;
                     state.ClassFilter               = currentState.ClassFilter;
                     state.MethodFilter              = currentState.MethodFilter;

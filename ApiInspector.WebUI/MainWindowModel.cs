@@ -4,7 +4,7 @@ namespace ApiInspector.WebUI;
 
 sealed class MainWindowModel
 {
-    public string AssemblyDirectory { get; set; }
+    public string AssemblyDirectory { get; init; }
 
     public string AssemblyFileName { get; set; }
 
