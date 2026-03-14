@@ -23,6 +23,8 @@ class MainWindowModel
     public string ScenarioFilterText { get; set; }
     
     public string RuntimeName { get; set; }
+
+    public string EnvironmentText { get; set; }
 }
 
 static class RuntimeNames

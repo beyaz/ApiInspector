@@ -69,6 +69,15 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
+    void TryUpdateEnvironmentText()
+    {
+        External.GetEnvironment(state.RuntimeName, AssemblyFileFullPath).Match
+        (
+            x => state.EnvironmentText = x,
+            _ => state.EnvironmentText = null
+        );
+    }
+    
     protected override Element render()
     {
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
@@ -144,7 +153,10 @@ class MainWindow : Component<MainWindowModel>
 
                 new FlexRow(Gap(20))
                 {
-                    GetEnvironment,
+                    new FlexRowCentered
+                    {
+                        state.EnvironmentText
+                    },
                     new LogoutButton()
                 },
 
@@ -266,13 +278,7 @@ class MainWindow : Component<MainWindowModel>
 
                             state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
 
-                            Client.DispatchEvent(Event.OnAssemblyChanged, [
-                                new AssemblyChangedArgs
-                                {
-                                    AssemblyFileFullPath = AssemblyFileFullPath,
-                                    RuntimeName          = state.RuntimeName
-                                }
-                            ]);
+                            TryUpdateEnvironmentText();
 
                             return Task.CompletedTask;
                         }
@@ -293,13 +299,7 @@ class MainWindow : Component<MainWindowModel>
 
                             state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
 
-                            Client.DispatchEvent(Event.OnAssemblyChanged, [
-                                new AssemblyChangedArgs
-                                {
-                                    AssemblyFileFullPath = AssemblyFileFullPath,
-                                    RuntimeName          = state.RuntimeName
-                                }
-                            ]);
+                            TryUpdateEnvironmentText();
 
                             return Task.CompletedTask;
                         })
@@ -728,17 +728,7 @@ class MainWindow : Component<MainWindowModel>
 
         return Task.CompletedTask;
     }
-
-    Element GetEnvironment()
-    {
-        return new EnvironmentInfoView
-        {
-            AssemblyFileFullPath = AssemblyFileFullPath,
-
-            RuntimeName = state.RuntimeName
-        };
-    }
-
+    
     Task MonitorDebug()
     {
         var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
@@ -1173,82 +1163,4 @@ class MainWindow : Component<MainWindowModel>
             return content;
         }
     }
-
-    class EnvironmentInfoState
-    {
-        public string AssemblyFileFullPath { get; set; }
-
-        public string RuntimeName { get; set; }
-
-        public string Text { get; set; }
-    }
-
-    class EnvironmentInfoView : Component<EnvironmentInfoState>
-    {
-        public required string AssemblyFileFullPath { get; init; }
-
-        public required string RuntimeName { get; init; }
-
-        protected override Task constructor()
-        {
-            state = new();
-
-            Client.ListenEvent<AssemblyChangedArgs>(Event.OnAssemblyChanged, OnAssemblyChanged);
-
-            return base.constructor();
-        }
-
-        protected override Task OverrideStateFromPropsBeforeRender()
-        {
-            if (state.AssemblyFileFullPath != AssemblyFileFullPath || state.RuntimeName != RuntimeName)
-            {
-                state.AssemblyFileFullPath = AssemblyFileFullPath;
-
-                state.RuntimeName = RuntimeName;
-
-                External.GetEnvironment(state.RuntimeName, AssemblyFileFullPath).Match
-                (
-                    x => state.Text = x,
-                    _ => state.Text = null
-                );
-            }
-
-            return base.OverrideStateFromPropsBeforeRender();
-        }
-
-        protected override Element render()
-        {
-            return new FlexRowCentered
-            {
-                state.Text
-            };
-        }
-
-        Task OnAssemblyChanged(AssemblyChangedArgs args)
-        {
-            state.AssemblyFileFullPath = args.AssemblyFileFullPath;
-
-            state.RuntimeName = args.RuntimeName;
-
-            External.GetEnvironment(args.RuntimeName, args.AssemblyFileFullPath).Match
-            (
-                x => state.Text = x,
-                _ => state.Text = null
-            );
-
-            return Task.CompletedTask;
-        }
-    }
-}
-
-enum Event
-{
-    OnAssemblyChanged
-}
-
-sealed record AssemblyChangedArgs
-{
-    public string AssemblyFileFullPath { get; init; }
-
-    public string RuntimeName { get; init; }
 }
