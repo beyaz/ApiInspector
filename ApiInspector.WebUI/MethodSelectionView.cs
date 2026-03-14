@@ -73,22 +73,6 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             select FindTreeNode(nodes, x => HasMatch(x, treeNodeKey));
     }
 
-    protected override Task constructor()
-    {
-        state = new MethodSelectionViewState
-        {
-            AssemblyFilePath          = AssemblyFilePath,
-            ClassFilter               = ClassFilter,
-            MethodFilter              = MethodFilter,
-            SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey
-        };
-
-        FetchNodes(state.AssemblyFilePath, state.ClassFilter, state.MethodFilter)
-           .Match( x => state.Nodes = x,  x => state.ErrorMessage = x.Message);
-
-        return Task.CompletedTask;
-    }
-
     protected override Task OverrideStateFromPropsBeforeRender()
     {
         if (state.AssemblyFilePath != AssemblyFilePath ||
@@ -101,8 +85,12 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             state.MethodFilter              = MethodFilter;
             state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
 
-            FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter)
-               .Match(x => state.Nodes = x, x => state.ErrorMessage = x.Message);
+            FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter).Match
+            (
+                x => state.Nodes = x,
+                
+                x => state.ErrorMessage = x.Message
+            );
         }
 
         return Task.CompletedTask;
