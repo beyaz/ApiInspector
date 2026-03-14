@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using ApiInspector.WebUI.Components;
+using System.Collections.Immutable;
 
 namespace ApiInspector.WebUI;
 
@@ -36,6 +37,8 @@ public sealed class MethodSelectionViewState
     public IReadOnlyList<MetadataNode> Nodes { get; set; }
 
     public string SelectedMethodTreeNodeKey { get; set; }
+    
+    public bool IsLoading { get; set; }
 }
 
 class MethodSelectionView : Component<MethodSelectionViewState>
@@ -85,14 +88,25 @@ class MethodSelectionView : Component<MethodSelectionViewState>
             state.MethodFilter              = MethodFilter;
             state.SelectedMethodTreeNodeKey = SelectedMethodTreeNodeKey;
 
-            FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter).Match
-            (
-                x => state.Nodes = x,
-                
-                x => state.ErrorMessage = x.Message
-            );
+            state.IsLoading = true;
+
+            Client.GotoMethod(StartFetchNodes);
         }
 
+        return Task.CompletedTask;
+    }
+
+    Task StartFetchNodes()
+    {
+        FetchNodes(AssemblyFilePath, ClassFilter, MethodFilter).Match
+        (
+            x => state.Nodes = x,
+                
+            x => state.ErrorMessage = x.Message
+        );
+
+        state.IsLoading = false;
+        
         return Task.CompletedTask;
     }
 
@@ -100,9 +114,27 @@ class MethodSelectionView : Component<MethodSelectionViewState>
     {
         var nodes = state.Nodes;
 
+        Element content = null;
+        {
+            if (state.IsLoading)
+            {
+                content = new FlexRowCentered(HeightFull)
+                {
+                    new LoadingIcon { Size(50) }
+                };
+            }
+            else if (state.ErrorMessage.HasValue())
+            {
+                content = new pre { state.ErrorMessage };
+            }
+            else
+            {
+                content = AsTreeView(nodes);
+            }
+        }
         return new div(MarginLeftRight(3), OverflowYScroll, CursorPointer, Padding(5), Border(Solid(1, rgb(217, 217, 217))), BorderRadius(3))
         {
-            state.ErrorMessage.HasValue() ? new pre { state.ErrorMessage } : AsTreeView(nodes),
+            content,
             WidthFull, Flex(1, 1, 0)
         };
     }
