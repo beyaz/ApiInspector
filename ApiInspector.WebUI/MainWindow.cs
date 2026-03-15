@@ -924,6 +924,7 @@ class MainWindow : Component<MainWindowModel>
                 {
                     state = cachedState;
 
+                    state.AssemblyDirectory         = currentState.AssemblyDirectory;
                     state.AssemblyFileName          = currentState.AssemblyFileName;
                     state.ClassFilter               = currentState.ClassFilter;
                     state.MethodFilter              = currentState.MethodFilter;
