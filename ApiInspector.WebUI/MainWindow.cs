@@ -318,6 +318,7 @@ class MainWindow : Component<MainWindowModel>
                         valueBind                = () => state.MethodFilter,
                         valueBindDebounceTimeout = 700,
                         valueBindDebounceHandler = OnFilterTextKeypressCompleted,
+                        spellCheck = "false",
                         style                    = { InputStyle }
                     }
                 },

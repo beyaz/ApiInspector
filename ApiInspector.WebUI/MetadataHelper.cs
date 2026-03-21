@@ -46,9 +46,9 @@ static class MetadataHelper
         {
             var namespaceNodes = new List<MetadataNode>();
 
-            foreach (var namespaceName in types.Select(t => t.Namespace).Distinct())
+            foreach (var namespaceName in types.Select(GetNamespaceName).Distinct())
             {
-                var classNodes = GetAllTypes(types.Where(x => x.Namespace == namespaceName)).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
+                var classNodes = GetAllTypes(types.Where(x => GetNamespaceName(x) == namespaceName)).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
@@ -68,6 +68,19 @@ static class MetadataHelper
             }
 
             return namespaceNodes.Take(3).ToList();
+
+            static string GetNamespaceName(TypeDefinition typeDefinition)
+            {
+                while (true)
+                {
+                    if (typeDefinition.DeclaringType is null)
+                    {
+                        return typeDefinition.Namespace;
+                    }
+
+                    typeDefinition = typeDefinition.DeclaringType;
+                }
+            }
 
             MetadataNode classToMetaData(TypeDefinition type)
             {
