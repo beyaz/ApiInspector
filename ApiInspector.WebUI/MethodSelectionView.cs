@@ -21,6 +21,26 @@ public record MetadataNode
     public string label { get; init; }
 
     public bool HasChild => Children.Count > 0;
+
+    public override string ToString()
+    {
+        if (IsNamespace)
+        {
+            return NamespaceReference;
+        }
+        
+        if (IsClass)
+        {
+            return TypeReference.ToString();
+        }
+
+        if (IsMethod)
+        {
+            return MethodReference.ToString();
+        }
+        
+        return "Invalid Node";
+    }
 }
 
 [Serializable]
