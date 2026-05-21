@@ -150,6 +150,7 @@ static class ReflectionHelper
 
         var pipe = new[]
         {
+           // () => tryLoadSystemAssembliesFromSdk0(fileNameWithoutExtension),
             () => tryLoadSystemAssembliesFromSdk(requestedAssemblyName),
             () => tryFindAssemblyByUsingPlugins(fileNameWithoutExtension),
             () => tryLoadFromSearchDirectories(e, fileNameWithoutExtension)
@@ -163,6 +164,17 @@ static class ReflectionHelper
             WriteLog(errorMessage);
         }
 
+        static (bool success, Assembly assembly) tryLoadSystemAssembliesFromSdk0(string fileNameWithoutExtension)
+        {
+            var path = Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty, fileNameWithoutExtension+".dll");
+            if (File.Exists(path))
+            {
+                return (true, LoadAssemblyFile(path));
+            }
+            
+            return default;
+        }
+        
         static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
         {
             var extensions = new[] { ".dll", ".exe" };
