@@ -146,7 +146,7 @@ static class Plugin
         {
             return default;
         }
-
+        
         var assembly = Assembly.LoadFrom(plugin.FullFilePathOfAssembly);
 
         var helperType = assembly.GetType(plugin.FullClassName);
