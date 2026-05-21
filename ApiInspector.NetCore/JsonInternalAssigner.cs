@@ -60,7 +60,7 @@ static class JsonInternalAssigner
                 var ctx = CreateHttpContextFromToken(jp.Value);
                 if (ctx is not null)
                 {
-                    setter.Invoke(instance, new object?[] { ctx });
+                    setter.Invoke(instance, [ctx]);
                 }
                 continue;
             }
@@ -84,7 +84,7 @@ static class JsonInternalAssigner
     /// <summary>
     /// JToken'ı hedef tipe çevirir (string/enum/nullable/complex/collection destekli).
     /// </summary>
-    private static object? ConvertTokenToType(JToken token, Type targetType)
+    private static object ConvertTokenToType(JToken token, Type targetType)
     {
         // Nullable<T> çöz
         var isNullable = IsNullable(targetType, out var underlying);
@@ -122,7 +122,7 @@ static class JsonInternalAssigner
     /// <summary>
     /// JSON'dan basit bir DefaultHttpContext inşa eder ve alanları doldurur.
     /// </summary>
-    private static HttpContext? CreateHttpContextFromToken(JToken token)
+    private static HttpContext CreateHttpContextFromToken(JToken token)
     {
         // null ise
         if (token.Type == JTokenType.Null || token.Type == JTokenType.Undefined)
@@ -201,7 +201,7 @@ static class JsonInternalAssigner
         return ctx;
     }
 
-    private static PropertyInfo? GetPropertyCaseInsensitive(Type type, string name)
+    private static PropertyInfo GetPropertyCaseInsensitive(Type type, string name)
     {
         // Public + NonPublic; IgnoreCase
         return type.GetProperty(
@@ -210,7 +210,7 @@ static class JsonInternalAssigner
         );
     }
 
-    private static bool IsNullable(Type t, out Type? underlying)
+    private static bool IsNullable(Type t, out Type underlying)
     {
         underlying = Nullable.GetUnderlyingType(t);
         return underlying is not null;
