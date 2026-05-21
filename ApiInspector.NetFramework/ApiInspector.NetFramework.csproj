@@ -47,6 +47,7 @@
     <Compile Include="AsyncLogger.cs" />
     <Compile Include="FpExtensions.cs" />
     <Compile Include="GlobalUsings.cs" />
+    <Compile Include="JsonInternalAssigner.cs" />
     <Compile Include="MetadataNode.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="ProcessHelper.cs" />
