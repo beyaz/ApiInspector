@@ -150,7 +150,6 @@ static class ReflectionHelper
 
         var pipe = new[]
         {
-           // () => tryLoadSystemAssembliesFromSdk0(fileNameWithoutExtension),
             () => tryLoadSystemAssembliesFromSdk(requestedAssemblyName),
             () => tryFindAssemblyByUsingPlugins(fileNameWithoutExtension),
             () => tryLoadFromSearchDirectories(e, fileNameWithoutExtension)
@@ -164,16 +163,7 @@ static class ReflectionHelper
             WriteLog(errorMessage);
         }
 
-        static (bool success, Assembly assembly) tryLoadSystemAssembliesFromSdk0(string fileNameWithoutExtension)
-        {
-            var path = Path.Combine(Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty, fileNameWithoutExtension+".dll");
-            if (File.Exists(path))
-            {
-                return (true, LoadAssemblyFile(path));
-            }
-            
-            return default;
-        }
+        
         
         static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
         {
@@ -220,9 +210,27 @@ static class ReflectionHelper
                             }
                         }
                     }
+                    
+                    if (Directory.Exists(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\"))
+                    {
+                        foreach (var folderPath in Directory.GetDirectories(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\").OrderByDescending(x => x))
+                        {
+                            var majorVersion = requestedAssemblyName.Version?.Major.ToString();
+
+                            var folderNameHasMatchMajorVersion = !string.IsNullOrWhiteSpace(majorVersion) && Path.GetFileName(folderPath).StartsWith(majorVersion, StringComparison.OrdinalIgnoreCase);
+                            if (folderNameHasMatchMajorVersion)
+                            {
+                                var finalFilePath = Path.Combine(folderPath, requestedAssemblyName.Name + ".dll");
+                                if (File.Exists(finalFilePath))
+                                {
+                                    return (true, LoadAssemblyFile(finalFilePath));
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
+            
             return default;
         }
 
