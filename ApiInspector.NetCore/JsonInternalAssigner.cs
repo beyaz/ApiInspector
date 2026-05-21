@@ -224,7 +224,6 @@ public sealed class InternalWritableContractResolver : DefaultContractResolver
 {
     public InternalWritableContractResolver(bool includeNonPublicFields)
     {
-        DefaultMembersSearchFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         IncludeNonPublicFields = includeNonPublicFields;
         // İstersen NamingStrategy burada da ayarlanabilir
         // NamingStrategy = new CamelCaseNamingStrategy(true, false);
@@ -252,20 +251,49 @@ public sealed class InternalWritableContractResolver : DefaultContractResolver
             }
         }
 
-        if (IncludeNonPublicFields)
-        {
-            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            foreach (var fi in fields)
-            {
-                if (fi.Name.Contains("k__BackingField")) continue;
-
-                var jp = base.CreateProperty(fi, memberSerialization);
-                jp.Readable = true;
-                jp.Writable = true;
-                props.Add(jp);
-            }
-        }
+        // Fields are included via GetSerializableMembers override when IncludeNonPublicFields is true,
+        // so no need to add them here manually.
 
         return props;
+    }
+
+    protected override List<MemberInfo> GetSerializableMembers(Type objectType)
+    {
+        // Include public and non-public instance properties from the type hierarchy.
+        // Optionally include fields when requested. Exclude compiler generated backing fields.
+        var members = new List<MemberInfo>();
+
+        var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+        var current = objectType;
+        while (current != null && current != typeof(object))
+        {
+            // Properties
+            foreach (var pi in current.GetProperties(flags))
+            {
+                members.Add(pi);
+            }
+
+            if (IncludeNonPublicFields)
+            {
+                foreach (var fi in current.GetFields(flags))
+                {
+                    if (fi.Name.Contains("k__BackingField")) continue;
+                    members.Add(fi);
+                }
+            }
+
+            current = current.BaseType;
+        }
+
+        // Remove duplicates (if any) while preserving order
+        var seen = new HashSet<string>();
+        var result = new List<MemberInfo>();
+        foreach (var m in members)
+        {
+            var key = m.MemberType + ":" + m.Name + ":" + (m.DeclaringType?.FullName ?? "");
+            if (seen.Add(key)) result.Add(m);
+        }
+
+        return result;
     }
 }
