@@ -196,7 +196,7 @@ static class Program
                 tryCreateInstanceFromReflection
             ]);
 
-            instance = JsonInternalAssigner.tryAssignInternalProps(instance, jsonForInstance);
+            instance = JsonInternalAssigner.TryAssignInternalProps(instance, jsonForInstance);
 
             static object tryCreateInstanceFromPlugins(Type declaringType, string jsonForInstance)
             {
