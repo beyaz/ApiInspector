@@ -37,13 +37,13 @@
     </ItemGroup>
 
 
-    <!--<ItemGroup>
+    <ItemGroup>
         <PackageReference Include="BOA.Compatibility" Version="1.*" />
     </ItemGroup>
     <PropertyGroup>
         <PostBuildEvent>
             copy /y "$(OutDir)$(AssemblyName).*" D:\BOA\tools\ApiInspector\ApiInspector.NetCore\
         </PostBuildEvent>
-    </PropertyGroup>-->
+    </PropertyGroup>
 
 </Project>
