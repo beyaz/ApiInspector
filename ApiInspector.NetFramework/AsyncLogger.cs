@@ -71,4 +71,19 @@ static class AsyncLogger
 
         _signal.Release();
     }
+
+    internal static void WriteLog(IEnumerable<string> messages)
+    {
+        if (messages is null)
+        {
+            return;
+        }
+        
+        foreach (var message in messages)
+        {
+            _queue.Enqueue(message);
+        }
+        
+        _signal.Release();
+    }
 }

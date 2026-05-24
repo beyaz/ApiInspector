@@ -302,26 +302,52 @@ static class ReflectionHelper
 
     static Assembly TryLoadFromSameFolder(string fullAssemblyPath, ResolveEventArgs e)
     {
-        var requestedAssemblyName = new AssemblyName(e.Name);
+        var result = TryLoadFromSameFolder(fullAssemblyPath, new AssemblyName(e.Name).Name);
+        if (result.success)
+        {
+            WriteLog(result.trace);
+            return result.assembly;
+        }
         
-        var fileNameWithoutExtension = requestedAssemblyName.Name;
-
+        WriteLog(result.trace);
+        
+        return null;
+    }
+    
+    static (bool success, Assembly assembly, Exception exception, IReadOnlyList<string> trace) TryLoadFromSameFolder(string fullAssemblyPath, string requestedAssemblyName)
+    {
         var directoryInfo = Directory.GetParent(fullAssemblyPath);
         if (directoryInfo is null)
         {
-            return null;
+            return default;
         }
 
-        var fullFilePath = Path.Combine(directoryInfo.FullName, fileNameWithoutExtension + ".dll");
+        var fullFilePath = Path.Combine(directoryInfo.FullName, requestedAssemblyName + ".dll");
         if (!File.Exists(fullFilePath))
         {
-            return null;
+            return new()
+            {
+                trace = [$"{nameof(TryLoadFromSameFolder)} / FileNotFound / {fullFilePath}"]
+            };
         }
-
-        WriteLog($"Loading: {fullFilePath}");
-            
-        return Assembly.LoadFrom(fullFilePath);
-
+        
+        try
+        {
+            return new()
+            {
+                success = true,
+                assembly = Assembly.LoadFrom(fullFilePath),
+                trace = [ $"Successfully loaded assembly({requestedAssemblyName}) from same folder."]
+            };
+        }
+        catch (Exception exception)
+        {
+            return new()
+            {
+                exception = exception,
+                trace    = [ $"Failed when loading assembly({requestedAssemblyName}) from same folder."]
+            };
+        }
     }
 
     static T ValueOrDefault<T>(this (bool success, T value) tuple)
