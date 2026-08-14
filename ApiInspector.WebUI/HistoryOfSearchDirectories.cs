@@ -21,9 +21,17 @@ static class HistoryOfSearchDirectories
     }
 
     public static IReadOnlyList<string> Value => value;
-
+    
+    
     public static void AddIfNotExists(string path)
     {
+        if (path.HasNoValue())
+        {
+            return;
+        }
+
+        path = path.RemoveFromEnd(Path.DirectorySeparatorChar.ToString());
+
         if (value.Contains(path))
         {
             return;
