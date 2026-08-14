@@ -36,7 +36,7 @@ static class HistoryOfSearchDirectories
 
         path = ClearPath(path);
 
-        if (value.Contains(path))
+        if (value.Contains(path, StringComparer.OrdinalIgnoreCase))
         {
             return;
         }
