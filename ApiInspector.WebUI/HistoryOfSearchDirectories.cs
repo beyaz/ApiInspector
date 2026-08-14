@@ -12,7 +12,7 @@ static class HistoryOfSearchDirectories
     {
         if (FileStorage.ExistInStorage(storageKey))
         {
-            value = JsonConvert.DeserializeObject<List<string>>(FileStorage.ReadFromStorage(storageKey));
+            value = [.. (JsonConvert.DeserializeObject<List<string>>(FileStorage.ReadFromStorage(storageKey)) ?? []).Select(ClearPath)];
         }
         else
         {
@@ -21,8 +21,12 @@ static class HistoryOfSearchDirectories
     }
 
     public static IReadOnlyList<string> Value => value;
-    
-    
+
+    static string ClearPath(string path)
+    {
+        return path.RemoveFromEnd(Path.DirectorySeparatorChar.ToString());
+    }
+
     public static void AddIfNotExists(string path)
     {
         if (path.HasNoValue())
@@ -30,7 +34,7 @@ static class HistoryOfSearchDirectories
             return;
         }
 
-        path = path.RemoveFromEnd(Path.DirectorySeparatorChar.ToString());
+        path = ClearPath(path);
 
         if (value.Contains(path))
         {
