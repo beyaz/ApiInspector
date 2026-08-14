@@ -12,7 +12,7 @@ sealed class MainWindowModel
 
     public string MethodFilter { get; set; }
 
-    public ImmutableList<ScenarioModel> ScenarioList { get; set; } = ImmutableList<ScenarioModel>.Empty.Add(new ScenarioModel());
+    public ImmutableList<ScenarioModel> ScenarioList { get; set; } = [new()];
 
     public int ScenarioListSelectedIndex { get; set; }
 

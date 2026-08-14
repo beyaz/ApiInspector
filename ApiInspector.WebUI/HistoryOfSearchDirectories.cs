@@ -4,7 +4,7 @@ namespace ApiInspector.WebUI;
 
 static class HistoryOfSearchDirectories
 {
-    static readonly string storageKey = $"{nameof(HistoryOfSearchDirectories)}.json";
+    const string storageKey = $"{nameof(HistoryOfSearchDirectories)}.json";
 
     static readonly List<string> value;
 
