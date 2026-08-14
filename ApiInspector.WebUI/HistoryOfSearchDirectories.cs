@@ -16,7 +16,7 @@ static class HistoryOfSearchDirectories
         }
         else
         {
-            value = new List<string>();
+            value = [];
         }
     }
 

@@ -634,6 +634,11 @@ class MainWindow : Component<MainWindowModel>
 
     static string GetDefaultRuntimeNameFromAssembly(string assemblyFileFullPath)
     {
+        if (assemblyFileFullPath.HasNoValue())
+        {
+            return RuntimeNames.NetCore;
+        }
+        
         var fileInfo = new FileInfo(assemblyFileFullPath);
         if (fileInfo.Exists)
         {

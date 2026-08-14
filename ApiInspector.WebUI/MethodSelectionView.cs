@@ -54,7 +54,7 @@ public sealed class MethodSelectionViewState
 
     public string MethodFilter { get; set; }
 
-    public IReadOnlyList<MetadataNode> Nodes { get; set; }
+    public IReadOnlyList<MetadataNode> Nodes { get; set; } = [];
 
     public string SelectedMethodTreeNodeKey { get; set; }
     
