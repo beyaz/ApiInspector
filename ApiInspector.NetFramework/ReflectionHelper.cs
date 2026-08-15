@@ -6,11 +6,6 @@ namespace ApiInspector;
 
 static class ReflectionHelper
 {
-    
-  
-    
-
-    
     public static void AttachAssemblyResolver()
     {
         AppDomain.CurrentDomain.AssemblyResolve -= TryResolveAssembly;
