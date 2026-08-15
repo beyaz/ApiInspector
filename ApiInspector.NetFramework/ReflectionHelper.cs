@@ -6,17 +6,9 @@ namespace ApiInspector;
 
 static class ReflectionHelper
 {
-    public static void AttachAssemblyResolver()
-    {
-        //AppDomain.CurrentDomain.AssemblyResolve -= TryResolveAssembly;
-        //AppDomain.CurrentDomain.AssemblyResolve += TryResolveAssembly;
-    }
-
     public static void AttachToAssemblyResolveSameDirectory(string fullAssemblyPath)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CreateAssemblyResolver([Path.GetDirectoryName(fullAssemblyPath)]);
-        
-        // AppDomain.CurrentDomain.AssemblyResolve += (_, e) => TryLoadFromSameFolder(fullAssemblyPath, e);
     }
 
     public static object CreateDefaultValue(Type type)
@@ -124,251 +116,38 @@ static class ReflectionHelper
         void traceError(Exception exception) => WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }
 
-    static (bool success, T value) OnFail<T>(this (bool success, T value) tuple, Action action)
+    static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
     {
-        if (!tuple.success)
+        var extensions = new[] { ".dll", ".exe" };
+
+        foreach (var fileExtension in extensions)
         {
-            action();
-        }
+            var fileName = fileNameWithoutExtension + fileExtension;
 
-        return tuple;
-    }
-
-    static Assembly TryResolveAssembly(object _, ResolveEventArgs e)
-    {
-        var requestedAssemblyName = new AssemblyName(e.Name);
-
-        WriteLog($"RequestedAssemblyName: {requestedAssemblyName}");
-
-        var fileNameWithoutExtension = requestedAssemblyName.Name;
-
-        var pipe = new[]
-        {
-            () => tryLoadSystemAssembliesFromSdk(requestedAssemblyName),
-            () => tryFindAssemblyByUsingPlugins(fileNameWithoutExtension),
-            () => tryLoadFromSearchDirectories(e, fileNameWithoutExtension)
-        };
-
-        return run(pipe).OnFail(onFail).ValueOrDefault();
-
-        void onFail()
-        {
-            var errorMessage = $"Assembly not resolved. @fileNameWithoutExtension: {fileNameWithoutExtension}";
-            WriteLog(errorMessage);
-        }
-
-        static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
-        {
-            var extensions = new[] { ".dll", ".exe" };
-
-            foreach (var fileExtension in extensions)
+            var fullFilePath = Plugin.TryFindFullFilePathOfAssembly(fileName);
+            if (fullFilePath is not null && File.Exists(fullFilePath))
             {
-                var fileName = fileNameWithoutExtension + fileExtension;
-
-                var fullFilePath = Plugin.TryFindFullFilePathOfAssembly(fileName);
-                if (fullFilePath is not null && File.Exists(fullFilePath))
-                {
-                    return (true, LoadAssemblyFile(fullFilePath));
-                }
+                return (true, LoadAssemblyFile(fullFilePath));
             }
-
-            return default;
-        }
-
-        static (bool success, Assembly assembly) tryLoadSystemAssembliesFromSdk(AssemblyName requestedAssemblyName)
-        {
-            if (requestedAssemblyName.Name?.StartsWith("System.", StringComparison.OrdinalIgnoreCase) is true)
-            {
-                var currentEnvironmentIsDotNetFramework = GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetFramework;
-
-                if (currentEnvironmentIsDotNetFramework)
-                {
-                    if (Directory.Exists("C:\\Program Files\\dotnet\\sdk\\"))
-                    {
-                        foreach (var folderPath in Directory.GetDirectories("C:\\Program Files\\dotnet\\sdk\\").OrderByDescending(x => x))
-                        {
-                            var majorVersion = requestedAssemblyName.Version?.Major.ToString();
-
-                            var folderNameHasMatchMajorVersion = !string.IsNullOrWhiteSpace(majorVersion) && Path.GetFileName(folderPath).StartsWith(majorVersion, StringComparison.OrdinalIgnoreCase);
-                            if (folderNameHasMatchMajorVersion)
-                            {
-                                var finalFolderPath = Path.Combine(folderPath, "Containers", "tasks", "net472");
-
-                                var finalFilePath = Path.Combine(finalFolderPath, requestedAssemblyName.Name + ".dll");
-                                if (File.Exists(finalFilePath))
-                                {
-                                    return (true, LoadAssemblyFile(finalFilePath));
-                                }
-                            }
-                        }
-                    }
-
-                    if (Directory.Exists(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\"))
-                    {
-                        foreach (var folderPath in Directory.GetDirectories(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\").OrderByDescending(x => x))
-                        {
-                            var majorVersion = requestedAssemblyName.Version?.Major.ToString();
-
-                            var folderNameHasMatchMajorVersion = !string.IsNullOrWhiteSpace(majorVersion) && Path.GetFileName(folderPath).StartsWith(majorVersion, StringComparison.OrdinalIgnoreCase);
-                            if (folderNameHasMatchMajorVersion)
-                            {
-                                var finalFilePath = Path.Combine(folderPath, requestedAssemblyName.Name + ".dll");
-                                if (File.Exists(finalFilePath))
-                                {
-                                    return (true, LoadAssemblyFile(finalFilePath));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return default;
-        }
-
-        static (bool success, Assembly assembly) tryLoadFromSearchDirectories(ResolveEventArgs e, string fileNameWithoutExtension)
-        {
-            var extensions = new[] { ".dll", ".exe" };
-
-            foreach (var searchDirectory in getSearchDirectories(e.RequestingAssembly))
-            {
-                foreach (var fileExtension in extensions)
-                {
-                    var filePath = Path.Combine(searchDirectory, fileNameWithoutExtension + fileExtension);
-                    if (File.Exists(filePath))
-                    {
-                        return (success: true, LoadAssemblyFile(filePath));
-                    }
-                }
-            }
-
-            return default;
-
-            static IReadOnlyList<string> getSearchDirectories(Assembly requestingAssembly)
-            {
-                var searchDirectories = new List<string>();
-
-                SafeInvoke(() => Path.GetDirectoryName(requestingAssembly?.Location)).Then(directoryName =>
-                {
-                    if (directoryName != null)
-                    {
-                        searchDirectories.Insert(0, directoryName);
-                    }
-                });
-
-                if (GetTargetFramework(new FileInfo(typeof(ReflectionHelper).Assembly.Location)).isDotNetCore)
-                {
-                    var version = Environment.Version.ToString();
-
-                    var folders = new[]
-                    {
-                        $"C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App\\{version}",
-                        $"C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\{version}",
-                        $"C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App\\{version}"
-                    };
-
-                    foreach (var folder in folders)
-                    {
-                        searchDirectories.Add(folder);
-                    }
-                }
-
-                return searchDirectories;
-            }
-        }
-
-        static (bool success, T value) run<T>(Func<(bool success, T value)>[] methods)
-        {
-            foreach (var method in methods)
-            {
-                var (success, value) = method();
-                if (success)
-                {
-                    return (true, value);
-                }
-            }
-
-            return default;
-        }
-    }
-
-    static Assembly TryLoadFromSameFolder(string fullAssemblyPath, ResolveEventArgs e)
-    {
-        var result = TryLoadFromSameFolder(fullAssemblyPath, new AssemblyName(e.Name).Name);
-        if (result.success)
-        {
-            WriteLog(result.trace);
-            return result.assembly;
-        }
-
-        WriteLog(result.trace);
-
-        return null;
-    }
-
-    static (bool success, Assembly assembly, Exception exception, IReadOnlyList<string> trace) TryLoadFromSameFolder(string fullAssemblyPath, string requestedAssemblyName)
-    {
-        var directoryInfo = Directory.GetParent(fullAssemblyPath);
-        if (directoryInfo is null)
-        {
-            return new()
-            {
-                trace = [$"{nameof(TryLoadFromSameFolder)} / FirectoryNotFound / {fullAssemblyPath}"]
-            };
-        }
-
-        var fullFilePath = Path.Combine(directoryInfo.FullName, requestedAssemblyName + ".dll");
-        if (!File.Exists(fullFilePath))
-        {
-            return new()
-            {
-                trace = [$"{nameof(TryLoadFromSameFolder)} / FileNotFound / {fullFilePath}"]
-            };
-        }
-
-        try
-        {
-            return new()
-            {
-                success  = true,
-                assembly = Assembly.LoadFrom(fullFilePath),
-                trace    = [$"Successfully loaded assembly({requestedAssemblyName}) from same folder."]
-            };
-        }
-        catch (Exception exception)
-        {
-            return new()
-            {
-                exception = exception,
-                trace     = [$"Failed when loading assembly({requestedAssemblyName}) from same folder."]
-            };
-        }
-    }
-
-    static T ValueOrDefault<T>(this (bool success, T value) tuple)
-    {
-        if (tuple.success)
-        {
-            return tuple.value;
         }
 
         return default;
     }
 
-
     internal static ResolveEventHandler CreateAssemblyResolver(IReadOnlyList<string> searchDirectories)
     {
-        var directories = searchDirectories
-                         .Where(Directory.Exists)
-                         .Select(Path.GetFullPath)
-                         .Distinct(StringComparer.OrdinalIgnoreCase)
-                         .ToArray();
+        var directories =
+            searchDirectories
+               .Where(Directory.Exists)
+               .Select(Path.GetFullPath)
+               .Distinct(StringComparer.OrdinalIgnoreCase)
+               .ToArray();
 
-        return (_sender, args) =>
+        return (_, args) =>
         {
             var requestedName = new AssemblyName(args.Name);
 
-            try
+            // I s   A l r e a d y   L o a d e d
             {
                 var alreadyLoaded = AppDomain.CurrentDomain
                                              .GetAssemblies()
@@ -388,262 +167,193 @@ static class ReflectionHelper
                 {
                     return alreadyLoaded;
                 }
+            }
 
-                //
-                // System.* / Microsoft.* için önce runtime'a bırak.
-                //
-                if (IsFrameworkAssembly(requestedName))
-                {
-                    try
-                    {
-                        return Assembly.Load(requestedName);
-                    }
-                    catch
-                    {
-                    }
-                }
-
-                //
-                // Kullanıcının verdiği klasörler
-                //
-                var candidate = FindBestAssembly(
-                    requestedName,
-                    directories);
-
+            // U s e r   D i r e c t o r i e s
+            {
+                var candidate = FindBestAssembly(requestedName, directories);
                 if (candidate != null)
                 {
                     return Assembly.LoadFrom(candidate);
                 }
+            }
 
-                //
-                // Runtime dizini
-                //
-                var runtimeDir = Path.GetDirectoryName(
-                    typeof(object).Assembly.Location);
+            // F r o m   P l u g i n
+            {
+                var response = tryFindAssemblyByUsingPlugins(requestedName.Name);
+                if (response.success)
+                {
+                    return response.assembly;
+                }
+            }
+
+            // R u n t i m e   D i r e c t o r i e s
+            {
+                var runtimeDir = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
                 if (!string.IsNullOrWhiteSpace(runtimeDir))
                 {
-                    candidate = FindBestAssembly(
-                        requestedName,
-                        new[] { runtimeDir });
-
+                    var candidate = FindBestAssembly(requestedName, [runtimeDir]);
                     if (candidate != null)
                     {
                         return Assembly.LoadFrom(candidate);
                     }
                 }
+            }
 
-                //
-                // Microsoft/System ise bütün runtime ve sdk klasörlerine bak
-                //
+            // F r a m e w o r k   D i r e c t o r i e s
+            {
                 if (IsFrameworkAssembly(requestedName))
                 {
                     var frameworkDirs = GetFrameworkDirectories();
 
-                    candidate = FindBestAssembly(
-                        requestedName,
-                        frameworkDirs);
+                    var candidate = FindBestAssembly(requestedName, frameworkDirs);
 
                     if (candidate != null)
                     {
                         return Assembly.LoadFrom(candidate);
                     }
+                }
+            }
 
-                    //
-                    // son kez runtime'a sor
-                    //
+            return null;
+
+            static bool IsFrameworkAssembly(AssemblyName name)
+            {
+                var n = name.Name ?? "";
+
+                return n.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
+                       || n.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)
+                       || n.Equals("System", StringComparison.OrdinalIgnoreCase)
+                       || n.Equals("mscorlib", StringComparison.OrdinalIgnoreCase)
+                       || n.Equals("netstandard", StringComparison.OrdinalIgnoreCase);
+            }
+
+            static IEnumerable<string> GetFrameworkDirectories()
+            {
+                var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                void SafeAdd(string path)
+                {
+                    if (!string.IsNullOrWhiteSpace(path)
+                        && Directory.Exists(path))
+                    {
+                        result.Add(path);
+                    }
+                }
+
+                SafeAdd(Path.GetDirectoryName(
+                    typeof(object).Assembly.Location));
+
+                SafeAdd(Environment.GetEnvironmentVariable(
+                    "DOTNET_ROOT"));
+
+                SafeAdd(Environment.GetEnvironmentVariable(
+                    "DOTNET_ROOT(x86)"));
+
+                SafeAdd(@"C:\Program Files\dotnet");
+
+                SafeAdd(@"C:\Program Files (x86)\dotnet");
+
+                foreach (var root in result.ToList())
+                {
                     try
                     {
-                        return Assembly.Load(requestedName);
+                        foreach (var dir in Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories))
+                        {
+                            result.Add(dir);
+                        }
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
 
-                return null;
+                return result;
+            }
 
-                // ==========================
-                // Local Functions
-                // ==========================
+            static string FindBestAssembly(AssemblyName requested, IEnumerable<string> roots)
+            {
+                var requestedVersion = requested.Version ?? new Version(0, 0);
 
-                static bool IsFrameworkAssembly(AssemblyName name)
+                var requestedPkt = requested.GetPublicKeyToken();
+
+                string bestPath = null;
+
+                var bestScore = long.MinValue;
+
+                foreach (var root in roots)
                 {
-                    var n = name.Name ?? "";
-
-                    return n.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
-                           || n.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase)
-                           || n.Equals("System", StringComparison.OrdinalIgnoreCase)
-                           || n.Equals("mscorlib", StringComparison.OrdinalIgnoreCase)
-                           || n.Equals("netstandard", StringComparison.OrdinalIgnoreCase);
-                }
-
-                static IEnumerable<string> GetFrameworkDirectories()
-                {
-                    var result = new HashSet<string>(
-                        StringComparer.OrdinalIgnoreCase);
-
-                    void SafeAdd(string? path)
+                    if (!Directory.Exists(root))
                     {
-                        if (!string.IsNullOrWhiteSpace(path)
-                            && Directory.Exists(path))
-                        {
-                            result.Add(path);
-                        }
+                        continue;
                     }
 
-                    //
-                    // Runtime klasörü
-                    //
-                    SafeAdd(Path.GetDirectoryName(
-                        typeof(object).Assembly.Location));
+                    IEnumerable<string> files;
 
-                    //
-                    // DOTNET_ROOT
-                    //
-                    SafeAdd(Environment.GetEnvironmentVariable(
-                        "DOTNET_ROOT"));
+                    try
+                    {
+                        files = Directory.EnumerateFiles(root, $"{requested.Name}.dll", SearchOption.AllDirectories);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
 
-                    SafeAdd(Environment.GetEnvironmentVariable(
-                        "DOTNET_ROOT(x86)"));
-
-                    //
-                    // Default install locations
-                    //
-                    SafeAdd(
-                        @"C:\Program Files\dotnet");
-
-                    SafeAdd(
-                        @"C:\Program Files (x86)\dotnet");
-
-                    foreach (var root in result.ToList())
+                    foreach (var file in files)
                     {
                         try
                         {
-                            foreach (var dir in Directory.EnumerateDirectories(
-                                         root,
-                                         "*",
-                                         SearchOption.AllDirectories))
+                            var candidateName = AssemblyName.GetAssemblyName(file);
+
+                            if (!string.Equals(candidateName.Name, requested.Name, StringComparison.OrdinalIgnoreCase))
                             {
-                                result.Add(dir);
+                                continue;
                             }
-                        }
-                        catch
-                        {
-                        }
-                    }
 
-                    return result;
-                }
-
-                static string? FindBestAssembly(
-                    AssemblyName requested,
-                    IEnumerable<string> roots)
-                {
-                    var requestedVersion =
-                        requested.Version ?? new Version(0, 0);
-
-                    var requestedPkt =
-                        requested.GetPublicKeyToken();
-
-                    string? bestPath = null;
-                    var bestScore = long.MinValue;
-
-                    foreach (var root in roots)
-                    {
-                        if (!Directory.Exists(root))
-                        {
-                            continue;
-                        }
-
-                        IEnumerable<string> files;
-
-                        try
-                        {
-                            files = Directory.EnumerateFiles(
-                                root,
-                                $"{requested.Name}.dll",
-                                SearchOption.AllDirectories);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-
-                        foreach (var file in files)
-                        {
-                            try
+                            //
+                            // Strong name uyumu
+                            //
+                            if (requestedPkt is { Length: > 0 })
                             {
-                                var candidateName =
-                                    AssemblyName.GetAssemblyName(file);
+                                var candidatePkt = candidateName.GetPublicKeyToken();
 
-                                if (candidateName.Version != requested.Version)
-                                {
-                                    ;
-                                }
-                                if (!string.Equals(
-                                        candidateName.Name,
-                                        requested.Name,
-                                        StringComparison.OrdinalIgnoreCase))
+                                if (candidatePkt == null || !candidatePkt.SequenceEqual(requestedPkt))
                                 {
                                     continue;
                                 }
-
-                                //
-                                // Strong name uyumu
-                                //
-                                if (requestedPkt is { Length: > 0 })
-                                {
-                                    var candidatePkt =
-                                        candidateName.GetPublicKeyToken();
-
-                                    if (candidatePkt == null ||
-                                        !candidatePkt.SequenceEqual(
-                                            requestedPkt))
-                                    {
-                                        continue;
-                                    }
-                                }
-
-                                var version =
-                                    candidateName.Version
-                                    ?? new Version(0, 0);
-
-                                long score;
-
-                                if (version == requestedVersion)
-                                {
-                                    score = long.MaxValue;
-                                }
-                                else
-                                {
-                                    score =
-                                        -Math.Abs(
-                                            version.CompareTo(
-                                                requestedVersion));
-                                }
-
-                                if (score > bestScore)
-                                {
-                                    bestScore = score;
-                                    bestPath  = file;
-                                }
                             }
-                            catch
+
+                            var version = candidateName.Version ?? new Version(0, 0);
+
+                            long score;
+
+                            if (version == requestedVersion)
                             {
+                                score = long.MaxValue;
+                            }
+                            else
+                            {
+                                score = -Math.Abs(version.CompareTo(requestedVersion));
+                            }
+
+                            if (score > bestScore)
+                            {
+                                bestScore = score;
+
+                                bestPath = file;
                             }
                         }
+                        catch
+                        {
+                            // ignored
+                        }
                     }
-
-                    return bestPath;
                 }
-            }
-            catch(Exception exception)
-            {
-                return null;
+
+                return bestPath;
             }
         };
     }
-    
-
 }

@@ -14,7 +14,6 @@ static class Program
     public static string GetEnvironment(string assemblyFileFullPath)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
-        ReflectionHelper.AttachAssemblyResolver();
         Plugin.BeforeStart(assemblyFileFullPath);
 
         return Plugin.GetEnvironment(assemblyFileFullPath);
@@ -36,7 +35,6 @@ static class Program
         var (fullAssemblyPath, methodReference, jsonForInstance) = state;
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        ReflectionHelper.AttachAssemblyResolver();
         Plugin.BeforeStart(fullAssemblyPath);
 
         if (methodReference is null || methodReference.IsStatic)
@@ -118,7 +116,6 @@ static class Program
         var (fullAssemblyPath, methodReference, jsonForParameters) = state;
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        ReflectionHelper.AttachAssemblyResolver();
         Plugin.BeforeStart(fullAssemblyPath);
 
         if (methodReference is null || methodReference.Parameters.Count == 0)
@@ -170,7 +167,6 @@ static class Program
         WriteLog($"jsonForParameters: {jsonForParameters}");
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        ReflectionHelper.AttachAssemblyResolver();
         Plugin.BeforeStart(fullAssemblyPath);
 
         WriteLog("ResolversAttached");
