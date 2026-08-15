@@ -8,7 +8,7 @@ public class DirectorySelector : Component
 
     [CustomEvent]
     public Func<string,Task> SelectionChanged { get; init; }
-
+    
     protected override Element render()
     {
         List<string> suggestions = [];
@@ -31,6 +31,8 @@ public class DirectorySelector : Component
 
             }
         }
+
+       
         
         var autoComplete = new AutoComplete<string>
         {
@@ -52,7 +54,20 @@ public class DirectorySelector : Component
                 {
                     x
                 }
-            }
+            },
+            filterBy= """
+                      (function(keyword, option)
+                      {
+                          var parts = keyword
+                              .split(/[\\/:._-]+/)
+                              .filter(Boolean)
+                              .map(x => x.toLocaleLowerCase());
+
+                          var label = option.label.toLocaleLowerCase();
+
+                          return parts.every(part => label.includes(part));
+                      })
+                      """
         };
 
         return autoComplete;
