@@ -135,7 +135,7 @@ static class ReflectionHelper
     static Assembly TryResolveAssembly(object _, ResolveEventArgs e)
     {
         var requestedAssemblyName = new AssemblyName(e.Name);
-        
+
         WriteLog($"RequestedAssemblyName: {requestedAssemblyName}");
 
         var fileNameWithoutExtension = requestedAssemblyName.Name;
@@ -155,8 +155,6 @@ static class ReflectionHelper
             WriteLog(errorMessage);
         }
 
-        
-        
         static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
         {
             var extensions = new[] { ".dll", ".exe" };
@@ -202,7 +200,7 @@ static class ReflectionHelper
                             }
                         }
                     }
-                    
+
                     if (Directory.Exists(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\"))
                     {
                         foreach (var folderPath in Directory.GetDirectories(@"C:\Program Files\dotnet\shared\Microsoft.NETCore.App\").OrderByDescending(x => x))
@@ -222,7 +220,7 @@ static class ReflectionHelper
                     }
                 }
             }
-            
+
             return default;
         }
 
@@ -300,12 +298,12 @@ static class ReflectionHelper
             WriteLog(result.trace);
             return result.assembly;
         }
-        
+
         WriteLog(result.trace);
-        
+
         return null;
     }
-    
+
     static (bool success, Assembly assembly, Exception exception, IReadOnlyList<string> trace) TryLoadFromSameFolder(string fullAssemblyPath, string requestedAssemblyName)
     {
         var directoryInfo = Directory.GetParent(fullAssemblyPath);
@@ -325,14 +323,14 @@ static class ReflectionHelper
                 trace = [$"{nameof(TryLoadFromSameFolder)} / FileNotFound / {fullFilePath}"]
             };
         }
-        
+
         try
         {
             return new()
             {
-                success = true,
+                success  = true,
                 assembly = Assembly.LoadFrom(fullFilePath),
-                trace = [ $"Successfully loaded assembly({requestedAssemblyName}) from same folder."]
+                trace    = [$"Successfully loaded assembly({requestedAssemblyName}) from same folder."]
             };
         }
         catch (Exception exception)
@@ -340,7 +338,7 @@ static class ReflectionHelper
             return new()
             {
                 exception = exception,
-                trace    = [ $"Failed when loading assembly({requestedAssemblyName}) from same folder."]
+                trace     = [$"Failed when loading assembly({requestedAssemblyName}) from same folder."]
             };
         }
     }
