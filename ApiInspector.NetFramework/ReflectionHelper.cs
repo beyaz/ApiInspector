@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using static ApiInspector.FpExtensions;
 
 namespace ApiInspector;
 
@@ -319,7 +316,10 @@ static class ReflectionHelper
         var directoryInfo = Directory.GetParent(fullAssemblyPath);
         if (directoryInfo is null)
         {
-            return default;
+            return new()
+            {
+                trace = [$"{nameof(TryLoadFromSameFolder)} / FirectoryNotFound / {fullAssemblyPath}"]
+            };
         }
 
         var fullFilePath = Path.Combine(directoryInfo.FullName, requestedAssemblyName + ".dll");
