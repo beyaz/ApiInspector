@@ -67,9 +67,33 @@ class HistoryPanel : Component
         static Element renderItem(MethodReference methodReference, string filterText)
         {
             var htmlContent = methodReference.DeclaringType.FullName + "::" + methodReference.FullNameWithoutReturnType;
+            
+            htmlContent = System.Net.WebUtility.HtmlEncode(htmlContent);
+
             if (filterText.HasValue())
             {
-                htmlContent = htmlContent.Replace(filterText, "<b>" + filterText + "<b>");
+                var encodedFilter = System.Net.WebUtility.HtmlEncode(filterText);
+
+                var sb = new System.Text.StringBuilder();
+
+                var index = 0;
+
+                while (true)
+                {
+                    var found = htmlContent.IndexOf(encodedFilter, index, StringComparison.OrdinalIgnoreCase);
+                    if (found < 0)
+                    {
+                        sb.Append(htmlContent, index, htmlContent.Length - index);
+                        break;
+                    }
+
+                    sb.Append(htmlContent, index, found - index);
+                    sb.Append("<b>").Append(htmlContent, found, encodedFilter.Length).Append("</b>");
+
+                    index = found + encodedFilter.Length;
+                }
+
+                htmlContent = sb.ToString();
             }
             
             return new div
