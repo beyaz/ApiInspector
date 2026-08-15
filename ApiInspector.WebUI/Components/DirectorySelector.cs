@@ -11,7 +11,26 @@ public class DirectorySelector : Component
 
     protected override Element render()
     {
-        var suggestions = HistoryOfSearchDirectories.Value;
+        List<string> suggestions = [];
+
+        if (DirectoryPath.HasValue())
+        {
+            var parentDirectory = Directory.GetParent(DirectoryPath);
+            if (parentDirectory is not null && parentDirectory.Exists)
+            {
+                var filterDirectoryName = Path.GetFileNameWithoutExtension(DirectoryPath);
+
+                suggestions =
+                [
+                    .. from d in parentDirectory.GetDirectories()
+                       where d.Name.Contains(filterDirectoryName, StringComparison.OrdinalIgnoreCase)
+                       select  Path.Combine(parentDirectory.FullName,  d.Name)
+                ];
+
+                suggestions = [.. suggestions.Take(7)];
+
+            }
+        }
         
         var autoComplete = new AutoComplete<string>
         {
