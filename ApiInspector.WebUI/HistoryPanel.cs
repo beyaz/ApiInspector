@@ -14,8 +14,10 @@ class HistoryPanel : Component
 
     protected override Element render()
     {
-        var searchResult = SearchInStoreage(FilterText, 5).Select(x => (storageKey: x.StorageKey, JsonConvert.DeserializeObject<MainWindowModel>(x.StorageValue).SelectedMethod));
+        IEnumerable<(string storageKey, MethodReference SelectedMethod)> searchResult = SearchInStoreage(FilterText, 5).Select(x => (storageKey: x.StorageKey, JsonConvert.DeserializeObject<MainWindowModel>(x.StorageValue).SelectedMethod));
 
+        
+        
         return new FlexColumn(AlignItemsCenter, PaddingLeftRight(20), Gap(15), Height("50vh"))
         {
             new FlexRowCentered(FontSize40, FontWeight700, Color("#ced4da"), Padding(5),  CursorDefault, Hover(Color("#adada6")))
@@ -50,13 +52,7 @@ class HistoryPanel : Component
 
                         new img { Src(GetSvgUrl("Method")), Size(14), MarginTop(5) },
 
-                        new div
-                        {
-                            Text(x.SelectedMethod.DeclaringType.FullName + "::" + x.SelectedMethod.FullNameWithoutReturnType),
-                            MarginLeft(5),
-                            FontSize13,
-                            WordBreakAll
-                        }
+                        renderItem(x.SelectedMethod, FilterText)
                     },
                     new img
                     {
@@ -66,6 +62,24 @@ class HistoryPanel : Component
                 })
             }
         };
+        
+        
+        static Element renderItem(MethodReference methodReference, string filterText)
+        {
+            var htmlContent = methodReference.DeclaringType.FullName + "::" + methodReference.FullNameWithoutReturnType;
+            if (filterText.HasValue())
+            {
+                htmlContent = htmlContent.Replace(filterText, "<b>" + filterText + "<b>");
+            }
+            
+            return new div
+            {
+                DangerouslySetInnerHTML(htmlContent),
+                MarginLeft(5),
+                FontSize13,
+                WordBreakAll
+            };
+        }
     }
 
     Task OnClose(MouseEvent obj)
