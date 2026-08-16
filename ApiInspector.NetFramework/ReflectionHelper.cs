@@ -8,7 +8,7 @@ static class ReflectionHelper
 {
     public static void AttachToAssemblyResolveSameDirectory(string fullAssemblyPath)
     {
-        AppDomain.CurrentDomain.AssemblyResolve += CreateAssemblyResolver([Path.GetDirectoryName(fullAssemblyPath)]);
+        AppDomain.CurrentDomain.AssemblyResolve += CreateAssemblyResolver(fullAssemblyPath);
     }
 
     public static object CreateDefaultValue(Type type)
@@ -134,15 +134,8 @@ static class ReflectionHelper
         return default;
     }
 
-    internal static ResolveEventHandler CreateAssemblyResolver(IReadOnlyList<string> searchDirectories)
+    internal static ResolveEventHandler CreateAssemblyResolver(string fullAssemblyPath)
     {
-        var directories =
-            searchDirectories
-               .Where(Directory.Exists)
-               .Select(Path.GetFullPath)
-               .Distinct(StringComparer.OrdinalIgnoreCase)
-               .ToArray();
-
         return (_, args) =>
         {
             var requestedName = new AssemblyName(args.Name);
@@ -171,10 +164,19 @@ static class ReflectionHelper
 
             // U s e r   D i r e c t o r i e s
             {
-                var candidate = FindBestAssembly(requestedName, directories);
-                if (candidate != null)
+                var assemblyFilePath = Path.Combine(Path.GetDirectoryName(fullAssemblyPath) ?? string.Empty, $"{requestedName.Name}.dll");
+                if (File.Exists(assemblyFilePath))
                 {
-                    return Assembly.LoadFrom(candidate);
+                    try
+                    {
+                        return Assembly.LoadFrom(assemblyFilePath);
+                    }
+                    catch (Exception exception)
+                    {
+                        WriteLog(exception.ToString());
+                        
+                        throw;
+                    }
                 }
             }
 
@@ -290,6 +292,8 @@ static class ReflectionHelper
                         continue;
                     }
 
+                    WriteLog($"Trying to find '{requested.Name}' in '{root}'");
+                    
                     IEnumerable<string> files;
 
                     try
@@ -332,6 +336,8 @@ static class ReflectionHelper
                             if (version == requestedVersion)
                             {
                                 score = long.MaxValue;
+                                
+                                return file;
                             }
                             else
                             {
