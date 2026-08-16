@@ -42,6 +42,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Invocation.Shared.cs" />
     <Compile Include="AssemblyModel.cs" />
     <Compile Include="AssemblyModelHelper.cs" />
     <Compile Include="AsyncLogger.cs" />

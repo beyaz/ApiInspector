@@ -25,6 +25,7 @@
         <Compile Include="..\ApiInspector.NetFramework\JsonConverterForPropertyInfo.cs" Link="JsonConverterForPropertyInfo.cs" />
 		<Compile Include="..\ApiInspector.NetFramework\AsyncLogger.cs" Link="AsyncLogger.cs" />
         <Compile Include="..\ApiInspector.NetFramework\JsonInternalAssigner.cs" Link="AsyncLogger.cs" />
+        <Compile Include="..\ApiInspector.NetFramework\Invocation.Shared.cs" Link="Invocation.Shared.cs" />
     </ItemGroup>
 
     <ItemGroup>
