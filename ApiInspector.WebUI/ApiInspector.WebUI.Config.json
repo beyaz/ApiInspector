@@ -8,5 +8,11 @@
   "FileStorage": {
     "IsActive": true,
     "CacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache"
-  }
+  },
+
+  "InvocationHandlerExePaths": [
+    "D:\\BOA\\tools\\ApiInspector\\ApiInspector.Card.Net8\\ApiInspector.exe",
+    "D:\\BOA\\tools\\ApiInspector\\ApiInspector.NetCore\\ApiInspector.exe",
+    "D:\\BOA\\tools\\ApiInspector\\ApiInspector.NetFramework\\ApiInspector.exe"
+  ] 
 }

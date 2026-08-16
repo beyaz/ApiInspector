@@ -11,6 +11,11 @@ namespace ApiInspector;
 
 static class Program
 {
+    public static bool IsYourAssembly(string assemblyFileFullPath)
+    {
+        return false;
+    }
+    
     public static string GetEnvironment(string assemblyFileFullPath)
     {
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);

@@ -40,6 +40,23 @@ static class External
 
         return Execute<string>(executeInput);
     }
+    
+    public static Result<string> IsYourAssembly(string runtimeName, string assemblyFileFullPath)
+    {
+        var parameter = assemblyFileFullPath;
+
+        var executeInput = new ExecuteInput
+        {
+            RuntimeName          = runtimeName,
+            AssemblyFileFullPath = assemblyFileFullPath,
+            MethodName           = nameof(IsYourAssembly),
+            Parameter            = parameter
+        };
+
+        return Execute<string>(executeInput);
+    }
+    
+    
 
     public static Result<string> GetInstanceEditorJsonText(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
@@ -200,13 +217,13 @@ static class External
     {
         // @formatter:off
         
-        public string InputAsJson{ get; init; }
+        public string InputAsJson { get; init; }
         
-        public bool IsNetCoreApp{ get; init; }
+        public bool IsNetCoreApp  { get; init; }
         
-        public string MethodName{ get; init; }
+        public string MethodName { get; init; }
         
-        public bool WaitForDebugger{ get; init; }
+        public bool WaitForDebugger { get; init; }
         
         public Action<Process> OnProcessStarted { get; init; }
         
