@@ -156,7 +156,7 @@ class MainWindow : Component<MainWindowModel>
             {
                 new FlexRow(AlignItemsCenter, Gap(5))
                 {
-                    new h3 { "Api Inspector" }, new h5 { " (.net method invoker) ", MarginTop(5) }
+                    new h3 { "Api Inspector" }, new h5 { " (.net method invoker) ", MarginTop(5) }, new h6 { " version: 1.0.0 ", MarginTop(10) }
                 },
 
                 new FlexRow(Gap(20))
