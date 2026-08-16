@@ -59,12 +59,11 @@ class MainWindow : Component<MainWindowModel>
     {
         state = StateCache.ReadState() ?? new MainWindowModel
         {
-            AssemblyDirectory = Config.InvocationHandlerExePaths[0],
+            AssemblyDirectory = Path.GetDirectoryName(Config.InvocationHandlerExePaths[0]),
             AssemblyFileName  = "ApiInspector.exe",
             MethodFilter      = "GetHelpMessage"
         };
-
-        state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
+        ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
 
         return Task.CompletedTask;
     }
@@ -73,7 +72,7 @@ class MainWindow : Component<MainWindowModel>
     {
         foreach (var invokerExeFilePath in Config.InvocationHandlerExePaths)
         {
-            var result = External.IsYourAssembly(invokerExeFilePath , state.RuntimeName, assemblyFileFullPath);
+            var result = External.IsYourAssembly(invokerExeFilePath, assemblyFileFullPath);
             if (result.HasError)
             {
                 continue;
@@ -305,8 +304,6 @@ class MainWindow : Component<MainWindowModel>
                         {
                             state.AssemblyFileName = x;
 
-                            state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
-                            
                             ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
                             
                             TryUpdateEnvironmentText();
@@ -491,46 +488,6 @@ class MainWindow : Component<MainWindowModel>
 
             var partActionButtons = new FlexRow(Height(50), Gap(30))
             {
-                new FlexColumn(Gap(2), AlignItemsFlexStart, CursorDefault)
-                {
-                    new FlexRowCentered(Gap(4))
-                    {
-                        new svg(svg.Size(20))
-                        {
-                            new circle { cx = 10, cy = 10, r = 9, stroke = BluePrimary, strokeWidth = 1, fill = none },
-
-                            state.RuntimeName == RuntimeNames.NetCore ? null : new circle { cx = 10, cy = 10, r = 5, fill = "#f18484" }
-                        },
-
-                        "Framework",
-
-                        OnClick(_ =>
-                        {
-                            state.RuntimeName = RuntimeNames.NetFramework;
-
-                            return Task.CompletedTask;
-                        })
-                    },
-
-                    new FlexRowCentered(Gap(4))
-                    {
-                        new svg(svg.Size(20))
-                        {
-                            new circle { cx = 10, cy = 10, r = 9, stroke = BluePrimary, strokeWidth = 1, fill = none },
-
-                            state.RuntimeName == RuntimeNames.NetFramework ? null : new circle { cx = 10, cy = 10, r = 5, fill = "#f18484" }
-                        },
-
-                        "Core",
-
-                        OnClick(_ =>
-                        {
-                            state.RuntimeName = RuntimeNames.NetCore;
-
-                            return Task.CompletedTask;
-                        })
-                    }
-                },
                 new ExecuteButton
                 {
                     Click  = OnExecuteClicked,
@@ -652,25 +609,6 @@ class MainWindow : Component<MainWindowModel>
         }
     }
 
-    static string GetDefaultRuntimeNameFromAssembly(string assemblyFileFullPath)
-    {
-        if (assemblyFileFullPath.HasNoValue())
-        {
-            return RuntimeNames.NetCore;
-        }
-        
-        var fileInfo = new FileInfo(assemblyFileFullPath);
-        if (fileInfo.Exists)
-        {
-            var targetRuntimeInfo = GetTargetFramework(fileInfo);
-            if (targetRuntimeInfo.IsNetFramework || targetRuntimeInfo.IsNetStandard)
-            {
-                return RuntimeNames.NetFramework;
-            }
-        }
-
-        return RuntimeNames.NetCore;
-    }
 
     Task AddNewScenarioClicked(MouseEvent _)
     {
@@ -956,10 +894,7 @@ class MainWindow : Component<MainWindowModel>
                     state.MethodFilter              = currentState.MethodFilter;
                     state.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
 
-                    if (state.RuntimeName.HasNoValue())
-                    {
-                        state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
-                    }
+                    ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
                 }
             }
         }
@@ -1092,7 +1027,6 @@ class MainWindow : Component<MainWindowModel>
             {
                 External.GetInstanceEditorJsonText
                 (
-                    state.RuntimeName,
                     AssemblyFileFullPath,
                     state.SelectedMethod,
                     scenario.JsonTextForDotNetInstanceProperties

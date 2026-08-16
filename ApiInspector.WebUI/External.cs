@@ -39,7 +39,7 @@ static class External
         return Execute<string>(executeInput);
     }
     
-    public static Result<string> IsYourAssembly(string invokerExeFilePath,string runtimeName, string assemblyFileFullPath)
+    public static Result<string> IsYourAssembly(string invokerExeFilePath, string assemblyFileFullPath)
     {
         var parameter = assemblyFileFullPath;
 
@@ -56,7 +56,7 @@ static class External
     
     
 
-    public static Result<string> GetInstanceEditorJsonText(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
+    public static Result<string> GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
