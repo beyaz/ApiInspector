@@ -59,7 +59,7 @@ class MainWindow : Component<MainWindowModel>
     {
         state = StateCache.ReadState() ?? new MainWindowModel
         {
-            AssemblyDirectory = Path.GetDirectoryName(DotNetFrameworkInvokerExePath),
+            AssemblyDirectory = Config.InvocationHandlerExePaths[0],
             AssemblyFileName  = "ApiInspector.exe",
             MethodFilter      = "GetHelpMessage"
         };
@@ -876,8 +876,6 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        RuntimeName = state.RuntimeName,
-
                         AssemblyFileFullPath = AssemblyFileFullPath,
 
                         MethodReference = state.SelectedMethod,
@@ -1016,8 +1014,6 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        RuntimeName = state.RuntimeName,
-
                         AssemblyFileFullPath = AssemblyFileFullPath,
 
                         MethodReference = state.SelectedMethod,
@@ -1107,7 +1103,6 @@ class MainWindow : Component<MainWindowModel>
             {
                 External.GetParametersEditorJsonText
                 (
-                    state.RuntimeName,
                     AssemblyFileFullPath,
                     state.SelectedMethod,
                     scenario.JsonTextForDotNetMethodParameters

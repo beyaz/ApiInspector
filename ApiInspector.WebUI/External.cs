@@ -7,8 +7,6 @@ sealed record ExternalInvokeInput
 {
     // @formatter:off
     
-    public required string RuntimeName { get; init; }
-    
     public required  string AssemblyFileFullPath { get; init;} 
     
     public required  MethodReference MethodReference { get;init; } 
@@ -47,7 +45,6 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            RuntimeName          = runtimeName,
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(IsYourAssembly),
             Parameter            = parameter,
@@ -65,7 +62,6 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            RuntimeName          = runtimeName,
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetInstanceEditorJsonText),
             Parameter            = parameter
@@ -74,13 +70,12 @@ static class External
         return Execute<string>(executeInput);
     }
 
-    public static Result<string> GetParametersEditorJsonText(string runtimeName, string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
+    public static Result<string> GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
 
         var executeInput = new ExecuteInput
         {
-            RuntimeName          = runtimeName,
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetParametersEditorJsonText),
             Parameter            = parameter
@@ -95,7 +90,6 @@ static class External
 
         var executeInput = new ExecuteInput
         {
-            RuntimeName          = input.RuntimeName,
             AssemblyFileFullPath = input.AssemblyFileFullPath,
             MethodName           = nameof(InvokeMethod),
             Parameter            = parameter,
@@ -122,13 +116,10 @@ static class External
         }
 
         var inputAsJson = JsonConvert.SerializeObject(input.Parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
-
-        var isNetCore = input.RuntimeName == RuntimeNames.NetCore;
-
+        
         var runProcessInput = new RunProcessInput
         {
             InputAsJson      = inputAsJson,
-            IsNetCoreApp     = isNetCore,
             MethodName       = input.MethodName,
             WaitForDebugger  = input.WaitForDebugger,
             OnProcessStarted = input.OnProcessStarted,
@@ -153,7 +144,7 @@ static class External
     {
         var processStartInfo = new ProcessStartInfo
         {
-            FileName = input.InvokerExeFilePath ?? ( input.IsNetCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath),
+            FileName = input.InvokerExeFilePath,
 
             Arguments = $"{(input.WaitForDebugger ? "1" : "0")}|{input.MethodName}|{AsyncLogger.ListennigUrl}",
 
@@ -196,8 +187,6 @@ static class External
     {
         // @formatter:off
         
-        public string RuntimeName { get; init; }
-        
         public string AssemblyFileFullPath { get; init; }
         
         public string MethodName { get; init; }
@@ -218,8 +207,6 @@ static class External
         // @formatter:off
         
         public string InputAsJson { get; init; }
-        
-        public bool IsNetCoreApp  { get; init; }
         
         public string MethodName { get; init; }
         

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace ApiInspector.WebUI;
 
@@ -42,35 +41,7 @@ partial class Extensions
         }
     }
 
-    public static string DotNetCoreInvokerExePath
-    {
-        get
-        {
-            if (Debugger.IsAttached)
-            {
-                var app = AppFolder.Replace(@"\ApiInspector.WebUI\", @"\ApiInspector.NetCore\");
-
-                return Path.Combine(app, "ApiInspector.exe");
-            }
-
-            return Path.Combine(AppFolder, "ApiInspector.NetCore", "ApiInspector.exe");
-        }
-    }
-
-    public static string DotNetFrameworkInvokerExePath
-    {
-        get
-        {
-            if (Debugger.IsAttached)
-            {
-                var app = AppFolder.Replace(@"\ApiInspector.WebUI\bin\Debug\net8.0", @"\ApiInspector.NetFramework\bin\Debug\");
-
-                return Path.Combine(app, "ApiInspector.exe");
-            }
-
-            return Path.Combine(AppFolder, "ApiInspector.NetFramework", "ApiInspector.exe");
-        }
-    }
+    
 
     static ConfigInfo ReadConfig()
     {
