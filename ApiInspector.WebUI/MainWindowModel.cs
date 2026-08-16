@@ -25,6 +25,8 @@ sealed class MainWindowModel
     public string RuntimeName { get; set; }
 
     public string EnvironmentText { get; set; }
+    
+    public string InvokerExeFilePath { get; set; }
 }
 
 static class RuntimeNames

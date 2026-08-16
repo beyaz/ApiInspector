@@ -69,6 +69,24 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
+    static void ArrangeInvokerExeFilePath(MainWindowModel state, string assemblyFileFullPath)
+    {
+        foreach (var invokerExeFilePath in Config.InvocationHandlerExePaths)
+        {
+            var result = External.IsYourAssembly(invokerExeFilePath , state.RuntimeName, assemblyFileFullPath);
+            if (result.HasError)
+            {
+                continue;
+            }
+
+            if ("true".Equals(result.Value, StringComparison.OrdinalIgnoreCase))
+            {
+                state.InvokerExeFilePath = invokerExeFilePath;
+                break;
+            }
+        }
+    }
+    
     protected override Element render()
     {
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
@@ -288,7 +306,9 @@ class MainWindow : Component<MainWindowModel>
                             state.AssemblyFileName = x;
 
                             state.RuntimeName = GetDefaultRuntimeNameFromAssembly(AssemblyFileFullPath);
-
+                            
+                            ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+                            
                             TryUpdateEnvironmentText();
 
                             return Task.CompletedTask;
@@ -868,7 +888,9 @@ class MainWindow : Component<MainWindowModel>
 
                         WaitForDebugger = true,
 
-                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; }
+                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; },
+
+                        InvokerExeFilePath = state.InvokerExeFilePath
                     };
 
                     External.InvokeMethod(input).Match
@@ -1006,7 +1028,9 @@ class MainWindow : Component<MainWindowModel>
 
                         WaitForDebugger = false,
 
-                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; }
+                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; },
+
+                        InvokerExeFilePath = state.InvokerExeFilePath
                     };
                     External.InvokeMethod(input).Match
                     (
@@ -1099,7 +1123,7 @@ class MainWindow : Component<MainWindowModel>
 
     void TryUpdateEnvironmentText()
     {
-        External.GetEnvironment(state.RuntimeName, AssemblyFileFullPath).Match
+        External.GetEnvironment(state.InvokerExeFilePath, AssemblyFileFullPath).Match
         (
             x => state.EnvironmentText = x,
             _ => state.EnvironmentText = null

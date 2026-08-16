@@ -21,27 +21,27 @@ sealed record ExternalInvokeInput
     
     public required  Action<Process> OnProcessStarted { get; init; }
     
+    public required  string InvokerExeFilePath { get; init; }
+    
     // @formatter:on
 }
 
 static class External
 {
-    public static Result<string> GetEnvironment(string runtimeName, string assemblyFileFullPath)
+    public static Result<string> GetEnvironment(string invokerExeFilePath, string assemblyFileFullPath)
     {
-        var parameter = assemblyFileFullPath;
-
         var executeInput = new ExecuteInput
         {
-            RuntimeName          = runtimeName,
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetEnvironment),
-            Parameter            = parameter
+            Parameter            = assemblyFileFullPath,
+            InvokerExeFilePath = invokerExeFilePath
         };
 
         return Execute<string>(executeInput);
     }
     
-    public static Result<string> IsYourAssembly(string runtimeName, string assemblyFileFullPath)
+    public static Result<string> IsYourAssembly(string invokerExeFilePath,string runtimeName, string assemblyFileFullPath)
     {
         var parameter = assemblyFileFullPath;
 
@@ -50,7 +50,8 @@ static class External
             RuntimeName          = runtimeName,
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(IsYourAssembly),
-            Parameter            = parameter
+            Parameter            = parameter,
+            InvokerExeFilePath = invokerExeFilePath
         };
 
         return Execute<string>(executeInput);
@@ -99,7 +100,8 @@ static class External
             MethodName           = nameof(InvokeMethod),
             Parameter            = parameter,
             WaitForDebugger      = input.WaitForDebugger,
-            OnProcessStarted     = input.OnProcessStarted
+            OnProcessStarted     = input.OnProcessStarted,
+            InvokerExeFilePath   = input.InvokerExeFilePath
         };
 
         return Execute<string>(executeInput);
@@ -107,11 +109,6 @@ static class External
 
     static Result<TResponse> Execute<TResponse>(ExecuteInput input)
     {
-        if (string.IsNullOrWhiteSpace(input.RuntimeName))
-        {
-            return new ArgumentException("Select runtime");
-        }
-
         var fileInfo = new FileInfo(input.AssemblyFileFullPath);
         if (!fileInfo.Exists)
         {
@@ -134,7 +131,8 @@ static class External
             IsNetCoreApp     = isNetCore,
             MethodName       = input.MethodName,
             WaitForDebugger  = input.WaitForDebugger,
-            OnProcessStarted = input.OnProcessStarted
+            OnProcessStarted = input.OnProcessStarted,
+            InvokerExeFilePath = input.InvokerExeFilePath
         };
 
         var (exitCode, outputAsJson) = RunProcess(runProcessInput);
@@ -155,7 +153,7 @@ static class External
     {
         var processStartInfo = new ProcessStartInfo
         {
-            FileName = input.IsNetCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath,
+            FileName = input.InvokerExeFilePath ?? ( input.IsNetCoreApp ? DotNetCoreInvokerExePath : DotNetFrameworkInvokerExePath),
 
             Arguments = $"{(input.WaitForDebugger ? "1" : "0")}|{input.MethodName}|{AsyncLogger.ListennigUrl}",
 
@@ -210,6 +208,8 @@ static class External
         
         public Action<Process> OnProcessStarted { get; init; }
         
+        public string InvokerExeFilePath { get; init; }
+        
         // @formatter:on
     }
 
@@ -226,6 +226,8 @@ static class External
         public bool WaitForDebugger { get; init; }
         
         public Action<Process> OnProcessStarted { get; init; }
+        
+        public string InvokerExeFilePath { get; init; }
         
         // @formatter:on
     }
