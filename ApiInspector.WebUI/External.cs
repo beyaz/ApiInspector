@@ -32,7 +32,10 @@ static class External
         {
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetEnvironment),
-            Parameter            = assemblyFileFullPath,
+            Parameter            = new()
+            {
+                AssemblyFileFullPath = assemblyFileFullPath
+            },
             InvokerExeFilePath = invokerExeFilePath
         };
 
@@ -41,13 +44,14 @@ static class External
     
     public static Result<string> IsYourAssembly(string invokerExeFilePath, string assemblyFileFullPath)
     {
-        var parameter = assemblyFileFullPath;
-
         var executeInput = new ExecuteInput
         {
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(IsYourAssembly),
-            Parameter            = parameter,
+            Parameter            = new()
+            {
+                AssemblyFileFullPath = assemblyFileFullPath
+            },
             InvokerExeFilePath = invokerExeFilePath
         };
 
@@ -58,13 +62,16 @@ static class External
 
     public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
-        var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
-
         var executeInput = new ExecuteInput
         {
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetInstanceEditorJsonText),
-            Parameter            = parameter,
+            Parameter            = new()
+            {
+                AssemblyFileFullPath = assemblyFileFullPath,
+                MethodReference = methodReference,
+                JsonForInstance = jsonForInstance
+            },
             InvokerExeFilePath   = invokerExeFilePath
         };
 
@@ -73,13 +80,16 @@ static class External
 
     public static Result<string> GetParametersEditorJsonText(string invokerExeFilePath, string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
-        var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
-
         var executeInput = new ExecuteInput
         {
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetParametersEditorJsonText),
-            Parameter            = parameter,
+            Parameter            = new()
+            {
+                AssemblyFileFullPath = assemblyFileFullPath,
+                MethodReference      = methodReference,
+                JsonForParameters      = jsonForParameters
+            },
             InvokerExeFilePath   = invokerExeFilePath
         };
 
@@ -94,7 +104,13 @@ static class External
         {
             AssemblyFileFullPath = input.AssemblyFileFullPath,
             MethodName           = nameof(InvokeMethod),
-            Parameter            = parameter,
+            Parameter            = new()
+            {
+                AssemblyFileFullPath = input.AssemblyFileFullPath,
+                MethodReference = input.MethodReference,
+                JsonForInstance = input.JsonTextForDotNetInstanceProperties,
+                JsonForParameters = input.JsonTextForDotNetMethodParameters
+            },
             WaitForDebugger      = input.WaitForDebugger,
             OnProcessStarted     = input.OnProcessStarted,
             InvokerExeFilePath   = input.InvokerExeFilePath
@@ -105,6 +121,11 @@ static class External
 
     static Result<TResponse> Execute<TResponse>(ExecuteInput input)
     {
+        if (input.InvokerExeFilePath is null)
+        {
+            return new ArgumentException(nameof(input.InvokerExeFilePath));
+        }
+        
         var fileInfo = new FileInfo(input.AssemblyFileFullPath);
         if (!fileInfo.Exists)
         {
@@ -193,7 +214,7 @@ static class External
         
         public string MethodName { get; init; }
         
-        public object Parameter { get; init; }
+        public ExternalInput Parameter { get; init; }
         
         public bool WaitForDebugger { get; init; }
         

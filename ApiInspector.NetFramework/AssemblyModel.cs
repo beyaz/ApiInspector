@@ -89,3 +89,15 @@ public sealed class ParameterReference
         return $"{ParameterType} {Name}";
     }
 }
+
+[Serializable]
+public sealed class ExternalInput
+{
+    public string AssemblyFileFullPath { get; set; }
+    
+    public MethodReference MethodReference { get; set; }
+    
+    public string JsonForInstance { get; set; }
+    
+    public string JsonForParameters { get; set; }
+}
