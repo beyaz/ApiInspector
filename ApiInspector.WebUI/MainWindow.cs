@@ -899,6 +899,8 @@ class MainWindow : Component<MainWindowModel>
             }
         }
 
+        ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+        
         TryInitializeDefaultJsonInputs();
 
         return Task.CompletedTask;
@@ -1027,6 +1029,7 @@ class MainWindow : Component<MainWindowModel>
             {
                 External.GetInstanceEditorJsonText
                 (
+                    state.InvokerExeFilePath,
                     AssemblyFileFullPath,
                     state.SelectedMethod,
                     scenario.JsonTextForDotNetInstanceProperties
@@ -1037,6 +1040,7 @@ class MainWindow : Component<MainWindowModel>
             {
                 External.GetParametersEditorJsonText
                 (
+                    state.InvokerExeFilePath,
                     AssemblyFileFullPath,
                     state.SelectedMethod,
                     scenario.JsonTextForDotNetMethodParameters

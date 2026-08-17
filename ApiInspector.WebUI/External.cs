@@ -56,7 +56,7 @@ static class External
     
     
 
-    public static Result<string> GetInstanceEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
+    public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForInstance);
 
@@ -64,13 +64,14 @@ static class External
         {
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetInstanceEditorJsonText),
-            Parameter            = parameter
+            Parameter            = parameter,
+            InvokerExeFilePath   = invokerExeFilePath
         };
 
         return Execute<string>(executeInput);
     }
 
-    public static Result<string> GetParametersEditorJsonText(string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
+    public static Result<string> GetParametersEditorJsonText(string invokerExeFilePath, string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
     {
         var parameter = (assemblyFileFullPath, methodReference, jsonForParameters);
 
@@ -78,7 +79,8 @@ static class External
         {
             AssemblyFileFullPath = assemblyFileFullPath,
             MethodName           = nameof(GetParametersEditorJsonText),
-            Parameter            = parameter
+            Parameter            = parameter,
+            InvokerExeFilePath   = invokerExeFilePath
         };
 
         return Execute<string>(executeInput);
