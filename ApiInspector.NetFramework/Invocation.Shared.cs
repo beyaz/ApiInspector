@@ -15,6 +15,21 @@ static class Mixin
             Thread.Sleep(100);
         }
     }
+    
+    internal static object TryCreateAsValueType(Type type)
+    {
+        if (type == null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
+
+        if (type.IsValueType)
+        {
+            return Activator.CreateInstance(type);
+        }
+
+        return null;
+    }
 }
 
 sealed class LogTextWriter : TextWriter

@@ -814,14 +814,17 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
-                        AssemblyFileFullPath = AssemblyFileFullPath,
-
-                        MethodReference = state.SelectedMethod,
-
-                        JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
-
-                        JsonTextForDotNetMethodParameters = scenario.JsonTextForDotNetMethodParameters,
-
+                        Input = new()
+                        {
+                            AssemblyFileFullPath = AssemblyFileFullPath,
+                            
+                            MethodReference = state.SelectedMethod,
+                            
+                            JsonForInstance = scenario.JsonTextForDotNetInstanceProperties,
+                            
+                            JsonForParameters = scenario.JsonTextForDotNetMethodParameters,
+                        },
+                        
                         WaitForDebugger = true,
 
                         OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; },
@@ -951,14 +954,18 @@ class MainWindow : Component<MainWindowModel>
                 {
                     var input = new ExternalInvokeInput
                     {
+                        Input = new()
+                        {
+                            
+                        
                         AssemblyFileFullPath = AssemblyFileFullPath,
 
                         MethodReference = state.SelectedMethod,
 
-                        JsonTextForDotNetInstanceProperties = scenario.JsonTextForDotNetInstanceProperties,
+                        JsonForInstance = scenario.JsonTextForDotNetInstanceProperties,
 
-                        JsonTextForDotNetMethodParameters = scenario.JsonTextForDotNetMethodParameters,
-
+                        JsonForParameters = scenario.JsonTextForDotNetMethodParameters,
+                        },
                         WaitForDebugger = false,
 
                         OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; },
@@ -1030,9 +1037,12 @@ class MainWindow : Component<MainWindowModel>
                 External.GetInstanceEditorJsonText
                 (
                     state.InvokerExeFilePath,
-                    AssemblyFileFullPath,
-                    state.SelectedMethod,
-                    scenario.JsonTextForDotNetInstanceProperties
+                    new ()
+                    {
+                        AssemblyFileFullPath = AssemblyFileFullPath,
+                        MethodReference = state.SelectedMethod,
+                        JsonForInstance = scenario.JsonTextForDotNetInstanceProperties
+                    }
                 ).Match(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
 
@@ -1041,9 +1051,12 @@ class MainWindow : Component<MainWindowModel>
                 External.GetParametersEditorJsonText
                 (
                     state.InvokerExeFilePath,
-                    AssemblyFileFullPath,
-                    state.SelectedMethod,
-                    scenario.JsonTextForDotNetMethodParameters
+                    new ()
+                    {
+                        AssemblyFileFullPath = AssemblyFileFullPath,
+                        MethodReference      = state.SelectedMethod,
+                        JsonForParameters      = scenario.JsonTextForDotNetMethodParameters
+                    }
                 ).Match(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 

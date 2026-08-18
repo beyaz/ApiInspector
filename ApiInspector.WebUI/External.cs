@@ -7,19 +7,13 @@ sealed record ExternalInvokeInput
 {
     // @formatter:off
     
-    public required  string AssemblyFileFullPath { get; init;} 
-    
-    public required  MethodReference MethodReference { get;init; } 
-    
-    public required  string JsonTextForDotNetInstanceProperties { get; init;} 
-    
-    public required  string JsonTextForDotNetMethodParameters { get; init;} 
-    
     public required  bool WaitForDebugger { get;init; } 
     
     public required  Action<Process> OnProcessStarted { get; init; }
     
     public required  string InvokerExeFilePath { get; init; }
+    
+    public required  ExternalInput Input { get; init; }
     
     // @formatter:on
 }
@@ -60,36 +54,26 @@ static class External
     
     
 
-    public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, string assemblyFileFullPath, MethodReference methodReference, string jsonForInstance)
+    public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, ExternalInput input)
     {
         var executeInput = new ExecuteInput
         {
-            AssemblyFileFullPath = assemblyFileFullPath,
+            AssemblyFileFullPath = input.AssemblyFileFullPath,
             MethodName           = nameof(GetInstanceEditorJsonText),
-            Parameter            = new()
-            {
-                AssemblyFileFullPath = assemblyFileFullPath,
-                MethodReference = methodReference,
-                JsonForInstance = jsonForInstance
-            },
+            Parameter            = input,
             InvokerExeFilePath   = invokerExeFilePath
         };
 
         return Execute<string>(executeInput);
     }
 
-    public static Result<string> GetParametersEditorJsonText(string invokerExeFilePath, string assemblyFileFullPath, MethodReference methodReference, string jsonForParameters)
+    public static Result<string> GetParametersEditorJsonText(string invokerExeFilePath, ExternalInput input)
     {
         var executeInput = new ExecuteInput
         {
-            AssemblyFileFullPath = assemblyFileFullPath,
+            AssemblyFileFullPath = input.AssemblyFileFullPath,
             MethodName           = nameof(GetParametersEditorJsonText),
-            Parameter            = new()
-            {
-                AssemblyFileFullPath = assemblyFileFullPath,
-                MethodReference      = methodReference,
-                JsonForParameters      = jsonForParameters
-            },
+            Parameter            = input,
             InvokerExeFilePath   = invokerExeFilePath
         };
 
@@ -98,19 +82,11 @@ static class External
 
     public static Result<string> InvokeMethod(ExternalInvokeInput input)
     {
-        var parameter = (assemblyFileFullPath: input.AssemblyFileFullPath, methodReference: input.MethodReference, stateJsonTextForDotNetInstanceProperties: input.JsonTextForDotNetInstanceProperties, stateJsonTextForDotNetMethodParameters: input.JsonTextForDotNetMethodParameters);
-
         var executeInput = new ExecuteInput
         {
-            AssemblyFileFullPath = input.AssemblyFileFullPath,
+            AssemblyFileFullPath = input.Input.AssemblyFileFullPath,
             MethodName           = nameof(InvokeMethod),
-            Parameter            = new()
-            {
-                AssemblyFileFullPath = input.AssemblyFileFullPath,
-                MethodReference = input.MethodReference,
-                JsonForInstance = input.JsonTextForDotNetInstanceProperties,
-                JsonForParameters = input.JsonTextForDotNetMethodParameters
-            },
+            Parameter            = input.Input,
             WaitForDebugger      = input.WaitForDebugger,
             OnProcessStarted     = input.OnProcessStarted,
             InvokerExeFilePath   = input.InvokerExeFilePath
