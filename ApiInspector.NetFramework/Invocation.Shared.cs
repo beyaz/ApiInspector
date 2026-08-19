@@ -1,6 +1,9 @@
 ﻿global using static ApiInspector.Mixin;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
@@ -29,6 +32,16 @@ static class Mixin
         }
 
         return null;
+    }
+    
+    internal static string LocalIPAddress()
+    {
+        if (!NetworkInterface.GetIsNetworkAvailable())
+        {
+            return null;
+        }
+
+        return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString();
     }
 }
 

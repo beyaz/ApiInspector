@@ -117,6 +117,41 @@ static class AssemblyModelHelper
 
         return methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
     }
+    
+    public static (bool Success, MethodInfo Value, Exception Exception) TryLoadMethod(this Assembly assembly, MethodReference methodReference)
+    {
+        if (assembly == null)
+        {
+            return (Success: false, Value: null, Exception: new ArgumentNullException(nameof(assembly)));
+        }
+
+        if (methodReference == null)
+        {
+            return (Success: false, Value: null, Exception: new ArgumentNullException(nameof(methodReference)));
+        }
+
+        var type = assembly.GetType(methodReference.DeclaringType.FullName, throwOnError: false, ignoreCase: true);
+        if (type == null)
+        {
+            return (Success: false, Value: null, Exception: new Exception($"Type '{methodReference.DeclaringType.FullName}' not found in assembly '{assembly.FullName}'"));
+        }
+
+        var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        methods = methods.Where(m => m.Name == methodReference.Name).ToArray();
+        if (methods.Length == 1)
+        {
+            return (Success: true, Value: methods[0], Exception: null);
+        }
+
+        var methodInfo = methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
+        if (methodInfo == null)
+        {
+            return (Success: false, Value: null, Exception: new Exception($"Method '{methodReference.Name}' not found in type '{methodReference.DeclaringType.FullName}'"));
+        }
+
+        return (Success: true, Value: methodInfo, Exception: null);
+    }
 
     /// <summary>
     ///     Removes value from end of str
@@ -138,4 +173,15 @@ static class AssemblyModelHelper
 
         return data;
     }
+}
+
+
+public sealed record Result<TValue>(bool Success, TValue Value, Exception Exception)
+{
+    public static implicit operator Result<TValue>(TValue value) => new(true, value, null);
+
+    public static implicit operator Result<TValue>(Exception exception) => new(false, default, exception);
+
+    public static implicit operator Result<TValue>((bool Success, TValue Value, Exception Exception) tuple) => new(tuple.Success, tuple.Value, tuple.Exception);
+
 }
