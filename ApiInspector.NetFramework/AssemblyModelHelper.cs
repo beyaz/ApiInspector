@@ -118,22 +118,43 @@ static class AssemblyModelHelper
         return methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
     }
     
-    public static (bool Success, MethodInfo Value, Exception Exception) TryLoadMethod(this Assembly assembly, MethodReference methodReference)
+    public static Result<Type> TryLoadType(this Assembly assembly, TypeReference typeReference)
     {
         if (assembly == null)
         {
-            return (Success: false, Value: null, Exception: new ArgumentNullException(nameof(assembly)));
+            throw new ArgumentNullException(nameof(assembly));
+        }
+
+        if (typeReference == null)
+        {
+            throw new ArgumentNullException(nameof(typeReference));
+        }
+
+        var type = assembly.GetType(typeReference.FullName, throwOnError: false, ignoreCase: true);
+        if (type == null)
+        {
+            return new Exception($"Type '{typeReference.FullName}' not found in assembly '{assembly.FullName}'");
+        }
+
+        return type;
+    }
+    
+    public static Result<MethodInfo> TryLoadMethod(this Assembly assembly, MethodReference methodReference)
+    {
+        if (assembly == null)
+        {
+            return new ArgumentNullException(nameof(assembly));
         }
 
         if (methodReference == null)
         {
-            return (Success: false, Value: null, Exception: new ArgumentNullException(nameof(methodReference)));
+            return new ArgumentNullException(nameof(methodReference));
         }
 
         var type = assembly.GetType(methodReference.DeclaringType.FullName, throwOnError: false, ignoreCase: true);
         if (type == null)
         {
-            return (Success: false, Value: null, Exception: new Exception($"Type '{methodReference.DeclaringType.FullName}' not found in assembly '{assembly.FullName}'"));
+            return new Exception($"Type '{methodReference.DeclaringType.FullName}' not found in assembly '{assembly.FullName}'");
         }
 
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
@@ -141,16 +162,16 @@ static class AssemblyModelHelper
         methods = methods.Where(m => m.Name == methodReference.Name).ToArray();
         if (methods.Length == 1)
         {
-            return (Success: true, Value: methods[0], Exception: null);
+            return methods[0];
         }
 
         var methodInfo = methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
         if (methodInfo == null)
         {
-            return (Success: false, Value: null, Exception: new Exception($"Method '{methodReference.Name}' not found in type '{methodReference.DeclaringType.FullName}'"));
+            return new Exception($"Method '{methodReference.Name}' not found in type '{methodReference.DeclaringType.FullName}'");
         }
 
-        return (Success: true, Value: methodInfo, Exception: null);
+        return methodInfo;
     }
 
     /// <summary>
@@ -176,12 +197,35 @@ static class AssemblyModelHelper
 }
 
 
-public sealed record Result<TValue>(bool Success, TValue Value, Exception Exception)
+public readonly struct Result<TValue>(bool success, TValue value, Exception exception)
 {
+    public bool Success { get;  } = success;
+
+    public TValue Value { get; } = value;
+
+    public Exception Exception { get;  } = exception;
+
     public static implicit operator Result<TValue>(TValue value) => new(true, value, null);
 
     public static implicit operator Result<TValue>(Exception exception) => new(false, default, exception);
 
     public static implicit operator Result<TValue>((bool Success, TValue Value, Exception Exception) tuple) => new(tuple.Success, tuple.Value, tuple.Exception);
+   
 
+    public override string ToString()
+    {
+        if (Success && Value != null)
+        {
+            return Value.ToString();
+        }
+        
+        return $"Success: {Success}, Value: {Value}, Exception: {Exception}";
+    }
+
+    public void Deconstruct(out bool success, out TValue value, out Exception exception)
+    {
+        success   = this.Success;
+        value     = this.Value;
+        exception = this.Exception;
+    }
 }
