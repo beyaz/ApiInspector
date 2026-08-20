@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using BOA.Common.Types;
 
 namespace ApiInspector;
 
@@ -251,6 +250,16 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
         }
 
         return selector(Value);
+    }
+    
+    public Result<TResult> SelectMany<TResult>(Func<TValue, TResult> selector)
+    {
+        if (!Success)
+        {
+            return Exception;
+        }
+
+        return new Result<TResult>(success: true, value: selector(Value), exception: null);
     }
 
     public Result<TResult> SelectMany<TIntermediate, TResult>(Func<TValue, Result<TIntermediate>> selector, Func<TValue, TIntermediate, TResult> resultSelector)
