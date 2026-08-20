@@ -196,7 +196,25 @@ static class AssemblyModelHelper
     }
 }
 
+public readonly struct Result(bool success, Exception exception)
+{
+    public bool Success { get;  } = success;
+    
+    public Exception Exception { get;  } = exception;
 
+    public static Result<T> From<T>(Func<T> func)
+    {
+        try
+        {
+            return new Result<T>(success: true, value: func(), exception: null);
+        }
+        catch (Exception ex)
+        {
+            return new Result<T>(success: false, value: default, exception: ex);
+        }
+    }
+}
+    
 public readonly struct Result<TValue>(bool success, TValue value, Exception exception)
 {
     public bool Success { get;  } = success;
@@ -261,6 +279,8 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
 
         return new Result<TResult>(success: true, value: selector(Value), exception: null);
     }
+    
+    
 
     public Result<TResult> SelectMany<TIntermediate, TResult>(Func<TValue, Result<TIntermediate>> selector, Func<TValue, TIntermediate, TResult> resultSelector)
     {
@@ -277,6 +297,23 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
 
         return resultSelector(Value, intermediate.Value);
     }
+    
+    public Result<TResult> SelectMany<TIntermediate, TResult>(Func<TValue, Func<Result<TIntermediate>>> selector, Func<TValue, TIntermediate, TResult> resultSelector)
+    {
+        if (!Success)
+        {
+            return Exception;
+        }
+
+        var intermediate = selector(Value)();
+        if (!intermediate.Success)
+        {
+            return intermediate.Exception;
+        }
+
+        return resultSelector(Value, intermediate.Value);
+    }
+    
 
     public Result<TValue> Where(Func<TValue, bool> predicate)    {
         if (!Success)
@@ -329,9 +366,9 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
         action(source.Value);
         return source;
     }
-    
-   
 }
+
+
 
 public static class PipeExtensions
 {
