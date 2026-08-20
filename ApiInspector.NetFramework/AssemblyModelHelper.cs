@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using BOA.Common.Types;
 
 namespace ApiInspector;
 
@@ -319,6 +320,8 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
         action(source.Value);
         return source;
     }
+    
+   
 }
 
 public static class PipeExtensions
@@ -329,8 +332,8 @@ public static class PipeExtensions
         
         public static Result<TResult> operator | (T source, Func<T, Result<TResult>> func) => func(source);
 
+       
     }
-    
 }
 
 public readonly struct PipeData<TValue>(TValue value)
