@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace ApiInspector;
 
@@ -213,6 +214,18 @@ public readonly struct Result(bool success, Exception exception)
             return new Result<T>(success: false, value: default, exception: ex);
         }
     }
+    
+    public static Result<T> From<T>(Func<Result<T>> func)
+    {
+        try
+        {
+            return func();
+        }
+        catch (Exception ex)
+        {
+            return new Result<T>(success: false, value: default, exception: ex);
+        }
+    }
 }
     
 public readonly struct Result<TValue>(bool success, TValue value, Exception exception)
@@ -251,6 +264,16 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
     // First failed result short circuits the query.
 
     public Result<TResult> Select<TResult>(Func<TValue, TResult> selector)
+    {
+        if (!Success)
+        {
+            return Exception;
+        }
+
+        return new Result<TResult>(success: true, value: selector(Value), exception: null);
+    }
+    
+    public Result<TResult> Select<TResult>(Func<TValue, Result<TResult>> selector)
     {
         if (!Success)
         {

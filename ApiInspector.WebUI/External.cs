@@ -95,7 +95,7 @@ static class External
         return Execute<string>(executeInput);
     }
 
-    static Result<TResponse> Execute<TResponse>(ExecuteInput input)
+    static Result<string> Execute<TResponse>(ExecuteInput input)
     {
         if (input.InvokerExeFilePath is null)
         {
@@ -128,7 +128,7 @@ static class External
         var (exitCode, outputAsJson) = RunProcess(runProcessInput);
         if (exitCode == 1)
         {
-            return JsonConvert.DeserializeObject<TResponse>(outputAsJson);
+            return outputAsJson;
         }
 
         if (exitCode == 0)
