@@ -307,6 +307,30 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
 
         return this;
     }
+    
+    public static Result<TValue> operator | (Result<TValue> source, Action action)
+    {
+        action();
+        return source;
+    }
+    
+    public static Result<TValue> operator | (Result<TValue> source, Action<TValue> action)
+    {
+        action(source.Value);
+        return source;
+    }
+}
+
+public static class PipeExtensions
+{
+    extension<T, TResult>(T)
+    {
+        public static TResult operator |(T source, Func<T, TResult> func) => func(source);
+        
+        public static Result<TResult> operator | (T source, Func<T, Result<TResult>> func) => func(source);
+
+    }
+    
 }
 
 public readonly struct PipeData<TValue>(TValue value)
