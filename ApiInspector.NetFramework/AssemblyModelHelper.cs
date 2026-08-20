@@ -228,4 +228,88 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
         value     = this.Value;
         exception = this.Exception;
     }
+
+    // L i n q   q u e r y   s y n t a x   s u p p o r t
+    // First failed result short circuits the query.
+
+    public Result<TResult> Select<TResult>(Func<TValue, TResult> selector)
+    {
+        if (!Success)
+        {
+            return Exception;
+        }
+
+        return selector(Value);
+    }
+
+    public Result<TResult> SelectMany<TResult>(Func<TValue, Result<TResult>> selector)
+    {
+        if (!Success)
+        {
+            return Exception;
+        }
+
+        return selector(Value);
+    }
+
+    public Result<TResult> SelectMany<TIntermediate, TResult>(Func<TValue, Result<TIntermediate>> selector, Func<TValue, TIntermediate, TResult> resultSelector)
+    {
+        if (!Success)
+        {
+            return Exception;
+        }
+
+        var intermediate = selector(Value);
+        if (!intermediate.Success)
+        {
+            return intermediate.Exception;
+        }
+
+        return resultSelector(Value, intermediate.Value);
+    }
+
+    public Result<TValue> Where(Func<TValue, bool> predicate)    {
+        if (!Success)
+        {
+            return this;
+        }
+
+        if (!predicate(Value))
+        {
+            return new Exception($"Predicate not satisfied. @value: {Value}");
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Runs given action for success value then returns same result.
+    /// </summary>
+    public Result<TValue> Tap(Action<TValue> action)
+    {
+        if (Success)
+        {
+            action(Value);
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Runs given action for exception then returns same result.
+    /// </summary>
+    public Result<TValue> TapError(Action<Exception> action)
+    {
+        if (!Success)
+        {
+            action(Exception);
+        }
+
+        return this;
+    }
+}
+
+public readonly struct PipeData<TValue>(TValue value)
+{
+    public TValue Value { get; } = value;
 }
