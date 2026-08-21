@@ -24,6 +24,18 @@ public sealed class Result<TValue>
     {
         return Task.FromResult(result);
     }
+    
+    public static Result<TValue> operator | (Result<TValue> source, Action action)
+    {
+        action();
+        return source;
+    }
+    
+    public static Result<TValue> operator | (Result<TValue> source, Action<TValue> action)
+    {
+        action(source.Value);
+        return source;
+    }
 
     // @formatter:on
 }
@@ -35,9 +47,21 @@ public static class Result
         return new() { Error = exception };
     }
 
-    public static Result<T> From<T>(T value)
+    public static Result<T> Success<T>(T value)
     {
         return new() { Value = value };
+    }
+    
+    public static Result<T> From<T>(Func<T> value)
+    {
+        try
+        {
+            return Success(value());
+        }
+        catch (Exception ex)
+        {
+            return Error<T>(ex);
+        }
     }
 }
 
