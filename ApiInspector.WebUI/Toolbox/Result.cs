@@ -924,4 +924,17 @@ public static class ResultExtensions
             }
         }
     }
+    
+    
+    
+    public  static T Unwrap<T>(this Result<T> result)
+    {
+        if (result.HasError)
+        {
+            throw result.Error;
+         
+        }
+
+        return result.Value;
+    }
 }
