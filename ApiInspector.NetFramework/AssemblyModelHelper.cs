@@ -42,18 +42,17 @@ static class AssemblyModelHelper
                 Assembly      = asReference(x.Assembly)
             };
 
-
             static AssemblyReference asReference(Assembly assembly)
             {
                 var assemblyName = assembly.GetName();
 
                 var name = assemblyName.Name;
-                
+
                 if (name.EndsWith(".dll"))
                 {
                     name = name.RemoveFromEnd(".dll");
                 }
-                
+
                 return new() { Name = assemblyName.Name };
             }
         }
@@ -74,71 +73,6 @@ static class AssemblyModelHelper
         }
     }
 
-    public static Type TryLoadFrom(this Assembly assembly, TypeReference typeReference)
-    {
-        if (assembly == null)
-        {
-            throw new ArgumentNullException(nameof(assembly));
-        }
-
-        if (typeReference == null)
-        {
-            throw new ArgumentNullException(nameof(typeReference));
-        }
-
-        return assembly.GetType(typeReference.FullName, throwOnError: false, ignoreCase: true);
-    }
-
-    public static MethodInfo TryLoadFrom(this Assembly assembly, MethodReference methodReference)
-    {
-        if (assembly == null)
-        {
-            throw new ArgumentNullException(nameof(assembly));
-        }
-
-        if (methodReference == null)
-        {
-            throw new ArgumentNullException(nameof(methodReference));
-        }
-
-        var type = assembly.GetType(methodReference.DeclaringType.FullName, throwOnError: false, ignoreCase: true);
-        if (type == null)
-        {
-            return null;
-        }
-
-        var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-
-        methods = methods.Where(m => m.Name == methodReference.Name).ToArray();
-        if (methods.Length == 1)
-        {
-            return methods[0];
-        }
-
-        return methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
-    }
-    
-    public static Result<Type> TryLoadType(this Assembly assembly, TypeReference typeReference)
-    {
-        if (assembly == null)
-        {
-            throw new ArgumentNullException(nameof(assembly));
-        }
-
-        if (typeReference == null)
-        {
-            throw new ArgumentNullException(nameof(typeReference));
-        }
-
-        var type = assembly.GetType(typeReference.FullName, throwOnError: false, ignoreCase: true);
-        if (type == null)
-        {
-            return new Exception($"Type '{typeReference.FullName}' not found in assembly '{assembly.FullName}'");
-        }
-
-        return type;
-    }
-    
     public static Result<MethodInfo> TryLoadMethod(this Assembly assembly, MethodReference methodReference)
     {
         if (assembly == null)
@@ -173,20 +107,40 @@ static class AssemblyModelHelper
 
         return methodInfo;
     }
-   
+
+    public static Result<Type> TryLoadType(this Assembly assembly, TypeReference typeReference)
+    {
+        if (assembly == null)
+        {
+            throw new ArgumentNullException(nameof(assembly));
+        }
+
+        if (typeReference == null)
+        {
+            throw new ArgumentNullException(nameof(typeReference));
+        }
+
+        var type = assembly.GetType(typeReference.FullName, throwOnError: false, ignoreCase: true);
+        if (type == null)
+        {
+            return new Exception($"Type '{typeReference.FullName}' not found in assembly '{assembly.FullName}'");
+        }
+
+        return type;
+    }
 
     /// <summary>
     ///     Removes value from end of str
     /// </summary>
-     static string RemoveFromEnd(this string data, string value)
+    static string RemoveFromEnd(this string data, string value)
     {
-        return RemoveFromEnd(data, value, StringComparison.OrdinalIgnoreCase);
+        return data.RemoveFromEnd(value, StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
     ///     Removes from end.
     /// </summary>
-     static string RemoveFromEnd(this string data, string value, StringComparison comparison)
+    static string RemoveFromEnd(this string data, string value, StringComparison comparison)
     {
         if (data.EndsWith(value, comparison))
         {
@@ -196,4 +150,3 @@ static class AssemblyModelHelper
         return data;
     }
 }
-

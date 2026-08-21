@@ -54,7 +54,7 @@ static class Program
             return jsonForInstance;
         }
 
-        var declaringType = ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(typeOfInstance);
+        var declaringType = ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadType(typeOfInstance).Unwrap();
         if (declaringType == null)
         {
             return jsonForInstance;
@@ -134,7 +134,7 @@ static class Program
             map = new();
         }
 
-        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadFrom(methodReference)?.GetParameters() ?? [])
+        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadMethod(methodReference).Unwrap()?.GetParameters() ?? [])
         {
             var name = parameterInfo.Name;
             if (name == null || map.ContainsKey(name))
@@ -178,7 +178,7 @@ static class Program
 
         var assembly = ReflectionHelper.LoadFrom(fullAssemblyPath);
 
-        var methodInfo = assembly.TryLoadFrom(methodReference);
+        var methodInfo = assembly.TryLoadMethod(methodReference).Unwrap();
         if (methodInfo == null)
         {
             throw new MissingMemberException(methodReference.FullNameWithoutReturnType);
@@ -189,7 +189,7 @@ static class Program
         object instance = null;
         if (!methodInfo.IsStatic)
         {
-            var declaringType = assembly.TryLoadFrom(methodReference.DeclaringType);
+            var declaringType = assembly.TryLoadType(methodReference.DeclaringType).Unwrap();
 
             instance = ExecUntilNotNull(declaringType, jsonForInstance, [
                 tryCreateInstanceFromPlugins,
