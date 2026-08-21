@@ -75,6 +75,16 @@ public static class Result
             return Error<T>(exception);
         }
     }
+
+    public static Result<T> NotNull<T>(T value)
+    {
+        if (value is null)
+        {
+            return Error<T>(new NullReferenceException());
+        }
+
+        return Success(value);
+    }
 }
 
 // ReSharper disable once PartialTypeWithSinglePart
