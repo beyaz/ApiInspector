@@ -836,7 +836,7 @@ public static class ResultExtensions
     /// <summary>
     ///     Runs given action for success value then returns same result.
     /// </summary>
-    public static Result<T> Tap<T>(Result<T> result, Action<T> action)
+    public static Result<T> Tap<T>(this Result<T> result, Action<T> action)
     {
         if (!result.HasError)
         {
@@ -849,7 +849,7 @@ public static class ResultExtensions
     /// <summary>
     ///     Runs given action for exception then returns same result.
     /// </summary>
-    public static Result<T> TapError<T>(Result<T> result, Action<Exception> action)
+    public static Result<T> TapError<T>(this Result<T> result, Action<Exception> action)
     {
         if (result.HasError)
         {
