@@ -237,7 +237,7 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
     public Exception Exception { get;  } = exception;
 
     public static implicit operator Result<TValue>(TValue value) => new(true, value, null);
-
+    
     public static implicit operator Result<TValue>(Exception exception) => new(false, default, exception);
 
     public static implicit operator Result<TValue>((bool Success, TValue Value, Exception Exception) tuple) => new(tuple.Success, tuple.Value, tuple.Exception);
@@ -270,7 +270,9 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
             return Exception;
         }
 
-        return new Result<TResult>(success: true, value: selector(Value), exception: null);
+        var value = selector(Value);
+        
+        return new Result<TResult>(success: true, value, exception: null);
     }
     
     public Result<TResult> Select<TResult>(Func<TValue, Result<TResult>> selector)
@@ -280,7 +282,12 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
             return Exception;
         }
 
-        return selector(Value);
+        var result =  selector(Value);
+        if (result.Success)
+        {
+            return result.Value;
+        }
+        return result.Exception;
     }
 
     public Result<TResult> SelectMany<TResult>(Func<TValue, Result<TResult>> selector)
@@ -290,7 +297,12 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
             return Exception;
         }
 
-        return selector(Value);
+        var result =  selector(Value);
+        if (result.Success)
+        {
+            return result.Value;
+        }
+        return result.Exception;
     }
     
     public Result<TResult> SelectMany<TResult>(Func<TValue, TResult> selector)
@@ -335,6 +347,7 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
         }
 
         return resultSelector(Value, intermediate.Value);
+        
     }
     
 
@@ -393,15 +406,32 @@ public readonly struct Result<TValue>(bool success, TValue value, Exception exce
 
 
 
+public static class ResultExtensions
+{
+    /// <summary>
+    ///     Flattens a nested Result&lt;Result&lt;T&gt;&gt; into Result&lt;T&gt;.
+    ///     Useful when an implicit conversion accidentally wrapped a Result inside another Result.
+    /// </summary>
+    public static Result<T> Flatten<T>(this Result<Result<T>> nested)
+    {
+        if (!nested.Success)
+        {
+            return nested.Exception;
+        }
+
+        return nested.Value;
+    }
+}
+
 public static class PipeExtensions
 {
     extension<T, TResult>(T)
     {
         public static TResult operator |(T source, Func<T, TResult> func) => func(source);
-        
+
         public static Result<TResult> operator | (T source, Func<T, Result<TResult>> func) => func(source);
 
-       
+
     }
 }
 
