@@ -63,6 +63,18 @@ public static class Result
     {
         return new() { Value = value };
     }
+
+    public static Result<T> Try<T>(Func<T> func)
+    {
+        try
+        {
+            return Success(func());
+        }
+        catch (Exception exception)
+        {
+            return Error<T>(exception);
+        }
+    }
 }
 
 // ReSharper disable once PartialTypeWithSinglePart
