@@ -65,6 +65,7 @@ public static class Result
     }
 }
 
+// ReSharper disable once PartialTypeWithSinglePart
 public static partial class ResultExtensions
 {
     public static Result<T> AsResult<T>(this (T value, Exception exception) tuple)

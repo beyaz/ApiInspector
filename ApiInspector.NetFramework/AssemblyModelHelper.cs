@@ -118,6 +118,61 @@ static class AssemblyModelHelper
         return methods.FirstOrDefault(m => methodReference.Equals(AsMethodReference(m)));
     }
     
+    public static Result<Type> TryLoadType(this Assembly assembly, TypeReference typeReference)
+    {
+        if (assembly == null)
+        {
+            throw new ArgumentNullException(nameof(assembly));
+        }
+
+        if (typeReference == null)
+        {
+            throw new ArgumentNullException(nameof(typeReference));
+        }
+
+        var type = assembly.GetType(typeReference.FullName, throwOnError: false, ignoreCase: true);
+        if (type == null)
+        {
+            return new Exception($"Type '{typeReference.FullName}' not found in assembly '{assembly.FullName}'");
+        }
+
+        return type;
+    }
+    
+    public static Result<MethodInfo> TryLoadMethod(this Assembly assembly, MethodReference methodReference)
+    {
+        if (assembly == null)
+        {
+            return new ArgumentNullException(nameof(assembly));
+        }
+
+        if (methodReference == null)
+        {
+            return new ArgumentNullException(nameof(methodReference));
+        }
+
+        var type = assembly.GetType(methodReference.DeclaringType.FullName, throwOnError: false, ignoreCase: true);
+        if (type == null)
+        {
+            return new Exception($"Type '{methodReference.DeclaringType.FullName}' not found in assembly '{assembly.FullName}'");
+        }
+
+        var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        methods = methods.Where(m => m.Name == methodReference.Name).ToArray();
+        if (methods.Length == 1)
+        {
+            return methods[0];
+        }
+
+        var methodInfo = methods.FirstOrDefault(m => methodReference.Equals(m.AsMethodReference()));
+        if (methodInfo == null)
+        {
+            return new Exception($"Method '{methodReference.Name}' not found in type '{methodReference.DeclaringType.FullName}'");
+        }
+
+        return methodInfo;
+    }
    
 
     /// <summary>
