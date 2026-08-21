@@ -100,8 +100,7 @@ public static class ResultExtensions
         }
     }
 
-    public static IEnumerable<Result<B>> Select<A, B>
-    (
+    public static IEnumerable<Result<B>> Select<A, B>(
         this IEnumerable<Result<A>> source,
         Func<A, B> selector
     )
@@ -118,8 +117,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<B>> Select<A, B>
-    (
+    public static async IAsyncEnumerable<Result<B>> Select<A, B>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, B> selector
     )
@@ -136,8 +134,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<B>> Select<A, B>
-    (
+    public static async IAsyncEnumerable<Result<B>> Select<A, B>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, Task<Result<B>>> selector
     )
@@ -154,8 +151,7 @@ public static class ResultExtensions
         }
     }
 
-    public static Result<B> Select<A, B>
-    (
+    public static Result<B> Select<A, B>(
         this Result<A> source,
         Func<A, B> selector
     )
@@ -168,8 +164,7 @@ public static class ResultExtensions
         return selector(source.Value);
     }
 
-    public static Result<B> Select<A, B>
-    (
+    public static Result<B> Select<A, B>(
         this Result<A> source,
         Func<A, Result<B>> selector
     )
@@ -182,8 +177,7 @@ public static class ResultExtensions
         return selector(source.Value);
     }
 
-    public static async Task<Result<B>> Select<A, B>
-    (
+    public static async Task<Result<B>> Select<A, B>(
         this Task<Result<A>> source,
         Func<A, B> selector
     )
@@ -198,8 +192,7 @@ public static class ResultExtensions
         return selector(a.Value);
     }
 
-    public static Task<Result<B>> Select<A, B>
-    (
+    public static Task<Result<B>> Select<A, B>(
         this Result<A> a,
         Func<A, Task<Result<B>>> selector
     )
@@ -214,8 +207,7 @@ public static class ResultExtensions
         return selector(a.Value);
     }
 
-    public static Result<IEnumerable<B>> Select<A, B>
-    (
+    public static Result<IEnumerable<B>> Select<A, B>(
         this Result<IEnumerable<A>> source,
         Func<A, B> selector
     )
@@ -237,8 +229,7 @@ public static class ResultExtensions
         return returnItems;
     }
 
-    public static async Task<Result<C>> SelectMany<A, B, C>
-    (
+    public static async Task<Result<C>> SelectMany<A, B, C>(
         this Task<Result<A>> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, C> resultSelector
@@ -260,8 +251,7 @@ public static class ResultExtensions
         return resultSelector(a.Value, middle.Value);
     }
 
-    public static async Task<Result<C>> SelectMany<A, B, C>
-    (
+    public static async Task<Result<C>> SelectMany<A, B, C>(
         this Task<Result<A>> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, Task<Result<C>>> resultSelector
@@ -283,8 +273,7 @@ public static class ResultExtensions
         return await resultSelector(a.Value, middle.Value);
     }
 
-    public static Result<C> SelectMany<A, B, C>
-    (
+    public static Result<C> SelectMany<A, B, C>(
         this Result<A> source,
         Func<A, Result<B>> bind,
         Func<A, B, C> resultSelector
@@ -304,8 +293,7 @@ public static class ResultExtensions
         return resultSelector(source.Value, middle.Value);
     }
 
-    public static Result<IEnumerable<C>> SelectMany<A, B, C>
-    (
+    public static Result<IEnumerable<C>> SelectMany<A, B, C>(
         this Result<A> source,
         Func<A, IEnumerable<B>> bind,
         Func<A, B, C> resultSelector
@@ -317,17 +305,16 @@ public static class ResultExtensions
         }
 
         var a = source.Value;
-        
+
         var enumerableB = bind(a);
-        
+
         return new()
         {
             Value = from b in enumerableB select resultSelector(a, b)
         };
     }
 
-    public static Result<IEnumerable<C>> SelectMany<A, B, C>
-    (
+    public static Result<IEnumerable<C>> SelectMany<A, B, C>(
         this Result<A> source,
         Func<A, IEnumerable<Result<B>>> bind,
         Func<A, B, C> resultSelector
@@ -361,8 +348,7 @@ public static class ResultExtensions
         return returnList;
     }
 
-    public static IEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static IEnumerable<Result<C>> SelectMany<A, B, C>(
         this IEnumerable<A> source,
         Func<A, Result<B>> bind,
         Func<A, B, C> resultSelector
@@ -406,8 +392,7 @@ public static class ResultExtensions
         return returnItems;
     }
 
-    public static IEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static IEnumerable<Result<C>> SelectMany<A, B, C>(
         this IEnumerable<Result<A>> source,
         Func<A, Result<B>> bind,
         Func<A, B, C> resultSelector
@@ -461,8 +446,7 @@ public static class ResultExtensions
         return returnItems;
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this Result<IEnumerable<A>> source,
         Func<A, Task<Result<B>>> bindAsync,
         Func<A, B, Result<C>> selector
@@ -494,8 +478,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this Result<IEnumerable<A>> source,
         Func<A, Task<Result<B>>> bindAsync,
         Func<A, B, C> selector
@@ -520,8 +503,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async Task<Result<C>> SelectMany<A, B, C>
-    (
+    public static async Task<Result<C>> SelectMany<A, B, C>(
         this Task<Result<A>> source,
         Func<A, Result<B>> bind,
         Func<A, B, C> resultSelector
@@ -543,8 +525,7 @@ public static class ResultExtensions
         return resultSelector(a.Value, middle.Value);
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this Task<Result<A>> source,
         Func<A, IEnumerable<B>> bind,
         Func<A, B, C> resultSelector
@@ -565,8 +546,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, Result<C>> resultSelector
@@ -591,8 +571,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, Result<B>> bind,
         Func<A, B, C> resultSelector
@@ -617,8 +596,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, Task<Result<C>>> resultSelector
@@ -643,8 +621,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IEnumerable<A> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, C> resultSelector
@@ -681,8 +658,7 @@ public static class ResultExtensions
         }
     }
 
-    public static Result<IEnumerable<C>> SelectMany<A, B, C>
-    (
+    public static Result<IEnumerable<C>> SelectMany<A, B, C>(
         this Result<IEnumerable<A>> result,
         Func<A, Result<B>> binder,
         Func<A, B, C> projector
@@ -711,8 +687,7 @@ public static class ResultExtensions
         return returnList;
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, IEnumerable<B>> bind,
         Func<A, B, Result<C>> resultSelector
@@ -734,8 +709,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, IEnumerable<B>> bind,
         Func<A, B, C> resultSelector
@@ -757,8 +731,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static async IAsyncEnumerable<Result<C>> SelectMany<A, B, C>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, C> resultSelector
@@ -783,8 +756,7 @@ public static class ResultExtensions
         }
     }
 
-    public static async Task<Result<C>> SelectMany<A, B, C>
-    (
+    public static async Task<Result<C>> SelectMany<A, B, C>(
         this Result<A> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, C> resultSelector
@@ -804,8 +776,7 @@ public static class ResultExtensions
         return resultSelector(source.Value, middle.Value);
     }
 
-    public static IEnumerable<Result<C>> SelectMany<A, B, C>
-    (
+    public static IEnumerable<Result<C>> SelectMany<A, B, C>(
         this IEnumerable<Result<A>> source,
         Func<A, IEnumerable<B>> bind,
         Func<A, B, C> resultSelector
@@ -851,8 +822,33 @@ public static class ResultExtensions
         return returnItems;
     }
 
-    public static IEnumerable<Result<A>> Where<A>
-    (
+    /// <summary>
+    ///     Runs given action for success value then returns same result.
+    /// </summary>
+    public static Result<T> Tap<T>(Result<T> result, Action<T> action)
+    {
+        if (!result.HasError)
+        {
+            action(result.Value);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///     Runs given action for exception then returns same result.
+    /// </summary>
+    public static Result<T> TapError<T>(Result<T> result, Action<Exception> action)
+    {
+        if (result.HasError)
+        {
+            action(result.Error);
+        }
+
+        return result;
+    }
+
+    public static IEnumerable<Result<A>> Where<A>(
         this IEnumerable<Result<A>> source,
         Func<A, bool> predicate
     )
@@ -886,8 +882,7 @@ public static class ResultExtensions
 
         return returnList;
     }
-    
-   
+
     public static async IAsyncEnumerable<Result<A>> Where<A>(
         this IAsyncEnumerable<Result<A>> source,
         Func<A, bool> predicate)
@@ -918,5 +913,4 @@ public static class ResultExtensions
             }
         }
     }
-
 }
