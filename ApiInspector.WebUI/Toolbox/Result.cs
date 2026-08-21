@@ -43,6 +43,17 @@ public static class Result
 
 public static class ResultExtensions
 {
+    
+    public  static T GetValueOrDefault<T>(this Result<T> tuple)
+    {
+        if (tuple.HasError)
+        {
+            return default;
+        }
+
+        return tuple.Value;
+    }
+    
     public static Result<T> AsResult<T>(this (T value, Exception exception) tuple)
     {
         return new() { Value = tuple.value, Error = tuple.exception };
