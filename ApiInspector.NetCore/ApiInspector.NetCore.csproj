@@ -26,6 +26,7 @@
 		<Compile Include="..\ApiInspector.NetFramework\AsyncLogger.cs" Link="AsyncLogger.cs" />
         <Compile Include="..\ApiInspector.NetFramework\JsonInternalAssigner.cs" Link="AsyncLogger.cs" />
         <Compile Include="..\ApiInspector.NetFramework\Invocation.Shared.cs" Link="Invocation.Shared.cs" />
+        <Compile Include="..\ApiInspector.WebUI\Toolbox\Result.cs" Link="Toolbox\Result.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,6 +41,11 @@
 
     <ItemGroup>
         <PackageReference Include="BOA.Compatibility" Version="1.*" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Toolbox\" />
     </ItemGroup>
     <PropertyGroup>
         <PostBuildEvent>
