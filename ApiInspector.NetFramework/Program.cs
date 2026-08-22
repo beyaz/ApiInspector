@@ -156,9 +156,6 @@ static partial class Program
                 tryCreateInstanceFromReflection
             ]);
 
-            instance = JsonInternalAssigner.TryAssignInternalProps(instance, jsonForInstance);
-
-           
 
             static object tryCreateInstanceFromJson(Type declaringType, string jsonForInstance)
             {
