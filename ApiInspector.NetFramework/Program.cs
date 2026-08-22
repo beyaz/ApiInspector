@@ -193,84 +193,84 @@ static partial class Program
             }
 
             return invocationParameters.ToArray();
-            
+
             static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
-        {
-            var jProperty = parameterInfo.Name switch
             {
-                null => null,
-                _    => map.Property(parameterInfo.Name, StringComparison.Ordinal)
-            };
-
-            return ExecUntilNotNull(parameterInfo, jProperty, [
-                tryDeserializeTuple,
-                tryCreateFromJsonBySerialization,
-                createDefaultValueByReflection
-            ]);
-
-            static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
-            {
-                return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
+                var jProperty = parameterInfo.Name switch
                 {
-                    TypeNameHandling = TypeNameHandling.Auto
-                });
-            }
+                    null => null,
+                    _    => map.Property(parameterInfo.Name, StringComparison.Ordinal)
+                };
 
-            static object createDefaultValueByReflection(ParameterInfo parameterInfo, JProperty jProperty)
-            {
-                if (parameterInfo.ParameterType.IsValueType)
+                return ExecUntilNotNull(parameterInfo, jProperty, [
+                    tryDeserializeTuple,
+                    tryCreateFromJsonBySerialization,
+                    createDefaultValueByReflection
+                ]);
+
+                static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
                 {
-                    return Activator.CreateInstance(parameterInfo.ParameterType);
+                    return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
+                    {
+                        TypeNameHandling = TypeNameHandling.Auto
+                    });
                 }
 
-                return null;
-            }
-
-            static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
-            {
-                if (jProperty.Value is not JObject jObject)
+                static object createDefaultValueByReflection(ParameterInfo parameterInfo, JProperty jProperty)
                 {
+                    if (parameterInfo.ParameterType.IsValueType)
+                    {
+                        return Activator.CreateInstance(parameterInfo.ParameterType);
+                    }
+
                     return null;
                 }
 
-                IList<string> elementNames;
+                static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
                 {
-                    var tupleNamesAttr = parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>();
-
-                    elementNames = tupleNamesAttr?.TransformNames;
-
-                    if (elementNames is null || elementNames.Count == 0)
+                    if (jProperty.Value is not JObject jObject)
                     {
                         return null;
                     }
-                }
 
-                var parameterType = parameterInfo.ParameterType;
-
-                var genericArgs = parameterType.GetGenericArguments();
-
-                var values = new object[genericArgs.Length];
-
-                for (var i = 0; i < genericArgs.Length; i++)
-                {
-                    var name = elementNames[i];
-                    if (name is not null && jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out var jToken))
+                    IList<string> elementNames;
                     {
-                        values[i] = jToken.ToObject(genericArgs[i]);
+                        var tupleNamesAttr = parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>();
+
+                        elementNames = tupleNamesAttr?.TransformNames;
+
+                        if (elementNames is null || elementNames.Count == 0)
+                        {
+                            return null;
+                        }
                     }
-                    else
+
+                    var parameterType = parameterInfo.ParameterType;
+
+                    var genericArgs = parameterType.GetGenericArguments();
+
+                    var values = new object[genericArgs.Length];
+
+                    for (var i = 0; i < genericArgs.Length; i++)
                     {
-                        name = $"Item{i + 1}";
-                        if (jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out jToken))
+                        var name = elementNames[i];
+                        if (name is not null && jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out var jToken))
                         {
                             values[i] = jToken.ToObject(genericArgs[i]);
                         }
+                        else
+                        {
+                            name = $"Item{i + 1}";
+                            if (jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out jToken))
+                            {
+                                values[i] = jToken.ToObject(genericArgs[i]);
+                            }
+                        }
                     }
-                }
 
-                return Activator.CreateInstance(parameterType, values);
+                    return Activator.CreateInstance(parameterType, values);
+                }
             }
-        }
         }
 
         static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
@@ -325,8 +325,6 @@ static partial class Program
 
             return Result.Success(response);
         }
-
-        
     }
 
     public static Result<string> IsYourAssembly(ExternalInput input)
