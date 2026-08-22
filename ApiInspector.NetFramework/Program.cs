@@ -146,36 +146,21 @@ static partial class Program
 
         WriteLog("MethodFound");
 
-        object instance = null;
-        if (!methodInfo.IsStatic)
+        static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
         {
-            var declaringType = assembly.TryLoadType(methodReference.DeclaringType).Unwrap();
-
-            instance = ExecUntilNotNull(declaringType, jsonForInstance, [
-                tryCreateInstanceFromJson,
-                tryCreateInstanceFromReflection
-            ]);
-
-
-            static object tryCreateInstanceFromJson(Type declaringType, string jsonForInstance)
+            if (methodInfo.IsStatic)
             {
-                if (!string.IsNullOrWhiteSpace(jsonForInstance))
-                {
-                    WriteLog("instance = deserialize from jsonForInstance");
-
-                    return JsonConvert.DeserializeObject(jsonForInstance, declaringType);
-                }
-
-                return null;
+                return Result.Success<object>(null);
             }
-
-            static object tryCreateInstanceFromReflection(Type declaringType, string jsonForInstance)
+            
+            if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
             {
-                WriteLog($"instance = reflection create from declaringType: {declaringType.FullName}");
-
-                return Activator.CreateInstance(declaringType);
+                return JsonConvert.DeserializeObject(input.JsonForInstance, methodInfo.DeclaringType!);
             }
+            
+            return Activator.CreateInstance(methodInfo.DeclaringType!);
         }
+        object instance = CreateDeclaringType(input,methodInfo).Unwrap();
 
         WriteLog("Started to calculate parameters");
 
