@@ -5,7 +5,7 @@
         <RootNamespace>ApiInspector</RootNamespace>
         <AssemblyName>ApiInspector</AssemblyName>
         <LangVersion>preview</LangVersion>
-        <ApplicationIcon>$(SolutionDir)Shared\app.ico</ApplicationIcon>
+        <ApplicationIcon>../Shared/app.ico</ApplicationIcon>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
