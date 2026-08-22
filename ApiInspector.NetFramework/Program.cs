@@ -128,12 +128,15 @@ static partial class Program
     }
     
    
-    public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
+    public static Result<object> InvokeMethod(ExternalInput input)
     {
         WriteLog("InvokeStarted");
 
-        var (fullAssemblyPath, methodReference, jsonForInstance, jsonForParameters) = state;
-
+        var fullAssemblyPath = input.AssemblyFileFullPath;
+        var methodReference = input.MethodReference;
+        var jsonForInstance = input.JsonForInstance;
+        var jsonForParameters = input.JsonForParameters;
+        
         WriteLog("Inputs");
         WriteLog($"fullAssemblyPath: {fullAssemblyPath}");
         WriteLog($"methodReference: {methodReference.FullNameWithoutReturnType}");
@@ -462,101 +465,7 @@ static partial class Program
         }
     }
 
-    public static void Main(string[] args)
-    {
-        var originalStdout = Console.Out;
 
-        Console.SetOut(new LogTextWriter());
-
-        WriteLog("Invocation started.");
-
-        try
-        {
-            if (args == null)
-            {
-                throw new("CommandLine arguments cannot be null.");
-            }
-
-            if (args.Length == 0)
-            {
-                throw new("CommandLine arguments cannot be empty.");
-            }
-
-            var arr = args[0].Split('|');
-            if (arr.Length is not 3)
-            {
-                throw new($"CommandLine arguments are invalid. @arguments: {args[0]}");
-            }
-
-            var waitForDebugger = arr[0];
-
-            var methodName = arr[1];
-
-            var loggerUrl = arr[2];
-
-            Start(loggerUrl);
-
-            if (waitForDebugger == "1")
-            {
-                WriteLog("WaitingForAttachToDebugger");
-                WaitForDebuggerAttach();
-                WriteLog("DebuggerAttached");
-            }
-
-            var methodInfo = typeof(Program).GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo == null)
-            {
-                throw new($"CommandLine argument invalid.Method not found. @methodName: {methodName}");
-            }
-
-            var parameters = new object[] { };
-            if (methodInfo.GetParameters().Length == 1)
-            {
-                var inputAsJsonString = Console.In.ReadToEnd();
-
-                WriteLog($"I N P U T : {inputAsJsonString}");
-
-                parameters = [JsonConvert.DeserializeObject(inputAsJsonString, methodInfo.GetParameters()[0].ParameterType)];
-            }
-
-            var response = methodInfo.Invoke(null, parameters);
-
-            var responseAsJson = ResponseToJson(response);
-
-            Console.SetOut(originalStdout);
-            Console.Write(responseAsJson);
-
-            WriteLog("S U C C E S S");
-
-            WaitAsyncLogsForFinish();
-
-            Environment.Exit(1);
-        }
-        catch (Exception exception)
-        {
-            if (exception is TargetInvocationException targetInvocationException)
-            {
-                if (targetInvocationException.InnerException is not null)
-                {
-                    exception = targetInvocationException.InnerException;
-                }
-            }
-
-            var failInfoAsJson = JsonConvert.SerializeObject(exception, new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            });
-
-            Console.SetOut(originalStdout);
-            Console.Write(failInfoAsJson);
-
-            WriteLog("F A I L");
-
-            WaitAsyncLogsForFinish();
-
-            Environment.Exit(0);
-        }
-    }
 
     static string ResponseToJson(object response)
     {
@@ -581,5 +490,15 @@ class Json
     public static string SerializeDoNotIgnoreDefaultValues(object o)
     {
         throw new NotImplementedException();
+    }
+    
+    internal static T Deserialize<T>(string json)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static string Serialize(object instance)
+    {
+        return null;
     }
 }

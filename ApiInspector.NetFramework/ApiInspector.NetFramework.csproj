@@ -63,6 +63,9 @@
     <Compile Include="..\Shared\ProcessHelper.cs">
       <Link>Shared\ProcessHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Program.Shared.cs">
+      <Link>Shared\Program.Shared.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\ReflectionHelper.cs">
       <Link>Shared\ReflectionHelper.cs</Link>
     </Compile>
