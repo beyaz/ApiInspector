@@ -11,6 +11,13 @@ namespace ApiInspector;
 
 static partial class Program
 {
+    internal static Result<MethodInfo> LoadMethodInfo(ExternalInput input)
+    {
+        return from assembly in Result.From(() => Assembly.LoadFrom(input.AssemblyFileFullPath))
+               from methodInfo in assembly.TryLoadMethod(input.MethodReference).Tap(_ => WriteLog("Target method found."))
+               select methodInfo;
+    }
+    
     public static Result<string> IsYourAssembly(ExternalInput input)
     {
         return Convert.ToString(true);
@@ -32,6 +39,14 @@ static partial class Program
         ];
     }
 
+    public static Result<string> GetInstanceEditorJsonText(ExternalInput input)
+    {
+        return from methodInfo in LoadMethodInfo(input)
+               from declaringType in Result.NotNull(methodInfo.DeclaringType)
+               from instance in Result.From(()=>Activator.CreateInstance(declaringType))
+               select Json.SerializeDoNotIgnoreDefaultValues(instance);
+    }
+    
     public static string GetInstanceEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance) state)
     {
         var (fullAssemblyPath, methodReference, jsonForInstance) = state;
@@ -602,4 +617,12 @@ static partial class Program
   
 
    
+}
+
+class Json
+{
+    public static string SerializeDoNotIgnoreDefaultValues(object o)
+    {
+        throw new NotImplementedException();
+    }
 }
