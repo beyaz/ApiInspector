@@ -229,55 +229,61 @@ static partial class Program
         
         object[] methodParameters = CreateParameters(input, methodInfo).Unwrap();
 
-        object response = null;
-
-        Exception invocationException = null;
-
-        WriteLog("Invocation_started");
-
-        try
+        static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
         {
-            WriteLog("Trying_invoke_by_default_reflection");
+            object response = null;
 
-            response = methodInfo.Invoke(instance, methodParameters);
+            Exception invocationException = null;
 
-            if (response is Task task)
+            WriteLog("Invocation_started");
+
+            try
             {
-                task.GetAwaiter().GetResult();
+                WriteLog("Trying_invoke_by_default_reflection");
 
-                var resultProperty = task.GetType().GetProperty("Result");
-                if (resultProperty is not null)
+                response = methodInfo.Invoke(instance, methodParameters);
+
+                if (response is Task task)
                 {
-                    response = resultProperty.GetValue(task);
+                    task.GetAwaiter().GetResult();
+
+                    var resultProperty = task.GetType().GetProperty("Result");
+                    if (resultProperty is not null)
+                    {
+                        response = resultProperty.GetValue(task);
+                    }
                 }
             }
-        }
-        catch (Exception exception)
-        {
-            WriteLog($"Exception_occurred: {exception}");
+            catch (Exception exception)
+            {
+                WriteLog($"Exception_occurred: {exception}");
 
-            invocationException = exception.InnerException ?? exception;
-        }
+                invocationException = exception.InnerException ?? exception;
+            }
         
-        if (invocationException != null)
-        {
-            WriteLog($"Throwing_exception: {invocationException}");
+            if (invocationException != null)
+            {
+                WriteLog($"Throwing_exception: {invocationException}");
 
-            throw invocationException;
+                throw invocationException;
+            }
+
+            WriteLog("Invocation_is_success");
+
+            if (response is string responseAsString)
+            {
+                WriteLog($"Returning_already_string_response: {responseAsString}");
+
+                return responseAsString;
+            }
+
+            WriteLog("Serializing_invocation_output_to_json");
+
+            return Result.Success(response);
         }
 
-        WriteLog("Invocation_is_success");
 
-        if (response is string responseAsString)
-        {
-            WriteLog($"Returning_already_string_response: {responseAsString}");
-
-            return responseAsString;
-        }
-
-        WriteLog("Serializing_invocation_output_to_json");
-
-        return ResponseToJson(response);
+        return Invoke(methodInfo, instance, methodParameters);
 
         static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
