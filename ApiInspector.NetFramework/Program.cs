@@ -162,21 +162,20 @@ static partial class Program
         }
         object instance = CreateDeclaringType(input,methodInfo).Unwrap();
 
-        WriteLog("Started to calculate parameters");
+        
 
-        // calculate parameters
-        object[] methodParameters;
+        static Result<object[]> CreateParameters(ExternalInput input, MethodInfo methodInfo)
         {
             var parameterInfoList = methodInfo.GetParameters();
 
             var map = new JObject();
             try
             {
-                if (!string.IsNullOrWhiteSpace(jsonForParameters))
+                if (!string.IsNullOrWhiteSpace(input.JsonForParameters))
                 {
                     WriteLog("Started to deserialize jsonForParameters");
 
-                    map = JsonConvert.DeserializeObject<JObject>(jsonForParameters);
+                    map = JsonConvert.DeserializeObject<JObject>(input.JsonForParameters);
                 }
 
                 if (parameterInfoList.Length == 1 &&
@@ -188,7 +187,7 @@ static partial class Program
                     {
                         map = new()
                         {
-                            [parameterInfoList[0].Name] = new JValue(jsonForParameters)
+                            [parameterInfoList[0].Name] = new JValue(input.JsonForParameters)
                         };
                     }
                 }
@@ -203,7 +202,7 @@ static partial class Program
 
                     map = new()
                     {
-                        [parameterInfoList[0].Name] = new JValue(jsonForParameters)
+                        [parameterInfoList[0].Name] = new JValue(input.JsonForParameters)
                     };
                 }
                 else
@@ -224,8 +223,11 @@ static partial class Program
                 invocationParameters.Add(calculateParameterValue(map, parameterInfo));
             }
 
-            methodParameters = invocationParameters.ToArray();
+            return invocationParameters.ToArray();
         }
+
+        
+        object[] methodParameters = CreateParameters(input, methodInfo).Unwrap();
 
         object response = null;
 
