@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -6,21 +7,9 @@ namespace ApiInspector;
 
 static partial class Program
 {
-    internal static Result<MethodInfo> LoadMethodInfo(ExternalInput input)
-    {
-        return from assembly in Result.From(() => Assembly.LoadFrom(input.AssemblyFileFullPath))
-               from methodInfo in assembly.TryLoadMethod(input.MethodReference).Tap(_ => WriteLog("Target method found."))
-               select methodInfo;
-    }
-    
-    public static Result<string> IsYourAssembly(ExternalInput input)
-    {
-        return Convert.ToString(true);
-    }
-    
     public static Result<string> GetEnvironment(ExternalInput input)
     {
-        return  "NetVersion: " + Environment.Version.Major;
+        return "NetVersion: " + Environment.Version.Major;
     }
 
     public static string[] GetHelpMessage()
@@ -38,8 +27,7 @@ static partial class Program
     {
         return from methodInfo in LoadMethodInfo(input)
                from declaringType in Result.NotNull(methodInfo.DeclaringType)
-              select CreateJson(input.JsonForInstance, declaringType);
-
+               select CreateJson(input.JsonForInstance, declaringType);
 
         static string CreateJson(string jsonForInstance, Type declaringType)
         {
@@ -69,8 +57,6 @@ static partial class Program
                     continue;
                 }
 
-                
-
                 map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
             }
 
@@ -80,14 +66,12 @@ static partial class Program
                 Formatting           = Formatting.Indented
             });
         }
-               
     }
-    
+
     public static Result<string> GetParametersEditorJsonText(ExternalInput input)
     {
         return from methodInfo in LoadMethodInfo(input)
                select CreateParametersJson(input.JsonForParameters, methodInfo);
-
 
         static string CreateParametersJson(string jsonForParameters, MethodInfo methodInfo)
         {
@@ -105,7 +89,6 @@ static partial class Program
                     continue;
                 }
 
-
                 map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
             }
 
@@ -116,8 +99,7 @@ static partial class Program
             });
         }
     }
-    
-   
+
     public static Result<object> InvokeMethod(ExternalInput input)
     {
         WriteLog("InvokeStarted");
@@ -129,25 +111,6 @@ static partial class Program
                from methodParameters in CreateParameters(input, methodInfo)
                from output in Invoke(methodInfo, instance, methodParameters)
                select output;
-
-
-        static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
-        {
-            if (methodInfo.IsStatic)
-            {
-                return Result.Success<object>(null);
-            }
-            
-            if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
-            {
-                return JsonConvert.DeserializeObject(input.JsonForInstance, methodInfo.DeclaringType!);
-            }
-            
-            return Activator.CreateInstance(methodInfo.DeclaringType!);
-        }
-        
-
-        
 
         static Result<object[]> CreateParameters(ExternalInput input, MethodInfo methodInfo)
         {
@@ -211,8 +174,20 @@ static partial class Program
             return invocationParameters.ToArray();
         }
 
-        
-       
+        static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
+        {
+            if (methodInfo.IsStatic)
+            {
+                return Result.Success<object>(null);
+            }
+
+            if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
+            {
+                return JsonConvert.DeserializeObject(input.JsonForInstance, methodInfo.DeclaringType!);
+            }
+
+            return Activator.CreateInstance(methodInfo.DeclaringType!);
+        }
 
         static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
         {
@@ -245,7 +220,7 @@ static partial class Program
 
                 invocationException = exception.InnerException ?? exception;
             }
-        
+
             if (invocationException != null)
             {
                 WriteLog($"Throwing_exception: {invocationException}");
@@ -267,8 +242,6 @@ static partial class Program
             return Result.Success(response);
         }
 
-       
-
         static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
             var jProperty = parameterInfo.Name switch
@@ -283,7 +256,6 @@ static partial class Program
                 createDefaultValueByReflection
             ]);
 
-            
             static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
             {
                 return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
@@ -301,7 +273,7 @@ static partial class Program
 
                 return null;
             }
-            
+
             static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
             {
                 if (jProperty.Value is not JObject jObject)
@@ -311,7 +283,7 @@ static partial class Program
 
                 IList<string> elementNames;
                 {
-                    var tupleNamesAttr = parameterInfo.GetCustomAttribute<System.Runtime.CompilerServices.TupleElementNamesAttribute>();
+                    var tupleNamesAttr = parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>();
 
                     elementNames = tupleNamesAttr?.TransformNames;
 
@@ -322,7 +294,7 @@ static partial class Program
                 }
 
                 var parameterType = parameterInfo.ParameterType;
-                
+
                 var genericArgs = parameterType.GetGenericArguments();
 
                 var values = new object[genericArgs.Length];
@@ -337,7 +309,7 @@ static partial class Program
                     else
                     {
                         name = $"Item{i + 1}";
-                        if (jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out  jToken))
+                        if (jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out jToken))
                         {
                             values[i] = jToken.ToObject(genericArgs[i]);
                         }
@@ -346,15 +318,20 @@ static partial class Program
 
                 return Activator.CreateInstance(parameterType, values);
             }
-
         }
     }
 
+    public static Result<string> IsYourAssembly(ExternalInput input)
+    {
+        return Convert.ToString(true);
+    }
 
-
-  
-
-   
+    internal static Result<MethodInfo> LoadMethodInfo(ExternalInput input)
+    {
+        return from assembly in Result.From(() => Assembly.LoadFrom(input.AssemblyFileFullPath))
+               from methodInfo in assembly.TryLoadMethod(input.MethodReference).Tap(_ => WriteLog("Target method found."))
+               select methodInfo;
+    }
 }
 
 class Json
@@ -363,7 +340,7 @@ class Json
     {
         throw new NotImplementedException();
     }
-    
+
     internal static T Deserialize<T>(string json)
     {
         throw new NotImplementedException();
