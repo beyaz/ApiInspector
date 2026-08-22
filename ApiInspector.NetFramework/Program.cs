@@ -196,28 +196,9 @@ static partial class Program
 
             static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
             {
-                var jProperty = parameterInfo.Name switch
+                if (parameterInfo.Name is null)
                 {
-                    null => null,
-                    _    => map.Property(parameterInfo.Name, StringComparison.Ordinal)
-                };
-
-                return ExecUntilNotNull(parameterInfo, jProperty, [
-                    tryDeserializeTuple,
-                    tryCreateFromJsonBySerialization,
-                    createDefaultValueByReflection
-                ]);
-
-                static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
-                {
-                    return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
-                    {
-                        TypeNameHandling = TypeNameHandling.Auto
-                    });
-                }
-
-                static object createDefaultValueByReflection(ParameterInfo parameterInfo, JProperty jProperty)
-                {
+                    // Default Value By Reflection
                     if (parameterInfo.ParameterType.IsValueType)
                     {
                         return Activator.CreateInstance(parameterInfo.ParameterType);
@@ -225,6 +206,23 @@ static partial class Program
 
                     return null;
                 }
+
+                var jProperty = map.Property(parameterInfo.Name, StringComparison.Ordinal);
+                if (jProperty is null)
+                {
+                    // Default Value By Reflection
+                    if (parameterInfo.ParameterType.IsValueType)
+                    {
+                        return Activator.CreateInstance(parameterInfo.ParameterType);
+                    }
+
+                    return null;
+                }
+
+                return tryDeserializeTuple(parameterInfo, jProperty) ?? jProperty.Value.ToObject(parameterInfo.ParameterType, new()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                });
 
                 static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
                 {
