@@ -127,24 +127,15 @@ static partial class Program
     {
         WriteLog("InvokeStarted");
 
-        var fullAssemblyPath = input.AssemblyFileFullPath;
-        var methodReference = input.MethodReference;
-        var jsonForInstance = input.JsonForInstance;
-        var jsonForParameters = input.JsonForParameters;
+        ReflectionHelper.AttachToAssemblyResolveSameDirectory(input.AssemblyFileFullPath);
+
+        var methodInfo = LoadMethodInfo(input).Unwrap();
+       
+        object instance = CreateDeclaringType(input,methodInfo).Unwrap();
         
+        object[] methodParameters = CreateParameters(input, methodInfo).Unwrap();
         
-
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-
-        var assembly = ReflectionHelper.LoadFrom(fullAssemblyPath);
-
-        var methodInfo = assembly.TryLoadMethod(methodReference).Unwrap();
-        if (methodInfo == null)
-        {
-            throw new MissingMemberException(methodReference.FullNameWithoutReturnType);
-        }
-
-        WriteLog("MethodFound");
+        return Invoke(methodInfo, instance, methodParameters);
 
         static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
         {
@@ -160,7 +151,7 @@ static partial class Program
             
             return Activator.CreateInstance(methodInfo.DeclaringType!);
         }
-        object instance = CreateDeclaringType(input,methodInfo).Unwrap();
+        
 
         
 
@@ -227,7 +218,7 @@ static partial class Program
         }
 
         
-        object[] methodParameters = CreateParameters(input, methodInfo).Unwrap();
+       
 
         static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
         {
@@ -282,8 +273,7 @@ static partial class Program
             return Result.Success(response);
         }
 
-
-        return Invoke(methodInfo, instance, methodParameters);
+       
 
         static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
