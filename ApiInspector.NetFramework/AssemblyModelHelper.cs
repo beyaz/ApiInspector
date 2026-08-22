@@ -93,7 +93,7 @@ static class AssemblyModelHelper
 
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-        methods = methods.Where(m => m.Name == methodReference.Name).ToArray();
+        methods = [.. methods.Where(m => m.Name == methodReference.Name)];
         if (methods.Length == 1)
         {
             return methods[0];

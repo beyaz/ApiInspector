@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -42,6 +43,24 @@ static class Mixin
         }
 
         return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString();
+    }
+    
+    internal static void AttachAssemblyResolverForSameDirectory(string baseDirectory)
+    {
+        // A t t a c h   A s s e m b l y   R e s o l v e r   F o r   S a m e    D i r e c t o r y 
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
+            {
+                var assemblyName = new AssemblyName(e.Name).Name;
+                var assemblyPath = Path.Combine(baseDirectory, assemblyName + ".dll");
+                if (File.Exists(assemblyPath))
+                {
+                    return Assembly.LoadFrom(assemblyPath);
+                }
+
+                return null;
+            };
+        }
     }
 }
 

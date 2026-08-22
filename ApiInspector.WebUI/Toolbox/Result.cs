@@ -1,4 +1,6 @@
-﻿namespace Toolbox;
+﻿using System.Threading.Tasks;
+
+namespace Toolbox;
 
 public sealed class Result<TValue>
 {
@@ -58,17 +60,47 @@ public static class Result
             return Error<T>(ex);
         }
     }
+    
+    public static Result<IReadOnlyList<T>> From<T>(IEnumerable<Result<T>> enumerable)
+    {
+        try
+        {
+            List<T> items = [];
+
+            foreach (var result in enumerable)
+            {
+                if (result.HasError)
+                {
+                    return Error<IReadOnlyList<T>>(result.Error);
+                }
+
+                items.Add(result.Value);
+            }
+
+            return Success<IReadOnlyList<T>>(items);
+        }
+        catch (Exception ex)
+        {
+            return Error<IReadOnlyList<T>>(ex);
+        }
+    }
 
     public static Result<T> Success<T>(T value)
     {
         return new() { Value = value };
     }
-
-    public static Result<T> Try<T>(Func<T> func)
+    
+    public static Result<T> From<T>(Func<Result<T>> func)
     {
         try
         {
-            return Success(func());
+            var result = Success(func());
+            if (result.HasError)
+            {
+                return result.Error;
+            }
+            
+            return result.Value;
         }
         catch (Exception exception)
         {
