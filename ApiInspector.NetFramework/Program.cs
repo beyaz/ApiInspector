@@ -26,41 +26,14 @@ static partial class Program
     {
         return from methodInfo in LoadMethodInfo(input)
                from declaringType in Result.NotNull(methodInfo.DeclaringType)
-               select CreateJson(input.JsonForInstance, declaringType);
-
-        static string CreateJson(string jsonForInstance, Type declaringType)
-        {
-            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty) ?? new();
-
-            foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                var name = propertyInfo.Name;
-                var propertyType = propertyInfo.PropertyType;
-
-                if (map.ContainsKey(name))
-                {
-                    continue;
-                }
-
-                if (propertyInfo.DeclaringType?.IsAbstract == true)
-                {
-                    continue;
-                }
-
-                if (propertyType.BaseType == typeof(MulticastDelegate))
-                {
-                    continue;
-                }
-
-                map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
-            }
-
-            return JsonConvert.SerializeObject(map, new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented
-            });
-        }
+               from instance in Result.From(() => Activator.CreateInstance(declaringType))
+               select instance is null
+                   ? string.Empty
+                   : JsonConvert.SerializeObject(instance, new JsonSerializerSettings
+                   {
+                       DefaultValueHandling = DefaultValueHandling.Include,
+                       Formatting           = Formatting.Indented
+                   });
     }
 
     public static Result<string> GetParametersEditorJsonText(ExternalInput input)
