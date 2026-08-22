@@ -106,11 +106,21 @@ static partial class Program
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(input.AssemblyFileFullPath);
 
-        return from methodInfo in LoadMethodInfo(input)
-               from instance in CreateDeclaringType(input, methodInfo)
-               from methodParameters in CreateParameters(input, methodInfo)
-               from output in Invoke(methodInfo, instance, methodParameters)
-               select output;
+        return
+            // F in d   M e t h o d
+            from methodInfo in LoadMethodInfo(input)
+
+            // C r e a t e   T a r g e t   I n s t a n c e
+            from instance in CreateDeclaringType(input, methodInfo)
+
+            // I n it i a l i z e   M e t h o d   P a r a m e t e r s
+            from methodParameters in CreateParameters(input, methodInfo)
+
+            // I n v o k e
+            from output in Invoke(methodInfo, instance, methodParameters)
+
+            // O u t p u t
+            select output;
 
         static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
         {
