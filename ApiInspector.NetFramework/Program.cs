@@ -65,8 +65,6 @@ static partial class Program
 
     public static Result<object> InvokeMethod(ExternalInput input)
     {
-        WriteLog("InvokeStarted");
-
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(input.AssemblyFileFullPath);
 
         return
