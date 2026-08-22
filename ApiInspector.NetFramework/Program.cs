@@ -1,9 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -129,13 +124,12 @@ static partial class Program
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(input.AssemblyFileFullPath);
 
-        var methodInfo = LoadMethodInfo(input).Unwrap();
-       
-        object instance = CreateDeclaringType(input,methodInfo).Unwrap();
-        
-        object[] methodParameters = CreateParameters(input, methodInfo).Unwrap();
-        
-        return Invoke(methodInfo, instance, methodParameters);
+        return from methodInfo in LoadMethodInfo(input)
+               from instance in CreateDeclaringType(input, methodInfo)
+               from methodParameters in CreateParameters(input, methodInfo)
+               from output in Invoke(methodInfo, instance, methodParameters)
+               select output;
+
 
         static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
         {
