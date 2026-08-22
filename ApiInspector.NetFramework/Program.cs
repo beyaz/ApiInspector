@@ -27,8 +27,7 @@ static partial class Program
         return from methodInfo in LoadMethodInfo(input)
                from declaringType in Result.NotNull(methodInfo.DeclaringType)
                from instance in Result.From(() => Activator.CreateInstance(declaringType))
-               select instance is null
-                   ? string.Empty
+               select instance is null ? null
                    : JsonConvert.SerializeObject(instance, new JsonSerializerSettings
                    {
                        DefaultValueHandling = DefaultValueHandling.Include,
@@ -38,30 +37,22 @@ static partial class Program
 
     public static Result<string> GetParametersEditorJsonText(ExternalInput input)
     {
+        
         return from methodInfo in LoadMethodInfo(input)
-               select CreateParametersJson(input.JsonForParameters, methodInfo);
-
-        static string CreateParametersJson(string jsonForParameters, MethodInfo methodInfo)
-        {
-            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForParameters ?? string.Empty) ?? new();
-
-            foreach (var parameterInfo in methodInfo.GetParameters())
-            {
-                var name = parameterInfo.Name;
-                if (name == null || map.ContainsKey(name))
-                {
-                    continue;
-                }
-
-                map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
-            }
-
-            return JsonConvert.SerializeObject(map, new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Include,
-                Formatting           = Formatting.Indented
-            });
-        }
+               let map = new Dictionary<string, object>
+               (
+                   //from parameterInfo in methodInfo.GetParameters()
+                   //where parameterInfo.Name is not null
+                   //select new KeyValuePair<string, object>(parameterInfo.Name, Activator.CreateInstance(parameterInfo.ParameterType))
+               )
+               select JsonConvert.SerializeObject(map, new JsonSerializerSettings
+               {
+                   DefaultValueHandling = DefaultValueHandling.Include,
+                   Formatting           = Formatting.Indented
+               });
+        
+        
+       
     }
 
     public static Result<object> InvokeMethod(ExternalInput input)
