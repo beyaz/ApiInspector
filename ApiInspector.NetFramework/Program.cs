@@ -75,11 +75,7 @@ static partial class Program
 
         static string CreateParametersJson(string jsonForParameters, MethodInfo methodInfo)
         {
-            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForParameters ?? string.Empty);
-            if (map == null)
-            {
-                map = new();
-            }
+            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForParameters ?? string.Empty) ?? new();
 
             foreach (var parameterInfo in methodInfo.GetParameters())
             {
@@ -197,62 +193,8 @@ static partial class Program
             }
 
             return invocationParameters.ToArray();
-        }
-
-        static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
-        {
-            object response = null;
-
-            Exception invocationException = null;
-
-            WriteLog("Invocation_started");
-
-            try
-            {
-                WriteLog("Trying_invoke_by_default_reflection");
-
-                response = methodInfo.Invoke(instance, methodParameters);
-
-                if (response is Task task)
-                {
-                    task.GetAwaiter().GetResult();
-
-                    var resultProperty = task.GetType().GetProperty("Result");
-                    if (resultProperty is not null)
-                    {
-                        response = resultProperty.GetValue(task);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                WriteLog($"Exception_occurred: {exception}");
-
-                invocationException = exception.InnerException ?? exception;
-            }
-
-            if (invocationException != null)
-            {
-                WriteLog($"Throwing_exception: {invocationException}");
-
-                throw invocationException;
-            }
-
-            WriteLog("Invocation_is_success");
-
-            if (response is string responseAsString)
-            {
-                WriteLog($"Returning_already_string_response: {responseAsString}");
-
-                return responseAsString;
-            }
-
-            WriteLog("Serializing_invocation_output_to_json");
-
-            return Result.Success(response);
-        }
-
-        static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
+            
+            static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
         {
             var jProperty = parameterInfo.Name switch
             {
@@ -329,6 +271,62 @@ static partial class Program
                 return Activator.CreateInstance(parameterType, values);
             }
         }
+        }
+
+        static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
+        {
+            object response = null;
+
+            Exception invocationException = null;
+
+            WriteLog("Invocation_started");
+
+            try
+            {
+                WriteLog("Trying_invoke_by_default_reflection");
+
+                response = methodInfo.Invoke(instance, methodParameters);
+
+                if (response is Task task)
+                {
+                    task.GetAwaiter().GetResult();
+
+                    var resultProperty = task.GetType().GetProperty("Result");
+                    if (resultProperty is not null)
+                    {
+                        response = resultProperty.GetValue(task);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                WriteLog($"Exception_occurred: {exception}");
+
+                invocationException = exception.InnerException ?? exception;
+            }
+
+            if (invocationException != null)
+            {
+                WriteLog($"Throwing_exception: {invocationException}");
+
+                throw invocationException;
+            }
+
+            WriteLog("Invocation_is_success");
+
+            if (response is string responseAsString)
+            {
+                WriteLog($"Returning_already_string_response: {responseAsString}");
+
+                return responseAsString;
+            }
+
+            WriteLog("Serializing_invocation_output_to_json");
+
+            return Result.Success(response);
+        }
+
+        
     }
 
     public static Result<string> IsYourAssembly(ExternalInput input)
