@@ -215,7 +215,6 @@ static partial class Program
                 }
 
                 return null;
-
             }
         }
 
@@ -306,7 +305,6 @@ class Json
             Formatting                 = Formatting.Indented,
             PreserveReferencesHandling = PreserveReferencesHandling.None,
             ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
-            Converters                 = new List<JsonConverter> { new JsonConverterForPropertyInfo() }
         };
         return JsonConvert.SerializeObject(instance, jsonSerializerSettings);
     }

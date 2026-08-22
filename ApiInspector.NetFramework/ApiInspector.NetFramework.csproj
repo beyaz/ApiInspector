@@ -73,11 +73,8 @@
       <Link>Shared\Toolbox\Result.cs</Link>
     </Compile>
     <Compile Include="GlobalUsings.cs" />
-    <Compile Include="JsonInternalAssigner.cs" />
-    <Compile Include="Plugin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="JsonConverterForPropertyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">

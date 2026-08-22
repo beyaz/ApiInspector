@@ -116,23 +116,7 @@ static class ReflectionHelper
         void traceError(Exception exception) => WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
     }
 
-    static (bool success, Assembly assembly) tryFindAssemblyByUsingPlugins(string fileNameWithoutExtension)
-    {
-        var extensions = new[] { ".dll", ".exe" };
-
-        foreach (var fileExtension in extensions)
-        {
-            var fileName = fileNameWithoutExtension + fileExtension;
-
-            var fullFilePath = Plugin.TryFindFullFilePathOfAssembly(fileName);
-            if (fullFilePath is not null && File.Exists(fullFilePath))
-            {
-                return (true, LoadAssemblyFile(fullFilePath));
-            }
-        }
-
-        return default;
-    }
+    
 
     internal static ResolveEventHandler CreateAssemblyResolver(string fullAssemblyPath)
     {
@@ -180,14 +164,7 @@ static class ReflectionHelper
                 }
             }
 
-            // F r o m   P l u g i n
-            {
-                var response = tryFindAssemblyByUsingPlugins(requestedName.Name);
-                if (response.success)
-                {
-                    return response.assembly;
-                }
-            }
+            
 
             // R u n t i m e   D i r e c t o r i e s
             {
