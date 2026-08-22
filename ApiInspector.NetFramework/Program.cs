@@ -9,19 +9,16 @@ using Newtonsoft.Json.Linq;
 
 namespace ApiInspector;
 
-static class Program
+static partial class Program
 {
-    public static bool IsYourAssembly(string assemblyFileFullPath)
+    public static Result<string> IsYourAssembly(ExternalInput input)
     {
-        return false;
+        return Convert.ToString(true);
     }
     
-    public static string GetEnvironment(string assemblyFileFullPath)
+    public static Result<string> GetEnvironment(ExternalInput input)
     {
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(assemblyFileFullPath);
-        Plugin.BeforeStart(assemblyFileFullPath);
-
-        return Plugin.GetEnvironment(assemblyFileFullPath);
+        return  "NetVersion: " + Environment.Version.Major;
     }
 
     public static string[] GetHelpMessage()
