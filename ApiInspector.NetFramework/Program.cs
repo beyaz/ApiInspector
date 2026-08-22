@@ -137,16 +137,9 @@ static partial class Program
         var jsonForInstance = input.JsonForInstance;
         var jsonForParameters = input.JsonForParameters;
         
-        WriteLog("Inputs");
-        WriteLog($"fullAssemblyPath: {fullAssemblyPath}");
-        WriteLog($"methodReference: {methodReference.FullNameWithoutReturnType}");
-        WriteLog($"jsonForInstance: {jsonForInstance}");
-        WriteLog($"jsonForParameters: {jsonForParameters}");
+        
 
         ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        Plugin.BeforeStart(fullAssemblyPath);
-
-        WriteLog("ResolversAttached");
 
         var assembly = ReflectionHelper.LoadFrom(fullAssemblyPath);
 
@@ -283,35 +276,9 @@ static partial class Program
 
         try
         {
-            var shouldInvoke = true;
+            WriteLog("Trying_invoke_by_default_reflection");
 
-            WriteLog("Try_to_invoke_from_plugin");
-
-            var (exception, isInvoked, invocationOutput) = Plugin.InvokeMethod(methodInfo, instance, methodParameters);
-            if (exception is not null)
-            {
-                WriteLog($"Try_to_invoke_from_plugin_has_error: {exception}");
-
-                invocationException = exception;
-
-                shouldInvoke = false;
-            }
-
-            if (isInvoked)
-            {
-                WriteLog("Successfully_invoked_from_plugin");
-
-                response = invocationOutput;
-
-                shouldInvoke = false;
-            }
-
-            if (shouldInvoke)
-            {
-                WriteLog("Trying_invoke_by_default_reflection");
-
-                response = methodInfo.Invoke(instance, methodParameters);
-            }
+            response = methodInfo.Invoke(instance, methodParameters);
 
             if (response is Task task)
             {
@@ -330,18 +297,7 @@ static partial class Program
 
             invocationException = exception.InnerException ?? exception;
         }
-
-        WriteLog("Started_to_call_plugin_after_invoke_method");
-        var afterInvoke = Plugin.AfterInvokeMethod(methodInfo, instance, methodParameters, response, invocationException);
-        if (afterInvoke.isProcessed)
-        {
-            WriteLog("Plugin_after_invoke_method_successfully_called");
-
-            response = afterInvoke.invocationResponse;
-
-            invocationException = afterInvoke.invocationException;
-        }
-
+        
         if (invocationException != null)
         {
             WriteLog($"Throwing_exception: {invocationException}");
