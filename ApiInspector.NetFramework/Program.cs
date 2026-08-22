@@ -112,6 +112,21 @@ static partial class Program
                from output in Invoke(methodInfo, instance, methodParameters)
                select output;
 
+        static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
+        {
+            if (methodInfo.IsStatic)
+            {
+                return Result.Success<object>(null);
+            }
+
+            if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
+            {
+                return JsonConvert.DeserializeObject(input.JsonForInstance, methodInfo.DeclaringType!);
+            }
+
+            return Activator.CreateInstance(methodInfo.DeclaringType!);
+        }
+
         static Result<object[]> CreateParameters(ExternalInput input, MethodInfo methodInfo)
         {
             var parameterInfoList = methodInfo.GetParameters();
@@ -172,21 +187,6 @@ static partial class Program
             }
 
             return invocationParameters.ToArray();
-        }
-
-        static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
-        {
-            if (methodInfo.IsStatic)
-            {
-                return Result.Success<object>(null);
-            }
-
-            if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
-            {
-                return JsonConvert.DeserializeObject(input.JsonForInstance, methodInfo.DeclaringType!);
-            }
-
-            return Activator.CreateInstance(methodInfo.DeclaringType!);
         }
 
         static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
