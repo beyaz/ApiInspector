@@ -6,7 +6,6 @@
         <AssemblyName>ApiInspector</AssemblyName>
         <LangVersion>preview</LangVersion>
         <ApplicationIcon>../Shared/app.ico</ApplicationIcon>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
