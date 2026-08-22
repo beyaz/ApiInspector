@@ -79,6 +79,18 @@
     </ItemGroup>
 
 
+    <Target Name="StartWithSolutionBinFolder" BeforeTargets="Build">
+
+        <ItemGroup>
+            <FilesToCopy Include="$(SolutionDir)bin\**\*.*" />
+        </ItemGroup>
+
+        <Copy
+            SourceFiles="@(FilesToCopy)"
+            DestinationFiles="@(FilesToCopy->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    </Target>
+    
     <Target Name="CopyToSolutionBinFolder" AfterTargets="Build">
 
         <ItemGroup>
@@ -90,6 +102,8 @@
         <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin" />
 
     </Target>
+
+
     
    
 </Project>

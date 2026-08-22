@@ -11,11 +11,6 @@
   },
 
   "InvocationHandlerExePaths": [
-    "D:\\BOA\\tools\\ApiInspector\\ApiInspector_BOA_Server_Net8\\ApiInspector.exe",
-    "D:\\BOA\\tools\\ApiInspector\\ApiInspector_Card_Net8\\ApiInspector.exe",
-    "D:\\BOA\\tools\\ApiInspector\\ApiInspector_BOA_EOD_NetFramework\\ApiInspector.exe",
-
-    "D:\\BOA\\tools\\ApiInspector\\ApiInspector.NetCore\\ApiInspector.exe",
-    "D:\\BOA\\tools\\ApiInspector\\ApiInspector.NetFramework\\ApiInspector.exe"
+    "ApiInspector.NetFramework/ApiInspector.exe"
   ] 
 }
