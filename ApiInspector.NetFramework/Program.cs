@@ -368,19 +368,6 @@ static partial class Program
 
 
 
-    static string ResponseToJson(object response)
-    {
-        var jsonSerializerSettings = new JsonSerializerSettings
-        {
-            DefaultValueHandling       = DefaultValueHandling.Ignore,
-            Formatting                 = Formatting.Indented,
-            PreserveReferencesHandling = PreserveReferencesHandling.None,
-            ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
-            Converters                 = new List<JsonConverter> { new JsonConverterForPropertyInfo() }
-        };
-        return JsonConvert.SerializeObject(response, jsonSerializerSettings);
-    }
-
   
 
    
@@ -400,6 +387,14 @@ class Json
 
     internal static string Serialize(object instance)
     {
-        return null;
+        var jsonSerializerSettings = new JsonSerializerSettings
+        {
+            DefaultValueHandling       = DefaultValueHandling.Ignore,
+            Formatting                 = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.None,
+            ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
+            Converters                 = new List<JsonConverter> { new JsonConverterForPropertyInfo() }
+        };
+        return JsonConvert.SerializeObject(instance, jsonSerializerSettings);
     }
 }
