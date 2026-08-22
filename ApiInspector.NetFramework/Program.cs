@@ -287,14 +287,9 @@ static partial class Program
 
 class Json
 {
-    public static string SerializeDoNotIgnoreDefaultValues(object o)
-    {
-        throw new NotImplementedException();
-    }
-
     internal static T Deserialize<T>(string json)
     {
-        throw new NotImplementedException();
+        return JsonConvert.DeserializeObject<T>(json);
     }
 
     internal static string Serialize(object instance)
@@ -304,7 +299,7 @@ class Json
             DefaultValueHandling       = DefaultValueHandling.Ignore,
             Formatting                 = Formatting.Indented,
             PreserveReferencesHandling = PreserveReferencesHandling.None,
-            ReferenceLoopHandling      = ReferenceLoopHandling.Ignore,
+            ReferenceLoopHandling      = ReferenceLoopHandling.Ignore
         };
         return JsonConvert.SerializeObject(instance, jsonSerializerSettings);
     }
