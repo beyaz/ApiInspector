@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -31,11 +30,7 @@ static partial class Program
 
         static string CreateJson(string jsonForInstance, Type declaringType)
         {
-            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
-            if (map == null)
-            {
-                map = new();
-            }
+            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty) ?? new();
 
             foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
@@ -208,66 +203,19 @@ static partial class Program
                 }
 
                 var jProperty = map.Property(parameterInfo.Name, StringComparison.Ordinal);
-                if (jProperty is null)
+                if (jProperty is not null)
                 {
-                    // Default Value By Reflection
-                    if (parameterInfo.ParameterType.IsValueType)
-                    {
-                        return Activator.CreateInstance(parameterInfo.ParameterType);
-                    }
-
-                    return null;
+                    return jProperty.Value.ToObject(parameterInfo.ParameterType);
                 }
 
-                return tryDeserializeTuple(parameterInfo, jProperty) ?? jProperty.Value.ToObject(parameterInfo.ParameterType, new()
+                // Default Value By Reflection
+                if (parameterInfo.ParameterType.IsValueType)
                 {
-                    TypeNameHandling = TypeNameHandling.Auto
-                });
-
-                static object tryDeserializeTuple(ParameterInfo parameterInfo, JProperty jProperty)
-                {
-                    if (jProperty.Value is not JObject jObject)
-                    {
-                        return null;
-                    }
-
-                    IList<string> elementNames;
-                    {
-                        var tupleNamesAttr = parameterInfo.GetCustomAttribute<TupleElementNamesAttribute>();
-
-                        elementNames = tupleNamesAttr?.TransformNames;
-
-                        if (elementNames is null || elementNames.Count == 0)
-                        {
-                            return null;
-                        }
-                    }
-
-                    var parameterType = parameterInfo.ParameterType;
-
-                    var genericArgs = parameterType.GetGenericArguments();
-
-                    var values = new object[genericArgs.Length];
-
-                    for (var i = 0; i < genericArgs.Length; i++)
-                    {
-                        var name = elementNames[i];
-                        if (name is not null && jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out var jToken))
-                        {
-                            values[i] = jToken.ToObject(genericArgs[i]);
-                        }
-                        else
-                        {
-                            name = $"Item{i + 1}";
-                            if (jObject.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out jToken))
-                            {
-                                values[i] = jToken.ToObject(genericArgs[i]);
-                            }
-                        }
-                    }
-
-                    return Activator.CreateInstance(parameterType, values);
+                    return Activator.CreateInstance(parameterInfo.ParameterType);
                 }
+
+                return null;
+
             }
         }
 
