@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ApiInspector.WebUI\Toolbox\Result.cs" Link="Result.cs" />
+    <Compile Include="..\Shared\Toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <Folder Include="Properties\" />
+      <Folder Include="Shared\Toolbox\" />
     </ItemGroup>
 
 </Project>

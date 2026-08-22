@@ -42,12 +42,16 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ApiInspector.WebUI\Toolbox\Result.cs">
-      <Link>Toolbox\Result.cs</Link>
+    <Compile Include="..\shared\AssemblyModel.cs">
+      <Link>Shared\AssemblyModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\AssemblyModelHelper.cs">
+      <Link>Shared\AssemblyModelHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\shared\toolbox\Result.cs">
+      <Link>Shared\Toolbox\Result.cs</Link>
     </Compile>
     <Compile Include="Invocation.Shared.cs" />
-    <Compile Include="AssemblyModel.cs" />
-    <Compile Include="AssemblyModelHelper.cs" />
     <Compile Include="AsyncLogger.cs" />
     <Compile Include="FpExtensions.cs" />
     <Compile Include="GlobalUsings.cs" />

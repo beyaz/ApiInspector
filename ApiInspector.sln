@@ -14,6 +14,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "old_ApiInspector.NetCore", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "old_ApiInspector.NetFramework", "old_ApiInspector.NetFramework\old_ApiInspector.NetFramework.csproj", "{007F4126-1D87-4CE5-ACBC-B00305D92A47}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{8108AEBA-9F92-401D-9D41-5645A71371A3}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\AssemblyModel.cs = Shared\AssemblyModel.cs
+		Shared\AssemblyModelHelper.cs = Shared\AssemblyModelHelper.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Toolbox", "Toolbox", "{0BD9BE99-03EF-4153-AC4B-E1BA4964EE62}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Toolbox\Result.cs = Shared\Toolbox\Result.cs
+		Shared\Toolbox\Result.IAsyncEnumerable.cs = Shared\Toolbox\Result.IAsyncEnumerable.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +51,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0BD9BE99-03EF-4153-AC4B-E1BA4964EE62} = {8108AEBA-9F92-401D-9D41-5645A71371A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6877BB56-304D-4AF0-BB23-1B4E4E67CB34}

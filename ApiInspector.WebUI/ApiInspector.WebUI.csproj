@@ -15,7 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Include="..\old_ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
       <None Include="ApiInspector.WebUI.Config.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -24,9 +23,16 @@
     <ItemGroup>
       <EmbeddedResource Include="Resources\*.*" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\Shared\AssemblyModel.cs" Link="Shared\AssemblyModel.cs" />
+      <Compile Include="..\Shared\Toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
+      <Compile Include="..\Shared\Toolbox\Result.IAsyncEnumerable.cs" Link="Shared\Toolbox\Result.IAsyncEnumerable.cs" />
+    </ItemGroup>
 	
     <ItemGroup>
       <Folder Include="Properties\" />
+      <Folder Include="Shared\Toolbox\" />
     </ItemGroup>
 
 

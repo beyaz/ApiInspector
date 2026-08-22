@@ -13,8 +13,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="..\old_ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
-        <Compile Include="..\old_ApiInspector.NetFramework\AssemblyModelHelper.cs" Link="AssemblyModelHelper.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\FpExtensions.cs" Link="FpExtensions.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\GlobalUsings.cs" Link="GlobalUsings.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\MetadataNode.cs" Link="MetadataNode.cs" />
@@ -26,7 +24,9 @@
 		<Compile Include="..\old_ApiInspector.NetFramework\AsyncLogger.cs" Link="AsyncLogger.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\JsonInternalAssigner.cs" Link="AsyncLogger.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\Invocation.Shared.cs" Link="Invocation.Shared.cs" />
-        <Compile Include="..\ApiInspector.WebUI\Toolbox\Result.cs" Link="Toolbox\Result.cs" />
+        <Compile Include="..\shared\AssemblyModel.cs" Link="Shared\AssemblyModel.cs" />
+        <Compile Include="..\Shared\AssemblyModelHelper.cs" Link="Shared\AssemblyModelHelper.cs" />
+        <Compile Include="..\shared\toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -45,7 +45,7 @@
 
 
     <ItemGroup>
-      <Folder Include="Toolbox\" />
+      <Folder Include="Shared\Toolbox\" />
     </ItemGroup>
     <PropertyGroup>
         <PostBuildEvent>
