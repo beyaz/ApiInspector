@@ -13,19 +13,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="..\old_ApiInspector.NetFramework\FpExtensions.cs" Link="FpExtensions.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\GlobalUsings.cs" Link="GlobalUsings.cs" />
-        <Compile Include="..\old_ApiInspector.NetFramework\MetadataNode.cs" Link="MetadataNode.cs" />
+        <Compile Include="..\old_ApiInspector.NetFramework\JsonInternalAssigner.cs" Link="JsonInternalAssigner.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\Plugin.cs" Link="Plugin.cs" />
-        <Compile Include="..\old_ApiInspector.NetFramework\ProcessHelper.cs" Link="ProcessHelper.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\Program.cs" Link="Program.cs" />
-        <Compile Include="..\old_ApiInspector.NetFramework\ReflectionHelper.cs" Link="ReflectionHelper.cs" />
         <Compile Include="..\old_ApiInspector.NetFramework\JsonConverterForPropertyInfo.cs" Link="JsonConverterForPropertyInfo.cs" />
-		<Compile Include="..\old_ApiInspector.NetFramework\AsyncLogger.cs" Link="AsyncLogger.cs" />
-        <Compile Include="..\old_ApiInspector.NetFramework\JsonInternalAssigner.cs" Link="AsyncLogger.cs" />
-        <Compile Include="..\old_ApiInspector.NetFramework\Invocation.Shared.cs" Link="Invocation.Shared.cs" />
-        <Compile Include="..\shared\AssemblyModel.cs" Link="Shared\AssemblyModel.cs" />
+        <Compile Include="..\Shared\AssemblyModel.cs" Link="Shared\AssemblyModel.cs" />
         <Compile Include="..\Shared\AssemblyModelHelper.cs" Link="Shared\AssemblyModelHelper.cs" />
+        <Compile Include="..\Shared\AsyncLogger.cs" Link="Shared\AsyncLogger.cs" />
+        <Compile Include="..\Shared\FpExtensions.cs" Link="Shared\FpExtensions.cs" />
+        <Compile Include="..\Shared\Invocation.Shared.cs" Link="Shared\Invocation.Shared.cs" />
+        <Compile Include="..\Shared\MetadataNode.cs" Link="Shared\MetadataNode.cs" />
+        <Compile Include="..\Shared\ProcessHelper.cs" Link="Shared\ProcessHelper.cs" />
+        <Compile Include="..\Shared\ReflectionHelper.cs" Link="Shared\ReflectionHelper.cs" />
         <Compile Include="..\shared\toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
     </ItemGroup>
 

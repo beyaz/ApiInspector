@@ -18,6 +18,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{8108AE
 	ProjectSection(SolutionItems) = preProject
 		Shared\AssemblyModel.cs = Shared\AssemblyModel.cs
 		Shared\AssemblyModelHelper.cs = Shared\AssemblyModelHelper.cs
+		Shared\AsyncLogger.cs = Shared\AsyncLogger.cs
+		Shared\FpExtensions.cs = Shared\FpExtensions.cs
+		Shared\Invocation.Shared.cs = Shared\Invocation.Shared.cs
+		Shared\MetadataNode.cs = Shared\MetadataNode.cs
+		Shared\ProcessHelper.cs = Shared\ProcessHelper.cs
+		Shared\ReflectionHelper.cs = Shared\ReflectionHelper.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Toolbox", "Toolbox", "{0BD9BE99-03EF-4153-AC4B-E1BA4964EE62}"

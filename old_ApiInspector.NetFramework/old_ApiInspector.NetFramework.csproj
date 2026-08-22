@@ -42,27 +42,39 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\shared\AssemblyModel.cs">
+    <Compile Include="..\Shared\AssemblyModel.cs">
       <Link>Shared\AssemblyModel.cs</Link>
     </Compile>
     <Compile Include="..\Shared\AssemblyModelHelper.cs">
       <Link>Shared\AssemblyModelHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\AsyncLogger.cs">
+      <Link>Shared\AsyncLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\FpExtensions.cs">
+      <Link>Shared\FpExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Invocation.Shared.cs">
+      <Link>Shared\Invocation.Shared.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\MetadataNode.cs">
+      <Link>Shared\MetadataNode.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ProcessHelper.cs">
+      <Link>Shared\ProcessHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ReflectionHelper.cs">
+      <Link>Shared\ReflectionHelper.cs</Link>
+    </Compile>
     <Compile Include="..\shared\toolbox\Result.cs">
       <Link>Shared\Toolbox\Result.cs</Link>
     </Compile>
-    <Compile Include="Invocation.Shared.cs" />
-    <Compile Include="AsyncLogger.cs" />
-    <Compile Include="FpExtensions.cs" />
     <Compile Include="GlobalUsings.cs" />
     <Compile Include="JsonInternalAssigner.cs" />
-    <Compile Include="MetadataNode.cs" />
     <Compile Include="Plugin.cs" />
-    <Compile Include="ProcessHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JsonConverterForPropertyInfo.cs" />
-    <Compile Include="ReflectionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
