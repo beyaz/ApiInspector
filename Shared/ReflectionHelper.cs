@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 
 namespace ApiInspector;
@@ -9,76 +8,6 @@ static class ReflectionHelper
     public static void AttachToAssemblyResolveSameDirectory(string fullAssemblyPath)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CreateAssemblyResolver(fullAssemblyPath);
-    }
-
-    public static object CreateDefaultValue(Type type)
-    {
-        if (type == typeof(string))
-        {
-            return "";
-        }
-
-        if (type.IsValueType)
-        {
-            return Activator.CreateInstance(type);
-        }
-
-        if (type.IsArray)
-        {
-            var elementType = type.GetElementType();
-            if (elementType is not null)
-            {
-                return Array.CreateInstance(elementType, 0);
-            }
-        }
-
-        if (type.IsGenericType)
-        {
-            var genericTypeDefinition = type.GetGenericTypeDefinition();
-            if (genericTypeDefinition.IsSubclassOf(typeof(IList)))
-            {
-                var genericArgument = type.GetGenericArguments().FirstOrDefault();
-                if (genericArgument is not null)
-                {
-                    return Array.CreateInstance(genericArgument, 0);
-                }
-            }
-        }
-
-        try
-        {
-            var instance = Activator.CreateInstance(type);
-            if (instance == null)
-            {
-                return null;
-            }
-
-            foreach (var propertyInfo in type.GetProperties())
-            {
-                if (propertyInfo.GetIndexParameters().Length > 0)
-                {
-                    continue;
-                }
-
-                // avoid circular
-                if (propertyInfo.PropertyType == type)
-                {
-                    continue;
-                }
-
-                var existingValue = propertyInfo.GetValue(instance);
-                if (existingValue == null)
-                {
-                    propertyInfo.SetValue(instance, CreateDefaultValue(propertyInfo.PropertyType));
-                }
-            }
-
-            return instance;
-        }
-        catch (Exception)
-        {
-            return null;
-        }
     }
 
     public static (bool isDotNetCore, bool isDotNetFramework) GetTargetFramework(FileInfo dll)
@@ -97,26 +26,6 @@ static class ReflectionHelper
 
         return (false, false);
     }
-
-    public static Assembly LoadFrom(string fullAssemblyPath)
-    {
-        var isMsCorLib = Path.GetFileNameWithoutExtension(typeof(object).Assembly.Location) == Path.GetFileNameWithoutExtension(fullAssemblyPath);
-        if (isMsCorLib)
-        {
-            return typeof(object).Assembly;
-        }
-
-        return Assembly.LoadFrom(fullAssemblyPath);
-    }
-
-    static Assembly LoadAssemblyFile(string filePath)
-    {
-        return SafeInvoke(() => Assembly.LoadFrom(filePath)).TraceError(traceError).Unwrap();
-
-        void traceError(Exception exception) => WriteLog($"Assembly load failed. @filePath: {filePath}, @exception: {exception}");
-    }
-
-    
 
     internal static ResolveEventHandler CreateAssemblyResolver(string fullAssemblyPath)
     {
@@ -158,13 +67,11 @@ static class ReflectionHelper
                     catch (Exception exception)
                     {
                         WriteLog(exception.ToString());
-                        
+
                         throw;
                     }
                 }
             }
-
-            
 
             // R u n t i m e   D i r e c t o r i e s
             {
@@ -270,7 +177,7 @@ static class ReflectionHelper
                     }
 
                     WriteLog($"Trying to find '{requested.Name}' in '{root}'");
-                    
+
                     IEnumerable<string> files;
 
                     try
@@ -313,13 +220,11 @@ static class ReflectionHelper
                             if (version == requestedVersion)
                             {
                                 score = long.MaxValue;
-                                
+
                                 return file;
                             }
-                            else
-                            {
-                                score = -Math.Abs(version.CompareTo(requestedVersion));
-                            }
+
+                            score = -Math.Abs(version.CompareTo(requestedVersion));
 
                             if (score > bestScore)
                             {
