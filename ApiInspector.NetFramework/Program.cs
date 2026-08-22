@@ -196,11 +196,11 @@ static partial class Program
 
             Exception invocationException = null;
 
-            WriteLog("Invocation_started");
+            WriteLog("Invocation started");
 
             try
             {
-                WriteLog("Trying_invoke_by_default_reflection");
+                WriteLog("Trying to invoke by default reflection");
 
                 response = methodInfo.Invoke(instance, methodParameters);
 
@@ -217,28 +217,17 @@ static partial class Program
             }
             catch (Exception exception)
             {
-                WriteLog($"Exception_occurred: {exception}");
+                WriteLog($"Exception occurred: {exception}");
 
                 invocationException = exception.InnerException ?? exception;
             }
 
             if (invocationException != null)
             {
-                WriteLog($"Throwing_exception: {invocationException}");
-
-                throw invocationException;
+                return Result.Error<object>(invocationException);
             }
 
-            WriteLog("Invocation_is_success");
-
-            if (response is string responseAsString)
-            {
-                WriteLog($"Returning_already_string_response: {responseAsString}");
-
-                return responseAsString;
-            }
-
-            WriteLog("Serializing_invocation_output_to_json");
+            WriteLog("Invocation is finished successfully");
 
             return Result.Success(response);
         }
