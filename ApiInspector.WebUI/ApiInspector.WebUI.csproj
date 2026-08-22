@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Include="..\ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
+      <Compile Include="..\old_ApiInspector.NetFramework\AssemblyModel.cs" Link="AssemblyModel.cs" />
       <None Include="ApiInspector.WebUI.Config.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
