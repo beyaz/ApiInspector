@@ -27,7 +27,7 @@
         <Compile Include="..\shared\toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
     </ItemGroup>
 
-    <Target Name="CopyApiInspectorFiles" AfterTargets="Build">
+    <Target Name="CopyToSolutionBinFolder" AfterTargets="Build">
 
         <ItemGroup>
             <FilesToCopy Include="$(OutDir)*.*" Exclude="$(OutDir)*.pdb" />

@@ -77,6 +77,19 @@
     <ItemGroup>
         <Content Include="app.ico" />
     </ItemGroup>
+
+
+    <Target Name="CopyToSolutionBinFolder" AfterTargets="Build">
+
+        <ItemGroup>
+            <FilesToCopy Include="$(OutDir)*.*" Exclude="$(OutDir)*.pdb" />
+        </ItemGroup>
+
+        <MakeDir Directories="$(SolutionDir)bin" />
+
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin" />
+
+    </Target>
     
    
 </Project>
