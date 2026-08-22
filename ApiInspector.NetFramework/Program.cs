@@ -43,91 +43,57 @@ static partial class Program
     {
         return from methodInfo in LoadMethodInfo(input)
                from declaringType in Result.NotNull(methodInfo.DeclaringType)
-               from instance in Result.From(()=>Activator.CreateInstance(declaringType))
-               select Json.SerializeDoNotIgnoreDefaultValues(instance);
+              select CreateJson(input.JsonForInstance, declaringType);
+
+
+        static string CreateJson(string jsonForInstance, Type declaringType)
+        {
+            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
+            if (map == null)
+            {
+                map = new();
+            }
+
+            foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var name = propertyInfo.Name;
+                var propertyType = propertyInfo.PropertyType;
+
+                if (map.ContainsKey(name))
+                {
+                    continue;
+                }
+
+                if (propertyInfo.DeclaringType?.IsAbstract == true)
+                {
+                    continue;
+                }
+
+                if (propertyType.BaseType == typeof(MulticastDelegate))
+                {
+                    continue;
+                }
+
+                var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(propertyType);
+                if (isSuccessfullyCreated)
+                {
+                    map.Add(name, instance);
+                    continue;
+                }
+
+                map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
+            }
+
+            return JsonConvert.SerializeObject(map, new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Include,
+                Formatting           = Formatting.Indented
+            });
+        }
+               
     }
     
-    public static string GetInstanceEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForInstance) state)
-    {
-        var (fullAssemblyPath, methodReference, jsonForInstance) = state;
-
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        Plugin.BeforeStart(fullAssemblyPath);
-
-        if (methodReference is null || methodReference.IsStatic)
-        {
-            return jsonForInstance;
-        }
-
-        var typeOfInstance = methodReference.DeclaringType;
-
-        if (typeOfInstance == null)
-        {
-            return jsonForInstance;
-        }
-
-        var declaringType = ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadType(typeOfInstance).Unwrap();
-        if (declaringType == null)
-        {
-            return jsonForInstance;
-        }
-
-        // try to create from plugins
-        {
-            var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(declaringType);
-            if (isSuccessfullyCreated)
-            {
-                return JsonConvert.SerializeObject(instance, new JsonSerializerSettings
-                {
-                    DefaultValueHandling = DefaultValueHandling.Include,
-                    Formatting           = Formatting.Indented
-                });
-            }
-        }
-
-        var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForInstance ?? string.Empty);
-        if (map == null)
-        {
-            map = new();
-        }
-
-        foreach (var propertyInfo in declaringType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        {
-            var name = propertyInfo.Name;
-            var propertyType = propertyInfo.PropertyType;
-
-            if (map.ContainsKey(name))
-            {
-                continue;
-            }
-
-            if (propertyInfo.DeclaringType?.IsAbstract == true)
-            {
-                continue;
-            }
-
-            if (propertyType.BaseType == typeof(MulticastDelegate))
-            {
-                continue;
-            }
-
-            var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(propertyType);
-            if (isSuccessfullyCreated)
-            {
-                map.Add(name, instance);
-                continue;
-            }
-
-            map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
-        }
-
-        return JsonConvert.SerializeObject(map, new JsonSerializerSettings
-        {
-            DefaultValueHandling = DefaultValueHandling.Include,
-            Formatting           = Formatting.Indented
-        });
-    }
-
+   
     public static string GetParametersEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForParameters) state)
     {
         var (fullAssemblyPath, methodReference, jsonForParameters) = state;
