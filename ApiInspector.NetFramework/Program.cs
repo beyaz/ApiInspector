@@ -93,50 +93,41 @@ static partial class Program
                
     }
     
-   
-    public static string GetParametersEditorJsonText((string fullAssemblyPath, MethodReference methodReference, string jsonForParameters) state)
+    public static Result<string> GetParametersEditorJsonText(ExternalInput input)
     {
-        var (fullAssemblyPath, methodReference, jsonForParameters) = state;
+        return from methodInfo in LoadMethodInfo(input)
+               select CreateParametersJson(input.JsonForParameters, methodInfo);
 
-        ReflectionHelper.AttachToAssemblyResolveSameDirectory(fullAssemblyPath);
-        Plugin.BeforeStart(fullAssemblyPath);
 
-        if (methodReference is null || methodReference.Parameters.Count == 0)
+        static string CreateParametersJson(string jsonForParameters, MethodInfo methodInfo)
         {
-            return jsonForParameters;
-        }
-
-        var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(state.jsonForParameters ?? string.Empty);
-        if (map == null)
-        {
-            map = new();
-        }
-
-        foreach (var parameterInfo in ReflectionHelper.LoadFrom(fullAssemblyPath).TryLoadMethod(methodReference).Unwrap()?.GetParameters() ?? [])
-        {
-            var name = parameterInfo.Name;
-            if (name == null || map.ContainsKey(name))
+            var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonForParameters ?? string.Empty);
+            if (map == null)
             {
-                continue;
+                map = new();
             }
 
-            var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(parameterInfo.ParameterType);
-            if (isSuccessfullyCreated)
+            foreach (var parameterInfo in methodInfo.GetParameters())
             {
-                map.Add(name, instance);
-                continue;
+                var name = parameterInfo.Name;
+                if (name == null || map.ContainsKey(name))
+                {
+                    continue;
+                }
+
+
+                map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
             }
 
-            map.Add(name, ReflectionHelper.CreateDefaultValue(parameterInfo.ParameterType));
+            return JsonConvert.SerializeObject(map, new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Include,
+                Formatting           = Formatting.Indented
+            });
         }
-
-        return JsonConvert.SerializeObject(map, new JsonSerializerSettings
-        {
-            DefaultValueHandling = DefaultValueHandling.Include,
-            Formatting           = Formatting.Indented
-        });
     }
-
+    
+   
     public static string InvokeMethod((string fullAssemblyPath, MethodReference methodReference, string stateJsonTextForDotNetInstanceProperties, string stateJsonTextForDotNetMethodParameters) state)
     {
         WriteLog("InvokeStarted");
