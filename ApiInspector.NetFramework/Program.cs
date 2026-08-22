@@ -74,12 +74,7 @@ static partial class Program
                     continue;
                 }
 
-                var (isSuccessfullyCreated, instance) = Plugin.GetDefaultValueForJson(propertyType);
-                if (isSuccessfullyCreated)
-                {
-                    map.Add(name, instance);
-                    continue;
-                }
+                
 
                 map.Add(name, ReflectionHelper.CreateDefaultValue(propertyType));
             }
@@ -157,31 +152,13 @@ static partial class Program
             var declaringType = assembly.TryLoadType(methodReference.DeclaringType).Unwrap();
 
             instance = ExecUntilNotNull(declaringType, jsonForInstance, [
-                tryCreateInstanceFromPlugins,
                 tryCreateInstanceFromJson,
                 tryCreateInstanceFromReflection
             ]);
 
             instance = JsonInternalAssigner.TryAssignInternalProps(instance, jsonForInstance);
 
-            static object tryCreateInstanceFromPlugins(Type declaringType, string jsonForInstance)
-            {
-                WriteLog("Plugin.TryCreateInstance");
-                var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, createdInstance) = Plugin.TryCreateInstance(declaringType, jsonForInstance);
-                if (occurredErrorWhenCreatingInstance != null)
-                {
-                    WriteLog($"occurredErrorWhenCreatingInstance: {occurredErrorWhenCreatingInstance}");
-                    throw occurredErrorWhenCreatingInstance;
-                }
-
-                if (!isSuccessfullyCreated)
-                {
-                    return null;
-                }
-
-                WriteLog("PluginSuccessfullyCreatedInstance");
-                return createdInstance;
-            }
+           
 
             static object tryCreateInstanceFromJson(Type declaringType, string jsonForInstance)
             {
@@ -327,34 +304,12 @@ static partial class Program
             };
 
             return ExecUntilNotNull(parameterInfo, jProperty, [
-                tryCreateFromPlugins,
                 tryDeserializeTuple,
                 tryCreateFromJsonBySerialization,
                 createDefaultValueByReflection
             ]);
 
-            static object tryCreateFromPlugins(ParameterInfo parameterInfo, JProperty jProperty)
-            {
-                if (jProperty is null)
-                {
-                    return null;
-                }
-
-                var (occurredErrorWhenCreatingInstance, isSuccessfullyCreated, parameterInstance) = Plugin.TryCreateInstance(parameterInfo.ParameterType, jProperty.Value.ToString());
-
-                if (occurredErrorWhenCreatingInstance != null)
-                {
-                    throw occurredErrorWhenCreatingInstance;
-                }
-
-                if (isSuccessfullyCreated)
-                {
-                    return parameterInstance;
-                }
-
-                return null;
-            }
-
+            
             static object tryCreateFromJsonBySerialization(ParameterInfo parameterInfo, JProperty jProperty)
             {
                 return jProperty?.Value.ToObject(parameterInfo.ParameterType, new()
