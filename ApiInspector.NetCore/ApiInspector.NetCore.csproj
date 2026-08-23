@@ -28,6 +28,8 @@
 
         <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin\ApiInspector.NetCore.$(TargetFramework)" />
 
+        <RemoveDir Directories="$(SolutionDir)bin\ApiInspector.NetCore" />
+
     </Target>
 
 </Project>

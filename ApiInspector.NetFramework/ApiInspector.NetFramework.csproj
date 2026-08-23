@@ -29,9 +29,9 @@
             <FilesToCopy Include="$(OutDir)*.*" Exclude="$(OutDir)*.pdb" />
         </ItemGroup>
 
-        <MakeDir Directories="$(SolutionDir)bin\ApiInspector.NetFramework" />
+        <MakeDir Directories="$(SolutionDir)bin\ApiInspector.NetFramework.$(TargetFramework)" />
 
-        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin\ApiInspector.NetFramework" />
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin\ApiInspector.NetFramework.$(TargetFramework)" />
 
     </Target>
 
