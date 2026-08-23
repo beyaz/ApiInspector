@@ -501,15 +501,16 @@ class MainWindow : Component<MainWindowModel>
                 {
                     Click    = OnExecuteClicked,
                     Status   = ExecuteButtonStatus,
-                    Disabled = state.SelectedMethod is not null
+                    Disabled = state.SelectedMethod is null
                 } + ComponentBoxShadow,
                 new DebugButton
                 {
                     Click  = OnDebugClicked,
                     Status = DebugButtonStatus,
-                    Disabled = state.SelectedMethod is not null
+                    Disabled = state.SelectedMethod is null
                 } + ComponentBoxShadow,
 
+                state.SelectedMethod is null  ? null :
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
             };
 
@@ -911,8 +912,6 @@ class MainWindow : Component<MainWindowModel>
             }
         }
 
-        ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
-        
         TryInitializeDefaultJsonInputs();
 
         return Task.CompletedTask;
@@ -1049,8 +1048,7 @@ class MainWindow : Component<MainWindowModel>
                     new ()
                     {
                         AssemblyFileFullPath = AssemblyFileFullPath,
-                        MethodReference = state.SelectedMethod,
-                        JsonForInstance = scenario.JsonTextForDotNetInstanceProperties
+                        MethodReference = state.SelectedMethod
                     }
                 ).Match(json => scenario.JsonTextForDotNetInstanceProperties = json, printError);
             }
@@ -1063,8 +1061,7 @@ class MainWindow : Component<MainWindowModel>
                     new ()
                     {
                         AssemblyFileFullPath = AssemblyFileFullPath,
-                        MethodReference      = state.SelectedMethod,
-                        JsonForParameters      = scenario.JsonTextForDotNetMethodParameters
+                        MethodReference      = state.SelectedMethod
                     }
                 ).Match(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
