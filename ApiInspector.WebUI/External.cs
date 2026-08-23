@@ -102,13 +102,12 @@ static class External
             return new ArgumentException(nameof(input.InvokerExeFilePath));
         }
         
-        var fileInfo = new FileInfo(input.AssemblyFileFullPath);
-        if (!fileInfo.Exists)
+        if (!File.Exists(input.AssemblyFileFullPath))
         {
             return new FileNotFoundException(input.AssemblyFileFullPath);
         }
 
-        var runtime = GetTargetFramework(fileInfo);
+        var runtime = GetTargetFramework(new FileInfo(input.AssemblyFileFullPath));
         if (runtime.IsNetCore is false && runtime.IsNetFramework is false && runtime.IsNetStandard is false)
         {
             return RuntimeNotDetectedException(input.AssemblyFileFullPath);

@@ -70,6 +70,11 @@ class MainWindow : Component<MainWindowModel>
 
     static void ArrangeInvokerExeFilePath(MainWindowModel state, string assemblyFileFullPath)
     {
+        if (string.IsNullOrWhiteSpace(assemblyFileFullPath))
+        {
+            return;
+        }
+        
         var exeFilePaths = Config.InvocationHandlerExePaths;
         
         state.InvokerExeFilePath = exeFilePaths.Last();
