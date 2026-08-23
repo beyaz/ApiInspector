@@ -499,13 +499,15 @@ class MainWindow : Component<MainWindowModel>
             {
                 new ExecuteButton
                 {
-                    Click  = OnExecuteClicked,
-                    Status = ExecuteButtonStatus
+                    Click    = OnExecuteClicked,
+                    Status   = ExecuteButtonStatus,
+                    Disabled = !File.Exists(AssemblyFileFullPath)
                 } + ComponentBoxShadow,
                 new DebugButton
                 {
                     Click  = OnDebugClicked,
-                    Status = DebugButtonStatus
+                    Status = DebugButtonStatus,
+                    Disabled = !File.Exists(AssemblyFileFullPath)
                 } + ComponentBoxShadow,
 
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow

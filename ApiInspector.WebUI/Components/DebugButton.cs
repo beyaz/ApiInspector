@@ -5,6 +5,8 @@ sealed class DebugButton : Component
     public MouseEventHandler Click { get; init; }
     
     public required ActionButtonStatus Status { get; init; }
+    
+    public bool Disabled { get; init; }
 
     protected override Element render()
     {
@@ -27,6 +29,6 @@ sealed class DebugButton : Component
             SvgFileName  = svgFileName,
             OnClicked      = Click,
             TooltipText  = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide."
-        };
+        } + When(Disabled, Opacity(0.7));
     }
 }

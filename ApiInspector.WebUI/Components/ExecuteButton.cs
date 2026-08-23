@@ -5,6 +5,8 @@ sealed class ExecuteButton : PureComponent
     public MouseEventHandler Click { get; init; }
     
     public required ActionButtonStatus Status { get; init; }
+    
+    public bool Disabled { get; init; }
 
     protected override Element render()
     {
@@ -27,6 +29,6 @@ sealed class ExecuteButton : PureComponent
             SvgFileName  = svgFileName,
             OnClicked    = Click,
             TooltipText  = "Executes selected method by given parameters above then show results in below."
-        };
+        }+ When(Disabled, Opacity(0.7));
     }
 }
