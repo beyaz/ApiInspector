@@ -32,7 +32,6 @@
 	
     <ItemGroup>
       <Folder Include="Properties\" />
-      <Folder Include="Shared\Toolbox\" />
     </ItemGroup>
 
 
@@ -44,38 +43,15 @@
       </Reference>
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Content Update="web.config">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
-
-
     <ItemGroup>
       <None Update="Version.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-	
-	<Target Name="_AfterPublish_" AfterTargets="Publish">
-		<Delete Files="$(PublishDir)\ReactWithDotNet.pdb" />
-		<Delete Files="$(PublishDir)\ReactWithDotNet.xml" />
-		<Delete Files="$(PublishDir)\$(MSBuildProjectName).pdb" />
-		<Delete Files="$(PublishDir)\$(MSBuildProjectName).xml" />
-
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\ApiInspector.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetCore\bin\$(Configuration)\net8.0\ApiInspector.runtimeconfig.json" DestinationFolder="$(PublishDir)\ApiInspector.NetCore"></Copy>
-		
-		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\ApiInspector.exe" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
-		<Copy SourceFiles="..\ApiInspector.NetFramework\bin\$(Configuration)\Newtonsoft.Json.dll" DestinationFolder="$(PublishDir)\ApiInspector.NetFramework"></Copy>
-		
-	</Target>
-
-    <ItemGroup>
         <Content Include="app.ico" />
+
+        <Content Update="web.config">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 
@@ -102,8 +78,5 @@
         <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin" />
 
     </Target>
-
-
     
-   
 </Project>
