@@ -54,29 +54,13 @@
         </Content>
     </ItemGroup>
 
-
-    <Target Name="StartWithSolutionBinFolder" BeforeTargets="Build">
-
-        <ItemGroup>
-            <FilesToCopy Include="$(SolutionDir)bin\**\*.*" />
-        </ItemGroup>
-
-        <Copy
-            SourceFiles="@(FilesToCopy)"
-            DestinationFiles="@(FilesToCopy->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" />
-
-    </Target>
+    <PropertyGroup>
+        <BaseOutputPath>$(SolutionDir)bin\</BaseOutputPath>
+        <OutputPath>$(SolutionDir)bin\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <AppendConfigurationToOutputPath>false</AppendConfigurationToOutputPath>
+    </PropertyGroup>
     
-    <Target Name="CopyToSolutionBinFolder" AfterTargets="Build">
-
-        <ItemGroup>
-            <FilesToCopy Include="$(OutDir)*.*" Exclude="$(OutDir)*.pdb" />
-        </ItemGroup>
-
-        <MakeDir Directories="$(SolutionDir)bin" />
-
-        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin" />
-
-    </Target>
     
 </Project>
