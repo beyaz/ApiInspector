@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>ApiInspector</RootNamespace>
+        <AssemblyName>ApiInspector</AssemblyName>
+        <LangVersion>preview</LangVersion>
+        <ApplicationIcon>../Shared/app.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Shared\AssemblyModel.cs" Link="Shared\AssemblyModel.cs" />
+        <Compile Include="..\Shared\AssemblyModelHelper.cs" Link="Shared\AssemblyModelHelper.cs" />
+        <Compile Include="..\Shared\AsyncLogger.cs" Link="Shared\AsyncLogger.cs" />
+        <Compile Include="..\Shared\Invocation.Shared.cs" Link="Shared\Invocation.Shared.cs" />
+        <Compile Include="..\Shared\Program.Shared.cs" Link="Shared\Program.Shared.cs" />
+        <Compile Include="..\Shared\ReflectionHelper.cs" Link="Shared\ReflectionHelper.cs" />
+        <Compile Include="..\shared\toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
+    </ItemGroup>
+
+    <Target Name="CopyToSolutionBinFolder" AfterTargets="Build">
+
+        <ItemGroup>
+            <FilesToCopy Include="$(OutDir)*.*" Exclude="$(OutDir)*.pdb" />
+        </ItemGroup>
+
+        <MakeDir Directories="$(SolutionDir)bin\ApiInspector.NetCore8" />
+
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(SolutionDir)bin\ApiInspector.NetCore8" />
+
+    </Target>
+
+</Project>
