@@ -140,6 +140,11 @@ class MainWindow : Component<MainWindowModel>
                             HistoryDialogVisible = false;
 
                             state = StateCache.TryRead(selectedMethod) ?? state;
+                            
+                            if (state.InvokerExeFilePath is null)
+                            {
+                                ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+                            }
 
                             return Task.CompletedTask;
                         }
@@ -912,6 +917,12 @@ class MainWindow : Component<MainWindowModel>
                     state.ClassFilter               = currentState.ClassFilter;
                     state.MethodFilter              = currentState.MethodFilter;
                     state.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
+                    state.InvokerExeFilePath        = currentState.InvokerExeFilePath;
+                    
+                    if (state.InvokerExeFilePath is null)
+                    {
+                        ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+                    }
                 }
             }
         }
