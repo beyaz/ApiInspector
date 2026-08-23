@@ -27,13 +27,7 @@ static partial class Program
         return from methodInfo in LoadMethodInfo(input)
                from declaringType in Result.NotNull(methodInfo.DeclaringType)
                from instance in Result.From(() => Activator.CreateInstance(declaringType))
-               select instance is null
-                   ? null
-                   : JsonConvert.SerializeObject(instance, new JsonSerializerSettings
-                   {
-                       DefaultValueHandling = DefaultValueHandling.Include,
-                       Formatting           = Formatting.Indented
-                   });
+               select instance is null ? null : Json.SerializeIncludeDefaultValues(instance);
     }
 
     public static Result<string> GetParametersEditorJsonText(ExternalInput input)
@@ -45,11 +39,7 @@ static partial class Program
                    where parameterInfo.Name is not null
                    select (parameterInfo.Name, Activator.CreateInstance(parameterInfo.ParameterType))
                )
-               select JsonConvert.SerializeObject(map, new JsonSerializerSettings
-               {
-                   DefaultValueHandling = DefaultValueHandling.Include,
-                   Formatting           = Formatting.Indented
-               });
+               select Json.SerializeIncludeDefaultValues(map);
 
         static Dictionary<string, object> CreateNewDictionary(IEnumerable<(string name, object value)> items)
         {
@@ -92,7 +82,7 @@ static partial class Program
 
             if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
             {
-                return JsonConvert.DeserializeObject(input.JsonForInstance, methodInfo.DeclaringType!);
+                return Json.Deserialize(input.JsonForInstance, methodInfo.DeclaringType!);
             }
 
             return Activator.CreateInstance(methodInfo.DeclaringType!);
@@ -221,6 +211,11 @@ class Json
     {
         return JsonConvert.DeserializeObject<T>(json);
     }
+    
+    internal static object Deserialize(string json, Type type)
+    {
+        return JsonConvert.DeserializeObject(json, type);
+    }
 
     internal static string Serialize(object instance)
     {
@@ -232,5 +227,14 @@ class Json
             ReferenceLoopHandling      = ReferenceLoopHandling.Ignore
         };
         return JsonConvert.SerializeObject(instance, jsonSerializerSettings);
+    }
+
+    internal static string SerializeIncludeDefaultValues(object instance)
+    {
+        return JsonConvert.SerializeObject(instance, new JsonSerializerSettings
+        {
+            DefaultValueHandling = DefaultValueHandling.Include,
+            Formatting           = Formatting.Indented
+        });
     }
 }
