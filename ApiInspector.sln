@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Toolbox", "Toolbox", "{0BD9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.NetFramework", "ApiInspector.NetFramework\ApiInspector.NetFramework.csproj", "{8A8DD42B-A1FF-45B5-8C22-65621BC73039}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.NetCore8", "ApiInspector.NetCore8\ApiInspector.NetCore8.csproj", "{EF9D274C-16AD-8171-754F-F750E9A52162}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInspector.NetCore", "ApiInspector.NetCore\ApiInspector.NetCore.csproj", "{AF77D22F-EDD8-F19D-D46A-89A803B98084}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,10 +62,10 @@ Global
 		{8A8DD42B-A1FF-45B5-8C22-65621BC73039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A8DD42B-A1FF-45B5-8C22-65621BC73039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A8DD42B-A1FF-45B5-8C22-65621BC73039}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF9D274C-16AD-8171-754F-F750E9A52162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF9D274C-16AD-8171-754F-F750E9A52162}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF9D274C-16AD-8171-754F-F750E9A52162}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF9D274C-16AD-8171-754F-F750E9A52162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF77D22F-EDD8-F19D-D46A-89A803B98084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF77D22F-EDD8-F19D-D46A-89A803B98084}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF77D22F-EDD8-F19D-D46A-89A803B98084}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF77D22F-EDD8-F19D-D46A-89A803B98084}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

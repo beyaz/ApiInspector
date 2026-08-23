@@ -70,7 +70,11 @@ class MainWindow : Component<MainWindowModel>
 
     static void ArrangeInvokerExeFilePath(MainWindowModel state, string assemblyFileFullPath)
     {
-        foreach (var invokerExeFilePath in Config.InvocationHandlerExePaths)
+        var exeFilePaths = Config.InvocationHandlerExePaths;
+        
+        state.InvokerExeFilePath = exeFilePaths.Last();
+        
+        foreach (var invokerExeFilePath in exeFilePaths)
         {
             var result = External.IsYourAssembly(invokerExeFilePath, assemblyFileFullPath);
             if (result.HasError)

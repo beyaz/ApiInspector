@@ -12,6 +12,9 @@
 
   "InvocationHandlerExePaths": [
     "ApiInspector.NetFramework/ApiInspector.exe",
-    "ApiInspector.NetCore8/ApiInspector.exe"
+    "ApiInspector.NetCore.net7.0/ApiInspector.exe",
+    "ApiInspector.NetCore.net8.0/ApiInspector.exe",
+    "ApiInspector.NetCore.net9.0/ApiInspector.exe",
+    "ApiInspector.NetCore.net10.0/ApiInspector.exe"
   ] 
 }
