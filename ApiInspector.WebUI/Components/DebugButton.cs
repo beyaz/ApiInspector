@@ -28,7 +28,8 @@ sealed class DebugButton : Component
             Label        = "Debug",
             SvgFileName  = svgFileName,
             OnClicked      = Click,
-            TooltipText  = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide."
-        } + When(Disabled, Opacity(0.7));
+            TooltipText  = "Press Debug button and attach to 'ApiInspector.exe' process by visual studio or any other ide.",
+            Disabled = Disabled
+        };
     }
 }

@@ -13,6 +13,8 @@ sealed class ActionButton : PureComponent
     public string TooltipText { get; init; }
 
     public required ActionButtonStatus Status { get; init; }
+    
+    public bool Disabled { get; init; }
 
     protected override Element render()
     {
@@ -54,10 +56,12 @@ sealed class ActionButton : PureComponent
             Background(transparent),
             BorderRadius(5),
             Padding(10, 20),
-            CursorPointer
+            CursorPointer,
+            
+            When(Disabled, Opacity(0.5))
         };
 
-        var content = new FlexRowCentered(buttonStyle, OnClick(OnClicked))
+        var content = new FlexRowCentered(buttonStyle, When(!Disabled, OnClick(OnClicked)))
         {
             icon,
             new div{Label}

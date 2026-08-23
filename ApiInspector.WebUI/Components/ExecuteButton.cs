@@ -28,7 +28,8 @@ sealed class ExecuteButton : PureComponent
             Label        = "Execute",
             SvgFileName  = svgFileName,
             OnClicked    = Click,
-            TooltipText  = "Executes selected method by given parameters above then show results in below."
-        }+ When(Disabled, Opacity(0.7));
+            TooltipText  = "Executes selected method by given parameters above then show results in below.",
+            Disabled = Disabled
+        };
     }
 }
