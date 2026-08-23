@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -194,7 +196,15 @@ static partial class Program
 
     public static Result<string> IsYourAssembly(ExternalInput input)
     {
-        return Convert.ToString(true);
+        var currentFramework = Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
+        if (currentFramework is null)
+        {
+            return Convert.ToString(false);
+        }
+
+        var fileContent = File.ReadAllText(input.AssemblyFileFullPath);
+
+        return Convert.ToString(fileContent.Contains(currentFramework, StringComparison.OrdinalIgnoreCase));
     }
 
     internal static Result<MethodInfo> LoadMethodInfo(ExternalInput input)
