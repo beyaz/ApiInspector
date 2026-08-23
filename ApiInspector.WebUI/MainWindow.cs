@@ -501,13 +501,13 @@ class MainWindow : Component<MainWindowModel>
                 {
                     Click    = OnExecuteClicked,
                     Status   = ExecuteButtonStatus,
-                    Disabled = !File.Exists(AssemblyFileFullPath)
+                    Disabled = state.SelectedMethod is not null
                 } + ComponentBoxShadow,
                 new DebugButton
                 {
                     Click  = OnDebugClicked,
                     Status = DebugButtonStatus,
-                    Disabled = !File.Exists(AssemblyFileFullPath)
+                    Disabled = state.SelectedMethod is not null
                 } + ComponentBoxShadow,
 
                 new MethodReferenceView { MethodReference = state.SelectedMethod } + ComponentBoxShadow
