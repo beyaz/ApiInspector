@@ -103,61 +103,32 @@ static partial class Program
             var parameterInfoList = methodInfo.GetParameters();
 
             var map = new JObject();
+
             try
             {
                 if (!string.IsNullOrWhiteSpace(input.JsonForParameters))
                 {
-                    WriteLog("Started to deserialize jsonForParameters");
-
                     map = JsonConvert.DeserializeObject<JObject>(input.JsonForParameters);
-                }
-
-                if (parameterInfoList.Length == 1 &&
-                    parameterInfoList[0].ParameterType.FullName == "System.String" &&
-                    parameterInfoList[0].Name is not null)
-                {
-                    var jProperty = map.Property(parameterInfoList[0].Name, StringComparison.OrdinalIgnoreCase);
-                    if (jProperty == null)
-                    {
-                        map = new()
-                        {
-                            [parameterInfoList[0].Name] = new JValue(input.JsonForParameters)
-                        };
-                    }
                 }
             }
             catch (Exception exception)
             {
-                WriteLog($"Deserialization_failed:{exception}");
-
-                if (parameterInfoList.Length == 1 && parameterInfoList[0].ParameterType.FullName == "System.String" && parameterInfoList[0].Name is not null)
+                // Is Direct String Input
                 {
-                    WriteLog("Deserialization_failed_but_recalculating_for_string_only_parameter");
+                    var isOneStringParameter = parameterInfoList.Length == 1 &&
+                                               parameterInfoList[0].ParameterType.FullName == "System.String" &&
+                                               parameterInfoList[0].Name is not null;
 
-                    map = new()
+                    if (isOneStringParameter && !string.IsNullOrWhiteSpace(input.JsonForParameters))
                     {
-                        [parameterInfoList[0].Name] = new JValue(input.JsonForParameters)
-                    };
+                        return Result.Success<object[]>([input.JsonForParameters]);
+                    }
                 }
-                else
-                {
-                    WriteLog("Throwing_exception");
-                    throw;
-                }
+
+                return exception;
             }
 
-            WriteLog("Preparing_invocationParameters");
-
-            var invocationParameters = new List<object>();
-
-            foreach (var parameterInfo in parameterInfoList)
-            {
-                WriteLog($"Preparing_invocation_parameter: {parameterInfo.Name}");
-
-                invocationParameters.Add(calculateParameterValue(map, parameterInfo));
-            }
-
-            return invocationParameters.ToArray();
+            return Result.Success<object[]>([from p in parameterInfoList select calculateParameterValue(map, p)]);
 
             static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
             {
