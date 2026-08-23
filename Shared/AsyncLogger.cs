@@ -3,8 +3,6 @@ using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace ApiInspector;
 
@@ -41,9 +39,8 @@ static class AsyncLogger
                 {
                     try
                     {
-                        var json = JsonConvert.SerializeObject(new[] { message });
 
-                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        var content = new StringContent(message, Encoding.UTF8, "application/json");
 
                         await _httpClient.PostAsync(apiUrl, content);
                     }
