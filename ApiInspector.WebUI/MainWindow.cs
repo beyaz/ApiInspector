@@ -907,8 +907,6 @@ class MainWindow : Component<MainWindowModel>
                     state.ClassFilter               = currentState.ClassFilter;
                     state.MethodFilter              = currentState.MethodFilter;
                     state.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
-
-                    ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
                 }
             }
         }

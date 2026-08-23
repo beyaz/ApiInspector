@@ -17,6 +17,7 @@ sealed record ConfigInfo
     internal class FileStorageInfo
     {
         public string CacheDirectoryFormat { get; init; }
+        
         public bool IsActive { get; init; }
     }
 }
@@ -49,7 +50,11 @@ partial class Extensions
 
         if (IsRunningInVS)
         {
-            config = config with { UseUrls = false };
+            config = config with
+            {
+                UseUrls = false,
+                InvocationHandlerExePaths = new List<string>(from x in config.InvocationHandlerExePaths select Path.Combine(AppFolder, x))
+            };
         }
 
         return config;

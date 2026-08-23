@@ -70,7 +70,7 @@ static partial class Program
             from methodParameters in CreateParameters(input, methodInfo)
 
             // I n v o k e
-            from output in Invoke(methodInfo, instance, [methodParameters])
+            from output in Invoke(methodInfo, instance, [..methodParameters])
 
             // O u t p u t
             select output;

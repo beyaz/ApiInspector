@@ -100,6 +100,7 @@ partial class Program
             Console.SetOut(originalStdout);
 
             Console.Write(responseAsString);
+            
 
             WriteLog("S U C C E S S");
 
