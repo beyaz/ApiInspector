@@ -9,10 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Compile Include="..\Shared\AssemblyModel.cs" Link="Shared\AssemblyModel.cs" />
         <Compile Include="..\Shared\AssemblyModelHelper.cs" Link="Shared\AssemblyModelHelper.cs" />
         <Compile Include="..\Shared\AsyncLogger.cs" Link="Shared\AsyncLogger.cs" />
