@@ -78,7 +78,7 @@ static partial class Program
             from methodParameters in CreateParameters(input, methodInfo)
 
             // I n v o k e
-            from output in Invoke(methodInfo, instance, methodParameters)
+            from output in Invoke(methodInfo, instance, [methodParameters])
 
             // O u t p u t
             select output;
@@ -98,7 +98,7 @@ static partial class Program
             return Activator.CreateInstance(methodInfo.DeclaringType!);
         }
 
-        static Result<object[]> CreateParameters(ExternalInput input, MethodInfo methodInfo)
+        static Result<IReadOnlyList<object>> CreateParameters(ExternalInput input, MethodInfo methodInfo)
         {
             var parameterInfoList = methodInfo.GetParameters();
 
@@ -121,14 +121,14 @@ static partial class Program
 
                     if (isOneStringParameter && !string.IsNullOrWhiteSpace(input.JsonForParameters))
                     {
-                        return Result.Success<object[]>([input.JsonForParameters]);
+                        return Result.Success<IReadOnlyList<object>>([input.JsonForParameters]);
                     }
                 }
 
                 return exception;
             }
 
-            return Result.Success<object[]>([from p in parameterInfoList select calculateParameterValue(map, p)]);
+            return Result.From(from p in parameterInfoList select Result.From(() => calculateParameterValue(map, p)));
 
             static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
             {
