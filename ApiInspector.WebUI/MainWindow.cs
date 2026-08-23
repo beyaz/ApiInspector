@@ -63,7 +63,11 @@ class MainWindow : Component<MainWindowModel>
             AssemblyFileName  = "ApiInspector.exe",
             MethodFilter      = "GetHelpMessage"
         };
-        ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+        
+        if (state.InvokerExeFilePath is null)
+        {
+            ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+        }
 
         return Task.CompletedTask;
     }
@@ -1040,7 +1044,7 @@ class MainWindow : Component<MainWindowModel>
         {
             var scenario = state.ScenarioList[state.ScenarioListSelectedIndex];
 
-            if (scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
+            if (!state.SelectedMethod.IsStatic && scenario.JsonTextForDotNetInstanceProperties.IsNullOrWhiteSpaceOrEmptyJsonObject())
             {
                 External.GetInstanceEditorJsonText
                 (
