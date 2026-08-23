@@ -211,7 +211,7 @@ class Json
     {
         return JsonConvert.DeserializeObject<T>(json);
     }
-    
+
     internal static object Deserialize(string json, Type type)
     {
         return JsonConvert.DeserializeObject(json, type);

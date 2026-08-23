@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
 
 namespace ApiInspector;
 
@@ -93,13 +92,13 @@ static partial class Program
         {
             var parameterInfoList = methodInfo.GetParameters();
 
-            var map = new JObject();
+            JsonElement map = default;
 
             try
             {
                 if (!string.IsNullOrWhiteSpace(input.JsonForParameters))
                 {
-                    map = JsonConvert.DeserializeObject<JObject>(input.JsonForParameters);
+                    map = JsonSerializer.Deserialize<JsonElement>(input.JsonForParameters);
                 }
             }
             catch (Exception exception)
@@ -121,7 +120,7 @@ static partial class Program
 
             return Result.From(from p in parameterInfoList select Result.From(() => calculateParameterValue(map, p)));
 
-            static object calculateParameterValue(JObject map, ParameterInfo parameterInfo)
+            static object calculateParameterValue(JsonElement map, ParameterInfo parameterInfo)
             {
                 if (parameterInfo.Name is null)
                 {
@@ -134,10 +133,10 @@ static partial class Program
                     return null;
                 }
 
-                var jProperty = map.Property(parameterInfo.Name, StringComparison.Ordinal);
-                if (jProperty is not null)
+                if (map.ValueKind == JsonValueKind.Object &&
+                    map.TryGetProperty(parameterInfo.Name, out var property))
                 {
-                    return jProperty.Value.ToObject(parameterInfo.ParameterType);
+                    property.Deserialize(parameterInfo.ParameterType);
                 }
 
                 // Default Value By Reflection
@@ -210,32 +209,31 @@ class Json
 {
     internal static T Deserialize<T>(string json)
     {
-        return JsonConvert.DeserializeObject<T>(json);
+        return JsonSerializer.Deserialize<T>(json);
     }
+
     internal static object Deserialize(string json, Type type)
     {
-        return JsonConvert.DeserializeObject(json, type);
+        return JsonSerializer.Deserialize(json, type);
     }
-    
-    
+
     internal static string Serialize(object instance)
     {
-        var jsonSerializerSettings = new JsonSerializerSettings
+        var options = new JsonSerializerOptions
         {
-            DefaultValueHandling       = DefaultValueHandling.Ignore,
-            Formatting                 = Formatting.Indented,
-            PreserveReferencesHandling = PreserveReferencesHandling.None,
-            ReferenceLoopHandling      = ReferenceLoopHandling.Ignore
+            WriteIndented          = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            ReferenceHandler       = ReferenceHandler.IgnoreCycles
         };
-        return JsonConvert.SerializeObject(instance, jsonSerializerSettings);
+        return JsonSerializer.Serialize(instance, options);
     }
-    
+
     internal static string SerializeIncludeDefaultValues(object instance)
     {
         var options = new JsonSerializerOptions
         {
             WriteIndented = true
         };
-        return System.Text.Json.JsonSerializer.Serialize(instance, options);
+        return JsonSerializer.Serialize(instance, options);
     }
 }
