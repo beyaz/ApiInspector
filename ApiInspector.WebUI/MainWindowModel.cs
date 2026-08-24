@@ -2,11 +2,11 @@
 
 namespace ApiInspector.WebUI;
 
-sealed class MainWindowModel
+sealed record MainWindowModel
 {
     public string AssemblyDirectory { get; set; }
 
-    public string AssemblyFileName { get; set; }
+    public string AssemblyFileName { get; init; }
 
     public string ClassFilter { get; set; }
 

@@ -320,10 +320,8 @@ class MainWindow : Component<MainWindowModel>
 
                         AssemblySelector.CreateAssemblySelectorInput(state.AssemblyDirectory, state.AssemblyFileName, x =>
                         {
-                            state.AssemblyFileName = x;
+                            SetState(state with { AssemblyFileName = x });
 
-                            ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
-                            
                             TryUpdateEnvironmentText();
 
                             return Task.CompletedTask;
@@ -911,7 +909,10 @@ class MainWindow : Component<MainWindowModel>
                 if (cachedState is not null)
                 {
                     cachedState.AssemblyDirectory         = currentState.AssemblyDirectory;
-                    cachedState.AssemblyFileName          = currentState.AssemblyFileName;
+                    cachedState = cachedState with
+                    {
+                        AssemblyFileName = currentState.AssemblyFileName
+                    };
                     cachedState.ClassFilter               = currentState.ClassFilter;
                     cachedState.MethodFilter              = currentState.MethodFilter;
                     cachedState.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
