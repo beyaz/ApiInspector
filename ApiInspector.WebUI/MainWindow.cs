@@ -908,9 +908,9 @@ class MainWindow : Component<MainWindowModel>
                 var cachedState = StateCache.TryRead(state.SelectedMethod);
                 if (cachedState is not null)
                 {
-                    cachedState.AssemblyDirectory         = currentState.AssemblyDirectory;
                     cachedState = cachedState with
                     {
+                        AssemblyDirectory = currentState.AssemblyDirectory,
                         AssemblyFileName = currentState.AssemblyFileName
                     };
                     cachedState.ClassFilter               = currentState.ClassFilter;
