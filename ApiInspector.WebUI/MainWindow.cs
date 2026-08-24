@@ -911,9 +911,9 @@ class MainWindow : Component<MainWindowModel>
                     cachedState = cachedState with
                     {
                         AssemblyDirectory = currentState.AssemblyDirectory,
-                        AssemblyFileName = currentState.AssemblyFileName
+                        AssemblyFileName = currentState.AssemblyFileName,
+                        ClassFilter = currentState.ClassFilter
                     };
-                    cachedState.ClassFilter               = currentState.ClassFilter;
                     cachedState.MethodFilter              = currentState.MethodFilter;
                     cachedState.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
                     cachedState.InvokerExeFilePath        = currentState.InvokerExeFilePath;

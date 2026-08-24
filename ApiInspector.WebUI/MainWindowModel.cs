@@ -8,7 +8,7 @@ sealed record MainWindowModel
 
     public string AssemblyFileName { get; init; }
 
-    public string ClassFilter { get; set; }
+    public string ClassFilter { get; init; }
 
     public string MethodFilter { get; set; }
 
