@@ -57,21 +57,26 @@ class MainWindow : Component<MainWindowModel>
 
     protected override Task constructor()
     {
-        state = StateCache.ReadState() ?? new MainWindowModel
+        SetState(StateCache.ReadState() ?? new MainWindowModel
         {
             AssemblyDirectory = Path.GetDirectoryName(Config.InvocationHandlerExePaths[0]),
             AssemblyFileName  = "ApiInspector.exe",
             MethodFilter      = "GetHelpMessage"
-        };
+        });
+        
+        return Task.CompletedTask;
+    }
+
+    void SetState(MainWindowModel newState)
+    {
+        state = newState;
         
         if (state.InvokerExeFilePath is null)
         {
             ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
         }
-
-        return Task.CompletedTask;
     }
-
+    
     static void ArrangeInvokerExeFilePath(MainWindowModel state, string assemblyFileFullPath)
     {
         if (string.IsNullOrWhiteSpace(assemblyFileFullPath))
@@ -139,12 +144,7 @@ class MainWindow : Component<MainWindowModel>
                         {
                             HistoryDialogVisible = false;
 
-                            state = StateCache.TryRead(selectedMethod) ?? state;
-                            
-                            if (state.InvokerExeFilePath is null)
-                            {
-                                ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
-                            }
+                            SetState(StateCache.TryRead(selectedMethod) ?? state);
 
                             return Task.CompletedTask;
                         }
@@ -910,19 +910,15 @@ class MainWindow : Component<MainWindowModel>
                 var cachedState = StateCache.TryRead(state.SelectedMethod);
                 if (cachedState is not null)
                 {
-                    state = cachedState;
-
-                    state.AssemblyDirectory         = currentState.AssemblyDirectory;
-                    state.AssemblyFileName          = currentState.AssemblyFileName;
-                    state.ClassFilter               = currentState.ClassFilter;
-                    state.MethodFilter              = currentState.MethodFilter;
-                    state.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
-                    state.InvokerExeFilePath        = currentState.InvokerExeFilePath;
+                    cachedState.AssemblyDirectory         = currentState.AssemblyDirectory;
+                    cachedState.AssemblyFileName          = currentState.AssemblyFileName;
+                    cachedState.ClassFilter               = currentState.ClassFilter;
+                    cachedState.MethodFilter              = currentState.MethodFilter;
+                    cachedState.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
+                    cachedState.InvokerExeFilePath        = currentState.InvokerExeFilePath;
                     
-                    if (state.InvokerExeFilePath is null)
-                    {
-                        ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
-                    }
+                    SetState(cachedState);
+                    
                 }
             }
         }
@@ -932,6 +928,8 @@ class MainWindow : Component<MainWindowModel>
         return Task.CompletedTask;
     }
 
+    
+    
     async Task OnExecuteClicked(MouseEvent _)
     {
         AsyncLogger.logs.Clear();
