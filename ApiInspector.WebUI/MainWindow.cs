@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using ApiInspector.WebUI.Components;
 using ReactWithDotNet.ThirdPartyLibraries.MonacoEditorReact;
@@ -84,24 +83,28 @@ class MainWindow : Component<MainWindowModel>
             return;
         }
         
-        var exeFilePaths = Config.InvocationHandlerExePaths;
-        
-        state.InvokerExeFilePath = exeFilePaths.Last();
-        
-        foreach (var invokerExeFilePath in exeFilePaths)
+        string found = null;
         {
-            var result = External.IsYourAssembly(invokerExeFilePath, assemblyFileFullPath);
-            if (result.HasError)
+            foreach (var invokerExeFilePath in Config.InvocationHandlerExePaths)
             {
-                continue;
-            }
+                var result = External.IsYourAssembly(invokerExeFilePath, assemblyFileFullPath);
+                if (result.HasError)
+                {
+                    continue;
+                }
 
-            if ("true".Equals(result.Value, StringComparison.OrdinalIgnoreCase))
-            {
-                state.InvokerExeFilePath = invokerExeFilePath;
-                break;
+                if ("true".Equals(result.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    found= invokerExeFilePath;
+                    break;
+                }
             }
         }
+
+        state = state with
+        {
+            InvokerExeFilePath = found ?? Config.InvocationHandlerExePaths[^1]
+        };
     }
     
     protected override Element render()
@@ -871,7 +874,10 @@ class MainWindow : Component<MainWindowModel>
 
     Task OnElementSelected(string keyOfSelectedTreeNode)
     {
-        state.SelectedMethodTreeNodeKey = keyOfSelectedTreeNode;
+        state = state with
+        {
+            SelectedMethodTreeNodeKey = keyOfSelectedTreeNode
+        };
 
         IsInitializingSelectedMethod = true;
 
@@ -886,7 +892,7 @@ class MainWindow : Component<MainWindowModel>
 
         state.SelectedMethod = null;
 
-        state.ScenarioList              = ImmutableList<ScenarioModel>.Empty.Add(new());
+        state.ScenarioList              = [new()];
         state.ScenarioListSelectedIndex = 0;
 
         var nodeResult = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
@@ -912,11 +918,11 @@ class MainWindow : Component<MainWindowModel>
                     {
                         AssemblyDirectory = currentState.AssemblyDirectory,
                         AssemblyFileName = currentState.AssemblyFileName,
-                        ClassFilter = currentState.ClassFilter
+                        ClassFilter = currentState.ClassFilter,
+                        MethodFilter = currentState.MethodFilter,
+                        SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey,
+                        InvokerExeFilePath = currentState.InvokerExeFilePath
                     };
-                    cachedState.MethodFilter              = currentState.MethodFilter;
-                    cachedState.SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey;
-                    cachedState.InvokerExeFilePath        = currentState.InvokerExeFilePath;
                     
                     SetState(cachedState);
                     

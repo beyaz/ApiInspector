@@ -10,7 +10,7 @@ sealed record MainWindowModel
 
     public string ClassFilter { get; init; }
 
-    public string MethodFilter { get; set; }
+    public string MethodFilter { get; init; }
 
     public ImmutableList<ScenarioModel> ScenarioList { get; set; } = [new()];
 
@@ -18,13 +18,13 @@ sealed record MainWindowModel
 
     public MethodReference SelectedMethod { get; set; }
 
-    public string SelectedMethodTreeNodeKey { get; set; }
+    public string SelectedMethodTreeNodeKey { get; init; }
 
     public string ScenarioFilterText { get; set; }
     
     public string EnvironmentText { get; set; }
     
-    public string InvokerExeFilePath { get; set; }
+    public string InvokerExeFilePath { get; init; }
 }
 
 static class RuntimeNames
