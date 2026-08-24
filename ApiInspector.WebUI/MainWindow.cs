@@ -125,7 +125,17 @@ class MainWindow : Component<MainWindowModel>
                     BorderRadius(10),
                     BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15))
                 },
-                NotificationHost
+                NotificationHost,
+                
+                new div
+                {
+                    PositionFixed, Top(0), Left(0), Right(0), Bottom(0), Background(rgba(0,0,0,0.5)), 
+                    new div
+                    {
+                        PositionFixed, Bottom("10%"), Right("50%"), Color(Gray400),
+                        "Yükleniyor..."
+                    }
+                }
             }
         };
 
