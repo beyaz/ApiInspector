@@ -252,7 +252,7 @@ class MainWindow : Component<MainWindowModel>
                     IsSelected = i == state.ScenarioListSelectedIndex,
                     Clicked = e =>
                     {
-                        state.ScenarioListSelectedIndex = Convert.ToInt32(e.currentTarget.id);
+                        state = state with { ScenarioListSelectedIndex = Convert.ToInt32(e.currentTarget.id) };
                         return Task.CompletedTask;
                     }
                 } + When(!hasMatch(scenario, state.ScenarioFilterText), DisplayNone)),
@@ -269,8 +269,11 @@ class MainWindow : Component<MainWindowModel>
                         Label = "-",
                         Clicked = _ =>
                         {
-                            state.ScenarioList              = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex);
-                            state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+                            state = state with
+                            {
+                                ScenarioList = state.ScenarioList.RemoveAt(state.ScenarioListSelectedIndex),
+                                ScenarioListSelectedIndex = state.ScenarioList.Count - 1
+                            };
 
                             return Task.CompletedTask;
                         },
@@ -634,9 +637,11 @@ class MainWindow : Component<MainWindowModel>
 
     Task AddNewScenarioClicked(MouseEvent _)
     {
-        state.ScenarioList = state.ScenarioList.Add(new());
-
-        state.ScenarioListSelectedIndex = state.ScenarioList.Count - 1;
+        state = state with
+        {
+            ScenarioList = state.ScenarioList.Add(new()),
+            ScenarioListSelectedIndex = state.ScenarioList.Count
+        };
 
         IsInitializingSelectedMethod = true;
 
@@ -890,10 +895,12 @@ class MainWindow : Component<MainWindowModel>
     {
         IsInitializingSelectedMethod = false;
 
-        state.SelectedMethod = null;
-
-        state.ScenarioList              = [new()];
-        state.ScenarioListSelectedIndex = 0;
+        state = state with
+        {
+            SelectedMethod = null,
+            ScenarioList = [new()],
+            ScenarioListSelectedIndex = 0
+        };
 
         var nodeResult = MethodSelectionView.FindTreeNode(AssemblyFileFullPath, state.SelectedMethodTreeNodeKey, state.ClassFilter, state.MethodFilter);
         if (nodeResult.HasError)
@@ -907,7 +914,10 @@ class MainWindow : Component<MainWindowModel>
         {
             if (node.IsMethod)
             {
-                state.SelectedMethod = node.MethodReference;
+                state = state with
+                {
+                    SelectedMethod = node.MethodReference
+                };
 
                 var currentState = state;
 
@@ -1097,8 +1107,8 @@ class MainWindow : Component<MainWindowModel>
     {
         External.GetEnvironment(state.InvokerExeFilePath, AssemblyFileFullPath).Match
         (
-            x => state.EnvironmentText = x,
-            _ => state.EnvironmentText = null
+            x => state = state with { EnvironmentText = x },
+            _ => state = state with { EnvironmentText = null }
         );
     }
 

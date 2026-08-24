@@ -12,17 +12,17 @@ sealed record MainWindowModel
 
     public string MethodFilter { get; init; }
 
-    public ImmutableList<ScenarioModel> ScenarioList { get; set; } = [new()];
+    public ImmutableList<ScenarioModel> ScenarioList { get; init; } = [new()];
 
-    public int ScenarioListSelectedIndex { get; set; }
+    public int ScenarioListSelectedIndex { get; init; }
 
-    public MethodReference SelectedMethod { get; set; }
+    public MethodReference SelectedMethod { get; init; }
 
     public string SelectedMethodTreeNodeKey { get; init; }
 
-    public string ScenarioFilterText { get; set; }
+    public string ScenarioFilterText { get; init; }
     
-    public string EnvironmentText { get; set; }
+    public string EnvironmentText { get; init; }
     
     public string InvokerExeFilePath { get; init; }
 }
