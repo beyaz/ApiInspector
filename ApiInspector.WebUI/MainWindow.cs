@@ -90,7 +90,7 @@ class MainWindow : Component<MainWindowModel>
             Progress = new ProgressInfo
             {
                 ProgressIndex = index,
-                ProgressText  = $"Checking dll is {Path.GetFileNameWithoutExtension(Path.GetDirectoryName(Config.InvocationHandlerExePaths[index]))}",
+                ProgressText  = $"%{Convert.ToInt32((double)index/Config.InvocationHandlerExePaths.Count*100)} Checking dll is {Path.GetFileNameWithoutExtension(Path.GetDirectoryName(Config.InvocationHandlerExePaths[index]))}",
                 ShowProgress  = true
             }
         };
@@ -109,6 +109,8 @@ class MainWindow : Component<MainWindowModel>
                 Progress = new()
             };
 
+            TryUpdateEnvironmentText();
+            
             return Task.CompletedTask;
         }
 
@@ -127,6 +129,8 @@ class MainWindow : Component<MainWindowModel>
             
             Progress = new()
         };
+        
+        TryUpdateEnvironmentText();
 
         return Task.CompletedTask;
         
@@ -144,7 +148,7 @@ class MainWindow : Component<MainWindowModel>
 
                 new Style
                 {
-                    PaddingBottom(10),
+                    PaddingBottom(20),
                     Border(Solid(1, Theme.BorderColor)),
                     SizeFull,
                     Background(Theme.WindowBackgroundColor),
@@ -153,16 +157,19 @@ class MainWindow : Component<MainWindowModel>
                 },
                 NotificationHost,
 
-                When(state.Progress.ShowProgress, () =>
-                    new div
-                    {
-                        PositionFixed, Top(0), Left(0), Right(0), Bottom(0), Background(rgba(0, 0, 0, 0.5)),
-                        new div
-                        {
-                            PositionFixed, Bottom("10%"), Right("50%"), Color(Gray400),
-                            state.Progress.ProgressText
-                        }
-                    })
+                // S t a t u s
+                PositionRelative,
+                new FlexRow(Gap(4))
+                {
+                    PositionAbsolute, Bottom(1), Left(15), 
+                    "Status:", new div { state.Progress.ProgressText ?? "Ready" }
+                },
+                
+                // B a c k d r o p
+                When(state.Progress.ShowProgress, () => new div
+                {
+                    PositionFixed, Top(0), Left(0), Right(0), Bottom(0), Background(rgba(0, 0, 0, 0.5))
+                })
             }
         };
 
@@ -363,9 +370,11 @@ class MainWindow : Component<MainWindowModel>
 
                         AssemblySelector.CreateAssemblySelectorInput(state.AssemblyDirectory, state.AssemblyFileName, x =>
                         {
-                            SetState(state with { AssemblyFileName = x });
-
-                            TryUpdateEnvironmentText();
+                            SetState(state with
+                            {
+                                AssemblyFileName = x,
+                                InvokerExeFilePath = null
+                            });
 
                             return Task.CompletedTask;
                         })
