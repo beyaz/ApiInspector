@@ -34,24 +34,13 @@ static partial class Program
     public static Result<string> GetParametersEditorJsonText(ExternalInput input)
     {
         return from methodInfo in LoadMethodInfo(input)
-               let map = CreateNewDictionary
+               let map = NewDictionaryFrom
                (
                    from parameterInfo in methodInfo.GetParameters()
                    where parameterInfo.Name is not null
                    select (parameterInfo.Name, Activator.CreateInstance(parameterInfo.ParameterType))
                )
                select Json.SerializeIncludeDefaultValues(map);
-
-        static Dictionary<string, object> CreateNewDictionary(IEnumerable<(string name, object value)> items)
-        {
-            var map = new Dictionary<string, object>();
-            foreach (var (name, value) in items)
-            {
-                map[name] = value;
-            }
-
-            return map;
-        }
     }
 
     public static Result<object> InvokeMethod(ExternalInput input)

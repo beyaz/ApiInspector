@@ -62,6 +62,17 @@ static class Mixin
             };
         }
     }
+    
+    internal static IReadOnlyDictionary<TKey, TValue> NewDictionaryFrom<TKey, TValue>(IEnumerable<(TKey name, TValue value)> items)
+    {
+        var map = new Dictionary<TKey, TValue>();
+        foreach (var (name, value) in items)
+        {
+            map[name] = value;
+        }
+
+        return map;
+    }
 }
 
 sealed class LogTextWriter : TextWriter
