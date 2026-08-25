@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using SystemEnvironment = System.Environment;
 
 namespace ApiInspector;
@@ -56,7 +58,18 @@ partial class Program
 
             string responseAsString = null;
             {
-                var input = Json.Deserialize<ExternalInput>(readInputJson());
+                var inputJson = readInputJson();
+
+                // Attach Same Directory Assembly Resolver
+                {
+                    var assemblyPath = Regex.Match(inputJson, @"""AssemblyFileFullPath""\s*:\s*""(?<value>[^""]*)""", RegexOptions.IgnoreCase).Groups["value"].Value;
+                
+                    var baseDirectory = Path.GetDirectoryName(assemblyPath) ?? string.Empty;
+                
+                    AttachAssemblyResolverForSameDirectory(baseDirectory);
+                }
+                
+                var input = Json.Deserialize<ExternalInput>(inputJson);
 
                 switch (methodName)
                 {
