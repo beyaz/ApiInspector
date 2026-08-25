@@ -10,41 +10,90 @@ using System.Threading;
 
 namespace ApiInspector;
 
-static class Mixin
+#if NETCOREAPP
+using System.Runtime.Loader;
+#endif
+
+static class AssemblyResolver
 {
-    internal static void WaitForDebuggerAttach()
-    {
-        while (!Debugger.IsAttached)
-        {
-            Thread.Sleep(100);
-        }
-    }
+    static readonly object Sync = new();
     
-    internal static object TryCreateAsValueType(Type type)
+    static bool Attached;
+
+    public static void AttachAssemblyResolverForSameDirectory(string baseDirectory)
     {
-        if (type == null)
+        if (string.IsNullOrWhiteSpace(baseDirectory))
         {
-            throw new ArgumentNullException(nameof(type));
+            throw new ArgumentException(nameof(baseDirectory));
         }
 
-        if (type.IsValueType)
-        {
-            return Activator.CreateInstance(type);
-        }
+        baseDirectory = Path.GetFullPath(baseDirectory);
 
-        return null;
+        lock (Sync)
+        {
+            if (Attached)
+            {
+                return;
+            }
+
+            Attached = true;
+
+            #if NETCOREAPP
+            AssemblyLoadContext.Default.Resolving += (_, name) => Resolve(name, baseDirectory);
+            #else
+            AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
+            {
+                var assemblyName = new AssemblyName(e.Name);
+                
+                return Resolve(assemblyName, baseDirectory);
+            };
+            #endif
+        }
     }
-    
-    internal static string LocalIPAddress()
+
+    #if NETCOREAPP
+    static Assembly Resolve(AssemblyName name, string baseDirectory)
     {
-        if (!NetworkInterface.GetIsNetworkAvailable())
+        if (name?.Name == null) return null;
+
+        // Eğer zaten yüklüyse onu kullan
+        var already = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => string.Equals(a.GetName().Name, name.Name, StringComparison.OrdinalIgnoreCase));
+        if (already != null) return already;
+
+        var assemblyPath = Path.Combine(baseDirectory, name.Name + ".dll");
+        if (!File.Exists(assemblyPath)) return null;
+
+        // .NET Core: LoadFromAssemblyPath kullanmak load-context problemlerini azaltır
+        return AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.GetFullPath(assemblyPath));
+    }
+    #else
+    static Assembly Resolve(AssemblyName name, string baseDirectory)
+    {
+        if (name?.Name == null)
         {
             return null;
         }
 
-        return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString();
+        var already = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => string.Equals(a.GetName().Name, name.Name, StringComparison.OrdinalIgnoreCase));
+        if (already != null)
+        {
+            return already;
+        }
+
+        var assemblyPath = Path.Combine(baseDirectory, name.Name + ".dll");
+        if (!File.Exists(assemblyPath))
+        {
+            return null;
+        }
+
+        return Assembly.LoadFrom(Path.GetFullPath(assemblyPath));
     }
-    
+    #endif
+}
+
+static class Mixin
+{
     internal static void AttachAssemblyResolverForSameDirectory(string baseDirectory)
     {
         // A t t a c h   A s s e m b l y   R e s o l v e r   F o r   S a m e    D i r e c t o r y 
@@ -62,7 +111,17 @@ static class Mixin
             };
         }
     }
-    
+
+    internal static string LocalIPAddress()
+    {
+        if (!NetworkInterface.GetIsNetworkAvailable())
+        {
+            return null;
+        }
+
+        return Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)?.ToString();
+    }
+
     internal static IReadOnlyDictionary<TKey, TValue> NewDictionaryFrom<TKey, TValue>(IEnumerable<(TKey name, TValue value)> items)
     {
         var map = new Dictionary<TKey, TValue>();
@@ -72,6 +131,29 @@ static class Mixin
         }
 
         return map;
+    }
+
+    internal static object TryCreateAsValueType(Type type)
+    {
+        if (type == null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
+
+        if (type.IsValueType)
+        {
+            return Activator.CreateInstance(type);
+        }
+
+        return null;
+    }
+
+    internal static void WaitForDebuggerAttach()
+    {
+        while (!Debugger.IsAttached)
+        {
+            Thread.Sleep(100);
+        }
     }
 }
 
