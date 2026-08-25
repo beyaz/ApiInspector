@@ -11,6 +11,7 @@
   },
 
   "InvocationHandlerExePaths": [
+    "ApiInspector.BOA.Server.NetFramework.net48/ApiInspector.exe",
     "ApiInspector.BOA.Server.NetCore.net8.0/ApiInspector.exe",
     "ApiInspector.BOA.EOD.net48/ApiInspector.exe",
     "ApiInspector.BOA.Card.NetCore.net8.0/ApiInspector.exe",
