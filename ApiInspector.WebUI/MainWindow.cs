@@ -70,42 +70,68 @@ class MainWindow : Component<MainWindowModel>
     {
         state = newState;
         
-        if (state.InvokerExeFilePath is null)
+        if (state.InvokerExeFilePath is null && AssemblyFileFullPath.HasValue())
         {
-            ArrangeInvokerExeFilePath(state, AssemblyFileFullPath);
+            ArrangeInvokerExeFilePath();
         }
     }
     
-    static void ArrangeInvokerExeFilePath(MainWindowModel state, string assemblyFileFullPath)
+    void ArrangeInvokerExeFilePath()
     {
-        if (string.IsNullOrWhiteSpace(assemblyFileFullPath))
-        {
-            return;
-        }
+        ArrangeProgressForFindingInvokerExe(0);
         
-        string found = null;
-        {
-            foreach (var invokerExeFilePath in Config.InvocationHandlerExePaths)
-            {
-                var result = External.IsYourAssembly(invokerExeFilePath, assemblyFileFullPath);
-                if (result.HasError)
-                {
-                    continue;
-                }
+        Client.GotoMethod(ArrangeInvokerExeFilePath, 0);
+    }
 
-                if ("true".Equals(result.Value, StringComparison.OrdinalIgnoreCase))
-                {
-                    found= invokerExeFilePath;
-                    break;
-                }
-            }
-        }
-
+    void ArrangeProgressForFindingInvokerExe(int index)
+    {
         state = state with
         {
-            InvokerExeFilePath = found ?? Config.InvocationHandlerExePaths[^1]
+            Progress = new ProgressInfo
+            {
+                ProgressIndex = index,
+                ProgressText  = $"Checking dll is {Path.GetFileNameWithoutExtension(Path.GetDirectoryName(Config.InvocationHandlerExePaths[index]))}",
+                ShowProgress  = true
+            }
         };
     }
+    Task ArrangeInvokerExeFilePath(int index)
+    {
+        
+        
+        var result = External.IsYourAssembly(Config.InvocationHandlerExePaths[index], AssemblyFileFullPath);
+        if ("true".Equals(result.Value, StringComparison.OrdinalIgnoreCase))
+        {
+            state = state with
+            {
+                InvokerExeFilePath = Config.InvocationHandlerExePaths[index],
+                
+                Progress = new()
+            };
+
+            return Task.CompletedTask;
+        }
+
+        if (index + 1 < Config.InvocationHandlerExePaths.Count )
+        {
+            ArrangeProgressForFindingInvokerExe(index + 1);
+            
+            Client.GotoMethod(ArrangeInvokerExeFilePath, index+1);
+            
+            return Task.CompletedTask;
+        }
+        
+        state = state with
+        {
+            InvokerExeFilePath = Config.InvocationHandlerExePaths[^1],
+            
+            Progress = new()
+        };
+
+        return Task.CompletedTask;
+        
+    }
+    
     
     protected override Element render()
     {
@@ -126,16 +152,17 @@ class MainWindow : Component<MainWindowModel>
                     BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15))
                 },
                 NotificationHost,
-                
-                new div
-                {
-                    PositionFixed, Top(0), Left(0), Right(0), Bottom(0), Background(rgba(0,0,0,0.5)), 
+
+                When(state.Progress.ShowProgress, () =>
                     new div
                     {
-                        PositionFixed, Bottom("10%"), Right("50%"), Color(Gray400),
-                        "Yükleniyor..."
-                    }
-                }
+                        PositionFixed, Top(0), Left(0), Right(0), Bottom(0), Background(rgba(0, 0, 0, 0.5)),
+                        new div
+                        {
+                            PositionFixed, Bottom("10%"), Right("50%"), Color(Gray400),
+                            state.Progress.ProgressText
+                        }
+                    })
             }
         };
 
