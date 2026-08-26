@@ -26,9 +26,24 @@ static partial class Program
     public static Result<string> GetInstanceEditorJsonText(ExternalInput input)
     {
         return from methodInfo in LoadMethodInfo(input)
-               from declaringType in Result.NotNull(methodInfo.DeclaringType)
-               from instance in Result.From(() => Activator.CreateInstance(declaringType))
+               from instance in TryCreateDeclaringTypeInstance(methodInfo)
                select instance is null ? null : Json.SerializeIncludeDefaultValues(instance);
+        
+        static Result<object> TryCreateDeclaringTypeInstance(MethodInfo methodInfo)
+        {
+            if (methodInfo.IsStatic)
+            {
+                return null;
+            }
+            
+            var declaringType = methodInfo.DeclaringType;
+            if (declaringType is null)
+            {
+                return new InvalidOperationException($"Method '{methodInfo.Name}' has no declaring type.");
+            }
+
+            return Result.From(() => Activator.CreateInstance(declaringType));
+        }
     }
 
     public static Result<string> GetParametersEditorJsonText(ExternalInput input)
@@ -37,10 +52,15 @@ static partial class Program
                let map = NewDictionaryFrom
                (
                    from parameterInfo in methodInfo.GetParameters()
-                   where parameterInfo.Name is not null
+                   where parameterInfo.Name is not null && CanSerialize(parameterInfo.ParameterType)
                    select (parameterInfo.Name, Activator.CreateInstance(parameterInfo.ParameterType))
                )
                select Json.SerializeIncludeDefaultValues(map);
+        
+        static bool CanSerialize(Type type)
+        {
+            return type.IsAbstract || type.IsInterface || type.BaseType == typeof(MulticastDelegate);
+        }
     }
 
     public static Result<object> InvokeMethod(ExternalInput input)
