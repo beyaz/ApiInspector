@@ -78,67 +78,15 @@ class MainWindow : Component<MainWindowModel>
     
     void ArrangeInvokerExeFilePath()
     {
-        
-        var name = TargetRuntimeIndentifier.GetInvokerExePath(AssemblyFileFullPath);
-        
-        ArrangeProgressForFindingInvokerExe(0);
-        
-        Client.GotoMethod(ArrangeInvokerExeFilePath, 0);
-    }
-
-    void ArrangeProgressForFindingInvokerExe(int index)
-    {
-        state = state with
-        {
-            Progress = new ProgressInfo
-            {
-                ProgressIndex = index,
-                ProgressText  = $"%{Convert.ToInt32((double)index/Config.InvocationHandlerExePaths.Count*100)} Checking dll is {Path.GetFileNameWithoutExtension(Path.GetDirectoryName(Config.InvocationHandlerExePaths[index]))}",
-                ShowProgress  = true
-            }
-        };
-    }
-    Task ArrangeInvokerExeFilePath(int index)
-    {
-        
-        
-        var result = External.IsYourAssembly(Config.InvocationHandlerExePaths[index], AssemblyFileFullPath);
-        if ("true".Equals(result.Value, StringComparison.OrdinalIgnoreCase))
-        {
-            state = state with
-            {
-                InvokerExeFilePath = Config.InvocationHandlerExePaths[index],
-                
-                Progress = new()
-            };
-
-            TryUpdateEnvironmentText();
-            
-            return Task.CompletedTask;
-        }
-
-        if (index + 1 < Config.InvocationHandlerExePaths.Count )
-        {
-            ArrangeProgressForFindingInvokerExe(index + 1);
-            
-            Client.GotoMethod(ArrangeInvokerExeFilePath, index+1);
-            
-            return Task.CompletedTask;
-        }
+        var exePath = TargetRuntimeIndentifier.GetInvokerExePath(AssemblyFileFullPath);
         
         state = state with
         {
-            InvokerExeFilePath = Config.InvocationHandlerExePaths[^1],
-            
-            Progress = new()
+            InvokerExeFilePath = exePath.Value
         };
-        
+
         TryUpdateEnvironmentText();
-
-        return Task.CompletedTask;
-        
     }
-    
     
     protected override Element render()
     {
@@ -151,28 +99,14 @@ class MainWindow : Component<MainWindowModel>
 
                 new Style
                 {
-                    PaddingBottom(20),
+                    PaddingBottom(10),
                     Border(Solid(1, Theme.BorderColor)),
                     SizeFull,
                     Background(Theme.WindowBackgroundColor),
                     BorderRadius(10),
                     BoxShadow(0, 30, 30, 0, rgba(69, 42, 124, 0.15))
                 },
-                NotificationHost,
-
-                // S t a t u s
-                PositionRelative,
-                new FlexRow(Gap(4))
-                {
-                    PositionAbsolute, Bottom(1), Left(15), 
-                    "Status:", new div { state.Progress.ProgressText ?? "Ready" }
-                },
-                
-                // B a c k d r o p
-                When(state.Progress.ShowProgress, () => new div
-                {
-                    PositionFixed, Top(0), Left(0), Right(0), Bottom(0), Background(rgba(0, 0, 0, 0.5))
-                })
+                NotificationHost
             }
         };
 

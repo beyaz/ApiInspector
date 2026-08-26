@@ -25,24 +25,6 @@ sealed record MainWindowModel
     public string EnvironmentText { get; init; }
     
     public string InvokerExeFilePath { get; init; }
-
-    public ProgressInfo Progress { get; init; } = new();
-}
-
-public sealed record ProgressInfo
-{
-    public string ProgressText { get; init; }
-
-    public int ProgressIndex { get; init; }
-    
-    public bool ShowProgress { get; init; }
-}
-
-static class RuntimeNames
-{
-    public static string NetCore => nameof(NetCore);
-    
-    public static string NetFramework => nameof(NetFramework);
 }
 
 sealed class ScenarioModel
