@@ -107,12 +107,6 @@ static class External
             return new FileNotFoundException(input.AssemblyFileFullPath);
         }
 
-        var runtime = GetTargetFramework(new FileInfo(input.AssemblyFileFullPath));
-        if (runtime.IsNetCore is false && runtime.IsNetFramework is false && runtime.IsNetStandard is false)
-        {
-            return RuntimeNotDetectedException(input.AssemblyFileFullPath);
-        }
-
         var inputAsJson = JsonConvert.SerializeObject(input.Parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
         
         var runProcessInput = new RunProcessInput
@@ -175,12 +169,7 @@ static class External
 
         return (process.ExitCode, outputAsJson);
     }
-
-    static Exception RuntimeNotDetectedException(string assemblyFileFullPath)
-    {
-        return new($"Runtime not detected. @{assemblyFileFullPath}");
-    }
-
+    
     sealed record ExecuteInput
     {
         // @formatter:off

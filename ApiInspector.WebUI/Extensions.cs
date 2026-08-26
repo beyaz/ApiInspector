@@ -58,58 +58,6 @@ static partial class Extensions
         }
     }
 
-    public static TargetRuntimeInfo GetTargetFramework(FileInfo dll)
-    {
-        var assembly = MetadataHelper.ReadAssembly(dll.FullName);
-
-        if (assembly.Name.Name == "mscorlib")
-        {
-            return new() { IsNetFramework = true };
-        }
-        
-        if (assembly.Name.Name == "System.Private.CoreLib")
-        {
-            return new() { IsNetCore = true };
-        }
-        
-        foreach (var attribute in assembly.CustomAttributes)
-        {
-            if (attribute.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute")
-            {
-                var frameworkName = attribute.ConstructorArguments[0].Value.ToString();
-
-                if (frameworkName!.StartsWith(".NETStandard", StringComparison.OrdinalIgnoreCase))
-                {
-                    return new() { IsNetStandard = true };
-                }
-
-                if (frameworkName.StartsWith(".NETCoreApp", StringComparison.OrdinalIgnoreCase))
-                {
-                    return new() { IsNetCore = true };
-                }
-
-                if (frameworkName.StartsWith(".NETFramework", StringComparison.OrdinalIgnoreCase))
-                {
-                    return new() { IsNetFramework = true };
-                }
-            }
-        }
-        
-        foreach (var reference in assembly.MainModule.AssemblyReferences)
-        {
-            if (reference.Name.Equals("System.Private.CoreLib", StringComparison.OrdinalIgnoreCase))
-            {
-                return new() { IsNetCore = true };
-            }
-            else if (reference.Name.Equals("mscorlib", StringComparison.OrdinalIgnoreCase))
-            {
-                return new() { IsNetFramework = true };
-            }
-        }
-        
-        return new();
-    }
-
     public static bool HasNoValue(this string value) => string.IsNullOrWhiteSpace(value);
 
     public static bool HasValue(this string value) => !string.IsNullOrWhiteSpace(value);
@@ -195,11 +143,4 @@ static partial class Extensions
             return stringWriter.ToString();
         }
     }
-}
-
-sealed class TargetRuntimeInfo
-{
-    public bool IsNetCore { get; init; }
-    public bool IsNetFramework { get; init; }
-    public bool IsNetStandard { get; init; }
 }
