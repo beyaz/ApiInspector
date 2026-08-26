@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ApiInspector.WebUI;
 
@@ -15,6 +16,42 @@ sealed class TargetRuntimeInfo
 
 static class TargetRuntimeIndentifier
 {
+    public static string GetInvokerExePath(string filePath)
+    {
+        
+        var type = Assembly.Load("ApiInspector.BOASystem.InvokerAppFinder").GetType("ApiInspector.BOASystem.InvokerAppFinder.Finder");
+        var methodInfo = type.GetMethod("FindInvokerAppFolderName", BindingFlags.Static | BindingFlags.Public);
+        
+       var appFolderName = (string)methodInfo.Invoke(null, [filePath]);
+
+       if (appFolderName is null)
+       {
+           appFolderName = GetInvokerAppFolderName(filePath);
+       }
+
+       var appName = $"ApiInspector.{appFolderName}/ApiInspector.exe";
+
+       var path = Config.InvocationHandlerExePaths.FirstOrDefault(x=>x.EndsWith(appName, StringComparison.OrdinalIgnoreCase));
+
+       return path;
+    }
+    
+    public static string GetInvokerAppFolderName(string filePath)
+    {
+        var targetRuntimeInfo = GetTargetRuntimeInfo(filePath);
+        if (targetRuntimeInfo is null)
+        {
+            return null;
+        }
+
+        if (targetRuntimeInfo.IsNetFramework)
+        {
+            return "NetFramework.net48";
+        }
+        
+        return $"NetCore.{targetRuntimeInfo.NetCoreVersion}";
+    }
+    
     internal static TargetRuntimeInfo GetTargetRuntimeInfo(string filePath)
     {
         var assembly = MetadataHelper.ReadAssembly(filePath);

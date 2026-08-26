@@ -78,6 +78,9 @@ class MainWindow : Component<MainWindowModel>
     
     void ArrangeInvokerExeFilePath()
     {
+        
+        var name = TargetRuntimeIndentifier.GetInvokerExePath(AssemblyFileFullPath);
+        
         ArrangeProgressForFindingInvokerExe(0);
         
         Client.GotoMethod(ArrangeInvokerExeFilePath, 0);
