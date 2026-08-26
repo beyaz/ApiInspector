@@ -20,6 +20,8 @@ sealed record ConfigInfo
         
         public bool IsActive { get; init; }
     }
+    
+    public string InvokerAppFinderMethod { get; init; }
 }
 
 partial class Extensions

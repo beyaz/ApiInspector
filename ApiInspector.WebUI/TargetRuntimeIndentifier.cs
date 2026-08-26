@@ -6,9 +6,9 @@ namespace ApiInspector.WebUI;
 sealed class TargetRuntimeInfo
 {
     public bool IsNetCore { get; init; }
-    
+
     public bool IsNetFramework { get; init; }
-    
+
     public bool IsNetStandard { get; init; }
 
     public string NetCoreVersion { get; init; }
@@ -16,27 +16,48 @@ sealed class TargetRuntimeInfo
 
 static class TargetRuntimeIndentifier
 {
-    public static string GetInvokerExePath(string filePath)
+    public static Result<string> GetInvokerExePath(string filePath)
     {
-        
-        var type = Assembly.Load("ApiInspector.BOASystem.InvokerAppFinder").GetType("ApiInspector.BOASystem.InvokerAppFinder.Finder");
-        var methodInfo = type.GetMethod("FindInvokerAppFolderName", BindingFlags.Static | BindingFlags.Public);
-        
-       var appFolderName = (string)methodInfo.Invoke(null, [filePath]);
+        string appFolderName = null;
 
-       if (appFolderName is null)
-       {
-           appFolderName = GetInvokerAppFolderName(filePath);
-       }
+        if (Config.InvokerAppFinderMethod is not null)
+        {
+            var arr = Config.InvokerAppFinderMethod.Split('>', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var assemblyName = arr[0];
+            var typeName = arr[1];
+            var methodName = arr[2];
 
-       var appName = $"ApiInspector.{appFolderName}/ApiInspector.exe";
+            var assembly = Assembly.Load(assemblyName);
 
-       var path = Config.InvocationHandlerExePaths.FirstOrDefault(x=>x.EndsWith(appName, StringComparison.OrdinalIgnoreCase));
+            var type = assembly.GetType(typeName);
+            if (type is null)
+            {
+                return new TypeLoadException($"Type not found: {typeName}");
+            }
 
-       return path;
+            var methodInfo = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public);
+            if (methodInfo is null)
+            {
+                return new MissingMethodException($"Method not found: {methodName}");
+            }
+
+            appFolderName = (string)methodInfo.Invoke(null, [filePath]);
+        }
+
+        appFolderName ??= GetInvokerAppFolderName(filePath);
+
+        var appName = $"ApiInspector.{appFolderName}/ApiInspector.exe";
+
+        var path = Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase));
+        if (path is null)
+        {
+            return new InvalidOperationException($"AppFolder not found: {appFolderName}");
+        }
+
+        return path;
     }
-    
-    public static string GetInvokerAppFolderName(string filePath)
+
+    static string GetInvokerAppFolderName(string filePath)
     {
         var targetRuntimeInfo = GetTargetRuntimeInfo(filePath);
         if (targetRuntimeInfo is null)
@@ -48,11 +69,11 @@ static class TargetRuntimeIndentifier
         {
             return "NetFramework.net48";
         }
-        
+
         return $"NetCore.{targetRuntimeInfo.NetCoreVersion}";
     }
-    
-    internal static TargetRuntimeInfo GetTargetRuntimeInfo(string filePath)
+
+    static TargetRuntimeInfo GetTargetRuntimeInfo(string filePath)
     {
         var assembly = MetadataHelper.ReadAssembly(filePath);
 
