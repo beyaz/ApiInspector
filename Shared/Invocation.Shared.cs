@@ -54,15 +54,23 @@ static class AssemblyResolver
     #if NETCOREAPP
     static Assembly Resolve(AssemblyName name, string baseDirectory)
     {
-        if (name?.Name == null) return null;
+        if (name?.Name == null)
+        {
+            return null;
+        }
 
         // Eğer zaten yüklüyse onu kullan
-        var already = AppDomain.CurrentDomain.GetAssemblies()
-            .FirstOrDefault(a => string.Equals(a.GetName().Name, name.Name, StringComparison.OrdinalIgnoreCase));
-        if (already != null) return already;
+        var already = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => string.Equals(a.GetName().Name, name.Name, StringComparison.OrdinalIgnoreCase));
+        if (already != null)
+        {
+            return already;
+        }
 
         var assemblyPath = Path.Combine(baseDirectory, name.Name + ".dll");
-        if (!File.Exists(assemblyPath)) return null;
+        if (!File.Exists(assemblyPath))
+        {
+            return null;
+        }
 
         // .NET Core: LoadFromAssemblyPath kullanmak load-context problemlerini azaltır
         return AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.GetFullPath(assemblyPath));
