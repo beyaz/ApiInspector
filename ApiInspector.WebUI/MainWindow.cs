@@ -1083,7 +1083,6 @@ class MainWindow : Component<MainWindowModel>
             {
                 External.GetInstanceEditorJsonText
                 (
-                    state.InvokerExeFilePath,
                     new ()
                     {
                         AssemblyFileFullPath = AssemblyFileFullPath,
@@ -1096,7 +1095,6 @@ class MainWindow : Component<MainWindowModel>
             {
                 External.GetParametersEditorJsonText
                 (
-                    state.InvokerExeFilePath,
                     new ()
                     {
                         AssemblyFileFullPath = AssemblyFileFullPath,

@@ -36,31 +36,33 @@ static class External
                from output in Execute<string>(executeInput)
                select output;
     }
-    
-    public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, ExternalInput input)
-    {
-        var executeInput = new ExecuteInput
-        {
-            AssemblyFileFullPath = input.AssemblyFileFullPath,
-            MethodName           = nameof(GetInstanceEditorJsonText),
-            Parameter            = input,
-            InvokerExeFilePath   = invokerExeFilePath
-        };
 
-        return Execute<string>(executeInput);
+    public static Result<string> GetInstanceEditorJsonText(ExternalInput input)
+    {
+        return from invokerExeFilePath in TargetRuntimeIndentifier.GetInvokerExePath(input.AssemblyFileFullPath)
+               let executeInput = new ExecuteInput
+               {
+                   AssemblyFileFullPath = input.AssemblyFileFullPath,
+                   MethodName           = nameof(GetInstanceEditorJsonText),
+                   Parameter            = input,
+                   InvokerExeFilePath   = invokerExeFilePath
+               }
+               from output in Execute<string>(executeInput)
+               select output;
     }
 
-    public static Result<string> GetParametersEditorJsonText(string invokerExeFilePath, ExternalInput input)
+    public static Result<string> GetParametersEditorJsonText(ExternalInput input)
     {
-        var executeInput = new ExecuteInput
-        {
-            AssemblyFileFullPath = input.AssemblyFileFullPath,
-            MethodName           = nameof(GetParametersEditorJsonText),
-            Parameter            = input,
-            InvokerExeFilePath   = invokerExeFilePath
-        };
-
-        return Execute<string>(executeInput);
+        return from invokerExeFilePath in TargetRuntimeIndentifier.GetInvokerExePath(input.AssemblyFileFullPath)
+               let executeInput = new ExecuteInput
+               {
+                   AssemblyFileFullPath = input.AssemblyFileFullPath,
+                   MethodName           = nameof(GetParametersEditorJsonText),
+                   Parameter            = input,
+                   InvokerExeFilePath   = invokerExeFilePath
+               }
+               from output in Execute<string>(executeInput)
+               select output;
     }
 
     public static Result<string> InvokeMethod(ExternalInvokeInput input)
@@ -84,20 +86,20 @@ static class External
         {
             return new ArgumentException(nameof(input.InvokerExeFilePath));
         }
-        
+
         if (!File.Exists(input.AssemblyFileFullPath))
         {
             return new FileNotFoundException(input.AssemblyFileFullPath);
         }
 
         var inputAsJson = JsonConvert.SerializeObject(input.Parameter, new JsonSerializerSettings { Formatting = Formatting.Indented, DefaultValueHandling = DefaultValueHandling.Ignore });
-        
+
         var runProcessInput = new RunProcessInput
         {
-            InputAsJson      = inputAsJson,
-            MethodName       = input.MethodName,
-            WaitForDebugger  = input.WaitForDebugger,
-            OnProcessStarted = input.OnProcessStarted,
+            InputAsJson        = inputAsJson,
+            MethodName         = input.MethodName,
+            WaitForDebugger    = input.WaitForDebugger,
+            OnProcessStarted   = input.OnProcessStarted,
             InvokerExeFilePath = input.InvokerExeFilePath
         };
 
@@ -152,7 +154,7 @@ static class External
 
         return (process.ExitCode, outputAsJson);
     }
-    
+
     sealed record ExecuteInput
     {
         // @formatter:off
