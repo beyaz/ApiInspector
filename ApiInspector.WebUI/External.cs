@@ -20,20 +20,21 @@ sealed record ExternalInvokeInput
 
 static class External
 {
-    public static Result<string> GetEnvironment(string invokerExeFilePath, string assemblyFileFullPath)
+    public static Result<string> GetEnvironment(string assemblyFileFullPath)
     {
-        var executeInput = new ExecuteInput
-        {
-            AssemblyFileFullPath = assemblyFileFullPath,
-            MethodName           = nameof(GetEnvironment),
-            Parameter            = new()
-            {
-                AssemblyFileFullPath = assemblyFileFullPath
-            },
-            InvokerExeFilePath = invokerExeFilePath
-        };
-
-        return Execute<string>(executeInput);
+        return from invokerExeFilePath in TargetRuntimeIndentifier.GetInvokerExePath(assemblyFileFullPath)
+               let executeInput = new ExecuteInput
+               {
+                   AssemblyFileFullPath = assemblyFileFullPath,
+                   MethodName           = nameof(GetEnvironment),
+                   Parameter = new()
+                   {
+                       AssemblyFileFullPath = assemblyFileFullPath
+                   },
+                   InvokerExeFilePath = invokerExeFilePath
+               }
+               from output in Execute<string>(executeInput)
+               select output;
     }
     
     public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, ExternalInput input)

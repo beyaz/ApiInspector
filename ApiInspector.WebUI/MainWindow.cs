@@ -107,7 +107,7 @@ class MainWindow : Component<MainWindowModel>
                 {
                     filePath = FilePath;
                     
-                    environmentInfoText = External.GetEnvironment(TargetRuntimeIndentifier.GetInvokerExePath(filePath).Value, filePath).Value;
+                    External.GetEnvironment(filePath).Match(x=>environmentInfoText = x, ex => environmentInfoText = ex.Message);
                 }
                 return Task.CompletedTask;
             }
