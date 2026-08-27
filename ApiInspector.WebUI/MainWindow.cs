@@ -69,22 +69,8 @@ class MainWindow : Component<MainWindowModel>
     void SetState(MainWindowModel newState)
     {
         state = newState;
-        
-        if (state.InvokerExeFilePath is null && AssemblyFileFullPath.HasValue())
-        {
-            ArrangeInvokerExeFilePath();
-        }
     }
     
-    void ArrangeInvokerExeFilePath()
-    {
-        var exePath = TargetRuntimeIndentifier.GetInvokerExePath(AssemblyFileFullPath);
-        
-        state = state with
-        {
-            InvokerExeFilePath = exePath.Value
-        };
-    }
     
     static Element GetEnvironmentTextElement(string FilePath)
     {
@@ -335,8 +321,7 @@ class MainWindow : Component<MainWindowModel>
                         {
                             SetState(state with
                             {
-                                AssemblyFileName = x,
-                                InvokerExeFilePath = null
+                                AssemblyFileName = x
                             });
 
                             return Task.CompletedTask;
@@ -863,9 +848,7 @@ class MainWindow : Component<MainWindowModel>
                         
                         WaitForDebugger = true,
 
-                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; },
-
-                        InvokerExeFilePath = state.InvokerExeFilePath
+                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; }
                     };
 
                     External.InvokeMethod(input).Match
@@ -939,8 +922,7 @@ class MainWindow : Component<MainWindowModel>
                         AssemblyFileName = currentState.AssemblyFileName,
                         ClassFilter = currentState.ClassFilter,
                         MethodFilter = currentState.MethodFilter,
-                        SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey,
-                        InvokerExeFilePath = currentState.InvokerExeFilePath
+                        SelectedMethodTreeNodeKey = currentState.SelectedMethodTreeNodeKey
                     };
                     
                     SetState(cachedState);
@@ -1015,9 +997,7 @@ class MainWindow : Component<MainWindowModel>
                         },
                         WaitForDebugger = false,
 
-                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; },
-
-                        InvokerExeFilePath = state.InvokerExeFilePath
+                        OnProcessStarted = process => { ExternalProcessManager.CurrentProcess = process; }
                     };
                     External.InvokeMethod(input).Match
                     (

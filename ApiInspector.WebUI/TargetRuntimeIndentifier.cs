@@ -18,6 +18,11 @@ static class TargetRuntimeIndentifier
 {
     public static Result<string> GetInvokerExePath(string filePath)
     {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            return new ArgumentNullException(nameof(filePath));
+        }
+        
         string appFolderName = null;
 
         if (Config.InvokerAppFinderMethod is not null)

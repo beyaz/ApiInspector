@@ -11,8 +11,6 @@ sealed record ExternalInvokeInput
     
     public required  Action<Process> OnProcessStarted { get; init; }
     
-    public required  string InvokerExeFilePath { get; init; }
-    
     public required  ExternalInput Input { get; init; }
     
     // @formatter:on
@@ -67,17 +65,19 @@ static class External
 
     public static Result<string> InvokeMethod(ExternalInvokeInput input)
     {
-        var executeInput = new ExecuteInput
-        {
-            AssemblyFileFullPath = input.Input.AssemblyFileFullPath,
-            MethodName           = nameof(InvokeMethod),
-            Parameter            = input.Input,
-            WaitForDebugger      = input.WaitForDebugger,
-            OnProcessStarted     = input.OnProcessStarted,
-            InvokerExeFilePath   = input.InvokerExeFilePath
-        };
+        return from invokerExeFilePath in TargetRuntimeIndentifier.GetInvokerExePath(input.Input.AssemblyFileFullPath)
+               let executeInput = new ExecuteInput
+               {
+                   AssemblyFileFullPath = input.Input.AssemblyFileFullPath,
+                   MethodName           = nameof(InvokeMethod),
+                   Parameter            = input.Input,
+                   WaitForDebugger      = input.WaitForDebugger,
+                   OnProcessStarted     = input.OnProcessStarted,
+                   InvokerExeFilePath   = invokerExeFilePath
+               }
 
-        return Execute<string>(executeInput);
+               from output in Execute<string>(executeInput)
+               select output;
     }
 
     static Result<string> Execute<TResponse>(ExecuteInput input)

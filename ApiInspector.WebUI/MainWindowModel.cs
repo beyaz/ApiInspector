@@ -21,8 +21,6 @@ sealed record MainWindowModel
     public string SelectedMethodTreeNodeKey { get; init; }
 
     public string ScenarioFilterText { get; init; }
-    
-    public string InvokerExeFilePath { get; init; }
 }
 
 sealed class ScenarioModel

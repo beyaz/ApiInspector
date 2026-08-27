@@ -51,12 +51,12 @@ static partial class Program
                let map = NewDictionaryFrom
                (
                    from parameterInfo in methodInfo.GetParameters()
-                   where parameterInfo.Name is not null && CanSerialize(parameterInfo.ParameterType)
+                   where parameterInfo.Name is not null && !CantSerialize(parameterInfo.ParameterType)
                    select (parameterInfo.Name, Activator.CreateInstance(parameterInfo.ParameterType))
                )
                select Json.SerializeIncludeDefaultValues(map);
         
-        static bool CanSerialize(Type type)
+        static bool CantSerialize(Type type)
         {
             return type.IsAbstract || type.IsInterface || type.BaseType == typeof(MulticastDelegate);
         }
