@@ -16,6 +16,35 @@ sealed class TargetRuntimeInfo
 
 static class TargetRuntimeIndentifier
 {
+    static Result<MethodInfo> GetStaticPublicMethodFromString(string fullName)
+    {
+        var arr = fullName.Split('>', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (arr.Length != 3)
+        {
+            return new TypeLoadException($"Invalid method specification: {fullName}");
+        }
+        
+        var assemblyName = arr[0];
+        var typeName = arr[1];
+        var methodName = arr[2];
+
+        var assembly = Assembly.Load(assemblyName);
+
+        var type = assembly.GetType(typeName);
+        if (type is null)
+        {
+            return new TypeLoadException($"Type not found: {typeName}");
+        }
+
+        var methodInfo = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public);
+        if (methodInfo is null)
+        {
+            return new MissingMethodException($"Method not found: {methodName}");
+        }
+
+        return methodInfo;
+    }
+
     public static Result<string> GetInvokerExePath(string filePath)
     {
         if (string.IsNullOrWhiteSpace(filePath))
