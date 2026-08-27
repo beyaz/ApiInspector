@@ -30,5 +30,5 @@
     "d:/boa/card/*"
   ],
 
-  "InvokerAppFinderMethod": "ApiInspector.BOASystem.InvokerAppFinder > ApiInspector.BOASystem.InvokerAppFinder.Finder > FindInvokerAppFolderName"
+  "InvokerAppFinderMethod": "ApiInspector.BOASystem > ApiInspector.BOASystem.InvokerAppFinder > FindInvokerAppFolderName"
 }
