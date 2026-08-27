@@ -56,26 +56,13 @@ static class TargetRuntimeIndentifier
 
         if (Config.InvokerAppFinderMethod is not null)
         {
-            var arr = Config.InvokerAppFinderMethod.Split('>', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            var assemblyName = arr[0];
-            var typeName = arr[1];
-            var methodName = arr[2];
-
-            var assembly = Assembly.Load(assemblyName);
-
-            var type = assembly.GetType(typeName);
-            if (type is null)
+            var methodInfo = GetStaticPublicMethodFromString(Config.InvokerAppFinderMethod);
+            if (methodInfo.HasError)
             {
-                return new TypeLoadException($"Type not found: {typeName}");
+                return methodInfo.Error;
             }
-
-            var methodInfo = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public);
-            if (methodInfo is null)
-            {
-                return new MissingMethodException($"Method not found: {methodName}");
-            }
-
-            appFolderName = (string)methodInfo.Invoke(null, [filePath]);
+            
+            appFolderName = (string)methodInfo.Value.Invoke(null, [filePath]);
         }
 
         appFolderName ??= GetInvokerAppFolderName(filePath);
