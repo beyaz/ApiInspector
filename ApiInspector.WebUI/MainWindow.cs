@@ -1029,8 +1029,6 @@ class MainWindow : Component<MainWindowModel>
 
     void SaveState()
     {
-        HistoryOfSearchDirectories.AddIfNotExists(state.AssemblyDirectory);
-
         StateCache.Save(state);
 
         if (state.SelectedMethod is not null)
