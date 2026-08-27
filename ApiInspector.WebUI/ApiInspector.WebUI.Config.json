@@ -23,5 +23,12 @@
     "ApiInspector.NetCore.net10.0/ApiInspector.exe"
   ],
 
+  "DirectorySuggestions": [
+    "d:/boa/server/bin/",
+    "d:/boa/BOA.WebApi.Core/",
+    "d:/boa/client/bin/",
+    "d:/boa/card/*"
+  ],
+
   "InvokerAppFinderMethod": "ApiInspector.BOASystem.InvokerAppFinder > ApiInspector.BOASystem.InvokerAppFinder.Finder > FindInvokerAppFolderName"
 }

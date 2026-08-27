@@ -13,6 +13,8 @@ sealed record ConfigInfo
     public FileStorageInfo FileStorage { get; init; }
 
     public IReadOnlyList<string> InvocationHandlerExePaths { get; init; } = [];
+    
+    public IReadOnlyList<string> DirectorySuggestions { get; init; } = [];
 
     internal class FileStorageInfo
     {

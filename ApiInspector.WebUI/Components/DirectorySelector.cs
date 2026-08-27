@@ -12,8 +12,20 @@ public class DirectorySelector : Component
     protected override Element render()
     {
         List<string> suggestions = [];
-
-        if (DirectoryPath.HasValue())
+        
+        foreach (var path in Config.DirectorySuggestions)
+        {
+            if (path.EndsWith("*",StringComparison.OrdinalIgnoreCase))
+            {
+                suggestions.AddRange(Directory.GetDirectories(path.TrimEnd('*').Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar)));
+                continue;
+            }
+            
+            suggestions.Add(path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar));
+        }
+        
+        
+        if (DirectoryPath.HasValue() && Path.IsPathRooted(DirectoryPath))
         {
             var parentDirectory = Directory.GetParent(DirectoryPath);
             if (parentDirectory is not null && parentDirectory.Exists)
