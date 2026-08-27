@@ -73,11 +73,6 @@ partial class Program
 
                 switch (methodName)
                 {
-                    case nameof(IsYourAssembly):
-                    {
-                        responseAsString = IsYourAssembly(input).Unwrap();
-                        break;
-                    }
                     case nameof(GetEnvironment):
                     {
                         responseAsString = GetEnvironment(input).Unwrap();

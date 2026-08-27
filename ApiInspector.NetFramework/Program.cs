@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -200,18 +199,6 @@ static partial class Program
 
             return Result.Success(response);
         }
-    }
-
-    public static Result<string> IsYourAssembly(ExternalInput input)
-    {
-        string content = File.ReadAllText(input.AssemblyFileFullPath);
-
-        if (content.IndexOf(".NETFramework,Version=", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            return Convert.ToString(true);
-        }
-        
-        return Convert.ToString(false);
     }
 
     internal static Result<MethodInfo> LoadMethodInfo(ExternalInput input)

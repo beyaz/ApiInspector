@@ -36,24 +36,6 @@ static class External
         return Execute<string>(executeInput);
     }
     
-    public static Result<string> IsYourAssembly(string invokerExeFilePath, string assemblyFileFullPath)
-    {
-        var executeInput = new ExecuteInput
-        {
-            AssemblyFileFullPath = assemblyFileFullPath,
-            MethodName           = nameof(IsYourAssembly),
-            Parameter            = new()
-            {
-                AssemblyFileFullPath = assemblyFileFullPath
-            },
-            InvokerExeFilePath = invokerExeFilePath
-        };
-
-        return Execute<string>(executeInput);
-    }
-    
-    
-
     public static Result<string> GetInstanceEditorJsonText(string invokerExeFilePath, ExternalInput input)
     {
         var executeInput = new ExecuteInput
