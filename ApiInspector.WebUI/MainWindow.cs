@@ -84,10 +84,38 @@ class MainWindow : Component<MainWindowModel>
         {
             InvokerExeFilePath = exePath.Value
         };
-
-        TryUpdateEnvironmentText();
     }
     
+    static Element GetEnvironmentTextElement(string FilePath)
+    {
+        var filePath = FilePath;
+
+        string environmentInfoText = null;
+
+        return FC(cmp =>
+        {
+            cmp.OverrideStateFromPropsBeforeRender = OverrideStateFromPropsBeforeRender;
+
+            return new FlexRowCentered
+            {
+                environmentInfoText
+            };
+         
+            Task OverrideStateFromPropsBeforeRender()
+            {
+                if (filePath != FilePath || environmentInfoText is null)
+                {
+                    filePath = FilePath;
+                    
+                    environmentInfoText = External.GetEnvironment(TargetRuntimeIndentifier.GetInvokerExePath(filePath).Value, filePath).Value;
+                }
+                return Task.CompletedTask;
+            }
+            
+        });
+        
+    }
+
     protected override Element render()
     {
         return new FlexRow(Padding(10), SizeFull, Background(Theme.BackgroundColor))
@@ -163,10 +191,8 @@ class MainWindow : Component<MainWindowModel>
 
                 new FlexRow(Gap(20))
                 {
-                    new FlexRowCentered
-                    {
-                        state.EnvironmentText
-                    },
+                    GetEnvironmentTextElement(AssemblyFileFullPath),
+                    
                     new LogoutButton()
                 },
 
@@ -1084,15 +1110,6 @@ class MainWindow : Component<MainWindowModel>
                 scenario.ResponseAsJson = exception + NewLine + scenario.ResponseAsJson;
             }
         }
-    }
-
-    void TryUpdateEnvironmentText()
-    {
-        External.GetEnvironment(state.InvokerExeFilePath, AssemblyFileFullPath).Match
-        (
-            x => state = state with { EnvironmentText = x },
-            _ => state = state with { EnvironmentText = null }
-        );
     }
 
     class CircleButton : ReactPureComponent

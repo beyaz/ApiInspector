@@ -22,8 +22,6 @@ sealed record MainWindowModel
 
     public string ScenarioFilterText { get; init; }
     
-    public string EnvironmentText { get; init; }
-    
     public string InvokerExeFilePath { get; init; }
 }
 
