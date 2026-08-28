@@ -122,6 +122,16 @@ public static class Result
 // ReSharper disable once PartialTypeWithSinglePart
 public static partial class ResultExtensions
 {
+    public static Result<T> Required<T>(this T value, string message) where T : class
+    {
+        if (value is null)
+        {
+            return Result.Error<T>(new NullReferenceException(message));
+        }
+
+        return Result.Success(value);
+    }
+    
     public static Result<T> Required<T>(this T value) where T : class
     {
         if (value is null)

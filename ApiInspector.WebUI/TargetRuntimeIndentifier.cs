@@ -58,18 +58,12 @@ static class TargetRuntimeIndentifier
 
     static Result<string> GetInvokerAppFolderName(string filePath)
     {
-        var targetRuntimeInfo = GetTargetRuntimeInfo(filePath);
-        if (targetRuntimeInfo is null)
-        {
-            return new ArgumentException($"Unable to determine target runtime for file: {filePath}");
-        }
-
-        if (targetRuntimeInfo.IsNetFramework)
-        {
-            return "NetFramework.net48";
-        }
-
-        return $"NetCore.{targetRuntimeInfo.NetCoreVersion}";
+        return from targetRuntimeInfo in GetTargetRuntimeInfo(filePath).Required($"Unable to determine target runtime for file: {filePath}")
+               select targetRuntimeInfo.IsNetFramework switch
+               {
+                   true  => "NetFramework.net48",
+                   false => $"NetCore.{targetRuntimeInfo.NetCoreVersion}"
+               };
     }
 
     static TargetRuntimeInfo GetTargetRuntimeInfo(string filePath)
