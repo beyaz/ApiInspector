@@ -47,57 +47,21 @@ static class TargetRuntimeIndentifier
 
     public static Result<string> GetInvokerExePath(string filePath)
     {
-        {
-            return
-                from _ in filePath.Required()
-                from methodInfo in Config.InvokerAppFinderMethod.Traverse(GetStaticPublicMethodFromString)
-                from appFolderName in methodInfo.Traverse(m => (string)m.Invoke(null, [filePath])).Select(x => x ?? GetInvokerAppFolderName(filePath))
-                let appName = $"ApiInspector.{appFolderName}/ApiInspector.exe"
-                from finalPath in Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase)).Required()
-                select finalPath;
-
-
-        }
-        {
-            
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                return new ArgumentNullException(nameof(filePath));
-            }
-        
-            string appFolderName = null;
-
-            if (Config.InvokerAppFinderMethod is not null)
-            {
-                var methodInfo = GetStaticPublicMethodFromString(Config.InvokerAppFinderMethod);
-                if (methodInfo.HasError)
-                {
-                    return methodInfo.Error;
-                }
-            
-                appFolderName = (string)methodInfo.Value.Invoke(null, [filePath]);
-            }
-
-            appFolderName ??= GetInvokerAppFolderName(filePath);
-
-            var appName = $"ApiInspector.{appFolderName}/ApiInspector.exe";
-
-            var path = Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase));
-            if (path is null)
-            {
-                return new InvalidOperationException($"AppFolder not found: {appFolderName}");
-            }
-
-            return path;
-        }
+        return
+            from _ in filePath.Required()
+            from methodInfo in Config.InvokerAppFinderMethod.Traverse(GetStaticPublicMethodFromString)
+            from appFolderName in methodInfo.Traverse(m => (string)m.Invoke(null, [filePath])).Select(x => x ?? GetInvokerAppFolderName(filePath))
+            let appName = $"ApiInspector.{appFolderName}/ApiInspector.exe"
+            from finalPath in Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase)).Required()
+            select finalPath;
     }
 
-    static string GetInvokerAppFolderName(string filePath)
+    static Result<string> GetInvokerAppFolderName(string filePath)
     {
         var targetRuntimeInfo = GetTargetRuntimeInfo(filePath);
         if (targetRuntimeInfo is null)
         {
-            return null;
+            return new ArgumentException($"Unable to determine target runtime for file: {filePath}");
         }
 
         if (targetRuntimeInfo.IsNetFramework)
