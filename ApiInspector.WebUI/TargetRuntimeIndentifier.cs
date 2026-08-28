@@ -48,17 +48,15 @@ static class TargetRuntimeIndentifier
     public static Result<string> GetInvokerExePath(string filePath)
     {
         {
-            return 
-            from path in filePath.Required()
+            return
+                from _ in filePath.Required()
                 from methodInfo in Config.InvokerAppFinderMethod.Traverse(GetStaticPublicMethodFromString)
-                from appFolderName in methodInfo.Traverse(m => (string)m.Invoke(null, [filePath]))
+                from appFolderName in methodInfo.Traverse(m => (string)m.Invoke(null, [filePath])).Select(x => x ?? GetInvokerAppFolderName(filePath))
                 let appName = $"ApiInspector.{appFolderName}/ApiInspector.exe"
-                let finalPath = Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase))
-                from y in Result.NotNull(finalPath)
+                from finalPath in Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase)).Required()
+                select finalPath;
 
-                select y;
 
-            
         }
         {
             
