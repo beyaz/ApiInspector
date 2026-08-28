@@ -47,35 +47,51 @@ static class TargetRuntimeIndentifier
 
     public static Result<string> GetInvokerExePath(string filePath)
     {
-        if (string.IsNullOrWhiteSpace(filePath))
         {
-            return new ArgumentNullException(nameof(filePath));
-        }
-        
-        string appFolderName = null;
+            return 
+            from path in Result.NotNull(filePath)
+                from methodInfo in Config.InvokerAppFinderMethod is null ? Result.Success<MethodInfo>(null) : GetStaticPublicMethodFromString(Config.InvokerAppFinderMethod)
+                from appFolderName in methodInfo is null ? Result.Success<string>(null) : Result.From(() => (string)methodInfo.Invoke(null, [filePath]))
+                let appName = $"ApiInspector.{appFolderName}/ApiInspector.exe"
+                let finalPath = Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase))
+                from y in Result.NotNull(finalPath)
 
-        if (Config.InvokerAppFinderMethod is not null)
-        {
-            var methodInfo = GetStaticPublicMethodFromString(Config.InvokerAppFinderMethod);
-            if (methodInfo.HasError)
-            {
-                return methodInfo.Error;
-            }
+                select y;
+
             
-            appFolderName = (string)methodInfo.Value.Invoke(null, [filePath]);
         }
-
-        appFolderName ??= GetInvokerAppFolderName(filePath);
-
-        var appName = $"ApiInspector.{appFolderName}/ApiInspector.exe";
-
-        var path = Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase));
-        if (path is null)
         {
-            return new InvalidOperationException($"AppFolder not found: {appFolderName}");
-        }
+            
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return new ArgumentNullException(nameof(filePath));
+            }
+        
+            string appFolderName = null;
 
-        return path;
+            if (Config.InvokerAppFinderMethod is not null)
+            {
+                var methodInfo = GetStaticPublicMethodFromString(Config.InvokerAppFinderMethod);
+                if (methodInfo.HasError)
+                {
+                    return methodInfo.Error;
+                }
+            
+                appFolderName = (string)methodInfo.Value.Invoke(null, [filePath]);
+            }
+
+            appFolderName ??= GetInvokerAppFolderName(filePath);
+
+            var appName = $"ApiInspector.{appFolderName}/ApiInspector.exe";
+
+            var path = Config.InvocationHandlerExePaths.FirstOrDefault(x => x.EndsWith(appName, StringComparison.OrdinalIgnoreCase));
+            if (path is null)
+            {
+                return new InvalidOperationException($"AppFolder not found: {appFolderName}");
+            }
+
+            return path;
+        }
     }
 
     static string GetInvokerAppFolderName(string filePath)
