@@ -132,6 +132,16 @@ public static partial class ResultExtensions
         return Result.Success(value);
     }
     
+    public static Result<T> Required<T>(this T value, Func<Exception> exception) where T : class
+    {
+        if (value is null)
+        {
+            return Result.Error<T>(exception());
+        }
+
+        return Result.Success(value);
+    }
+    
     public static Result<T> Required<T>(this T value) where T : class
     {
         if (value is null)
