@@ -122,6 +122,36 @@ public static class Result
 // ReSharper disable once PartialTypeWithSinglePart
 public static partial class ResultExtensions
 {
+    public static Result<T> Required<T>(this T value) where T : class
+    {
+        if (value is null)
+        {
+            return Result.Error<T>(new NullReferenceException());
+        }
+
+        return Result.Success(value);
+    }
+    
+    public static Result<TResult> Traverse<TSource, TResult>(this TSource source, Func<TSource, Result<TResult>> selector) where TSource : class
+    {
+        if (source is null)
+        {
+            return Result.Success<TResult>(default!);
+        }
+
+        return selector(source);
+    }
+    
+    public static Result<TResult> Traverse<TSource, TResult>(this TSource source, Func<TSource, TResult> selector) where TSource : class
+    {
+        if (source is null)
+        {
+            return Result.Success<TResult>(default!);
+        }
+
+        return Result.From(() => selector(source));
+    }
+    
     public static Result<T> AsResult<T>(this (T value, Exception exception) tuple)
     {
         return new() { Value = tuple.value, Error = tuple.exception };
