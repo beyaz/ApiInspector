@@ -105,8 +105,8 @@ static partial class Program
                        true => Result.Success(tuple.parameters),
                        false => Result.From
                        (
-                           from p in methodInfo.GetParameters()
-                           select Result.From(() => CalculateParameterValue(tuple.map, p))
+                           from parameterInfo in methodInfo.GetParameters()
+                           select Result.From(() => CalculateParameterValue(tuple.map, parameterInfo))
                        )
                    }
                    select parameters;
