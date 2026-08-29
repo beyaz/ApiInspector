@@ -117,7 +117,7 @@ static partial class Program
                     && map.ValueKind == JsonValueKind.Object
                     && map.TryGetProperty(parameterInfo.Name, out var property))
                 {
-                    property.Deserialize(parameterInfo.ParameterType);
+                    return property.Deserialize(parameterInfo.ParameterType);
                 }
 
                 // Default Value By Reflection
