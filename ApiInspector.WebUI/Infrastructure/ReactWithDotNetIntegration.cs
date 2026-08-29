@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using ReactWithDotNet.UIDesigner;
@@ -9,7 +9,7 @@ class AsyncLogger
 {
     public const string UrlPath = "/trace";
 
-    public static readonly List<string> logs = new();
+    public static readonly List<string> logs = [];
     
     public static string ListennigUrl { get; set; }
 
