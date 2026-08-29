@@ -27,14 +27,14 @@ static partial class Program
         return from methodInfo in LoadMethodInfo(input)
                from instance in TryCreateDeclaringTypeInstance(methodInfo)
                select instance is null ? null : Json.SerializeIncludeDefaultValues(instance);
-        
+
         static Result<object> TryCreateDeclaringTypeInstance(MethodInfo methodInfo)
         {
             if (methodInfo.IsStatic)
             {
                 return null;
             }
-            
+
             var declaringType = methodInfo.DeclaringType;
             if (declaringType is null)
             {
@@ -55,8 +55,7 @@ static partial class Program
                    select (parameterInfo.Name, Activator.CreateInstance(parameterInfo.ParameterType))
                )
                select Json.SerializeIncludeDefaultValues(map);
-        
-        
+
         static bool CantSerialize(Type type)
         {
             return type.IsAbstract || type.IsInterface || type.BaseType == typeof(MulticastDelegate);
@@ -78,7 +77,7 @@ static partial class Program
             from methodParameters in CreateParameters(input, methodInfo)
 
             // I n v o k e
-            from output in Invoke(methodInfo, instance, [..methodParameters])
+            from output in Invoke(methodInfo, instance, [.. methodParameters])
 
             // O u t p u t
             select output;
@@ -100,41 +99,22 @@ static partial class Program
 
         static Result<IReadOnlyList<object>> CreateParameters(ExternalInput input, MethodInfo methodInfo)
         {
-            var parameterInfoList = methodInfo.GetParameters();
-
-            JsonElement map = default;
-
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(input.JsonForParameters))
-                {
-                    map = JsonSerializer.Deserialize<JsonElement>(input.JsonForParameters);
-                }
-            }
-            catch (Exception exception)
-            {
-                // Is Direct String Input
-                {
-                    var isOneStringParameter = parameterInfoList.Length == 1 &&
-                                               parameterInfoList[0].ParameterType.FullName == typeof(string).FullName &&
-                                               parameterInfoList[0].Name is not null;
-
-                    if (isOneStringParameter && !string.IsNullOrWhiteSpace(input.JsonForParameters))
-                    {
-                        return Result.Success<IReadOnlyList<object>>([input.JsonForParameters]);
-                    }
-                }
-
-                return exception;
-            }
-
-            
-            return Result.From(from p in parameterInfoList select Result.From(() => CalculateParameterValue(map, p)));
+            return from tuple in CreateParameterMapFromJson(methodInfo, input.JsonForParameters)
+                   from parameters in (tuple.parameters is not null) switch
+                   {
+                       true => Result.Success(tuple.parameters),
+                       false => Result.From
+                       (
+                           from p in methodInfo.GetParameters()
+                           select Result.From(() => CalculateParameterValue(tuple.map, p))
+                       )
+                   }
+                   select parameters;
 
             static object CalculateParameterValue(JsonElement map, ParameterInfo parameterInfo)
             {
-                if (parameterInfo.Name is not null 
-                    && map.ValueKind == JsonValueKind.Object 
+                if (parameterInfo.Name is not null
+                    && map.ValueKind == JsonValueKind.Object
                     && map.TryGetProperty(parameterInfo.Name, out var property))
                 {
                     property.Deserialize(parameterInfo.ParameterType);
@@ -148,7 +128,7 @@ static partial class Program
 
                 return null;
             }
-            
+
             static Result<(JsonElement map, IReadOnlyList<object> parameters)> CreateParameterMapFromJson(MethodInfo methodInfo, string jsonForParameters)
             {
                 try
@@ -165,7 +145,7 @@ static partial class Program
                     // Is Direct String Input
                     {
                         var parameterInfoList = methodInfo.GetParameters();
-                        
+
                         var isOneStringParameter = parameterInfoList.Length == 1 &&
                                                    parameterInfoList[0].ParameterType.FullName == typeof(string).FullName &&
                                                    parameterInfoList[0].Name is not null;
@@ -181,7 +161,6 @@ static partial class Program
 
                 return (default, null);
             }
-
         }
 
         static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
