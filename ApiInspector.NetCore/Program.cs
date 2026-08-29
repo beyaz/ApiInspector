@@ -71,7 +71,7 @@ static partial class Program
             from methodInfo in LoadMethodInfo(input)
 
             // C r e a t e   T a r g e t   I n s t a n c e
-            from instance in CreateDeclaringType(input, methodInfo)
+            from instance in Result.From(() => CreateDeclaringType(input, methodInfo))
 
             // I n it i a l i z e   M e t h o d   P a r a m e t e r s
             from methodParameters in CreateParameters(input, methodInfo)
@@ -82,11 +82,11 @@ static partial class Program
             // O u t p u t
             select output;
 
-        static Result<object> CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
+        static object CreateDeclaringType(ExternalInput input, MethodInfo methodInfo)
         {
             if (methodInfo.IsStatic)
             {
-                return Result.Success<object>(null);
+                return null;
             }
 
             if (!string.IsNullOrWhiteSpace(input.JsonForInstance))
@@ -94,7 +94,7 @@ static partial class Program
                 return Json.Deserialize(input.JsonForInstance, methodInfo.DeclaringType!);
             }
 
-            return Result.From(() => Activator.CreateInstance(methodInfo.DeclaringType!));
+            return Activator.CreateInstance(methodInfo.DeclaringType!);
         }
 
         static Result<IReadOnlyList<object>> CreateParameters(ExternalInput input, MethodInfo methodInfo)
