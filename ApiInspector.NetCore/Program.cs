@@ -128,23 +128,13 @@ static partial class Program
                 return exception;
             }
 
-            return Result.From(from p in parameterInfoList select Result.From(() => calculateParameterValue(map, p)));
+            return Result.From(from p in parameterInfoList select Result.From(() => CalculateParameterValue(map, p)));
 
-            static object calculateParameterValue(JsonElement map, ParameterInfo parameterInfo)
+            static object CalculateParameterValue(JsonElement map, ParameterInfo parameterInfo)
             {
-                if (parameterInfo.Name is null)
-                {
-                    // Default Value By Reflection
-                    if (parameterInfo.ParameterType.IsValueType)
-                    {
-                        return Activator.CreateInstance(parameterInfo.ParameterType);
-                    }
-
-                    return null;
-                }
-
-                if (map.ValueKind == JsonValueKind.Object &&
-                    map.TryGetProperty(parameterInfo.Name, out var property))
+                if (parameterInfo.Name is not null 
+                    && map.ValueKind == JsonValueKind.Object 
+                    && map.TryGetProperty(parameterInfo.Name, out var property))
                 {
                     property.Deserialize(parameterInfo.ParameterType);
                 }
