@@ -40,7 +40,7 @@ static class AsyncLogger
                     try
                     {
 
-                        var content = new StringContent(message, Encoding.UTF8, "application/json");
+                        var content = new StringContent(message, Encoding.UTF8, "text/plain");
 
                         await _httpClient.PostAsync(apiUrl, content);
                     }

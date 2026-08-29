@@ -10,17 +10,19 @@ class AsyncLogger
     public const string UrlPath = "/trace";
 
     public static readonly List<string> logs = [];
-    
+
     public static string ListennigUrl { get; set; }
 
     public static async Task HandleRequest(HttpContext httpContext)
     {
-        var items = await httpContext.Request.ReadFromJsonAsync<string[]>();
-        
-        logs.AddRange(items);
-                
+        using var reader = new StreamReader(httpContext.Request.Body);
+
+        var body = await reader.ReadToEndAsync();
+
+        logs.Add(body);
+
         httpContext.Response.StatusCode = StatusCodes.Status200OK;
-                
+
         await httpContext.Response.Body.FlushAsync();
     }
 }
@@ -30,14 +32,13 @@ static class ReactWithDotNetIntegration
     public static void ConfigureReactWithDotNet(this WebApplication app)
     {
         app.UseMiddleware<ReactWithDotNetJavaScriptFiles>();
-        
+
         RequestHandlerPath = $"/{nameof(HandleReactWithDotNetRequest)}";
-        
+
         app.Use(async (httpContext, next) =>
         {
             AsyncLogger.ListennigUrl ??= $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{AsyncLogger.UrlPath}";
-            
-            
+
             var path = httpContext.Request.Path.Value ?? string.Empty;
 
             if (path == RequestHandlerPath)
@@ -51,11 +52,11 @@ static class ReactWithDotNetIntegration
                 await HomePage(httpContext);
                 return;
             }
-            
+
             if (path == AsyncLogger.UrlPath)
             {
                 await AsyncLogger.HandleRequest(httpContext);
-                
+
                 return;
             }
 
