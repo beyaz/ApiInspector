@@ -65,6 +65,8 @@ static class External
 
     public static Result<string> InvokeMethod(ExternalInvokeInput input)
     {
+        ProcessHelper.KillAllNamedProcess($"{nameof(ApiInspector)}");
+        
         return from invokerExeFilePath in TargetRuntimeIndentifier.GetInvokerExePath(input.Input.AssemblyFileFullPath)
                let executeInput = new ExecuteInput
                {
