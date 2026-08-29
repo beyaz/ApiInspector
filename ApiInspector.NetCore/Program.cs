@@ -94,7 +94,7 @@ static partial class Program
                 return Json.Deserialize(input.JsonForInstance, methodInfo.DeclaringType!);
             }
 
-            return Activator.CreateInstance(methodInfo.DeclaringType!);
+            return Result.From(() => Activator.CreateInstance(methodInfo.DeclaringType!));
         }
 
         static Result<IReadOnlyList<object>> CreateParameters(ExternalInput input, MethodInfo methodInfo)
