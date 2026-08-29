@@ -116,7 +116,7 @@ static partial class Program
                 // Is Direct String Input
                 {
                     var isOneStringParameter = parameterInfoList.Length == 1 &&
-                                               parameterInfoList[0].ParameterType.FullName == "System.String" &&
+                                               parameterInfoList[0].ParameterType.FullName == typeof(string).FullName &&
                                                parameterInfoList[0].Name is not null;
 
                     if (isOneStringParameter && !string.IsNullOrWhiteSpace(input.JsonForParameters))
@@ -128,6 +128,7 @@ static partial class Program
                 return exception;
             }
 
+            
             return Result.From(from p in parameterInfoList select Result.From(() => CalculateParameterValue(map, p)));
 
             static object CalculateParameterValue(JsonElement map, ParameterInfo parameterInfo)
@@ -147,6 +148,40 @@ static partial class Program
 
                 return null;
             }
+            
+            static Result<(JsonElement map, IReadOnlyList<object> parameters)> CreateParameterMapFromJson(MethodInfo methodInfo, string jsonForParameters)
+            {
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(jsonForParameters))
+                    {
+                        var map = JsonSerializer.Deserialize<JsonElement>(jsonForParameters);
+
+                        return (map, null);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    // Is Direct String Input
+                    {
+                        var parameterInfoList = methodInfo.GetParameters();
+                        
+                        var isOneStringParameter = parameterInfoList.Length == 1 &&
+                                                   parameterInfoList[0].ParameterType.FullName == typeof(string).FullName &&
+                                                   parameterInfoList[0].Name is not null;
+
+                        if (isOneStringParameter && !string.IsNullOrWhiteSpace(jsonForParameters))
+                        {
+                            return (default, [jsonForParameters]);
+                        }
+                    }
+
+                    return exception;
+                }
+
+                return (default, null);
+            }
+
         }
 
         static Result<object> Invoke(MethodInfo methodInfo, object instance, object[] methodParameters)
