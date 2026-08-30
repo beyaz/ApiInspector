@@ -17,8 +17,6 @@ sealed record ConfigInfo
     public string CacheDirectoryFormat { get; init; }
     
     public string InvokerAppFinderMethod { get; init; }
-    
-    public string DbStorageConnectionString { get; init; }
 }
 
 partial class Extensions
