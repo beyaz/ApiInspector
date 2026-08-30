@@ -18,8 +18,6 @@ sealed record ConfigInfo
     
     public string InvokerAppFinderMethod { get; init; }
     
-    public bool IsDbStorageActive { get; init; }
-    
     public string DbStorageConnectionString { get; init; }
 }
 
