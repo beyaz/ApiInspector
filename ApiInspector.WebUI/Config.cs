@@ -10,20 +10,17 @@ sealed record ConfigInfo
     public int NextAvailablePortFrom { get; init; }
     public bool UseUrls { get; init; }
 
-    public FileStorageInfo FileStorage { get; init; }
-
     public IReadOnlyList<string> InvocationHandlerExePaths { get; init; } = [];
     
     public IReadOnlyList<string> DirectorySuggestions { get; init; } = [];
 
-    internal class FileStorageInfo
-    {
-        public string CacheDirectoryFormat { get; init; }
-        
-        public bool IsActive { get; init; }
-    }
+    public string CacheDirectoryFormat { get; init; }
     
     public string InvokerAppFinderMethod { get; init; }
+    
+    public bool IsDbStorageActive { get; init; }
+    
+    public string DbStorageConnectionString { get; init; }
 }
 
 partial class Extensions

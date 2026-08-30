@@ -6,7 +6,7 @@ static class FileStorage
     {
         get
         {
-            var folderNames = Config.FileStorage.CacheDirectoryFormat.Split('>', StringSplitOptions.RemoveEmptyEntries);
+            var folderNames = Config.CacheDirectoryFormat.Split('>', StringSplitOptions.RemoveEmptyEntries);
 
             return string.Join(Path.DirectorySeparatorChar.ToString(), folderNames.Select(processFolderName)) + Path.DirectorySeparatorChar;
 

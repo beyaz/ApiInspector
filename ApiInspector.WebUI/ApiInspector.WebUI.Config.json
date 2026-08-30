@@ -5,10 +5,7 @@
   "NextAvailablePortFrom": 5008,
   "UseUrls": true,
 
-  "FileStorage": {
-    "IsActive": true,
-    "CacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache"
-  },
+  "CacheDirectoryFormat": "{MyDocuments} > ApiInspector > Cache",
 
   "InvocationHandlerExePaths": [
     "ApiInspector.BOA.Server.NetFramework.net48/ApiInspector.exe",
