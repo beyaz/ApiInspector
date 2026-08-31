@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Toolbox;
+﻿namespace Toolbox;
 
 public sealed class Result<TValue>
 {
@@ -60,7 +58,7 @@ public static class Result
             return Error<T>(ex);
         }
     }
-    
+
     public static Result<IReadOnlyList<T>> From<T>(IEnumerable<Result<T>> enumerable)
     {
         try
@@ -85,11 +83,6 @@ public static class Result
         }
     }
 
-    public static Result<T> Success<T>(T value)
-    {
-        return new() { Value = value };
-    }
-    
     public static Result<T> From<T>(Func<Result<T>> func)
     {
         try
@@ -99,7 +92,7 @@ public static class Result
             {
                 return result.Error;
             }
-            
+
             return result.Value;
         }
         catch (Exception exception)
@@ -117,61 +110,16 @@ public static class Result
 
         return Success(value);
     }
+
+    public static Result<T> Success<T>(T value)
+    {
+        return new() { Value = value };
+    }
 }
 
 // ReSharper disable once PartialTypeWithSinglePart
 public static partial class ResultExtensions
 {
-    public static Result<T> Required<T>(this T value, string message) where T : class
-    {
-        if (value is null)
-        {
-            return Result.Error<T>(new NullReferenceException(message));
-        }
-
-        return Result.Success(value);
-    }
-    
-    public static Result<T> Required<T>(this T value, Func<Exception> exception) where T : class
-    {
-        if (value is null)
-        {
-            return Result.Error<T>(exception());
-        }
-
-        return Result.Success(value);
-    }
-    
-    public static Result<T> Required<T>(this T value) where T : class
-    {
-        if (value is null)
-        {
-            return Result.Error<T>(new NullReferenceException());
-        }
-
-        return Result.Success(value);
-    }
-    
-    public static Result<TResult> Traverse<TSource, TResult>(this TSource source, Func<TSource, Result<TResult>> selector) where TSource : class
-    {
-        if (source is null)
-        {
-            return Result.Success<TResult>(default!);
-        }
-
-        return selector(source);
-    }
-    
-    public static Result<TResult> Traverse<TSource, TResult>(this TSource source, Func<TSource, TResult> selector) where TSource : class
-    {
-        if (source is null)
-        {
-            return Result.Success<TResult>(default!);
-        }
-
-        return Result.From(() => selector(source));
-    }
-    
     public static Result<T> AsResult<T>(this (T value, Exception exception) tuple)
     {
         return new() { Value = tuple.value, Error = tuple.exception };
@@ -217,6 +165,36 @@ public static partial class ResultExtensions
         {
             onSuccess(result.Value);
         }
+    }
+
+    public static Result<T> Required<T>(this T value, string message) where T : class
+    {
+        if (value is null)
+        {
+            return Result.Error<T>(new NullReferenceException(message));
+        }
+
+        return Result.Success(value);
+    }
+
+    public static Result<T> Required<T>(this T value, Func<Exception> exception) where T : class
+    {
+        if (value is null)
+        {
+            return Result.Error<T>(exception());
+        }
+
+        return Result.Success(value);
+    }
+
+    public static Result<T> Required<T>(this T value) where T : class
+    {
+        if (value is null)
+        {
+            return Result.Error<T>(new NullReferenceException());
+        }
+
+        return Result.Success(value);
     }
 
     public static IEnumerable<Result<B>> Select<A, B>(
@@ -650,6 +628,26 @@ public static partial class ResultExtensions
         }
 
         return result;
+    }
+
+    public static Result<TResult> Traverse<TSource, TResult>(this TSource source, Func<TSource, Result<TResult>> selector) where TSource : class
+    {
+        if (source is null)
+        {
+            return Result.Success<TResult>(default!);
+        }
+
+        return selector(source);
+    }
+
+    public static Result<TResult> Traverse<TSource, TResult>(this TSource source, Func<TSource, TResult> selector) where TSource : class
+    {
+        if (source is null)
+        {
+            return Result.Success<TResult>(default!);
+        }
+
+        return Result.From(() => selector(source));
     }
 
     public static T Unwrap<T>(this Result<T> result)
