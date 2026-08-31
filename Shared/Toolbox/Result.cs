@@ -294,6 +294,28 @@ public static partial class ResultExtensions
 
     public static async Task<Result<C>> SelectMany<A, B, C>(
         this Task<Result<A>> source,
+        Func<A, Result<B>> bind,
+        Func<A, B, C> resultSelector
+    )
+    {
+        var a = await source;
+
+        if (a.HasError)
+        {
+            return a.Error;
+        }
+
+        var middle = bind(a.Value);
+        if (middle.HasError)
+        {
+            return middle.Error;
+        }
+
+        return resultSelector(a.Value, middle.Value);
+    }
+
+    public static async Task<Result<C>> SelectMany<A, B, C>(
+        this Task<Result<A>> source,
         Func<A, Task<Result<B>>> bind,
         Func<A, B, C> resultSelector
     )
