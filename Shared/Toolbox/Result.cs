@@ -1,5 +1,8 @@
-﻿namespace Toolbox;
+﻿using System.Diagnostics;
 
+namespace Toolbox;
+
+[DebuggerDisplay("Value: {Value} HasError: {HasError} ")]
 public sealed class Result<TValue>
 {
     // @formatter:off
@@ -99,16 +102,6 @@ public static class Result
         {
             return Error<T>(exception);
         }
-    }
-
-    public static Result<T> NotNull<T>(T value)
-    {
-        if (value is null)
-        {
-            return Error<T>(new NullReferenceException());
-        }
-
-        return Success(value);
     }
 
     public static Result<T> Success<T>(T value)
