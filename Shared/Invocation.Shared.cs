@@ -127,6 +127,23 @@ static class Mixin
 
         return map;
     }
+    
+    internal static Result<IReadOnlyDictionary<TKey, TValue>> NewDictionaryFrom<TKey, TValue>(IEnumerable<Result<(TKey name, TValue value)>> items)
+    {
+        var map = new Dictionary<TKey, TValue>();
+        foreach (var result in items)
+        {
+            if (result.HasError)
+            {
+                return result.Error;
+            }
+            
+            var (name, value) = result.Value;
+            map[name] = value;
+        }
+
+        return Result.Success<IReadOnlyDictionary<TKey, TValue>>(map);
+    }
 
     internal static object TryCreateAsValueType(Type type)
     {
