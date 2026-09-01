@@ -217,19 +217,19 @@ partial class ResultExtensions
     {
         if (source == null)
         {
-            yield return Result.Error<C>(new ArgumentNullException(nameof(source)));
+            yield return Result.Fail<C>(new ArgumentNullException(nameof(source)));
             yield break;
         }
 
         if (bind == null)
         {
-            yield return Result.Error<C>(new ArgumentNullException(nameof(bind)));
+            yield return Result.Fail<C>(new ArgumentNullException(nameof(bind)));
             yield break;
         }
 
         if (resultSelector == null)
         {
-            yield return Result.Error<C>(new ArgumentNullException(nameof(resultSelector)));
+            yield return Result.Fail<C>(new ArgumentNullException(nameof(resultSelector)));
             yield break;
         }
 
@@ -321,13 +321,13 @@ partial class ResultExtensions
     {
         if (source == null)
         {
-            yield return Result.Error<A>(new ArgumentNullException(nameof(source)));
+            yield return Result.Fail<A>(new ArgumentNullException(nameof(source)));
             yield break;
         }
 
         if (predicate == null)
         {
-            yield return Result.Error<A>(new ArgumentNullException(nameof(predicate)));
+            yield return Result.Fail<A>(new ArgumentNullException(nameof(predicate)));
             yield break;
         }
 

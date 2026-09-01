@@ -45,7 +45,7 @@ public sealed class Result<TValue>
 
 public static class Result
 {
-    public static Result<T> Error<T>(Exception exception)
+    public static Result<T> Fail<T>(Exception exception)
     {
         return new() { Error = exception };
     }
@@ -58,7 +58,7 @@ public static class Result
         }
         catch (Exception ex)
         {
-            return Error<T>(ex);
+            return Fail<T>(ex);
         }
     }
 
@@ -72,7 +72,7 @@ public static class Result
             {
                 if (result.HasError)
                 {
-                    return Error<IReadOnlyList<T>>(result.Error);
+                    return Fail<IReadOnlyList<T>>(result.Error);
                 }
 
                 items.Add(result.Value);
@@ -82,7 +82,7 @@ public static class Result
         }
         catch (Exception ex)
         {
-            return Error<IReadOnlyList<T>>(ex);
+            return Fail<IReadOnlyList<T>>(ex);
         }
     }
 
@@ -100,7 +100,7 @@ public static class Result
         }
         catch (Exception exception)
         {
-            return Error<T>(exception);
+            return Fail<T>(exception);
         }
     }
 
@@ -164,7 +164,7 @@ public static partial class ResultExtensions
     {
         if (value is null)
         {
-            return Result.Error<T>(new NullReferenceException(message));
+            return Result.Fail<T>(new NullReferenceException(message));
         }
 
         return Result.Success(value);
@@ -174,7 +174,7 @@ public static partial class ResultExtensions
     {
         if (value is null)
         {
-            return Result.Error<T>(exception());
+            return Result.Fail<T>(exception());
         }
 
         return Result.Success(value);
@@ -184,7 +184,7 @@ public static partial class ResultExtensions
     {
         if (value is null)
         {
-            return Result.Error<T>(new NullReferenceException());
+            return Result.Fail<T>(new NullReferenceException());
         }
 
         return Result.Success(value);
@@ -434,17 +434,17 @@ public static partial class ResultExtensions
     {
         if (source is null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(source)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(source)))];
         }
 
         if (bind == null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(bind)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(bind)))];
         }
 
         if (resultSelector == null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(resultSelector)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(resultSelector)))];
         }
 
         List<Result<C>> returnItems = [];
@@ -478,17 +478,17 @@ public static partial class ResultExtensions
     {
         if (source is null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(source)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(source)))];
         }
 
         if (bind == null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(bind)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(bind)))];
         }
 
         if (resultSelector == null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(resultSelector)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(resultSelector)))];
         }
 
         List<Result<C>> returnItems = [];
@@ -581,17 +581,17 @@ public static partial class ResultExtensions
     {
         if (source is null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(source)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(source)))];
         }
 
         if (bind == null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(bind)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(bind)))];
         }
 
         if (resultSelector == null)
         {
-            return [Result.Error<C>(new ArgumentNullException(nameof(resultSelector)))];
+            return [Result.Fail<C>(new ArgumentNullException(nameof(resultSelector)))];
         }
 
         List<Result<C>> returnItems = [];
@@ -682,12 +682,12 @@ public static partial class ResultExtensions
     {
         if (source == null)
         {
-            return [Result.Error<A>(new ArgumentNullException(nameof(source)))];
+            return [Result.Fail<A>(new ArgumentNullException(nameof(source)))];
         }
 
         if (predicate == null)
         {
-            return [Result.Error<A>(new ArgumentNullException(nameof(predicate)))];
+            return [Result.Fail<A>(new ArgumentNullException(nameof(predicate)))];
         }
 
         List<Result<A>> returnList = [];

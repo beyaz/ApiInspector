@@ -197,7 +197,7 @@ static partial class Program
 
             if (invocationException != null)
             {
-                return Result.Error<object>(invocationException);
+                return Result.Fail<object>(invocationException);
             }
 
             WriteLog("Invocation is finished successfully");
