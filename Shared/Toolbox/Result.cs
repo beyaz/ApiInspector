@@ -2,7 +2,7 @@
 
 namespace Toolbox;
 
-[DebuggerDisplay("Value: {Value} HasError: {HasError} ")]
+[DebuggerDisplay("{ToString()}")]
 public sealed class Result<TValue>
 {
     // @formatter:off
@@ -38,6 +38,21 @@ public sealed class Result<TValue>
     {
         action(source.Value);
         return source;
+    }
+
+    public override string ToString()
+    {
+        if (HasError)
+        {
+            return Error.ToString();
+        }
+
+        if (Value is null)
+        {
+            return "null";
+        }
+        
+        return Value.ToString();
     }
 
     // @formatter:on
