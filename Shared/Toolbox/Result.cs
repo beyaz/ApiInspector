@@ -53,39 +53,37 @@ public sealed record Error
 [DebuggerDisplay("{ToString()}")]
 public sealed class Result<TValue>
 {
-    // @formatter:off
-    
-    public TValue Value { get; init; } = default!;
+    public bool HasError => !ReferenceEquals(Error, null);
 
     public Exception Error { get; init; } = null!;
 
-    public bool HasError => !ReferenceEquals(Error, null);
+    public TValue Value { get; init; } = default!;
+
+    public static Result<TValue> operator |(Result<TValue> source, Action action)
+    {
+        action();
+        return source;
+    }
+
+    public static Result<TValue> operator |(Result<TValue> source, Action<TValue> action)
+    {
+        action(source.Value);
+        return source;
+    }
 
     public static implicit operator Result<TValue>(TValue value)
     {
-        return new() { Value = value};
+        return new() { Value = value };
     }
 
     public static implicit operator Result<TValue>(Exception error)
     {
         return new() { Error = error };
     }
-    
+
     public static implicit operator Task<Result<TValue>>(Result<TValue> result)
     {
         return Task.FromResult(result);
-    }
-    
-    public static Result<TValue> operator | (Result<TValue> source, Action action)
-    {
-        action();
-        return source;
-    }
-    
-    public static Result<TValue> operator | (Result<TValue> source, Action<TValue> action)
-    {
-        action(source.Value);
-        return source;
     }
 
     public override string ToString()
@@ -99,11 +97,9 @@ public sealed class Result<TValue>
         {
             return "null";
         }
-        
+
         return Value.ToString();
     }
-
-    // @formatter:on
 }
 
 public static class Result
