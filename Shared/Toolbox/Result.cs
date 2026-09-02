@@ -2,6 +2,54 @@
 
 namespace Toolbox;
 
+/// <summary>
+///     The error
+/// </summary>
+[Serializable]
+public sealed record Error
+{
+    public string Code { get; init; }
+
+    public string Message { get; init; }
+
+    /// <summary>
+    ///     Performs an implicit conversion from <see cref = "Exception" /> to <see cref = "Error" />.
+    /// </summary>
+    public static implicit operator Error(Exception exception)
+    {
+        return new Error
+        {
+            Code = exception.HResult.ToString(),
+
+            Message = exception.ToString()
+        };
+    }
+
+    /// <summary>
+    ///     Performs an implicit conversion from <see cref = "System.String" /> to <see cref = "Error" />.
+    /// </summary>
+    public static implicit operator Error(string errorMessage)
+    {
+        return new Error
+        {
+            Message = errorMessage
+        };
+    }
+
+    /// <summary>
+    ///     Returns a string representation of the error.
+    /// </summary>
+    public override string ToString()
+    {
+        if (Code is null)
+        {
+            return Message;
+        }
+
+        return Code + " " + Message;
+    }
+}
+
 [DebuggerDisplay("{ToString()}")]
 public sealed class Result<TValue>
 {
