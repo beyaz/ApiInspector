@@ -54,23 +54,9 @@ public sealed record Error
 [DebuggerDisplay("{ToString()}")]
 public sealed class Result<TValue>
 {
-    public bool HasError => !ReferenceEquals(Error, null);
-
     public Error Error { get; init; } = null!;
 
     public TValue Value { get; init; } = default!;
-
-    public static Result<TValue> operator |(Result<TValue> source, Action action)
-    {
-        action();
-        return source;
-    }
-
-    public static Result<TValue> operator |(Result<TValue> source, Action<TValue> action)
-    {
-        action(source.Value);
-        return source;
-    }
 
     public static implicit operator Result<TValue>(Error error)
     {
@@ -94,7 +80,7 @@ public sealed class Result<TValue>
 
     public override string ToString()
     {
-        if (HasError)
+        if (Error is not null)
         {
             return Error.ToString();
         }
@@ -773,5 +759,10 @@ public static partial class ResultExtensions
         }
 
         return returnList;
+    }
+
+    extension<T>(Result<T> result)
+    {
+        public bool HasError => result.Error is not null;
     }
 }
