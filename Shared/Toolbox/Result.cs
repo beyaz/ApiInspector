@@ -56,9 +56,9 @@ public static class Result
         {
             return Success(value());
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            return Fail<T>(ex);
+            return Fail<T>(exception);
         }
     }
 
