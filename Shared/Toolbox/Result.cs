@@ -3,9 +3,10 @@
 namespace Toolbox;
 
 /// <summary>
-///     The error
+///     The Error
 /// </summary>
 [Serializable]
+[DebuggerDisplay("{ToString()}")]
 public sealed record Error
 {
     public string Code { get; init; }
@@ -55,7 +56,7 @@ public sealed class Result<TValue>
 {
     public bool HasError => !ReferenceEquals(Error, null);
 
-    public Exception Error { get; init; } = null!;
+    public Error Error { get; init; } = null!;
 
     public TValue Value { get; init; } = default!;
 
@@ -69,6 +70,11 @@ public sealed class Result<TValue>
     {
         action(source.Value);
         return source;
+    }
+
+    public static implicit operator Result<TValue>(Error error)
+    {
+        return new() { Error = error };
     }
 
     public static implicit operator Result<TValue>(TValue value)
@@ -131,7 +137,7 @@ public static class Result
             {
                 if (result.HasError)
                 {
-                    return Fail<IReadOnlyList<T>>(result.Error);
+                    return result.Error;
                 }
 
                 items.Add(result.Value);
@@ -207,7 +213,7 @@ public static partial class ResultExtensions
         return tuple.Value;
     }
 
-    public static void Match<T>(this Result<T> result, Action<T> onSuccess, Action<Exception> onError)
+    public static void Match<T>(this Result<T> result, Action<T> onSuccess, Action<Error> onError)
     {
         if (result.HasError)
         {
@@ -694,7 +700,7 @@ public static partial class ResultExtensions
     /// <summary>
     ///     Runs given action for exception then returns same result.
     /// </summary>
-    public static Result<T> TapError<T>(this Result<T> result, Action<Exception> action)
+    public static Result<T> TapError<T>(this Result<T> result, Action<Error> action)
     {
         if (result.HasError)
         {
@@ -728,7 +734,7 @@ public static partial class ResultExtensions
     {
         if (result.HasError)
         {
-            throw result.Error;
+            throw new InvalidOperationException(result.Error.Message);
         }
 
         return result.Value;

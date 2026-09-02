@@ -24,7 +24,7 @@ class ExternalProcessManager
 
     public static string ResponseAsJson { get; set; }
 
-    public static Exception ResponseException { get; set; }
+    public static Error ResponseException { get; set; }
 }
 
 class MainWindow : Component<MainWindowModel>
@@ -1081,7 +1081,7 @@ class MainWindow : Component<MainWindowModel>
                 ).Match(json => scenario.JsonTextForDotNetMethodParameters = json, printError);
             }
 
-            void printError(Exception exception)
+            void printError(Error exception)
             {
                 scenario.ResponseAsJson = exception + NewLine + scenario.ResponseAsJson;
             }
