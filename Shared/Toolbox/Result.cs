@@ -792,5 +792,15 @@ public static partial class ResultExtensions
     extension<T>(Result<T> result)
     {
         public bool HasError => result.Error is not null;
+
+        public TOut Match<TOut>(Func<T, TOut> success, Func<Error, TOut> fail)
+        {
+            if (result.HasError)
+            {
+                return fail(result.Error.Message);
+            }
+
+            return success(result.Value);
+        }
     }
 }
