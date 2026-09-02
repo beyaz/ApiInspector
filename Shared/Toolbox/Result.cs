@@ -54,9 +54,9 @@ public sealed record Error
 [DebuggerDisplay("{ToString()}")]
 public sealed class Result<TValue>
 {
-    public Error Error { get; init; } = null!;
+    public Error Error { get; init; }
 
-    public TValue Value { get; init; } = default!;
+    public TValue Value { get; init; }
 
     public static implicit operator Result<TValue>(Error error)
     {
