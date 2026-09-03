@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <AssemblyName>ApiInspector</AssemblyName>
-    <StartupObject>ApiInspector.Bootstrapper.Program</StartupObject>
-    <ApplicationIcon>debug.ico</ApplicationIcon>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <AssemblyName>ApiInspector</AssemblyName>
+        <StartupObject>ApiInspector.Bootstrapper.Program</StartupObject>
+        <ApplicationIcon>debug.ico</ApplicationIcon>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\Shared\Toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\Toolbox\Result.cs" Link="Shared\Toolbox\Result.cs" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="debug.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="debug.ico" />
+    </ItemGroup>
 
     <ItemGroup>
         <RuntimeHostConfigurationOption Include="InstallationFolder" Value="{MyDocuments}\ApiInspector\Application\Api Inspector (.net method invoker)\" />
@@ -23,8 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\" />
-      <Folder Include="Shared\Toolbox\" />
+        <Folder Include="Properties\" />
+        <Folder Include="Shared\Toolbox\" />
     </ItemGroup>
 
 </Project>
