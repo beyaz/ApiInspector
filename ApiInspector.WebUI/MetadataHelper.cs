@@ -20,35 +20,13 @@ static class MetadataHelper
             return exception;
         }
 
-        static List<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> types)
-        {
-            var list = new List<TypeDefinition>();
-
-            foreach (var typeDefinition in types)
-            {
-                list.Add(typeDefinition);
-
-                foreach (var typeDefinitionNestedType in typeDefinition.NestedTypes)
-                {
-                    if (typeDefinitionNestedType.Name.StartsWith("<")) // Skip compiler generated classes
-                    {
-                        continue;
-                    }
-
-                    list.Add(typeDefinitionNestedType);
-                }
-            }
-
-            return list;
-        }
-
         IEnumerable<MetadataNode> getNamespaceNodes(IReadOnlyList<TypeDefinition> types)
         {
             var namespaceNodes = new List<MetadataNode>();
 
             foreach (var namespaceName in types.Select(GetNamespaceName).Distinct())
             {
-                var classNodes = GetAllTypes(types.Where(x => GetNamespaceName(x) == namespaceName)).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
+                var classNodes = types.Where(x => GetNamespaceName(x) == namespaceName).Select(classToMetaData).Where(classNode => classNode.HasChild).ToList();
 
                 if (!string.IsNullOrWhiteSpace(methodFilter))
                 {
