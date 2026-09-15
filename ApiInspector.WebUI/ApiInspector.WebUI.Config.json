@@ -23,9 +23,20 @@
 
   "DirectorySuggestions": [
     "d:/boa/server/bin/",
+    "//stlboabuild/BOA/Server/bin/",
+    "//sxlboabuild/BOA/Server/bin/",
+
     "d:/boa/BOA.WebApi.Core/",
+    "//stlboabuild/boa/BOA.WebApi.Core/",
+    "//sxlboabuild/boa/BOA.WebApi.Core/",
+
     "d:/boa/client/bin/",
-    "d:/boa/card/*"
+    "//stlboabuild/boa/client/bin/",
+    "//sxlboabuild/boa/client/bin/",
+
+    "d:/boa/card/*",
+    "//stlboabuild/boa/card/*",
+    "//sxlboabuild/boa/card/*"
   ],
 
   "InvokerAppFinderMethod": "ApiInspector.BOASystem > ApiInspector.BOASystem.InvokerAppFinder > FindInvokerAppFolderName"
